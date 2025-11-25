@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: chatterbox-api
+
+api:
+  prefix: /api
+
+webhook:
+  github:
+    secret: secret
