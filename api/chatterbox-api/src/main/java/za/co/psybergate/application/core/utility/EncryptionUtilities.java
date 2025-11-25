@@ -29,4 +29,24 @@ public class EncryptionUtilities {
         return sb.toString();
     }
 
+    /// Perform an XOR operation on each character. If at any
+    /// point XOR =/= 0 - this will return FALSE
+    ///
+    /// **NOTE: This method does not do an early return**
+    ///
+    /// We want to get in the habit of writing Security code like this
+    /// to avoid a [Timing Side-Channel Attack](https://en.wikipedia.org/wiki/Timing_attack),
+    /// so no early returns. We want a constant-time comparison
+    public boolean isIdentical(String a, String b) {
+        if (a == null || b == null || a.length() != b.length()) {
+            return false;
+        }
+
+        int result = 0;
+        for (int i = 0; i < a.length(); i++) {
+            result |= a.charAt(i) ^ b.charAt(i);
+        }
+        return result == 0;
+    }
+
 }
