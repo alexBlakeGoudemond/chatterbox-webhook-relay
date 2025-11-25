@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: chatterbox-api-test
+
+api:
+  prefix: /api
+
+webhook:
+  github:
+    secret: secret
+    payload: "{\"ping\":\"hello\"}"
