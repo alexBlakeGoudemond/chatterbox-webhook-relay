@@ -1,6 +1,7 @@
 package za.co.psybergate.application.core.utility;
 
 import org.springframework.stereotype.Component;
+import za.co.psybergate.application.core.exception.ApplicationException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -9,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class EncryptionUtilitiesImpl implements EncryptionUtilities {
 
     @Override
-    public String encryptUsingSHA256(String secret, String body) {
+    public String encryptUsingSHA256(String secret, String body) throws ApplicationException {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
@@ -18,7 +19,7 @@ public class EncryptionUtilitiesImpl implements EncryptionUtilities {
             byte[] rawHmac = mac.doFinal(body.getBytes());
             return "sha256=" + bytesToHex(rawHmac);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to calculate HMAC", e);
+            throw new ApplicationException("Failed to calculate HMAC", e);
         }
     }
 
