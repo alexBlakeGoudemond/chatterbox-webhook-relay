@@ -32,11 +32,12 @@
 	<properties>
 		<java.version>21</java.version>
         <lombok.version>1.18.40</lombok.version>
-        <maven-compiler-plugin.source>24</maven-compiler-plugin.source>
-        <maven-compiler-plugin.target>24</maven-compiler-plugin.target>
-        <maven-compiler-plugin.release>24</maven-compiler-plugin.release>
+        <maven-compiler-plugin.source>21</maven-compiler-plugin.source>
+        <maven-compiler-plugin.target>21</maven-compiler-plugin.target>
+        <maven-compiler-plugin.release>21</maven-compiler-plugin.release>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-test-plugin.version>3.0.0</maven-test-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     </properties>
 
 	<dependencies>
@@ -67,6 +68,14 @@
 
 	<build>
 		<plugins>
+
+            <!--
+                Want a FAT, executable JAR
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
 
             <!-- Maven needs to be told that Lombok compiles methods, else it cant discover the methods referenced -->
             <plugin>
