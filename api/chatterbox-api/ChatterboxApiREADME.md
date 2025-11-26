@@ -110,7 +110,8 @@ curl -X POST http://chatterbox:8080/api/webhook/github \
      -d '{"ping":"hello"}'
 ```
 
-You should see a valid response!
+You should see a valid response! 
+(Or an expected issue, like `Missing signature` for missing `X-Hub-Signature-256` header)
 
 ## Create and test with LocalTunnel
 
@@ -135,3 +136,35 @@ curl -X POST https://chatterbox.loca.lt/chatterbox/github \
 ```
 
 (notice the url) You should see a valid response!
+
+# Other Details
+
+## Self Signed Certificate
+
+Self-signed certs allow local environment to look like production.
+The browser/Postman/Spring Boot/Nginx config all behave as if it’s real TLS
+
+We can then test:
+
+- SSL termination
+- Redirects (HTTP→HTTPS)
+- Ciphers, HSTS, etc.
+- Cert/key loading
+- Proxy settings
+
+### Installing Mkcert on Windows
+
+`scoop bucket add extras`
+
+`scoop install mkcert`
+
+`mkcert -install` (install the local Certificate Authenticate in your system's trust store, allowing your browser
+and OS to trust the certificates generated)
+
+### Generating Cert
+
+generate the Certificate
+`mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1 ::1`
+
+Once generated, 2 files will be created: `cert.pem` and `key.pem` - we must add those to Nginx and adjust the config to
+reflect
