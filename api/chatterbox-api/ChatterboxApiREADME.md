@@ -168,3 +168,27 @@ generate the Certificate
 
 Once generated, 2 files will be created: `cert.pem` and `key.pem` - we must add those to Nginx and adjust the config to
 reflect
+
+## Testing Cert
+
+> If testing and you see `Missing Signature` - just add the `X-Hub-Signature-256`
+
+This should work (http):
+
+```bash
+curl -X POST http://localhost:80/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
+```
+
+AND, this should work (https - lt using port 80 still):
+
+```bash
+curl -X POST https://chatterbox.loca.lt/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
+```
+
+#### Running in a browser
+
+LocalStack may ask for a password.
+The tunnel password is the public IP of the computer running the localtunnel client (or the vpn's public IP if connected to one)
+To find the password, consider: `https://loca.lt/mytunnelpassword`
+
+Note that if your url is resolved to Spring, it defaults to a GET request
