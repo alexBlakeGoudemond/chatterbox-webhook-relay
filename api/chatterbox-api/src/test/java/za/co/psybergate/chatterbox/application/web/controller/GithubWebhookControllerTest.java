@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.logging.SignatureValidationLogger;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GithubWebhookController.class)
 @Import({
         EncryptionUtilitiesImpl.class,
+        SignatureValidationLogger.class,
         ApplicationConfig.class,
 })
 public class GithubWebhookControllerTest {
