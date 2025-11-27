@@ -1,4 +1,4 @@
-package za.co.psybergate.application.core.exception;
+package za.co.psybergate.chatterbox.application.core.exception;
 
 public class ApplicationException extends RuntimeException {
 

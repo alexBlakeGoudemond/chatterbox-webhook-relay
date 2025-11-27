@@ -5,16 +5,17 @@ services:
     build: .
     container_name: chatterbox
     ports:
-      - "8080:8080"     # optional if only nginx talks to it
+      - "8082:8082"     # optional if only nginx talks to it
     restart: always
     environment:
       TZ: Africa/Johannesburg
+      SPRING_PROFILES_ACTIVE: dev
 
   nginx:
     image: nginx:stable
     container_name: chatterbox-nginx
     ports:
-      - "80:80"
+      - "3002:80"   # hostPort:containerPort
       - "443:443"
     environment:
       TZ: Africa/Johannesburg

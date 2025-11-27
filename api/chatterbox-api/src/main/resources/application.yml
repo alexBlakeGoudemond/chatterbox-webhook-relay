@@ -5,6 +5,24 @@ spring:
 api:
   prefix: /api
 
+common:
+  logging:
+    appender:
+      file:
+        location: /var/log/chatterbox-api
+
+server:
+  port: 8082
+
+logging:
+  level:
+    root: INFO
+
+packages:
+  separate:
+    logging:
+      level: za.co.psybergate.chatterbox
+
 webhook:
   github:
     secret: secret
