@@ -1,4 +1,4 @@
-# todo how to control names opf images and containers and networks?
+# use `docker compose -p chatterbox-container-grouping up -d` to build
 services:
 
   chatterbox:
@@ -10,10 +10,12 @@ services:
     container_name: chatterbox-api
     ports:
       - "8082:8082"     # optional if only nginx talks to it
-    restart: always
     environment:
       TZ: Africa/Johannesburg
       SPRING_PROFILES_ACTIVE: dev
+    restart: always
+    networks:
+      - chatterbox-net
 
   nginx:
     build:
@@ -36,3 +38,11 @@ services:
     depends_on:
       - chatterbox
     restart: unless-stopped
+    networks:
+      - chatterbox-net
+
+# Define a custom network (allowing access across services via serviceName)
+networks:
+  chatterbox-net:
+    name: chatterbox-net
+    driver: bridge         # default driver, good for local use
