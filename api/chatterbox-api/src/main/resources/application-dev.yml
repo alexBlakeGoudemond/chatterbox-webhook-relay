@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: chatterbox-api-dev
+
+logging:
+  level:
+    za:
+      co:
+        psybergate:
+          chatterbox: DEBUG

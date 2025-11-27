@@ -1,4 +1,4 @@
-package za.co.psybergate;
+package za.co.psybergate.chatterbox;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

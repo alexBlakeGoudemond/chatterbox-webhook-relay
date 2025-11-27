@@ -8,7 +8,7 @@
 - Docker Compose that gets the chatterbox Image working alongside nginx
 - NginX configuration that defines location `/chatterbox/github` and resolves it to the fully qualifed URL that the
   Backend expects
-- Able to verify the combination works using LocalTunnel: `lt --port 80 --subdomain chatterbox`
+- Able to verify the combination works using LocalTunnel: `lt --port 3002 --subdomain chatterbox`
 
 ## Architecture Diagram
 
@@ -122,7 +122,7 @@ Start by following the steps outline in Docker-Compose
 In a dedicated terminal run:
 
 ```bash
-lt --port 80 --subdomain chatterbox
+lt --port 3002 --subdomain chatterbox
 ```
 
 (this will stay open)
@@ -158,7 +158,7 @@ We can then test:
 
 `scoop install mkcert`
 
-`mkcert -install` (install the local Certificate Authenticate in your system's trust store, allowing your browser
+`mkcert -install` (install the local Certificate Authority in your system's trust store, allowing your browser
 and OS to trust the certificates generated)
 
 ### Generating Cert
@@ -179,7 +179,7 @@ This should work (http):
 curl -X POST http://localhost:80/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
 ```
 
-AND, this should work (https - lt using port 80 still):
+AND, this should work (https - lt using port 3002 still):
 
 ```bash
 curl -X POST https://chatterbox.loca.lt/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
