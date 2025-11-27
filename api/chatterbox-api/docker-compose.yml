@@ -15,7 +15,7 @@ services:
     image: nginx:stable
     container_name: chatterbox-nginx
     ports:
-      - "80:80"
+      - "3002:80"   # hostPort:containerPort
       - "443:443"
     environment:
       TZ: Africa/Johannesburg
