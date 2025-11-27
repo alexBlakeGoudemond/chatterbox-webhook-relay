@@ -23,10 +23,6 @@ packages:
     logging:
       level: za.co.psybergate.chatterbox
 
-chatterbox:
-  webhook:
-    log-payload: true
-
 webhook:
   github:
     secret: secret

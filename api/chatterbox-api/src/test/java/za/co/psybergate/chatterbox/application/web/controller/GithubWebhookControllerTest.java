@@ -9,13 +9,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GithubWebhookController.class)
-@Import(EncryptionUtilitiesImpl.class)
+@Import({
+        EncryptionUtilitiesImpl.class,
+        ApplicationConfig.class,
+})
 public class GithubWebhookControllerTest {
 
     @Value("${api.prefix}")
@@ -38,6 +42,7 @@ public class GithubWebhookControllerTest {
     void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenFailure() throws Exception {
         mockMvc.perform(post(apiPrefix + "/webhook/github")
                         .contentType(APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
                         .content(webhookPayload))
                 .andExpect(status().isUnauthorized());
     }
@@ -47,6 +52,7 @@ public class GithubWebhookControllerTest {
     void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenFailure() throws Exception {
         mockMvc.perform(post(apiPrefix + "/webhook/github")
                         .contentType(APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
                         .content(webhookPayload)
                         .header("X-Hub-Signature-256", webhookSecret))
                 .andExpect(status().isUnauthorized());
@@ -59,6 +65,7 @@ public class GithubWebhookControllerTest {
 
         mockMvc.perform(post(apiPrefix + "/webhook/github")
                         .contentType(APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
                         .content(webhookPayload)
                         .header("X-Hub-Signature-256", encryptedSignature))
                 .andExpect(status().isAccepted());

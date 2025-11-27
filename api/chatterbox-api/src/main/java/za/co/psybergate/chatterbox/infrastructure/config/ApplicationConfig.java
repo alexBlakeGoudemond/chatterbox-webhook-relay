@@ -7,8 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggingFilter;
 
-// TODO BlakeGoudemond 2025/11/27 | keep going from here. Is the doFilter separate from logback? if so, use logback
-// TODO BlakeGoudemond 2025/11/27 | also use SignatureValidationLogger
+// TODO BlakeGoudemond 2025/11/27 | essential an Aspect right?
 @Configuration
 public class ApplicationConfig {
 
@@ -19,7 +18,8 @@ public class ApplicationConfig {
     public FilterRegistrationBean<WebhookLoggingFilter> webhookLoggingFilter() {
         FilterRegistrationBean<WebhookLoggingFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new WebhookLoggingFilter());
-        registration.addUrlPatterns(apiPrefix + "/webhook/*"); // only intercept webhook endpoints
+        String url = apiPrefix + "/webhook/*";
+        registration.addUrlPatterns(url); // only intercept webhook endpoints
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;
     }
