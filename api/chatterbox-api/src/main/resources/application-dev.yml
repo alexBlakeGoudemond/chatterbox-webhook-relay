@@ -5,3 +5,10 @@ spring:
 chatterbox:
   webhook:
     log-payload: true
+
+logging:
+  level:
+    za:
+      co:
+        psybergate:
+          chatterbox: DEBUG

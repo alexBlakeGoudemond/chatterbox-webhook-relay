@@ -23,3 +23,7 @@ chatterbox:
 webhook:
   github:
     secret: secret
+
+logging:
+  level:
+    root: INFO

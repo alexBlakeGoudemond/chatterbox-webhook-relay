@@ -9,6 +9,7 @@ services:
     restart: always
     environment:
       TZ: Africa/Johannesburg
+      SPRING_PROFILES_ACTIVE: dev
 
   nginx:
     image: nginx:stable
