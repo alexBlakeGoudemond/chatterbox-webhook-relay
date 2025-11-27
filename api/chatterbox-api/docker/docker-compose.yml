@@ -1,8 +1,8 @@
 # use `docker compose -f docker/docker-compose.yml -p chatterbox-container-grouping up -d` to build
-# todo: dockerfiles and compose in docker folder?
 # todo: compose up script; compose down script
 services:
 
+  # designed so only nginx can chat to this
   chatterbox:
     # build an image for everything in the root folder, using the chatterbox-api.dockerfile
     build:
@@ -10,8 +10,6 @@ services:
       dockerfile: docker/chatterbox-api.dockerfile
     image: chatterbox-api:dev
     container_name: chatterbox-api
-    ports:
-      - "8082:8082"     # optional if only nginx talks to it
     environment:
       TZ: Africa/Johannesburg
       SPRING_PROFILES_ACTIVE: dev
