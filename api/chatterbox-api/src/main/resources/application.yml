@@ -5,6 +5,21 @@ spring:
 api:
   prefix: /api
 
+common:
+  logging:
+    appender:
+      file:
+        location: /var/log/chatterbox-api
+
+# replace the logging pattern defined in the logging-dependency
+#logging:
+#  pattern:
+#    level: %5p [execId:%X{execId}]
+
+chatterbox:
+  webhook:
+    log-payload: false
+
 webhook:
   github:
     secret: secret

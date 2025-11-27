@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: chatterbox-api-dev
+
+chatterbox:
+  webhook:
+    log-payload: true
