@@ -8,23 +8,23 @@ Further suppose we use LocalTunnel with port 3002 to create a public facing URL 
 
 Then, thing would look like this:
 
-```java
-                                            ┌───────────────────────────────┐   ─┐
-        │  https://chatterbox.loca.lt   │    │                                      
-        │  reserves port xxx            │    │
-        └───────────────┬───────────────┘    │
-        │                    │ LocalTunnel                          
-                                                            ▼                    │     ▼
-                                                                    ┌───────────────────────────────┐    │ host:3002
-        │   Host-Level Port Bindings    │    │     ▼
-        │    i.e. docker-compose.yml    │    │ docker port binding                  
-                                            │                               │    │     ▼
-                                                    │   (hostPort:containerPort)    │    │ nginx:80
-        │       ( "3002 : 80"   )       │    │
-        │       (  "443 : 443"  )       │    │
-        │                               │    │
-        └───────────────┬───────────────┘   ─┘
-        │
+```sql
+                                                  ┌───────────────────────────────┐   ─┐
+                                                  │  https://chatterbox.loca.lt   │    │                                      
+                                                  │  reserves port xxx            │    │
+                                                  └───────────────┬───────────────┘    │
+                                                                  │                    │ LocalTunnel                          
+                                                                  ▼                    │     ▼
+                                                  ┌───────────────────────────────┐    │ host:3002
+                                                  │   Host-Level Port Bindings    │    │     ▼
+                                                  │    i.e. docker-compose.yml    │    │ docker port binding                  
+                                                  │                               │    │     ▼
+                                                  │   (hostPort:containerPort)    │    │ nginx:80
+                                                  │       ( "3002 : 80"   )       │    │
+                                                  │       (  "443 : 443"  )       │    │
+                                                  │                               │    │
+                                                  └───────────────┬───────────────┘   ─┘
+                                                                  │
         ┌─────────────────────────────────────────────────────────│──────────────────────────────────────────────────────────┐
         │ Container Group: chatterbox-container-grouping          │                                                          │
         │                                                         │                                                          │
