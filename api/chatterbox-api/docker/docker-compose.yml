@@ -1,11 +1,13 @@
-# use `docker compose -p chatterbox-container-grouping up -d` to build
+# use `docker compose -f docker/docker-compose.yml -p chatterbox-container-grouping up -d` to build
+# todo: dockerfiles and compose in docker folder?
+# todo: compose up script; compose down script
 services:
 
   chatterbox:
-    # build an image for everything in the current folder, using the chatterbox-api.dockerfile
+    # build an image for everything in the root folder, using the chatterbox-api.dockerfile
     build:
-      context: .
-      dockerfile: chatterbox-api.dockerfile
+      context: ..
+      dockerfile: docker/chatterbox-api.dockerfile
     image: chatterbox-api:dev
     container_name: chatterbox-api
     ports:
