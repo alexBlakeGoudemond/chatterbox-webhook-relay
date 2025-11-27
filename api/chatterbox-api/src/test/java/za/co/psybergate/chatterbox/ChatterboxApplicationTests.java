@@ -1,4 +1,4 @@
-package za.co.psybergate;
+package za.co.psybergate.chatterbox;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

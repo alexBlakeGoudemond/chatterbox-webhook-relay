@@ -42,6 +42,15 @@
 
 	<dependencies>
 
+        <!--
+            Psybergate Managed Dependency
+        -->
+        <dependency>
+            <groupId>za.co.psybergate.software-foundations.common.logging</groupId>
+            <artifactId>common-logging</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
