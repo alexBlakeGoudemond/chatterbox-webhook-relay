@@ -1,11 +1,11 @@
-package za.co.psybergate.application.web.controller;
+package za.co.psybergate.chatterbox.application.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.co.psybergate.application.core.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
 
 @Slf4j
 @RestController

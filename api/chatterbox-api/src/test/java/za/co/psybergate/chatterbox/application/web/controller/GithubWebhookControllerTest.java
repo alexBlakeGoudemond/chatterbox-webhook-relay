@@ -1,4 +1,4 @@
-package za.co.psybergate.application.web.controller;
+package za.co.psybergate.chatterbox.application.web.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
-import za.co.psybergate.application.core.utility.EncryptionUtilities;
-import za.co.psybergate.application.core.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
+import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

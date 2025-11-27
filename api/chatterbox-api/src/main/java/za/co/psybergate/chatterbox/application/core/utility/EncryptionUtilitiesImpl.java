@@ -1,7 +1,7 @@
-package za.co.psybergate.application.core.utility;
+package za.co.psybergate.chatterbox.application.core.utility;
 
 import org.springframework.stereotype.Component;
-import za.co.psybergate.application.core.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.core.exception.ApplicationException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
