@@ -11,10 +11,17 @@ common:
       file:
         location: /var/log/chatterbox-api
 
-# replace the logging pattern defined in the logging-dependency
-#logging:
-#  pattern:
-#    level: %5p [execId:%X{execId}]
+server:
+  port: 8082
+
+logging:
+  level:
+    root: INFO
+
+packages:
+  separate:
+    logging:
+      level: za.co.psybergate.chatterbox
 
 chatterbox:
   webhook:
@@ -23,7 +30,3 @@ chatterbox:
 webhook:
   github:
     secret: secret
-
-logging:
-  level:
-    root: INFO

@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.logging;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+// TODO BlakeGoudemond 2025/11/27 | leverage somewhere in App
 @Component
 @Slf4j
 public class SignatureValidationLogger {
