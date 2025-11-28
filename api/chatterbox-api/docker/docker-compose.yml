@@ -1,4 +1,5 @@
 # use `docker compose -f docker/docker-compose.yml -p chatterbox-container-grouping up -d --build` to build
+# Or, if using dockerissimo: `dockerissimo -f docker/docker-compose.yml -p chatterbox-container-grouping`
 services:
 
   # designed so only nginx can chat to this
