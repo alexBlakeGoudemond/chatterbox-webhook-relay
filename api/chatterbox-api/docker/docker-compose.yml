@@ -1,14 +1,13 @@
-# use `docker compose -f docker/docker-compose.yml -p chatterbox-container-grouping up -d` to build
-# todo: compose up script; compose down script
+# use `docker compose -f docker/docker-compose.yml -p chatterbox-container-grouping up -d --build` to build
 services:
 
   # designed so only nginx can chat to this
   chatterbox:
     # build an image for everything in the root folder, using the chatterbox-api.dockerfile
+    image: chatterbox-api:dev
     build:
       context: ..
       dockerfile: docker/chatterbox-api.dockerfile
-    image: chatterbox-api:dev
     container_name: chatterbox-api
     environment:
       TZ: Africa/Johannesburg
@@ -18,10 +17,10 @@ services:
       - chatterbox-net
 
   nginx:
+    image: chatterbox-nginx:dev
     build:
       context: ./nginx
       dockerfile: ../chatterbox-nginx.dockerfile
-    image: chatterbox-nginx:dev
     container_name: chatterbox-nginx
     ports:
       - "3002:80"   # hostPort:containerPort
