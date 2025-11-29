@@ -38,62 +38,15 @@
 
 # How to Confirm things Working?
 
-## Create and test the Dockerfile
-
-Build the Image:
-
-```bash
-docker build -t chatterbox:latest .
-```
-
-Confirm you see the Image created in Docker Desktop.
-
-Then, run the Image:
-
-```bash
-docker run -d --name chatterbox -p 8080:8080 chatterbox:latest
-```
-
-Confirm working with Logs:
-
-```bash
-docker logs -f chatterbox
-```
-
-From any terminal outside of docker, confirm the endpoint is working:
-
-```bash
-curl -X POST http://localhost:8080/api/webhook/github \
-     -H "Content-Type: application/json" \
-     -d '{"ping":"hello"}'
-```
-
-You should see a valid response!
-
-Now, stop that container:
-
-```bash
-docker stop chatterbox
-```
-
-and remove the container (keeps the image)
-
-```bash
-docker rm chatterbox
-```
-
 ## Create and test the Docker-Compose
 
 Docker Compose orchestrates multiple containers together.
 We are combining Spring Boot + NginX
 
-Start by following the steps outlined in the Dockerfile section above.
-Once confirmed working, ensure that no other containers use the Image
-
-Then, build the Container:
+Build the Container:
 
 ```bash
-docker-compose up --build -d
+docker-compose -f docker/docker-compose.yml -p chatterbox-container-grouping up --build -d
 ```
 
 Enter the container:
@@ -105,13 +58,13 @@ docker exec -it chatterbox-nginx bash
 and confirm that the endpoint is exposed:
 
 ```bash
-curl -X POST http://chatterbox:8080/api/webhook/github \
-     -H "Content-Type: application/json" \
-     -d '{"ping":"hello"}'
+curl -X POST http://chatterbox:8082/api/webhook/github -H "Content-Type: application/json" -d '{"hello":"world"}'
 ```
 
-You should see a valid response! 
-(Or an expected issue, like `Missing signature` for missing `X-Hub-Signature-256` header)
+> If you look at the logs of the `chatterbox-api` container, you should see the request was received and mentioned a
+> missing header
+> You can add the following header if you want: `-H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"`
+> (this corresponds to the payload `{"hello":"world"}`)
 
 ## Create and test with LocalTunnel
 
@@ -130,12 +83,27 @@ lt --port 3002 --subdomain chatterbox
 In a separate terminal: 
 
 ```bash
-curl -X POST https://chatterbox.loca.lt/chatterbox/github \
-     -H "Content-Type: application/json" \
-     -d '{"ping":"hello"}'
+curl -X POST https://chatterbox.loca.lt/chatterbox/github -H "Content-Type: application/json" -d '{"ping":"hello"}'
 ```
 
-(notice the url) You should see a valid response!
+> (notice the url) A response should come through, with something like "Missing Signature"
+
+## LocalTunnel on Port 443
+
+We have set up Port 443 to receive HTTPS requests. LocalTunnel is a tunneling tool.
+
+It is essentially a wrapper that takes in HTTPS requests and passes them along to localhost through HTTP
+
+The way LocalTunnel works is like this:
+1. HTTPS urls come in, LocalTunnel receives it on the configured (temporary) domain
+2. LocalTunnel terminates the HTTPS connection, having the request in plain HTTP
+3. LocalTunnel forwards the plain HTTP request to localhost: it relies on the fact that localhost is trusted
+
+This means that if LocalTunnel is set to redirect traffic to PORT 443,
+then port 443 will receive an HTTP Request.
+Port 443 is set to accept only SSL requests (HTTPS) so requests made
+will yield an HTTP Status of 400 with this meesage:
+`400 The plain HTTP request was sent to HTTPS port`
 
 # Other Details
 
@@ -173,13 +141,7 @@ reflect
 
 > If testing and you see `Missing Signature` - just add the `X-Hub-Signature-256`
 
-This should work (http):
-
-```bash
-curl -X POST http://localhost:80/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
-```
-
-AND, this should work (https - lt using port 3002 still):
+this should work (https - lt using port 3002 still):
 
 ```bash
 curl -X POST https://chatterbox.loca.lt/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
