@@ -59,6 +59,22 @@ services:
     networks:
       - chatterbox-net
 
+  grafana:
+    image: chatterbox-grafana:dev
+    build:
+      context: .
+      dockerfile: chatterbox-grafana.dockerfile
+    container_name: chatterbox-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      TZ: Africa/Johannesburg
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+    depends_on:
+      - prometheus
+
 # Define a custom network (allowing access across services via serviceName)
 networks:
   chatterbox-net:
