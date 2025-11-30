@@ -1,36 +1,16 @@
 package za.co.psybergate.chatterbox.infrastructure.actuator;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.stereotype.Component;
-
-@Component
-public class WebhookMetrics {
-
-    private final MeterRegistry registry;
-
-    public WebhookMetrics(MeterRegistry registry) {
-        this.registry = registry;
-    }
+/// Used alongside SpringActuator to track simple usage statistics
+public interface WebhookMetrics {
 
     /// Record Signature Failure for a specific eventType.
     /// EventTypes are bounded fields and do not change over millions of requests sent
     /// (for example `X-GitHub-Delivery`)
-    public void recordSignatureFailure(String eventType) {
-        registry.counter(
-                "webhook.signature.failures",
-                "event", eventType
-        ).increment();
-    }
+    void recordSignatureFailure(String eventType);
 
-    // TODO BlakeGoudemond 2025/11/30 | add to README and explain why it works!
     /// Record successes for a specific eventType
     /// EventTypes are bounded fields and do not change over millions of requests sent
     /// (for example `X-GitHub-Delivery`)
-    public void recordProcessingSuccess(String eventType) {
-        registry.counter(
-                "webhook.payload.successes",
-                "event", eventType
-        ).increment();
-    }
+    void recordProcessingSuccess(String eventType);
 
 }

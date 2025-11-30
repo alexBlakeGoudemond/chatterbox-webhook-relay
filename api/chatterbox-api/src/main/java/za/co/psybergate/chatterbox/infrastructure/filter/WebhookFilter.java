@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
-import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookMetrics;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
@@ -28,12 +28,12 @@ public class WebhookFilter implements Filter {
 
     private final EncryptionUtilities encryptionUtilities;
 
-    private final WebhookMetrics webhookMetrics;
+    private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    public WebhookFilter(WebhookLogger webhookValidationLogger, EncryptionUtilities encryptionUtilities, WebhookMetrics webhookMetrics) {
+    public WebhookFilter(WebhookLogger webhookValidationLogger, EncryptionUtilities encryptionUtilities, WebhookRuntimeMetrics webhookRuntimeMetrics) {
         this.webhookValidationLogger = webhookValidationLogger;
         this.encryptionUtilities = encryptionUtilities;
-        this.webhookMetrics = webhookMetrics;
+        this.webhookRuntimeMetrics = webhookRuntimeMetrics;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class WebhookFilter implements Filter {
         chain.doFilter(wrappedRequest, response);
         long ms = System.currentTimeMillis() - start;
 
-        webhookMetrics.recordProcessingSuccess(event);
+        webhookRuntimeMetrics.recordProcessingSuccess(event);
         webhookValidationLogger.logCompletion(ms);
         MDC.clear();
     }
@@ -73,14 +73,14 @@ public class WebhookFilter implements Filter {
 
         if (signature256 == null) {
             webhookValidationLogger.logMissingSignature();
-            webhookMetrics.recordSignatureFailure(event);
+            webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Missing X-Hub-Signature-256");
         }
 
         String expected = encryptionUtilities.encryptUsingSHA256(webhookSecret, rawBody);
         if (!encryptionUtilities.isIdentical(expected, signature256)) {
             webhookValidationLogger.logInvalidSignature(expected, signature256);
-            webhookMetrics.recordSignatureFailure(event);
+            webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match body");
         }
 

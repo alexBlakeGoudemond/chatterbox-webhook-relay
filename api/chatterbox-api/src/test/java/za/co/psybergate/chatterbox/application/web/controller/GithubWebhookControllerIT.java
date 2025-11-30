@@ -10,7 +10,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
-import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookMetrics;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
@@ -81,7 +81,7 @@ public class GithubWebhookControllerIT {
     private String webhookPayload;
 
     @MockitoBean
-    private WebhookMetrics webhookMetrics;  // Mocked so Spring can inject it
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
 
     @Autowired
     private MockMvc mockMvc;
