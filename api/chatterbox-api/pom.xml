@@ -38,6 +38,7 @@
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-test-plugin.version>3.0.0</maven-test-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <micrometer-registry-prometheus.version>1.15.4</micrometer-registry-prometheus.version>
     </properties>
 
 	<dependencies>
@@ -78,7 +79,13 @@
             <version>${lombok.version}</version>
         </dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${micrometer-registry-prometheus.version}</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>

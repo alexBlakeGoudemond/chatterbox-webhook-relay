@@ -43,6 +43,22 @@ services:
     networks:
       - chatterbox-net
 
+  prometheus:
+    image: chatterbox-prometheus:dev
+    build:
+      context: .
+      dockerfile: chatterbox-prometheus.dockerfile
+    container_name: chatterbox-prometheus
+    ports:
+      - "9090:9090"
+    environment:
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+
 # Define a custom network (allowing access across services via serviceName)
 networks:
   chatterbox-net:

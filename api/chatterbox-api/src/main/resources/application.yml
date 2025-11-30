@@ -23,10 +23,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,info,metrics"
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: "never"
+    prometheus:
+      access: unrestricted
 
 packages:
   separate:
