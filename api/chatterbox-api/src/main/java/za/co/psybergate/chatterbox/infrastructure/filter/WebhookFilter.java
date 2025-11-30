@@ -5,15 +5,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.ContentCachingRequestWrapper;
+import za.co.psybergate.chatterbox.application.core.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.core.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.web.metric.WebhookMetrics;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+
+import static za.co.psybergate.chatterbox.infrastructure.logging.MDC_KEYS.THREAD_EXECUTION_ID;
 
 @Component
 public class WebhookFilter implements Filter {
@@ -33,13 +36,12 @@ public class WebhookFilter implements Filter {
         this.webhookMetrics = webhookMetrics;
     }
 
-    // TODO BlakeGoudemond 2025/11/30 | refactor
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         String threadExecutionId = UUID.randomUUID().toString();
-        MDC.put("threadExecutionId", threadExecutionId);
+        MDC.put(THREAD_EXECUTION_ID.value(), threadExecutionId);
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         CachedBodyHttpServletRequest wrappedRequest = new CachedBodyHttpServletRequest(httpRequest);
@@ -48,12 +50,24 @@ public class WebhookFilter implements Filter {
         String delivery = wrappedRequest.getHeader("X-GitHub-Delivery");
         String signature256 = wrappedRequest.getHeader("X-Hub-Signature-256");
 
-        byte[] bodyBytes = wrappedRequest.getInputStream().readAllBytes();
-        String encoding = wrappedRequest.getCharacterEncoding();
-        if (encoding == null) {
-            encoding = StandardCharsets.UTF_8.name();
-        }
-        String rawBody = new String(bodyBytes, encoding);
+        assertValidSignature(wrappedRequest, event, delivery, signature256);
+
+        long start = System.currentTimeMillis();
+        chain.doFilter(wrappedRequest, response);
+        long ms = System.currentTimeMillis() - start;
+
+        webhookMetrics.recordProcessingSuccess(event);
+        webhookValidationLogger.logCompletion(ms);
+        MDC.clear();
+    }
+
+    private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,
+                                      String event,
+                                      String delivery,
+                                      String signature256) throws ApplicationException {
+        byte[] bodyBytes = getBodyAsBytes(wrappedRequest);
+        String encoding = getCharacterEncoding(wrappedRequest);
+        String rawBody = getRawBody(bodyBytes, encoding);
 
         webhookValidationLogger.logReceivedWebhookEvent(event, delivery);
 
@@ -71,15 +85,30 @@ public class WebhookFilter implements Filter {
         }
 
         webhookValidationLogger.logValidSignature();
+    }
 
-        long start = System.currentTimeMillis();
-        chain.doFilter(wrappedRequest, response);
-        long ms = System.currentTimeMillis() - start;
+    private String getRawBody(byte[] bodyBytes, String encoding) throws ApplicationException {
+        try {
+            return new String(bodyBytes, encoding);
+        } catch (UnsupportedEncodingException e) {
+            throw new ApplicationException("Unexpected issue encountered when converting Byte[] into String", e);
+        }
+    }
 
-        webhookMetrics.recordProcessingSuccess(event);
+    private String getCharacterEncoding(CachedBodyHttpServletRequest wrappedRequest) {
+        String encoding = wrappedRequest.getCharacterEncoding();
+        if (encoding == null) {
+            encoding = StandardCharsets.UTF_8.name();
+        }
+        return encoding;
+    }
 
-        webhookValidationLogger.logCompletion(ms);
-        MDC.clear();
+    private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws ApplicationException {
+        try {
+            return wrappedRequest.getInputStream().readAllBytes();
+        } catch (IOException e) {
+            throw new ApplicationException("Unexpected issue when reading requestBody as Byte[]", e);
+        }
     }
 
 }

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 
-// TODO BlakeGoudemond 2025/11/27 | essential an Aspect right?
 @Configuration
 public class ApplicationConfig {
 

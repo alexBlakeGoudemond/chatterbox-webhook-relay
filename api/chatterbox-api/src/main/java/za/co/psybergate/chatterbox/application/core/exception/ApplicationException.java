@@ -6,4 +6,8 @@ public class ApplicationException extends RuntimeException {
         super(message, e);
     }
 
+    public ApplicationException(String message) {
+        super(message);
+    }
+
 }
