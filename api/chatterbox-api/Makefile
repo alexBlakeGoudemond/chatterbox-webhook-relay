@@ -16,4 +16,12 @@ docker-up:
 docker-down:
 	dockerissimo -f docker/docker-compose.yml -p chatterbox-container-group -c
 
+docker-exec-nginx:
+	docker exec -it chatterbox-nginx bash
 
+localtunnel-up:
+	lt --port 3002 --subdomain chatterbox
+
+docker-redo:
+	$(MAKE) docker-down
+	$(MAKE) docker-up

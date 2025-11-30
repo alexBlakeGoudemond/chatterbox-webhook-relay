@@ -39,15 +39,15 @@ Then, thing would look like this:
         │ │ Image: chatterbox-nginx:dev                                             │  │   │ Image: chatterbox-api:dev     │ │
         │ │                                                                         │  │   │                               │ │
         │ │       (hostPort:conPort)                                                │  │   │ (no hostPort — internal only) │ │
-        │ │       ( "3002 : 80"   )                                                 │  │   │                               │ │
-        │ │       (  "443 : 443"  )                                                 │  │   │ GithubWebhookController       │ │
-        │ │                                                                         │  │   │                               │ │
+        │ │       ( "3002 : 80"   )                                                 │  │   │ (internalPort: 1234)          │ │
+        │ │       (  "443 : 443"  )                                                 │  │   │                               │ │
+        │ │                                                                         │  │   │ GithubWebhookController       │ │
         │ │                                                                         │  │   │                               │ │
         │ │ ┌────────────┐ ┌─────────────────────────────────────────────────────┐  │  │   │                               │ │
         │ │ │conPort: 443│ │conPort: 80                                          │  │  │   │                               │ │
         │ │ │(https)     │ │(http)                                               ├─────┘   │                               │ │
         │ │ │return 501  │ │/chatterbox/github                                   │  │  ▲   │                               │ │
-        │ │ │            │ │proxy_pass http://chatterbox:8082/api/webhook/github │  │  │   │                               │ │
+        │ │ │            │ │proxy_pass http://chatterbox:1234/api/webhook/github │  │  │   │                               │ │
         │ │ └────────────┘ └─────────────────────────────────────────────────────┘  │  │   │                               │ │
         │ └─────────────────────────────────────────────────────────────────────────┘  │   └───────────────────────────────┘ │
         │                                                                              │                                     │
