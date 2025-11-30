@@ -58,7 +58,7 @@ docker exec -it chatterbox-nginx bash
 and confirm that the endpoint is exposed:
 
 ```bash
-curl -X POST http://chatterbox:8082/api/webhook/github -H "Content-Type: application/json" -d '{"hello":"world"}'
+curl -X POST http://chatterbox:1234/api/webhook/github -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-GitHub-Delivery: 123" -d '{"hello":"world"}'
 ```
 
 > If you look at the logs of the `chatterbox-api` container, you should see the request was received and mentioned a
@@ -83,7 +83,7 @@ lt --port 3002 --subdomain chatterbox
 In a separate terminal: 
 
 ```bash
-curl -X POST https://chatterbox.loca.lt/chatterbox/github -H "Content-Type: application/json" -d '{"ping":"hello"}'
+curl -X POST https://chatterbox.loca.lt/chatterbox/github -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-GitHub-Delivery: 123" -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778" -d '{"hello":"world"}'
 ```
 
 > (notice the url) A response should come through, with something like "Missing Signature"
