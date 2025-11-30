@@ -55,6 +55,7 @@ services:
       TZ: Africa/Johannesburg
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/data:/prometheus
     restart: unless-stopped
     networks:
       - chatterbox-net
@@ -69,6 +70,11 @@ services:
       - "3000:3000"
     environment:
       TZ: Africa/Johannesburg
+    volumes:
+      - ./grafana/logs:/var/log/grafana
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/data/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     restart: unless-stopped
     networks:
       - chatterbox-net
