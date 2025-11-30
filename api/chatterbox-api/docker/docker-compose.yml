@@ -9,6 +9,8 @@ services:
     build:
       context: ..
       dockerfile: docker/chatterbox-api.dockerfile
+    expose:
+      - "1234" # port only available inside the docker network
     container_name: chatterbox-api
     environment:
       TZ: Africa/Johannesburg

@@ -12,11 +12,21 @@ common:
         location: /var/log/chatterbox-api
 
 server:
-  port: 8082
+  port: 1234
+  address: 0.0.0.0   # must be 0.0.0.0 for Docker networking
 
 logging:
   level:
     root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics"
+  endpoint:
+    health:
+      show-details: "never"
 
 packages:
   separate:

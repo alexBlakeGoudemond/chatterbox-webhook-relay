@@ -58,7 +58,7 @@ docker exec -it chatterbox-nginx bash
 and confirm that the endpoint is exposed:
 
 ```bash
-curl -X POST http://chatterbox:8082/api/webhook/github -H "Content-Type: application/json" -d '{"hello":"world"}'
+curl -X POST http://chatterbox:1234/api/webhook/github -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-GitHub-Delivery: 123" -d '{"hello":"world"}'
 ```
 
 > If you look at the logs of the `chatterbox-api` container, you should see the request was received and mentioned a
@@ -83,7 +83,7 @@ lt --port 3002 --subdomain chatterbox
 In a separate terminal: 
 
 ```bash
-curl -X POST https://chatterbox.loca.lt/chatterbox/github -H "Content-Type: application/json" -d '{"ping":"hello"}'
+curl -X POST https://chatterbox.loca.lt/chatterbox/github -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-GitHub-Delivery: 123" -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778" -d '{"hello":"world"}'
 ```
 
 > (notice the url) A response should come through, with something like "Missing Signature"
@@ -154,3 +154,46 @@ The tunnel password is the public IP of the computer running the localtunnel cli
 To find the password, consider: `https://loca.lt/mytunnelpassword`
 
 Note that if your url is resolved to Spring, it defaults to a GET request
+
+# Actuator Endpoints
+
+Some Actuator endpoints are available, including Custom Metrics
+
+## Custom Metrics
+
+Some simple metrics are tracked as part of a Filter, before any Endpoint 
+is processed. These metrics can be accessed on localhost.
+
+To identify the available metrics:
+
+```bash
+curl https://chatterbox.loca.lt/actuator/metrics
+```
+
+Then, from those keys, you can drill down into a specific metric:
+
+```bash
+curl https://chatterbox.loca.lt/actuator/metrics/webhook.payload.successes
+```
+
+### How do the Metrics work?
+
+In Spring Boot, metrics are handled by Micrometer, 
+which is the facade for various monitoring backends 
+(Prometheus, Datadog, etc.). 
+
+The central piece is usually a MeterRegistry, 
+which acts as a container for all the metrics. 
+Think of it as a dynamic registry of meters:
+- A meter = a single metric, e.g., a counter, gauge, timer, or histogram
+- Each meter has a unique name + optional tags
+- The registry keeps track of all meters for the lifetime of the application
+
+Internally, `MeterRegistry` implementations 
+(like `SimpleMeterRegistry` or `PrometheusMeterRegistry`) 
+use a concurrent map to store meters.
+
+In terms of lifecycles:
+- The registry lives for the lifetime of the Spring ApplicationContext / JAR
+- Meters are singleton within the registry: you always get the same Counter instance
+- When the application shuts down, the registry is gone, along with all metrics

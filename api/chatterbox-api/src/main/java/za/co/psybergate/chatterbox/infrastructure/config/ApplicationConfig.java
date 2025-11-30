@@ -5,10 +5,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggingFilter;
+import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 
-// TODO BlakeGoudemond 2025/11/27 | essential an Aspect right?
-// TODO BlakeGoudemond 2025/11/27 | can we get a script to teardown the images / containers, recreate jar and then build up?
 @Configuration
 public class ApplicationConfig {
 
@@ -16,9 +14,9 @@ public class ApplicationConfig {
     private String apiPrefix;
 
     @Bean
-    public FilterRegistrationBean<WebhookLoggingFilter> webhookLoggingFilter() {
-        FilterRegistrationBean<WebhookLoggingFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new WebhookLoggingFilter());
+    public FilterRegistrationBean<WebhookFilter> applicationWebhookFilter(WebhookFilter webhookFilter) {
+        FilterRegistrationBean<WebhookFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(webhookFilter);
         String url = apiPrefix + "/webhook/*";
         registration.addUrlPatterns(url); // only intercept webhook endpoints
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
