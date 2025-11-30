@@ -22,7 +22,7 @@
             </Pattern>
         </layout>
 
-<!--        <filter class="za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggingFilter"/>-->
+<!--        <filter class="za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter"/>-->
 
     </appender>
 
@@ -37,7 +37,7 @@
             <Pattern>%d %p [%t] [%X{threadExecutionId}] %logger{20} %m%n</Pattern>
         </encoder>
 
-<!--        <filter class="za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggingFilter"/>-->
+<!--        <filter class="za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter"/>-->
 
         <filter class="za.co.psybergate.software_foundations.common.logging.filter.LevelRangeFilter">
             <levelMin>INFO</levelMin>
@@ -65,7 +65,7 @@
             <Pattern>%d %p [%t] [%X{threadExecutionId}] %logger{20} %m%n</Pattern>
         </encoder>
 
-<!--        <filter class="za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggingFilter"/>-->
+<!--        <filter class="za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter"/>-->
 
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
