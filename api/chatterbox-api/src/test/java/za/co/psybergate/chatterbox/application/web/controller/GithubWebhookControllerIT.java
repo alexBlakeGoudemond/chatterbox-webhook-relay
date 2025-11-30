@@ -4,10 +4,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
+import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.application.web.metric.WebhookMetrics;
+import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -15,9 +20,56 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class GithubWebhookControllerTest {
+/// Integration test that navigates through the [WebhookFilter]
+/// and the [GithubWebhookController].
+///
+/// The Imports and Mocks work because of this diagram:
+///
+/// ```java
+///        [Test code: mockMvc.perform()]
+///                  │
+///                  ▼
+///        ┌─────────────────────────┐
+///        │ MockMvc Dispatcher      │
+///        └─────────┬───────────────┘
+///                  │
+///        Applies registered filters (WebhookFilter)
+///                  │
+///                  ▼
+///        ┌─────────────────────────┐
+///        │   WebhookFilter         │ ───────────> Depends on:
+///        ├─────────────────────────┤              - WebhookLogger
+///        │ 1. Reads headers        │                (Imported)
+///        │ 2. Reads raw body       │              - EncryptionUtilities
+///        │ 3. Validates sig        │                (Imported; implementation)
+///        │ 4. Logs events          │              - WebhookMetrics
+///        │ 5. Calls metrics        │                (Mocked)
+///        └─────────┬───────────────┘
+///                  │
+///        If signature valid
+///                  ▼
+///        ┌─────────────────────────┐
+///        │ GithubWebhookController │
+///        │  Handles the webhook    │
+///        └─────────┬───────────────┘
+///                  │
+///                  ▼
+///        Response generated (e.g., 202 ACCEPTED)
+///                  │
+///                  ▼
+///        MockMvc captures response
+///                  │
+///                  ▼
+///        Back to test assertion
+///        (e.g., .andExpect(status().isAccepted()))
+/// ```
+@Import({
+        WebhookFilter.class,
+        WebhookLogger.class,
+        EncryptionUtilitiesImpl.class,
+})
+@WebMvcTest(GithubWebhookController.class)
+public class GithubWebhookControllerIT {
 
     @Value("${api.prefix}")
     private String apiPrefix;
@@ -27,6 +79,9 @@ public class GithubWebhookControllerTest {
 
     @Value("${webhook.github.payload}")
     private String webhookPayload;
+
+    @MockitoBean
+    private WebhookMetrics webhookMetrics;  // Mocked so Spring can inject it
 
     @Autowired
     private MockMvc mockMvc;

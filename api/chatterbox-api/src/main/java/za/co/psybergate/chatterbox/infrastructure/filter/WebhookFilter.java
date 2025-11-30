@@ -33,6 +33,7 @@ public class WebhookFilter implements Filter {
         this.webhookMetrics = webhookMetrics;
     }
 
+    // TODO BlakeGoudemond 2025/11/30 | refactor
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,

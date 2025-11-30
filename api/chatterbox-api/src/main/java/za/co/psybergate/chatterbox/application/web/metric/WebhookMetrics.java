@@ -22,12 +22,13 @@ public class WebhookMetrics {
         ).increment();
     }
 
+    // TODO BlakeGoudemond 2025/11/30 | add to README and explain why it works!
     /// Record successes for a specific eventType
     /// EventTypes are bounded fields and do not change over millions of requests sent
     /// (for example `X-GitHub-Delivery`)
     public void recordProcessingSuccess(String eventType) {
         registry.counter(
-                "webhook.signature.successes",
+                "webhook.payload.successes",
                 "event", eventType
         ).increment();
     }
