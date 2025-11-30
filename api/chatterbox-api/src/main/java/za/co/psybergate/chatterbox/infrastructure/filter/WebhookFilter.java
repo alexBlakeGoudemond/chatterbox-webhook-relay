@@ -12,6 +12,7 @@ import za.co.psybergate.chatterbox.application.web.metric.WebhookMetrics;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Component
@@ -47,7 +48,11 @@ public class WebhookFilter implements Filter {
         String signature256 = wrappedRequest.getHeader("X-Hub-Signature-256");
 
         byte[] bodyBytes = wrappedRequest.getInputStream().readAllBytes();
-        String rawBody = new String(bodyBytes, wrappedRequest.getCharacterEncoding());
+        String encoding = wrappedRequest.getCharacterEncoding();
+        if (encoding == null) {
+            encoding = StandardCharsets.UTF_8.name();
+        }
+        String rawBody = new String(bodyBytes, encoding);
 
         webhookValidationLogger.logReceivedWebhookEvent(event, delivery);
 
