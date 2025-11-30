@@ -40,7 +40,7 @@ public class WebhookFilter implements Filter {
         MDC.put("threadExecutionId", threadExecutionId);
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(httpRequest);
+        CachedBodyHttpServletRequest wrappedRequest = new CachedBodyHttpServletRequest(httpRequest);
 
         String event = wrappedRequest.getHeader("X-GitHub-Event");
         String delivery = wrappedRequest.getHeader("X-GitHub-Delivery");
@@ -67,7 +67,7 @@ public class WebhookFilter implements Filter {
         webhookValidationLogger.logValidSignature();
 
         long start = System.currentTimeMillis();
-        chain.doFilter(httpRequest, response);
+        chain.doFilter(wrappedRequest, response);
         long ms = System.currentTimeMillis() - start;
 
         webhookMetrics.recordProcessingSuccess(event);

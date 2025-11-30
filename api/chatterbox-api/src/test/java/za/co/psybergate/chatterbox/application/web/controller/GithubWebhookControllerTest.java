@@ -4,24 +4,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
-import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(GithubWebhookController.class)
-@Import({
-        EncryptionUtilitiesImpl.class,
-        WebhookLogger.class,
-        ApplicationConfig.class,
-})
+@SpringBootTest
+@AutoConfigureMockMvc
 public class GithubWebhookControllerTest {
 
     @Value("${api.prefix}")
@@ -41,23 +36,39 @@ public class GithubWebhookControllerTest {
 
     @DisplayName("Missing signature fails")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenFailure() throws Exception {
-        mockMvc.perform(post(apiPrefix + "/webhook/github")
-                        .contentType(APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(webhookPayload))
-                .andExpect(status().isUnauthorized());
+    void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenFailure() {
+        try {
+            mockMvc.perform(post(apiPrefix + "/webhook/github")
+                    .contentType(APPLICATION_JSON)
+                    .characterEncoding("UTF-8")
+                    .content(webhookPayload)
+                    .header("X-GitHub-Delivery", "123")
+                    .header("X-GitHub-Event", "push")
+            );
+        } catch (Exception expected) {
+            assertTrue(expected.getMessage().contains("Missing X-Hub-Signature-256"));
+            return;
+        }
+        fail("Expected an exception to be thrown due to a Missing Signature");
     }
 
     @DisplayName("Invalid signature fails")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenFailure() throws Exception {
-        mockMvc.perform(post(apiPrefix + "/webhook/github")
-                        .contentType(APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(webhookPayload)
-                        .header("X-Hub-Signature-256", webhookSecret))
-                .andExpect(status().isUnauthorized());
+    void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenFailure() {
+        try {
+            mockMvc.perform(post(apiPrefix + "/webhook/github")
+                    .contentType(APPLICATION_JSON)
+                    .characterEncoding("UTF-8")
+                    .content(webhookPayload)
+                    .header("X-GitHub-Delivery", "123")
+                    .header("X-GitHub-Event", "push")
+                    .header("X-Hub-Signature-256", webhookSecret)
+            );
+        } catch (Exception expected) {
+            assertTrue(expected.getMessage().contains("Invalid X-Hub-Signature-256"));
+            return;
+        }
+        fail("Expected an exception to be thrown due to an Invalid Signature");
     }
 
     @DisplayName("Encrypted signature succeeds")
@@ -69,7 +80,10 @@ public class GithubWebhookControllerTest {
                         .contentType(APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(webhookPayload)
-                        .header("X-Hub-Signature-256", encryptedSignature))
+                        .header("X-GitHub-Delivery", "123")
+                        .header("X-GitHub-Event", "push")
+                        .header("X-Hub-Signature-256", encryptedSignature)
+                )
                 .andExpect(status().isAccepted());
     }
 
