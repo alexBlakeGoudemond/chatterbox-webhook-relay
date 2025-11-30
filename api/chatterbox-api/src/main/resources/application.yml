@@ -18,6 +18,15 @@ logging:
   level:
     root: INFO
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics"
+  endpoint:
+    health:
+      show-details: "never"
+
 packages:
   separate:
     logging:

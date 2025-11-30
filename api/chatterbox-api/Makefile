@@ -16,4 +16,22 @@ docker-up:
 docker-down:
 	dockerissimo -f docker/docker-compose.yml -p chatterbox-container-group -c
 
+docker-exec-nginx:
+	docker exec -it chatterbox-nginx bash
+
+localtunnel-up:
+	lt --port 3002 --subdomain chatterbox
+
+# Leverages IDE's java version
+install:
+	mvn clean install
+
+docker-redo:
+	$(MAKE) docker-down
+	$(MAKE) docker-up
+
+install-then-docker-redo:
+	$(MAKE) docker-down
+	$(MAKE) install
+	$(MAKE) docker-up
 
