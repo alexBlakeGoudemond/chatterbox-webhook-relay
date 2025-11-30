@@ -5,10 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.core.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.core.exception.UnauthorizedException;
+import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
+import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
-import za.co.psybergate.chatterbox.application.web.metric.WebhookMetrics;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookMetrics;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;

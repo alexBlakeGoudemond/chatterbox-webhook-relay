@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.application.core.utility;
 
-import za.co.psybergate.chatterbox.application.core.exception.ApplicationException;
+import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 
 public interface EncryptionUtilities {
 

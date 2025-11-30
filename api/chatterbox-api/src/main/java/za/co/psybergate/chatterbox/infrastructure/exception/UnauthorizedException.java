@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.core.exception;
+package za.co.psybergate.chatterbox.infrastructure.exception;
 
 public class UnauthorizedException extends ApplicationException {
 

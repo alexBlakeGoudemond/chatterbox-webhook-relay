@@ -10,7 +10,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
-import za.co.psybergate.chatterbox.application.web.metric.WebhookMetrics;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookMetrics;
 import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
