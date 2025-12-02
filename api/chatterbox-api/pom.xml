@@ -79,6 +79,11 @@
             <version>${lombok.version}</version>
         </dependency>
 
+        <!--
+            Spring Boot automatically registers a PrometheusMeterRegistry.
+            That registry triggers the creation of /actuator/prometheus.
+            No manual controller, no annotations needed.
+        -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
