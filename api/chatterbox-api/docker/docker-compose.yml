@@ -9,6 +9,12 @@ services:
     build:
       context: ..
       dockerfile: docker/chatterbox-api.dockerfile
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:1234/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
     expose:
       - "1234" # port only available inside the docker network
     container_name: chatterbox-api
@@ -35,10 +41,12 @@ services:
       - ./nginx/sites-available:/etc/nginx/sites-available
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled
       - ./nginx/logs:/var/log/nginx
+      - ./nginx/html:/usr/share/nginx/html
       - ./nginx/certs/cert.pem:/etc/nginx/certs/cert.pem:ro
       - ./nginx/certs/key.pem:/etc/nginx/certs/key.pem:ro
     depends_on:
-      - chatterbox
+      chatterbox:
+        condition: service_healthy # only attempts to connect if this service indicates ready
     restart: unless-stopped
     networks:
       - chatterbox-net
