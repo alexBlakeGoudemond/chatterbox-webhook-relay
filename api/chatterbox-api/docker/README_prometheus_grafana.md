@@ -29,40 +29,39 @@ curl http://chatterbox:1234/actuator/prometheus | grep webhook
 # Architecture Diagram
 
 ```bash
-												  																							
-												  +----------------------------------+ 				 +--------------------------------+ 	
-												  |	Prometheus UI				     |				 | Grafana UI					  | 	
-											 	  |	http://localhost:9090/targets    |				 | http://localhost:3000		  | 	
-												  +-----------------+----------------+				 +--------------+-----------------+ 	
-																	|												|						
-												  					|												|						
-   +----------------------------------------------------------------|-----------------------------------------------|--------------------+	
-   | Container Group: chatterbox-container-grouping					|												|					 |	
-   |	  +------------------------------+		  +-----------------+----------------+				 +--------------+-----------------+	 |	
-   |	  |	Service: nginx 				 |  	  |	Service: prometheus 			 |				 | Service: grafana 			  |	 |	
-   |	  |	Container: chatterbox-nginx	 |  	  |	Container: chatterbox-prometheus |				 | Container: chatterbox-grafana  |	 |	
-   |	  |	Image: chatterbox-nginx:dev	 |  	  |	Image: chatterbox-prometheus:dev |				 | Image: chatterbox-grafana:dev  |	 |	
-   |	  |	(hostPort:conPort)			 |  	  |	(hostPort:conPort)				 |				 | (hostPort:conPort)			  |	 |	
-   |	  |	( "3002  : 80"   ) 			 |  	  |	( "9090  : 9090" )				 |				 | ( "3000  : 3000" )			  |	 |	
-   |	  |	(  "443  : 443"  ) 			 |  	  |									 |				 | 								  |	 |	
-   |	  |								 |  	  |	(PromQL) ------------------------+---<----+		 | 								  |	 |	
-   |	  |					 			 |  	  |									 |		  |		 | 								  |	 |	
-   |	  +-------------+----------------+		  +-----------------+----------------+ 		  |		 +--------------+-----------------+	 |	
-   |					|											|						  |						|					 |	
-   |					|											| (Scrape Data using	  |						| (Grafana pulls	 |	
-   |	  +-------------+---------------+							|  interval, place		  |						|  from prometheus)  |	
-   |	  |	Service: chatterbox 		|							|  in Time-Series DB)	  |						|					 |	
-   |	  |	Container: chatterbox-api	|							|						  |						|					 |	
-   |	  |	Image: chatterbox-api:dev	|							|						  +---------------------+					 |	
-   |	  |	(internalPort: 1234)		|							|																	 |	
-   |	  | 							|							|																	 |	
-   |	  | (expose /metrics) ----------+-------<-------------------+																	 |	
-   |	  | 							|																								 |	
-   |	  +-----------------------------+																								 |	
-   |																																	 |	
-   | (Containers communicate via internal docker network: chatterbox-net)																 |	
-   +-------------------------------------------------------------------------------------------------------------------------------------+	
-
+                                                                                                                                                      
+                                                      +-------------------------------------+                 +--------------------------------+      
+                                                      |   Prometheus UI                     |                 | Grafana UI                     |      
+                                                      |   http://localhost:9090/targets     |                 | http://localhost:3000          |      
+                                                      +-----------------+-------------------+                 +--------------+-----------------+      
+                                                                        |                                                    |                        
+                                                                        |                                                    |                        
+   +--------------------------------------------------------------------+----------------------------------------------------+-------------------+    
+   | Container Group: chatterbox-container-grouping                     |                                                    |                   |    
+   |      +------------------------------------+      +-----------------+-------------------+                 +--------------+-----------------+ |    
+   |      | Service: nginx                     |      | Service: prometheus                 |                 | Service: grafana               | |    
+   |      | Container: chatterbox-nginx        |      | Container: chatterbox-prometheus    |                 | Container: chatterbox-grafana  | |    
+   |      | Image: chatterbox-nginx:dev        |      | Image: chatterbox-prometheus:dev    |                 | Image: chatterbox-grafana:dev  | |    
+   |      | (hostPort:conPort)                 |      | (hostPort:conPort)                  |                 | (hostPort:conPort)             | |    
+   |      | ( "3002  : 80"   )                 |      | ( "9090  : 9090" )                  |                 | ( "3000  : 3000" )             | |    
+   |      | (  "443  : 443"  )                 |      |                                     |                 |                                | |    
+   |      |                                    |      | (PromQL) ---------------------------+---<----+        |                                | |    
+   |      |                                    |      |                                     |        |        |                                | |    
+   |      +-------------+----------------------+      +-----------------+-------------------+        |        +--------------+-----------------+ |    
+   |                    |                                               |                            |                       |                   |    
+   |                    |                                               | (Scrape Data using         |                       | (Grafana pulls    |    
+   |      +-------------+----------------+                              |  interval, place           |                       |  from prometheus) |    
+   |      | Service: chatterbox          |                              |  in Time-Series DB)        |                       |                   |    
+   |      | Container: chatterbox-api    |                              |                            |                       |                   |    
+   |      | Image: chatterbox-api:dev    |                              |                            +-----------------------+                   |    
+   |      | (internalPort: 1234)         |                              |                                                                        |    
+   |      |                              |                              |                                                                        |    
+   |      | (expose /metrics) -----------+-------<----------------------+                                                                        |    
+   |      |                              |                                                                                                       |    
+   |      +------------------------------+                                                                                                       |    
+   |                                                                                                                                             |    
+   | (Containers communicate via internal docker network: chatterbox-net)                                                                        |    
+   +---------------------------------------------------------------------------------------------------------------------------------------------+    
 ```
 
 # More Details
