@@ -142,6 +142,20 @@ Database problems = application problems.
 Why?
 Critical for microservice environments.
 
+### PromQL helpful stuff
+
+Shows if targets are alive:
+
+```bash
+up
+```
+
+Requests per second:
+
+```bash
+rate(http_requests_total[5m])
+```
+
 ## Grafana
 
 Grafana is a visualization and dashboard tool.
@@ -185,59 +199,36 @@ Why Grafana?
 - Provides beautiful dashboards for team awareness.
 - Easy to share insights across developers, ops, managers.
 
-# Alternative tools
+## Example Dashboards
 
-## 🔍 Full Observability Suites
+### Application Dashboard
 
-### Datadog
-- SaaS (hosted)
-- Metrics + Logs + Traces in one place
-- Very polished dashboards + alerting
-- Expensive but zero maintenance
+- Requests per second
+- Error rate (4xx/5xx)
+- p50 / p90 / p99 latency
+- Active users / sessions
+- DB connections
+- JVM/Node.js/Go memory usage
 
-Good for teams that want everything managed and don't mind cost.
+### Infrastructure Dashboard
 
-### New Relic
-- Great application-level metrics (APM)
-- Automatic instrumentation
-- Easy setup
-- Also SaaS
+- CPU usage (per container / per node)
+- Memory pressure
+- Disk IO
+- Network throughput
+- Container restarts
 
-Good for app performance analysis and error tracing.
+### Kubernetes Dashboard (very common)
 
-### Dynatrace
-- Enterprise-focused, auto-discovery of components
-- Very intelligent anomaly detection
+- Pod health & restarts
+- Replica counts
+- Node capacity vs requests/limits
+- API server latency
 
-Good for large orgs wanting “AI-assisted ops”.
+### Business Dashboard
 
-## 📊 Metrics + Dashboards (Prometheus Alternatives)
+- Orders per minute
+- Signups per hour
+- Payment failures
+- Queue/message backlogs
 
-### InfluxDB + Telegraf + Grafana
-
-- Similar stack but Influx uses push architecture
-- Better for IoT, high-speed metrics ingestion
-
-### VictoriaMetrics
-
-- Drop-in Prometheus replacement
-- Faster and more efficient storage engine
-- Popular for large-scale Kubernetes clusters
-
-## 📚 Logging Solutions (Not Metrics) but Related
-
-ELK / OpenSearch (Elasticsearch + Logstash + Kibana)
-- Focuses on logs, not metrics
-- Often used alongside Prometheus/Grafana
-
-## 🧵 Tracing Systems (For Distributed Traces)
-
-### Jaeger
-
-- Open-source distributed tracing (microservices)
-- Often paired with Prometheus/Grafana/Loki
-
-### Grafana Tempo
-
-- Distributed tracing from the Grafana suite
-- Works with Loki (logs) and Prometheus (metrics)
