@@ -15,7 +15,7 @@ services:
     environment:
       TZ: Africa/Johannesburg
       SPRING_PROFILES_ACTIVE: dev
-    restart: always
+    restart: unless-stopped
     networks:
       - chatterbox-net
 
@@ -42,6 +42,44 @@ services:
     restart: unless-stopped
     networks:
       - chatterbox-net
+
+  prometheus:
+    image: chatterbox-prometheus:dev
+    build:
+      context: .
+      dockerfile: chatterbox-prometheus.dockerfile
+    container_name: chatterbox-prometheus
+    ports:
+      - "9090:9090"
+    environment:
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/data:/prometheus
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+
+  grafana:
+    image: chatterbox-grafana:dev
+    build:
+      context: .
+      dockerfile: chatterbox-grafana.dockerfile
+    container_name: chatterbox-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./grafana/logs:/var/log/grafana
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/data/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+    depends_on:
+      - prometheus
 
 # Define a custom network (allowing access across services via serviceName)
 networks:
