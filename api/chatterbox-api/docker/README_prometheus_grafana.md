@@ -1,4 +1,4 @@
-# README Prometheus and Grafana
+# Prometheus and Grafana README
 
 Prometheus can be used as a Web Scraping tool
 
