@@ -1,7 +1,5 @@
 # Chatterbox API README
 
-![Chattering Teeth Gif](chattering_teeth.gif)
-
 # What is Included
 
 - Dockerfile to copy the JAR into a Docker Image

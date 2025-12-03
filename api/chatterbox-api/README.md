@@ -1,5 +1,7 @@
 # README
 
+![Chattering Teeth Gif](chattering_teeth.gif)
+
 There are several README documents created to explain what is going on here. It is worth glossing over them, as some
 show how you can verify things are working and others explain how its working
 
@@ -16,6 +18,8 @@ find . -type f -iname "readme*
 ```
 
 # How to Confirm things Working?
+
+Can use Makefile commands - just review the environment variables at the top!
 
 ## Quick Commands
 
