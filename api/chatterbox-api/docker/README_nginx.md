@@ -90,3 +90,9 @@ this should work (https - lt using port 3002 still):
 ```bash
 curl -X POST https://chatterbox.loca.lt/chatterbox/github      -H "Content-Type: application/json"      -H "X-Hub-Signature-256: sha256=2677ad3e7c090b2fa2c0fb13020d66d5420879b8316eb356a2d60fb9073bc778"      -d '{"hello":"world"}'
 ```
+
+## Other Info
+
+There is also a healthcheck! If for some reason nginx tries to start and it cannot connect to the API, we can display 
+an html page explaining it is warming up!. Try this in your browser when nginx container is up and api is down:
+`http://localhost:3002/actuator/health` (Should also work with curl in terminal)
