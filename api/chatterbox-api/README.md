@@ -19,6 +19,8 @@ find . -type f -iname "readme*
 
 # How to Confirm things Working?
 
+Can use Makefile commands - just review the environment variables at the top!
+
 ## Quick Commands
 
 LocalTunnel:
