@@ -36,5 +36,4 @@ build/
 /docker/grafana/data/
 
 # Additional files for convenience scripting
-/ngrok.log
-/ngrok.pid
+/tmp/

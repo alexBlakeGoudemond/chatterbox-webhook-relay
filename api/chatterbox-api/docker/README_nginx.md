@@ -6,10 +6,10 @@ NginX is a reverse proxy tool that we are using to expose some parts of the API
 
 ```sql
                                                   ┌───────────────────────────────┐   ─┐
-                                                  │  https://chatterbox.loca.lt   │    │                                      
+                                                  │  https://<publicFacingURL>    │    │                                      
                                                   │  reserves port xxx            │    │
                                                   └───────────────┬───────────────┘    │
-                                                                  │                    │ LocalTunnel                          
+                                                                  │                    │ LocalTunnel/Ngrok                    
                                                                   ▼                    │     ▼
                                                   ┌───────────────────────────────┐    │ host:3002
                                                   │   Host-Level Port Bindings    │    │     ▼
