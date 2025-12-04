@@ -21,7 +21,7 @@ import static za.co.psybergate.chatterbox.infrastructure.logging.MDC_KEYS.THREAD
 @Component
 public class WebhookFilter implements Filter {
 
-    @Value("${webhook.github.secret}")
+    @Value("${chatterbox.webhook.github.secret}")
     private String webhookSecret;
 
     private final WebhookLogger webhookValidationLogger;
