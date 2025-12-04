@@ -71,6 +71,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
 
+    // TODO BlakeGoudemond 2025/12/04 | tests when invalidRepo
+    // TODO BlakeGoudemond 2025/12/04 | tests when missingConfigFile
+    // TODO BlakeGoudemond 2025/12/04 | tests when config does not have the right properties
+    // TODO BlakeGoudemond 2025/12/04 | tests when url does not have the right properties
+
     @Value("${api.prefix}")
     private String apiPrefix;
 

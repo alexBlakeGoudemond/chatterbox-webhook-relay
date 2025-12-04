@@ -1,5 +1,6 @@
 package za.co.psybergate.chatterbox.application.web.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,20 @@ public class GithubWebhookController {
 
     @PostMapping
     public ResponseEntity<String> handleGithubWebhook(@RequestHeader Map<String, String> headers,
-                                                      @RequestBody String rawBody) {
+                                                      @RequestBody JsonNode rawBody) {
         String eventType = headers.get("X-GitHub-Event");
-        if (configurationProperties.containsEvent(eventType)) {
-            log.warn("configurationProperties exist for eventType: {}, config: {}", eventType, configurationProperties);
+        String repositoryName = rawBody.get("repository").get("full_name").toString();
+        if (!configurationProperties.acceptsRepository(repositoryName)){
+            log.debug("Repository '{}' is not whitelisted as an accepted repository", repositoryName);
+            return ResponseEntity.ok().body("Webhook received; No further work done");
         }
+        if (!configurationProperties.containsEvent(eventType)) {
+            log.debug("No ConfigurationProperties Found for eventType: {}", eventType);
+            return ResponseEntity.ok().body("Webhook received; No further work done");
+        }
+        // TODO BlakeGoudemond 2025/12/04 | use this information to
+        //  - Prepare a Payload for MS Teams
+        //  - Send the Payload to MS Teams
         log.warn("Github Webhook received by Github API");
         return ResponseEntity.accepted().body("Webhook received");
     }

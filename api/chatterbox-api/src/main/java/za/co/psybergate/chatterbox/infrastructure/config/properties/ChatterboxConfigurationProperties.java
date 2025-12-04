@@ -22,6 +22,11 @@ public class ChatterboxConfigurationProperties {
         return githubIncomingMappings.containsKey(eventType);
     }
 
+    public boolean acceptsRepository(String repositoryName) {
+        repositoryName = repositoryName.replace("\"", "");
+        return githubRepositoriesAccepted.contains(repositoryName);
+    }
+
     @Data
     public static class TeamsDestination {
 

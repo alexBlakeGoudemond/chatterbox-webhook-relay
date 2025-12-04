@@ -40,8 +40,8 @@ webhook:
     secret: secret
 chatterbox:
   github-repositories-accepted:
-    - mentoring_software_foundations
-    - chatterbox
+    - Psybergate-Knowledge-Repository/mentoring_software_foundations
+    - psyAlexBlakeGoudemond/chatterbox
   teams-destinations-accepted:
     - channelName: "General"
       webhookUrl: "https://outlook.office.com/webhook/..."
