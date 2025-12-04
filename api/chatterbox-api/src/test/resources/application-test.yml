@@ -27,3 +27,20 @@ webhook:
   github:
     secret: secret
     payload: "{\"ping\":\"hello\"}"
+chatterbox:
+  github-repositories-accepted:
+    - mentoring_software_foundations
+    - chatterbox
+  teams-destinations-accepted:
+    - channelName: "General"
+      webhookUrl: "https://outlook.office.com/webhook/..."
+    - channelName: "TestChannel"
+      webhookUrl: "https://outlook.office.com/webhook/..."
+  github-incoming-mappings:
+    push:
+      displayName: "Push Event"
+      fields:
+        repositoryName: "repository.full_name"
+        senderName: "sender.login"
+        url: "issue.html_url"
+        urlDisplayText: "head_commit.message"
