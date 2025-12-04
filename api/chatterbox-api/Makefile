@@ -1,9 +1,16 @@
+# NOTE: If Emojis arent showing in terminal, add these settings to .bashrc file in Users Directory:
+# settings for emojis
+#export LC_ALL=en_US.UTF-8
+#export LANG=en_US.UTF-8
+#export LESSCHARSET=utf-8
+
 # Variables
 APP_NAME = chatterbox
 SRC_DIR = src
 JAVA21=C:\myprograms\java\jdk\jdk21.0.7
 NGROK_PORT=3002
-NGROK_LOG=ngrok.log
+NGROK_LOG=tmp/ngrok.log
+NGROK_PID=tmp/ngrok.pid
 NGROK_URL=unswaying-margeret-polymorphonuclear.ngrok-free.dev
 
 # Default target if you just run "make"
@@ -33,21 +40,22 @@ docker-redo:
 mvn-clean-install:
 	JAVA_HOME="$(JAVA21)" mvn clean install
 
-ngrok-start:
+ngrok-start-no-web-ui:
 	@echo -e "\u2B06 Starting up Ngrok";
 	nohup ngrok http $(NGROK_PORT) > $(NGROK_LOG) 2>&1 & \
-	echo $$! > ngrok.pid
+	echo $$! > $(NGROK_PID)
+	sleep 1
 	$(MAKE) ngrok-status
 
-ngrok-stop:
+ngrok-stop-no-web-ui:
 	@echo -e "\u2B07 Stopping Ngrok";
-	-kill `cat ngrok.pid`
-	rm -f ngrok.pid
+	-kill `cat $(NGROK_PID)`
+	rm -f $(NGROK_PID)
 	$(MAKE) ngrok-status
 
 ngrok-status:
-	@if [ -f ngrok.pid ] && ps -p $$(cat ngrok.pid) > /dev/null 2>&1 ; then \
-		echo -e "\U0001F45F  Ngrok is running (PID=$$(cat ngrok.pid))"; \
+	@if [ -f $(NGROK_PID) ] && ps -p $$(cat $(NGROK_PID)) > /dev/null 2>&1 ; then \
+		echo -e "\U0001F45F  Ngrok is running (PID=$$(cat $(NGROK_PID)))"; \
 	else \
 		echo -e "\u270B  Ngrok is NOT running"; \
 	fi
