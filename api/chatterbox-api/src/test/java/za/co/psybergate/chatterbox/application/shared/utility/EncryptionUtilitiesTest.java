@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.core.utility;
+package za.co.psybergate.chatterbox.application.shared.utility;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
+import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 

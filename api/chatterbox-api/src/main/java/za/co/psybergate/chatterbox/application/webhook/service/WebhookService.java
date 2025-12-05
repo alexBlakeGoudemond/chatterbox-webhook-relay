@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.core.service;
+package za.co.psybergate.chatterbox.application.webhook.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;

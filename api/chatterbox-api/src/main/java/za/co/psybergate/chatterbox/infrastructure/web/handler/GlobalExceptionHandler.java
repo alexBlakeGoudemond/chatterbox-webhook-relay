@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.handler;
+package za.co.psybergate.chatterbox.infrastructure.web.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

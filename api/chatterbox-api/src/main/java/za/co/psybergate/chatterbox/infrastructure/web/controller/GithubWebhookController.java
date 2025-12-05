@@ -1,10 +1,10 @@
-package za.co.psybergate.chatterbox.application.web.controller;
+package za.co.psybergate.chatterbox.infrastructure.web.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.co.psybergate.chatterbox.application.core.service.WebhookService;
+import za.co.psybergate.chatterbox.application.webhook.service.WebhookService;
 
 import java.util.Map;
 
