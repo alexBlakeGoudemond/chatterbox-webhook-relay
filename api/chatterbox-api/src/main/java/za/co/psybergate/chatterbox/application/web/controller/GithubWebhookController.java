@@ -34,7 +34,7 @@ public class GithubWebhookController {
         //  - Prepare a Payload for MS Teams
         //  - Send the Payload to MS Teams
         log.warn("Github Webhook received by Github API");
-        return ResponseEntity.accepted().body("Webhook received");
+        return ResponseEntity.accepted().body("Webhook received; work underway");
     }
 
 }

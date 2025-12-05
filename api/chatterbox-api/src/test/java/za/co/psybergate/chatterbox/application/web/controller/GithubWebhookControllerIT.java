@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /// Integration test that navigates through the [WebhookFilter]
@@ -108,13 +109,14 @@ public class GithubWebhookControllerIT {
         if (!(jsonNode instanceof ObjectNode)) {
             fail("Unable to mutate JsonNode - needed for the test to change the RepositoryName");
         }
-        ObjectNode objectNode = (ObjectNode) jsonNode.get("repository");
-        objectNode.put("full_name", "unknownOwner/unknownRepository");
+        ObjectNode nodeWithContentToReplace = (ObjectNode) jsonNode.get("repository");
+        nodeWithContentToReplace.put("full_name", "unknownOwner/unknownRepository");
 
-        MockHttpServletRequestBuilder httpRequest = getValidHttpRequest(webhookSecret, jsonNode.toString());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, jsonNode.toString());
         try {
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isOk());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Webhook received; No further work done"));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an Exception", e);
         }
@@ -123,14 +125,9 @@ public class GithubWebhookControllerIT {
     @DisplayName("Missing signature fails")
     @Test
     void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenExceptionThrown() {
+        MockHttpServletRequestBuilder httpRequestNoSignature = getHttpRequestNoSignature();
         try {
-            mockMvc.perform(post(apiPrefix + "/webhook/github")
-                    .contentType(APPLICATION_JSON)
-                    .characterEncoding("UTF-8")
-                    .content(webhookPayload)
-                    .header("X-GitHub-Delivery", "123")
-                    .header("X-GitHub-Event", "push")
-            );
+            mockMvc.perform(httpRequestNoSignature);
         } catch (Exception expected) {
             assertTrue(expected.getMessage().contains("Missing X-Hub-Signature-256"));
             return;
@@ -141,15 +138,9 @@ public class GithubWebhookControllerIT {
     @DisplayName("Invalid signature fails")
     @Test
     void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenExceptionThrown() {
+        MockHttpServletRequestBuilder httpRequestInvalidSignature = getHttpRequestInvalidSignature();
         try {
-            mockMvc.perform(post(apiPrefix + "/webhook/github")
-                    .contentType(APPLICATION_JSON)
-                    .characterEncoding("UTF-8")
-                    .content(webhookPayload)
-                    .header("X-GitHub-Delivery", "123")
-                    .header("X-GitHub-Event", "push")
-                    .header("X-Hub-Signature-256", webhookSecret)
-            );
+            mockMvc.perform(httpRequestInvalidSignature);
         } catch (Exception expected) {
             assertTrue(expected.getMessage().contains("Invalid X-Hub-Signature-256"));
             return;
@@ -160,16 +151,36 @@ public class GithubWebhookControllerIT {
     @DisplayName("Encrypted signature succeeds")
     @Test
     void whenPostToGithubWebhook_WithJson_ThenHttpStatusAccepted() {
-        MockHttpServletRequestBuilder httpRequest = getValidHttpRequest(webhookSecret, webhookPayload);
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, webhookPayload);
         try {
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isAccepted());
+                    .andExpect(status().isAccepted())
+                    .andExpect(content().string("Webhook received; work underway"));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);
         }
     }
 
-    private MockHttpServletRequestBuilder getValidHttpRequest(String payloadSecret, String payload) {
+    private MockHttpServletRequestBuilder getHttpRequestNoSignature() {
+        return post(apiPrefix + "/webhook/github")
+                .contentType(APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(webhookPayload)
+                .header("X-GitHub-Delivery", "123")
+                .header("X-GitHub-Event", "push");
+    }
+
+    private MockHttpServletRequestBuilder getHttpRequestInvalidSignature() {
+        return post(apiPrefix + "/webhook/github")
+                .contentType(APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(webhookPayload)
+                .header("X-GitHub-Delivery", "123")
+                .header("X-GitHub-Event", "push")
+                .header("X-Hub-Signature-256", webhookSecret);
+    }
+
+    private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
         String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
