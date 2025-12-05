@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.shared.utility;
+package za.co.psybergate.chatterbox.application.domain.utility;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
