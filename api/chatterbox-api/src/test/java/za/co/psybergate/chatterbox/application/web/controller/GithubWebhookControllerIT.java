@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import za.co.psybergate.chatterbox.application.core.service.WebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -76,12 +77,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookLogger.class,
         EncryptionUtilitiesImpl.class,
         ApplicationConfig.class,
+        WebhookServiceImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
     // TODO BlakeGoudemond 2025/12/05 | Filter getBodyAsBytes Exception can be thrown
     // TODO BlakeGoudemond 2025/12/05 | Filter getRawBody Exception can be thrown (incompatible encodings?
-    // TODO BlakeGoudemond 2025/12/04 | tests when config does not have the right properties
 
     @Value("${api.prefix}")
     private String apiPrefix;
@@ -119,7 +120,7 @@ public class GithubWebhookControllerIT {
         }
     }
 
-    @DisplayName("Unrecognized event: OK")
+    @DisplayName("Unrecognized event: FORBIDDEN")
     @Test
     public void givenValidPayload_AndUnacceptedEventType_ThenHttpStatusOk() {
         String unknownEventType = "strangeEvent";
@@ -128,14 +129,14 @@ public class GithubWebhookControllerIT {
             String responseContent =
                     String.format("Webhook received; no work done; unrecognized event '%s'", unknownEventType);
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isOk())
+                    .andExpect(status().isForbidden())
                     .andExpect(content().string(responseContent));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an Exception", e);
         }
     }
 
-    @DisplayName("Unaccepted Repository: OK")
+    @DisplayName("Unrecognized Repository: FORBIDDEN")
     @Test
     public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
         String unrecognizedRepositoryName = "unknownOwner/unknownRepository";
@@ -152,7 +153,7 @@ public class GithubWebhookControllerIT {
             String expectedContentBody =
                     String.format("Webhook received; no work done; unrecognized repository '%s'", unrecognizedRepositoryName);
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isOk())
+                    .andExpect(status().isForbidden())
                     .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an Exception", e);
