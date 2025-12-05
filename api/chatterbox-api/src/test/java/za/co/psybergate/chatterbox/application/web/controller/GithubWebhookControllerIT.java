@@ -78,7 +78,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
 
-    // TODO BlakeGoudemond 2025/12/04 | tests when missingConfigFile
     // TODO BlakeGoudemond 2025/12/04 | tests when config does not have the right properties
     // TODO BlakeGoudemond 2025/12/04 | tests when url does not have the right properties
 
@@ -103,6 +102,22 @@ public class GithubWebhookControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @DisplayName("Unrecognized event: OK")
+    @Test
+    public void givenValidPayload_AndUnacceptedEventType_ThenHttpStatusOk() {
+        String unknownEventType = "strangeEvent";
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestUnknownEvent(webhookSecret, webhookPayload, unknownEventType);
+        try {
+            String responseContent =
+                    String.format("Webhook received; no work done; unrecognized event '%s'", unknownEventType);
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(responseContent));
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to succeed without an Exception", e);
+        }
+    }
+
     @DisplayName("Unaccepted Repository: OK")
     @Test
     public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
@@ -118,7 +133,7 @@ public class GithubWebhookControllerIT {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, jsonNode.toString());
         try {
             String expectedContentBody =
-                    String.format("Webhook received; no work done; unrecognized repository \"%s\"", unrecognizedRepositoryName);
+                    String.format("Webhook received; no work done; unrecognized repository '%s'", unrecognizedRepositoryName);
             mockMvc.perform(httpRequest)
                     .andExpect(status().isOk())
                     .andExpect(content().string(expectedContentBody));
@@ -184,6 +199,17 @@ public class GithubWebhookControllerIT {
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", webhookSecret);
+    }
+
+    private MockHttpServletRequestBuilder getHttpRequestUnknownEvent(String payloadSecret, String payload, String unknownEventType) {
+        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        return post(apiPrefix + "/webhook/github")
+                .contentType(APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(payload)
+                .header("X-GitHub-Delivery", "123")
+                .header("X-GitHub-Event", unknownEventType)
+                .header("X-Hub-Signature-256", encryptedSignature);
     }
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
