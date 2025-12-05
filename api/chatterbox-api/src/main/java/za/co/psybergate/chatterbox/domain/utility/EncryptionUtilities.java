@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.core.utility;
+package za.co.psybergate.chatterbox.domain.utility;
 
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 
