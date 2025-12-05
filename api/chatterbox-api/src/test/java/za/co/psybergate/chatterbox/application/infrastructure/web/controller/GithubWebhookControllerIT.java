@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.application.infrastructure.web.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.webhook.service.WebhookServiceImpl;
+import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
+import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -79,8 +80,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookLogger.class,
         EncryptionUtilitiesImpl.class,
         ApplicationConfig.class,
-        WebhookServiceImpl.class,
+        GithubWebhookService.class,
         WebhookValidatorImpl.class,
+        GithubEventExtractor.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
@@ -104,7 +106,7 @@ public class GithubWebhookControllerIT {
     private EncryptionUtilities encryptionUtilities;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ConversionUtilities conversionUtilities;
 
     @DisplayName("Missing JSON properties: BAD_REQUEST")
     @Test
@@ -142,7 +144,7 @@ public class GithubWebhookControllerIT {
     public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
         String unrecognizedRepositoryName = "unknownOwner/unknownRepository";
 
-        JsonNode jsonNode = getAsJson(webhookPayload);
+        JsonNode jsonNode = conversionUtilities.getAsJson(webhookPayload);
         if (!(jsonNode instanceof ObjectNode)) {
             fail("Unable to mutate JsonNode - needed for the test to change the RepositoryName");
         }
@@ -264,14 +266,6 @@ public class GithubWebhookControllerIT {
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", encryptedSignature);
-    }
-
-    private JsonNode getAsJson(String jsonString) throws ApplicationException {
-        try {
-            return objectMapper.readTree(jsonString);
-        } catch (JsonProcessingException e) {
-            throw new ApplicationException("Unable to convert String into JSON", e);
-        }
     }
 
 }
