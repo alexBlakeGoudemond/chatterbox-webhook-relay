@@ -17,7 +17,6 @@ import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -82,7 +81,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GithubWebhookControllerIT {
     // TODO BlakeGoudemond 2025/12/05 | Filter getBodyAsBytes Exception can be thrown
     // TODO BlakeGoudemond 2025/12/05 | Filter getRawBody Exception can be thrown (incompatible encodings?
-    // TODO BlakeGoudemond 2025/12/05 | request without UTF-8 succeeds
     // TODO BlakeGoudemond 2025/12/04 | tests when config does not have the right properties
     // TODO BlakeGoudemond 2025/12/04 | tests when url does not have the right properties
 
@@ -187,6 +185,20 @@ public class GithubWebhookControllerIT {
         }
     }
 
+    @DisplayName("Signature, No UTF-8: ACCEPTED")
+    @Test
+    void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret, webhookPayload);
+        try {
+            String expectedContentBody = "Webhook received; work underway";
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isAccepted())
+                    .andExpect(content().string(expectedContentBody));
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to succeed without an exception", e);
+        }
+    }
+
     private MockHttpServletRequestBuilder getHttpRequestNoSignature() {
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
@@ -214,6 +226,16 @@ public class GithubWebhookControllerIT {
                 .content(payload)
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", unknownEventType)
+                .header("X-Hub-Signature-256", encryptedSignature);
+    }
+
+    private MockHttpServletRequestBuilder getHttpRequestValidNoEncoding(String payloadSecret, String payload) {
+        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        return post(apiPrefix + "/webhook/github")
+                .contentType(APPLICATION_JSON)
+                .content(payload)
+                .header("X-GitHub-Delivery", "123")
+                .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", encryptedSignature);
     }
 
