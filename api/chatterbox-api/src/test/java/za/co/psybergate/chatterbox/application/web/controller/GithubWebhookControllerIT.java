@@ -103,20 +103,25 @@ public class GithubWebhookControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @DisplayName("Unaccepted Repository: OK")
     @Test
     public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
+        String unrecognizedRepositoryName = "unknownOwner/unknownRepository";
+
         JsonNode jsonNode = getAsJson(webhookPayload);
         if (!(jsonNode instanceof ObjectNode)) {
             fail("Unable to mutate JsonNode - needed for the test to change the RepositoryName");
         }
         ObjectNode nodeWithContentToReplace = (ObjectNode) jsonNode.get("repository");
-        nodeWithContentToReplace.put("full_name", "unknownOwner/unknownRepository");
+        nodeWithContentToReplace.put("full_name", unrecognizedRepositoryName);
 
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, jsonNode.toString());
         try {
+            String expectedContentBody =
+                    String.format("Webhook received; no work done; unrecognized repository \"%s\"", unrecognizedRepositoryName);
             mockMvc.perform(httpRequest)
                     .andExpect(status().isOk())
-                    .andExpect(content().string("Webhook received; No further work done"));
+                    .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an Exception", e);
         }
@@ -148,14 +153,15 @@ public class GithubWebhookControllerIT {
         fail("Expected an exception to be thrown due to an Invalid Signature");
     }
 
-    @DisplayName("Encrypted signature succeeds")
+    @DisplayName("Encrypted signature: ACCEPTED")
     @Test
-    void whenPostToGithubWebhook_WithJson_ThenHttpStatusAccepted() {
+    void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, webhookPayload);
         try {
+            String expectedContentBody = "Webhook received; work underway";
             mockMvc.perform(httpRequest)
                     .andExpect(status().isAccepted())
-                    .andExpect(content().string("Webhook received; work underway"));
+                    .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);
         }

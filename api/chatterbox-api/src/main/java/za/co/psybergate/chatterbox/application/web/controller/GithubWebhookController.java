@@ -24,11 +24,15 @@ public class GithubWebhookController {
         String repositoryName = rawBody.get("repository").get("full_name").toString();
         if (!configurationProperties.acceptsRepository(repositoryName)){
             log.debug("Repository '{}' is not whitelisted as an accepted repository", repositoryName);
-            return ResponseEntity.ok().body("Webhook received; No further work done");
+            String responseContent =
+                    String.format("Webhook received; no work done; unrecognized repository %s", repositoryName);
+            return ResponseEntity.ok().body(responseContent);
         }
         if (!configurationProperties.containsEvent(eventType)) {
             log.debug("No ConfigurationProperties Found for eventType: {}", eventType);
-            return ResponseEntity.ok().body("Webhook received; No further work done");
+            String responseContent =
+                    String.format("Webhook received; no work done; unrecognized event %s", eventType);
+            return ResponseEntity.ok().body(responseContent);
         }
         // TODO BlakeGoudemond 2025/12/04 | use this information to
         //  - Prepare a Payload for MS Teams
