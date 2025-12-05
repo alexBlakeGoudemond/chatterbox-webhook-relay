@@ -1,13 +1,16 @@
 package za.co.psybergate.chatterbox.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 
 @Configuration
+@EnableConfigurationProperties(ChatterboxConfigurationProperties.class)
 public class ApplicationConfig {
 
     @Value("${api.prefix}")
@@ -22,5 +25,6 @@ public class ApplicationConfig {
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;
     }
+
 
 }
