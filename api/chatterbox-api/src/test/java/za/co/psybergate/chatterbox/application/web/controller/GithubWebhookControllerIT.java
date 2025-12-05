@@ -82,7 +82,6 @@ public class GithubWebhookControllerIT {
     // TODO BlakeGoudemond 2025/12/05 | Filter getBodyAsBytes Exception can be thrown
     // TODO BlakeGoudemond 2025/12/05 | Filter getRawBody Exception can be thrown (incompatible encodings?
     // TODO BlakeGoudemond 2025/12/04 | tests when config does not have the right properties
-    // TODO BlakeGoudemond 2025/12/04 | tests when url does not have the right properties
 
     @Value("${api.prefix}")
     private String apiPrefix;
@@ -104,6 +103,21 @@ public class GithubWebhookControllerIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @DisplayName("Missing JSON properties: BAD_REQUEST")
+    @Test
+    public void givenIncompletePayload_MissingJsonProperties_ThenHttpStatusOk() {
+        String incompletePayload = "{}";
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret, incompletePayload);
+        try {
+            String expectedContentBody = "Unable to parse 'repository.full_name' from raw body";
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().string(expectedContentBody));
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to succeed without an exception", e);
+        }
+    }
 
     @DisplayName("Unrecognized event: OK")
     @Test

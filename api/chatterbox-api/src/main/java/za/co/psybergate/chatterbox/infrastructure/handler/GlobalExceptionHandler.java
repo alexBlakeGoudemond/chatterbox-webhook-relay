@@ -1,16 +1,19 @@
 package za.co.psybergate.chatterbox.infrastructure.handler;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
 
-// TODO BlakeGoudemond 2025/11/30 | This will be used for problems within scope of the Controller
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(UnauthorizedException.class)
-//    public ResponseEntity<String> unauthorized(UnauthorizedException ex) {
-//        return ResponseEntity
-//                .status(HttpStatus.UNAUTHORIZED)
-//                .body(ex.getMessage());
-//    }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> badRequest(BadRequestException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
 
 }

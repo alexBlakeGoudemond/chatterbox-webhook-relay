@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
+import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
 
 import java.util.Map;
 
@@ -21,7 +22,12 @@ public class GithubWebhookController {
     public ResponseEntity<String> handleGithubWebhook(@RequestHeader Map<String, String> headers,
                                                       @RequestBody JsonNode rawBody) {
         String eventType = headers.get("X-GitHub-Event");
-        String repositoryName = rawBody.get("repository").get("full_name").toString().replaceAll("\"", "");
+        String repositoryName = null;
+        try {
+            repositoryName = rawBody.get("repository").get("full_name").toString().replaceAll("\"", "");
+        } catch (Exception e) {
+            throw new BadRequestException("Unable to parse 'repository.full_name' from raw body", e);
+        }
         if (!configurationProperties.acceptsRepository(repositoryName)){
             log.debug("Repository '{}' is not whitelisted as an accepted repository", repositoryName);
             String responseContent =
