@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.infrastructure.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter;
 
 @Component
 @Slf4j
