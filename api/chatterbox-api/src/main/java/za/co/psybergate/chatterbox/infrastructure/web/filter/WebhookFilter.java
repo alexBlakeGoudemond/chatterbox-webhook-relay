@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.filter;
+package za.co.psybergate.chatterbox.infrastructure.web.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
-import za.co.psybergate.chatterbox.application.core.utility.EncryptionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
