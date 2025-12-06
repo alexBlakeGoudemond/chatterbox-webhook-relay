@@ -1,0 +1,91 @@
+package za.co.psybergate.chatterbox.application.infrastructure.web.controller;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
+import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
+import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@Import({
+        WebhookFilter.class,
+        WebhookLogger.class,
+        EncryptionUtilitiesImpl.class,
+        ApplicationConfig.class,
+        GithubWebhookService.class,
+        WebhookValidatorImpl.class,
+        GithubEventExtractor.class,
+        ConversionUtilitiesImpl.class,
+})
+@WebMvcTest(GithubWebhookController.class)
+@ActiveProfiles({"bad-properties"})
+public class GithubControllerBadPropertiesIT {
+
+    @Value("${api.prefix}")
+    private String apiPrefix;
+
+    @Value("${webhook.github.secret}")
+    private String webhookSecret;
+
+    @Value("${webhook.github.payload}")
+    private String webhookPayload;
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private EncryptionUtilities encryptionUtilities;
+
+    private ConversionUtilities conversionUtilities;
+
+    @DisplayName("Invalid Properties: INTERNAL SERVER ERROR")
+    @Test
+    void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, webhookPayload);
+        try {
+            String expectedContentBody = "extract.<return value>.urlDisplayText: must not be null";
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(content().string(expectedContentBody));
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to succeed without an exception", e);
+        }
+    }
+
+    private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
+        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        return post(apiPrefix + "/webhook/github")
+                .contentType(APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(payload)
+                .header("X-GitHub-Delivery", "123")
+                .header("X-GitHub-Event", "push")
+                .header("X-Hub-Signature-256", encryptedSignature);
+    }
+
+}

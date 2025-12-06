@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
+import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 @ControllerAdvice
@@ -27,7 +27,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> internalServerError(ConstraintViolationException ex) {
+    public ResponseEntity<String> constraintViolation(ConstraintViolationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InternalServerException.class)
+    public ResponseEntity<String> internalServer(InternalServerException ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ex.getMessage());

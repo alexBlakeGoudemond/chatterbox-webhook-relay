@@ -87,8 +87,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
 
-    // TODO BlakeGoudemond 2025/12/06 | can a test be written to produce InternalServerError through handler? maybe different properties with missing definitions in properties?
-
     @Value("${api.prefix}")
     private String apiPrefix;
 

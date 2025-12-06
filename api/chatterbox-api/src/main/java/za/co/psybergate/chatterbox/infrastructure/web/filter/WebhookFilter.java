@@ -6,6 +6,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
+import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -103,12 +104,11 @@ public class WebhookFilter implements Filter {
         return encoding;
     }
 
-    // TODO BlakeGoudemond 2025/12/06 | make InternalServerException and place to handler
     private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws ApplicationException {
         try {
             return wrappedRequest.getInputStream().readAllBytes();
         } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when reading requestBody as Byte[]", e);
+            throw new InternalServerException("Unexpected issue when reading requestBody as Byte[]", e);
         }
     }
 
