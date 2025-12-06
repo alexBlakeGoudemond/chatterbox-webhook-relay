@@ -13,6 +13,8 @@ import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestE
 
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFields.*;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -29,14 +31,13 @@ public class GithubEventExtractor {
         }
         Map<String, String> fields = payloadMapping.getFields();
 
-        // TODO BlakeGoudemond 2025/12/05 | model Enums when confirmed working
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
-                read(payload, fields.get("repositoryName")),
-                read(payload, fields.get("senderName")),
-                read(payload, fields.get("url")),
-                read(payload, fields.get("urlDisplayText"))
+                read(payload, fields.get(REPOSITORY_NAME.toString())),
+                read(payload, fields.get(SENDER_NAME.toString())),
+                read(payload, fields.get(URL.toString())),
+                read(payload, fields.get(URL_DISPLAY_TEXT.toString()))
         );
     }
 
