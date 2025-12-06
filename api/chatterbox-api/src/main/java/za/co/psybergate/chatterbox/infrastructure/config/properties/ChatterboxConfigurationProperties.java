@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.infrastructure.config.properties;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -42,8 +42,23 @@ public class ChatterboxConfigurationProperties {
 
         private String displayName;
 
-        private Map<String, String> fields;
+        private Map<GithubIncomingMappingFieldKeys, String> fields;
 
+    }
+
+
+    @Getter
+    public enum GithubIncomingMappingFieldKeys {
+        REPOSITORYNAME("repositoryName"),
+        SENDERNAME("senderName"),
+        URL("url"),
+        URLDISPLAYTEXT("urlDisplayText");
+
+        GithubIncomingMappingFieldKeys(String fieldName) {
+            this.fieldName = fieldName;
+        }
+
+        private final String fieldName;
     }
 
 }

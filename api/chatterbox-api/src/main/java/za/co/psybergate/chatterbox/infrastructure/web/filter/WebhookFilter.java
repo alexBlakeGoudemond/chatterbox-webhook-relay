@@ -5,10 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
@@ -24,14 +24,14 @@ public class WebhookFilter implements Filter {
     @Value("${webhook.github.secret}")
     private String webhookSecret;
 
-    private final WebhookLogger webhookValidationLogger;
+    private final WebhookLogger webhookLogger;
 
     private final EncryptionUtilities encryptionUtilities;
 
     private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    public WebhookFilter(WebhookLogger webhookValidationLogger, EncryptionUtilities encryptionUtilities, WebhookRuntimeMetrics webhookRuntimeMetrics) {
-        this.webhookValidationLogger = webhookValidationLogger;
+    public WebhookFilter(WebhookLogger webhookLogger, EncryptionUtilities encryptionUtilities, WebhookRuntimeMetrics webhookRuntimeMetrics) {
+        this.webhookLogger = webhookLogger;
         this.encryptionUtilities = encryptionUtilities;
         this.webhookRuntimeMetrics = webhookRuntimeMetrics;
     }
@@ -57,41 +57,41 @@ public class WebhookFilter implements Filter {
         long ms = System.currentTimeMillis() - start;
 
         webhookRuntimeMetrics.recordProcessingSuccess(event);
-        webhookValidationLogger.logCompletion(ms);
+        webhookLogger.logCompletion(ms);
         MDC.clear();
     }
 
     private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,
                                       String event,
                                       String delivery,
-                                      String signature256) throws ApplicationException {
+                                      String signature256) throws UnauthorizedException {
         byte[] bodyBytes = getBodyAsBytes(wrappedRequest);
         String encoding = getCharacterEncoding(wrappedRequest);
         String rawBody = getRawBody(bodyBytes, encoding);
 
-        webhookValidationLogger.logReceivedWebhookEvent(event, delivery);
+        webhookLogger.logReceivedWebhookEvent(event, delivery);
 
         if (signature256 == null) {
-            webhookValidationLogger.logMissingSignature();
+            webhookLogger.logMissingSignature();
             webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Missing X-Hub-Signature-256");
         }
 
         String expected = encryptionUtilities.encryptUsingSHA256(webhookSecret, rawBody);
         if (!encryptionUtilities.isIdentical(expected, signature256)) {
-            webhookValidationLogger.logInvalidSignature(expected, signature256);
+            webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match body");
         }
 
-        webhookValidationLogger.logValidSignature();
+        webhookLogger.logValidSignature();
     }
 
-    private String getRawBody(byte[] bodyBytes, String encoding) throws ApplicationException {
+    private String getRawBody(byte[] bodyBytes, String encoding) throws InternalServerException {
         try {
             return new String(bodyBytes, encoding);
         } catch (UnsupportedEncodingException e) {
-            throw new ApplicationException("Unexpected issue encountered when converting Byte[] into String", e);
+            throw new InternalServerException("Unexpected issue encountered when converting Byte[] into String", e);
         }
     }
 
@@ -103,11 +103,11 @@ public class WebhookFilter implements Filter {
         return encoding;
     }
 
-    private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws ApplicationException {
+    private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws InternalServerException {
         try {
             return wrappedRequest.getInputStream().readAllBytes();
         } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when reading requestBody as Byte[]", e);
+            throw new InternalServerException("Unexpected issue when reading requestBody as Byte[]", e);
         }
     }
 
