@@ -25,11 +25,10 @@ public class GithubWebhookService implements WebhookService {
         webhookValidator.assertAcceptedEvent(eventType);
 
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
-        System.out.println("eventDto = " + eventDto);
+        log.debug("Github Webhook received by Github API; DTO: {}", eventDto);
         // TODO BlakeGoudemond 2025/12/04 | use this information to
         //  - Prepare a Payload for MS Teams
         //  - Send the Payload to MS Teams
-        log.warn("Github Webhook received by Github API");
     }
 
     @Override

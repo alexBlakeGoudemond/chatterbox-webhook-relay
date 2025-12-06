@@ -35,4 +35,13 @@ public class WebhookValidatorImpl implements WebhookValidator {
         throw new UnrecognizedRequestException(responseContent);
     }
 
+    @Override
+    public ChatterboxConfigurationProperties.PayloadMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
+        var payloadMapping = configurationProperties.getGithubIncomingMappings().get(eventType);
+        if (payloadMapping == null) {
+            throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
+        }
+        return payloadMapping;
+    }
+
 }
