@@ -1,7 +1,7 @@
 {
-    "ref": "refs/heads/task/review-work-done-so-far",
-    "before": "0000000000000000000000000000000000000000",
-    "after": "ac710f3e8db6c354508d701890a0f9e532e58497",
+    "ref": "refs/heads/task/design-internal-dtos",
+    "before": "e801d2efd8d62c4443accc06e3f391fbf882309d",
+    "after": "e0111fbe3c47d829525672d89dbaa2b547fe43b5",
     "repository": {
         "id": 1103371071,
         "node_id": "R_kgDOQcQbPw",
@@ -72,14 +72,14 @@
         "releases_url": "https://api.github.com/repos/psyAlexBlakeGoudemond/chatterbox/releases{/id}",
         "deployments_url": "https://api.github.com/repos/psyAlexBlakeGoudemond/chatterbox/deployments",
         "created_at": 1764012687,
-        "updated_at": "2025-12-03T17:04:01Z",
-        "pushed_at": 1764833125,
+        "updated_at": "2025-12-05T20:40:03Z",
+        "pushed_at": 1765053818,
         "git_url": "git://github.com/psyAlexBlakeGoudemond/chatterbox.git",
         "ssh_url": "git@github.com:psyAlexBlakeGoudemond/chatterbox.git",
         "clone_url": "https://github.com/psyAlexBlakeGoudemond/chatterbox.git",
         "svn_url": "https://github.com/psyAlexBlakeGoudemond/chatterbox",
         "homepage": null,
-        "size": 883,
+        "size": 901,
         "stargazers_count": 0,
         "watchers_count": 0,
         "language": "Java",
@@ -93,7 +93,7 @@
         "mirror_url": null,
         "archived": false,
         "disabled": false,
-        "open_issues_count": 0,
+        "open_issues_count": 1,
         "license": null,
         "allow_forking": true,
         "is_template": false,
@@ -103,7 +103,7 @@
         ],
         "visibility": "private",
         "forks": 0,
-        "open_issues": 0,
+        "open_issues": 1,
         "watchers": 0,
         "default_branch": "develop",
         "stargazers": 0,
@@ -134,44 +134,69 @@
         "user_view_type": "public",
         "site_admin": false
     },
-    "created": true,
+    "created": false,
     "deleted": false,
     "forced": false,
-    "base_ref": "refs/heads/develop",
-    "compare": "https://github.com/psyAlexBlakeGoudemond/chatterbox/compare/task/review-work-done-so-far",
+    "base_ref": null,
+    "compare": "https://github.com/psyAlexBlakeGoudemond/chatterbox/compare/e801d2efd8d6...e0111fbe3c47",
     "commits": [
+        {
+            "id": "e0111fbe3c47d829525672d89dbaa2b547fe43b5",
+            "tree_id": "eb3e22850206b3294307f2a79e24846afcc88e93",
+            "distinct": true,
+            "message": "Use RequestHeader outright to get CaseSensitive header",
+            "timestamp": "2025-12-06T22:43:30+02:00",
+            "url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/commit/e0111fbe3c47d829525672d89dbaa2b547fe43b5",
+            "author": {
+                "name": "Alex Blake-Goudemond",
+                "email": "alex@psybergate.co.za",
+                "date": "2025-12-06T22:43:30+02:00",
+                "username": "psyAlexBlakeGoudemond"
+            },
+            "committer": {
+                "name": "Alex Blake-Goudemond",
+                "email": "alex@psybergate.co.za",
+                "date": "2025-12-06T22:43:30+02:00",
+                "username": "psyAlexBlakeGoudemond"
+            },
+            "added": [
 
+            ],
+            "removed": [
+
+            ],
+            "modified": [
+                "api/chatterbox-api/src/main/java/za/co/psybergate/chatterbox/infrastructure/web/controller/GithubWebhookController.java"
+            ]
+        }
     ],
     "head_commit": {
-        "id": "ac710f3e8db6c354508d701890a0f9e532e58497",
-        "tree_id": "b0b337b27ff545db54eb7ef0a1463699994bbe6d",
+        "id": "e0111fbe3c47d829525672d89dbaa2b547fe43b5",
+        "tree_id": "eb3e22850206b3294307f2a79e24846afcc88e93",
         "distinct": true,
-        "message": "Bring in fallback file to ensure nginx waits for api to start (#11)",
-        "timestamp": "2025-12-03T19:03:56+02:00",
-        "url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/commit/ac710f3e8db6c354508d701890a0f9e532e58497",
+        "message": "Use RequestHeader outright to get CaseSensitive header",
+        "timestamp": "2025-12-06T22:43:30+02:00",
+        "url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/commit/e0111fbe3c47d829525672d89dbaa2b547fe43b5",
         "author": {
             "name": "Alex Blake-Goudemond",
             "email": "alex@psybergate.co.za",
-            "date": "2025-12-03T19:03:56+02:00",
+            "date": "2025-12-06T22:43:30+02:00",
             "username": "psyAlexBlakeGoudemond"
         },
         "committer": {
-            "name": "GitHub",
-            "email": "noreply@github.com",
-            "date": "2025-12-03T19:03:56+02:00",
-            "username": "web-flow"
+            "name": "Alex Blake-Goudemond",
+            "email": "alex@psybergate.co.za",
+            "date": "2025-12-06T22:43:30+02:00",
+            "username": "psyAlexBlakeGoudemond"
         },
         "added": [
-            "api/chatterbox-api/docker/nginx/html/fallback.html"
+
         ],
         "removed": [
 
         ],
         "modified": [
-            "api/chatterbox-api/docker/README_nginx.md",
-            "api/chatterbox-api/docker/docker-compose.yml",
-            "api/chatterbox-api/docker/nginx/sites-available/chatterbox.conf",
-            "api/chatterbox-api/docker/nginx/sites-enabled/chatterbox.conf"
+            "api/chatterbox-api/src/main/java/za/co/psybergate/chatterbox/infrastructure/web/controller/GithubWebhookController.java"
         ]
     }
 }

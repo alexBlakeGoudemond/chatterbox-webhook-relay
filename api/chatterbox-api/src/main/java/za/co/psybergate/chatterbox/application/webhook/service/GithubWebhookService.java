@@ -4,25 +4,33 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
+import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
-public class WebhookServiceImpl implements WebhookService {
+public class GithubWebhookService implements WebhookService {
 
     private final WebhookValidator webhookValidator;
+
+    private final GithubEventExtractor eventExtractor;
+
+    private final WebhookLogger webhookLogger;
 
     @Override
     public void process(String eventType, JsonNode rawBody) {
         String repositoryName = getRepositoryName(rawBody);
         webhookValidator.assertAcceptedRepository(repositoryName);
         webhookValidator.assertAcceptedEvent(eventType);
+
+        GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
+        webhookLogger.logWebhookReceived(eventDto);
         // TODO BlakeGoudemond 2025/12/04 | use this information to
         //  - Prepare a Payload for MS Teams
         //  - Send the Payload to MS Teams
-        log.warn("Github Webhook received by Github API");
     }
 
     @Override
