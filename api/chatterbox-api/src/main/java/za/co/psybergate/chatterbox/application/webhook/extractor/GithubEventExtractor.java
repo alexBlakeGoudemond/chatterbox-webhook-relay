@@ -31,10 +31,10 @@ public class GithubEventExtractor {
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
-                read(payload, fields.get(REPOSITORY_NAME)),
-                read(payload, fields.get(SENDER_NAME)),
+                read(payload, fields.get(REPOSITORYNAME)),
+                read(payload, fields.get(SENDERNAME)),
                 read(payload, fields.get(URL)),
-                read(payload, fields.get(URL_DISPLAY_TEXT))
+                read(payload, fields.get(URLDISPLAYTEXT))
         );
     }
 

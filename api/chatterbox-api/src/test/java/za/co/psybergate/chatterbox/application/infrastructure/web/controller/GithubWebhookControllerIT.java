@@ -15,6 +15,7 @@ import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtr
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -81,6 +82,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         GithubWebhookService.class,
         WebhookValidatorImpl.class,
         GithubEventExtractor.class,
+        ConversionUtilitiesImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {

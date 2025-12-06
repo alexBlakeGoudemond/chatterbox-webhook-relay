@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /// - this test throws [ConstraintViolationException] for nulls
 @SpringBootTest(classes = {
         GithubEventExtractor.class,
+        WebhookValidatorImpl.class,
         ApplicationConfig.class,
         ConversionUtilitiesImpl.class,
         WebhookFilter.class,

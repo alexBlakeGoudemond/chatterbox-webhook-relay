@@ -46,12 +46,13 @@ public class ChatterboxConfigurationProperties {
 
     }
 
+
     @Getter
     public enum GithubIncomingMappingFieldKeys {
-        REPOSITORY_NAME("repositoryName"),
-        SENDER_NAME("senderName"),
+        REPOSITORYNAME("repositoryName"),
+        SENDERNAME("senderName"),
         URL("url"),
-        URL_DISPLAY_TEXT("urlDisplayText");
+        URLDISPLAYTEXT("urlDisplayText");
 
         GithubIncomingMappingFieldKeys(String fieldName) {
             this.fieldName = fieldName;
