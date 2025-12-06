@@ -103,6 +103,7 @@ public class WebhookFilter implements Filter {
         return encoding;
     }
 
+    // TODO BlakeGoudemond 2025/12/06 | make InternalServerException and place to handler
     private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws ApplicationException {
         try {
             return wrappedRequest.getInputStream().readAllBytes();

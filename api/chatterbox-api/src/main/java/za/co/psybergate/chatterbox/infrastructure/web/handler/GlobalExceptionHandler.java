@@ -1,5 +1,6 @@
 package za.co.psybergate.chatterbox.infrastructure.web.handler;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,11 +26,13 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<String> internalServerError(Exception ex) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> internalServerError(ConstraintViolationException ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ex.getMessage());
     }
+
+    // TODO BlakeGoudemond 2025/12/06 | Confirm that nothing in the code throws ApplicationExceptino - more specialised?
 
 }
