@@ -5,11 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class WebhookFilter implements Filter {
     private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,
                                       String event,
                                       String delivery,
-                                      String signature256) throws ApplicationException {
+                                      String signature256) throws UnauthorizedException {
         byte[] bodyBytes = getBodyAsBytes(wrappedRequest);
         String encoding = getCharacterEncoding(wrappedRequest);
         String rawBody = getRawBody(bodyBytes, encoding);
@@ -88,11 +87,11 @@ public class WebhookFilter implements Filter {
         webhookValidationLogger.logValidSignature();
     }
 
-    private String getRawBody(byte[] bodyBytes, String encoding) throws ApplicationException {
+    private String getRawBody(byte[] bodyBytes, String encoding) throws InternalServerException {
         try {
             return new String(bodyBytes, encoding);
         } catch (UnsupportedEncodingException e) {
-            throw new ApplicationException("Unexpected issue encountered when converting Byte[] into String", e);
+            throw new InternalServerException("Unexpected issue encountered when converting Byte[] into String", e);
         }
     }
 
@@ -104,7 +103,7 @@ public class WebhookFilter implements Filter {
         return encoding;
     }
 
-    private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws ApplicationException {
+    private byte[] getBodyAsBytes(CachedBodyHttpServletRequest wrappedRequest) throws InternalServerException {
         try {
             return wrappedRequest.getInputStream().readAllBytes();
         } catch (IOException e) {
