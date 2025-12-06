@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys;
 import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFields.*;
+import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,15 +30,15 @@ public class GithubEventExtractor {
         if (payloadMapping == null) {
             throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
         }
-        Map<String, String> fields = payloadMapping.getFields();
+        Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
-                read(payload, fields.get(REPOSITORY_NAME.toString())),
-                read(payload, fields.get(SENDER_NAME.toString())),
-                read(payload, fields.get(URL.toString())),
-                read(payload, fields.get(URL_DISPLAY_TEXT.toString()))
+                read(payload, fields.get(REPOSITORY_NAME)),
+                read(payload, fields.get(SENDER_NAME)),
+                read(payload, fields.get(URL)),
+                read(payload, fields.get(URL_DISPLAY_TEXT))
         );
     }
 
