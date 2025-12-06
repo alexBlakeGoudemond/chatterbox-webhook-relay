@@ -7,4 +7,6 @@ public interface ConversionUtilities {
 
     JsonNode getAsJson(String jsonString) throws InternalServerException;
 
+    String readPayload(String pathToFile);
+
 }

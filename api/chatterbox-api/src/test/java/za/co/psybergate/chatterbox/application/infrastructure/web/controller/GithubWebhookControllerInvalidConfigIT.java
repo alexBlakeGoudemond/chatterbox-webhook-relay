@@ -49,9 +49,6 @@ public class GithubWebhookControllerInvalidConfigIT {
     @Value("${webhook.github.secret}")
     private String webhookSecret;
 
-    @Value("${webhook.github.payload}")
-    private String webhookPayload;
-
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
 
@@ -61,6 +58,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     @Autowired
     private EncryptionUtilities encryptionUtilities;
 
+    @Autowired
     private ConversionUtilities conversionUtilities;
 
     /// One of the properties that the codebase expects is a field `urlDisplayText`.
@@ -69,23 +67,9 @@ public class GithubWebhookControllerInvalidConfigIT {
     @DisplayName("Invalid Properties: INTERNAL SERVER ERROR")
     @Test
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, webhookPayload);
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
         try {
             String expectedContentBody = "extract.<return value>.urlDisplayText: must not be null";
-            mockMvc.perform(httpRequest)
-                    .andExpect(status().isInternalServerError())
-                    .andExpect(content().string(expectedContentBody));
-        } catch (Exception e) {
-            fail("Expected the HttpRequest to succeed without an exception", e);
-        }
-    }
-
-    @DisplayName("Invalid JSON: INTERNAL SERVER ERROR")
-    @Test
-    void whenPostToGithubWebhook_WithInvalidJson_ThenInternalServerError() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, webhookPayload);
-        try {
-            String expectedContentBody = "should fail ...";
             mockMvc.perform(httpRequest)
                     .andExpect(status().isInternalServerError())
                     .andExpect(content().string(expectedContentBody));
@@ -103,6 +87,11 @@ public class GithubWebhookControllerInvalidConfigIT {
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", encryptedSignature);
+    }
+
+    private String readGithubPayload() {
+        String pathToFile = "src/test/resources/payload/githubPayloadInvalid.json";
+        return conversionUtilities.readPayload(pathToFile);
     }
 
 }

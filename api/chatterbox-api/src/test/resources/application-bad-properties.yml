@@ -7,8 +7,6 @@ server:
 webhook:
   github:
     secret: secret
-    # todo move to package
-    payload: "{\"hello\":\"world\",\"repository\": {\"full_name\": \"psyAlexBlakeGoudemond/chatterbox\"}, \"sender\": {\"login\": \"psyAlexBlakeGoudemond\"}, \"issue\": {\"html_url\": \"http://localhost:abcd\"}, \"head_commit\": {\"message\": \"Test message Is here!\"}}"
 chatterbox:
   github-repositories-accepted:
     - Psybergate-Knowledge-Repository/mentoring_software_foundations

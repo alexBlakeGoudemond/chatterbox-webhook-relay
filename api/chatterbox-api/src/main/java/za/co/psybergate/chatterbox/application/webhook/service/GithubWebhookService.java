@@ -18,7 +18,7 @@ public class GithubWebhookService implements WebhookService {
 
     private final GithubEventExtractor eventExtractor;
 
-    private WebhookLogger webhookLogger;
+    private final WebhookLogger webhookLogger;
 
     @Override
     public void process(String eventType, JsonNode rawBody) {
