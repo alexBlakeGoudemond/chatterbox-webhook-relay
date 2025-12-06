@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.application.webhook.extractor;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 
@@ -23,8 +23,12 @@ public class GithubEventExtractor {
 
     private final WebhookValidator webhookValidator;
 
+    /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
+    ///
+    /// The [GithubEventDto] has simple validation setup through the constructor of the record.
+    /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Valid
-    public GithubEventDto extract(String eventType, JsonNode payload) throws UnrecognizedRequestException {
+    public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException {
         var payloadMapping = webhookValidator.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 

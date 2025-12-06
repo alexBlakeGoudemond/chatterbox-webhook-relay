@@ -44,9 +44,6 @@ import static org.junit.jupiter.api.Assertions.*;
 })
 public class GithubEventExtractorTest {
 
-    // TODO BlakeGoudemond 2025/12/06 | write test where extractor.read has dotPath of null (not defined in properties?)
-    // TODO BlakeGoudemond 2025/12/06 | ffup what isValueNode() represents and how to write test for it
-
     @Autowired
     private ConversionUtilities conversionUtilities;
 
