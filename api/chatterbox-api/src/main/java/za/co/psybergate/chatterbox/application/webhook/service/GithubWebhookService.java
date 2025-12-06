@@ -8,8 +8,8 @@ import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtr
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GithubWebhookService implements WebhookService {
@@ -18,6 +18,8 @@ public class GithubWebhookService implements WebhookService {
 
     private final GithubEventExtractor eventExtractor;
 
+    private WebhookLogger webhookLogger;
+
     @Override
     public void process(String eventType, JsonNode rawBody) {
         String repositoryName = getRepositoryName(rawBody);
@@ -25,7 +27,7 @@ public class GithubWebhookService implements WebhookService {
         webhookValidator.assertAcceptedEvent(eventType);
 
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
-        log.debug("Github Webhook received by Github API; DTO: {}", eventDto);
+        webhookLogger.logWebhookReceived(eventDto);
         // TODO BlakeGoudemond 2025/12/04 | use this information to
         //  - Prepare a Payload for MS Teams
         //  - Send the Payload to MS Teams

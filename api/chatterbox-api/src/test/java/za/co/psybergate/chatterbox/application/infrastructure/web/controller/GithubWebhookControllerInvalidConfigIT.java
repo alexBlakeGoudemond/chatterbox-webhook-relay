@@ -80,6 +80,20 @@ public class GithubWebhookControllerInvalidConfigIT {
         }
     }
 
+    @DisplayName("Invalid JSON: INTERNAL SERVER ERROR")
+    @Test
+    void whenPostToGithubWebhook_WithInvalidJson_ThenInternalServerError() {
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, webhookPayload);
+        try {
+            String expectedContentBody = "should fail ...";
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(content().string(expectedContentBody));
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to succeed without an exception", e);
+        }
+    }
+
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
         String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")

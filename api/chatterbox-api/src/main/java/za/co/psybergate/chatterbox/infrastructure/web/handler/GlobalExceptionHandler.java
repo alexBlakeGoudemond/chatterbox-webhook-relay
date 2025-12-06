@@ -40,6 +40,4 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    // TODO BlakeGoudemond 2025/12/06 | Confirm that nothing in the code throws ApplicationExceptino - more specialised?
-
 }

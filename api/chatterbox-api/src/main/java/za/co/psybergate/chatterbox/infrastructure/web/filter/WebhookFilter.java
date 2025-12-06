@@ -24,14 +24,14 @@ public class WebhookFilter implements Filter {
     @Value("${webhook.github.secret}")
     private String webhookSecret;
 
-    private final WebhookLogger webhookValidationLogger;
+    private final WebhookLogger webhookLogger;
 
     private final EncryptionUtilities encryptionUtilities;
 
     private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    public WebhookFilter(WebhookLogger webhookValidationLogger, EncryptionUtilities encryptionUtilities, WebhookRuntimeMetrics webhookRuntimeMetrics) {
-        this.webhookValidationLogger = webhookValidationLogger;
+    public WebhookFilter(WebhookLogger webhookLogger, EncryptionUtilities encryptionUtilities, WebhookRuntimeMetrics webhookRuntimeMetrics) {
+        this.webhookLogger = webhookLogger;
         this.encryptionUtilities = encryptionUtilities;
         this.webhookRuntimeMetrics = webhookRuntimeMetrics;
     }
@@ -57,7 +57,7 @@ public class WebhookFilter implements Filter {
         long ms = System.currentTimeMillis() - start;
 
         webhookRuntimeMetrics.recordProcessingSuccess(event);
-        webhookValidationLogger.logCompletion(ms);
+        webhookLogger.logCompletion(ms);
         MDC.clear();
     }
 
@@ -69,22 +69,22 @@ public class WebhookFilter implements Filter {
         String encoding = getCharacterEncoding(wrappedRequest);
         String rawBody = getRawBody(bodyBytes, encoding);
 
-        webhookValidationLogger.logReceivedWebhookEvent(event, delivery);
+        webhookLogger.logReceivedWebhookEvent(event, delivery);
 
         if (signature256 == null) {
-            webhookValidationLogger.logMissingSignature();
+            webhookLogger.logMissingSignature();
             webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Missing X-Hub-Signature-256");
         }
 
         String expected = encryptionUtilities.encryptUsingSHA256(webhookSecret, rawBody);
         if (!encryptionUtilities.isIdentical(expected, signature256)) {
-            webhookValidationLogger.logInvalidSignature(expected, signature256);
+            webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match body");
         }
 
-        webhookValidationLogger.logValidSignature();
+        webhookLogger.logValidSignature();
     }
 
     private String getRawBody(byte[] bodyBytes, String encoding) throws InternalServerException {
