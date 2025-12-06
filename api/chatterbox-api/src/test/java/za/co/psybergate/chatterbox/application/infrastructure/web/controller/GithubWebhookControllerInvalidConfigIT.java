@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 @WebMvcTest(GithubWebhookController.class)
 @ActiveProfiles({"bad-properties"})
-public class GithubControllerBadPropertiesIT {
+public class GithubWebhookControllerInvalidConfigIT {
 
     @Value("${api.prefix}")
     private String apiPrefix;
@@ -63,6 +63,9 @@ public class GithubControllerBadPropertiesIT {
 
     private ConversionUtilities conversionUtilities;
 
+    /// One of the properties that the codebase expects is a field `urlDisplayText`.
+    /// This test uses a properties file where this field is NOT included; the assertion is that
+    /// a 500 Http StatusCode is produced
     @DisplayName("Invalid Properties: INTERNAL SERVER ERROR")
     @Test
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
