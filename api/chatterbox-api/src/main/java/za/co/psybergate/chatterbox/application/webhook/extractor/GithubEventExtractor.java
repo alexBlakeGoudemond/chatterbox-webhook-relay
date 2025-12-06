@@ -1,21 +1,28 @@
 package za.co.psybergate.chatterbox.application.webhook.extractor;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
+import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
+@Validated
 public class GithubEventExtractor {
 
     private final ChatterboxConfigurationProperties configurationProperties;
 
-    public GithubEventDto extract(String eventType, JsonNode payload) throws UnrecognizedRequestException {
+    @Valid
+    public GithubEventDto extract(String eventType, JsonNode payload) throws ApplicationException {
         var payloadMapping = configurationProperties.getGithubIncomingMappings().get(eventType);
         if (payloadMapping == null) {
             throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));

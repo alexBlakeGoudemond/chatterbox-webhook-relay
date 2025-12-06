@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> forbidden(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<String> internalServerError(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ex.getMessage());
     }
 
