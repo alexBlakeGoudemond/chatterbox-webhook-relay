@@ -43,3 +43,12 @@ chatterbox:
         senderName: "sender.login"
         url: "issue.html_url"
         urlDisplayText: "head_commit.message"
+teams-card-template:
+  adaptive-card:
+    attachments:
+      - content:
+          msteams:
+            width: Full
+          body:
+            - text: "📢 ${displayName} for ${repositoryName}"
+            - text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"

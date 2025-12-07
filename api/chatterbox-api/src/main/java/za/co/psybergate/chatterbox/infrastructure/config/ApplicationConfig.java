@@ -7,10 +7,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.TeamsAdaptiveCardTemplateProperties;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 @Configuration
-@EnableConfigurationProperties(ChatterboxConfigurationProperties.class)
+@EnableConfigurationProperties({
+        ChatterboxConfigurationProperties.class,
+        TeamsAdaptiveCardTemplateProperties.class
+})
 public class ApplicationConfig {
 
     @Value("${api.prefix}")

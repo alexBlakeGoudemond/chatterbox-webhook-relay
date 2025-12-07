@@ -55,7 +55,6 @@ chatterbox:
         senderName: "sender.login"
         url: "compare"
         urlDisplayText: "head_commit.message"
-    # todo: investigate how to collapse urlDisplayTets that has newline chars
     pull_request:
       displayName: "Pull Request Event"
       fields:
@@ -63,3 +62,12 @@ chatterbox:
         senderName: "pull_request.user.login"
         url: "pull_request.html_url"
         urlDisplayText: "pull_request.title"
+teams-card-template:
+  adaptive-card:
+    attachments:
+      - content:
+          msteams:
+            width: Full
+          body:
+            - text: "📢 ${displayName} for ${repositoryName}"
+            - text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
