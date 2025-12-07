@@ -32,13 +32,18 @@ public class GithubEventExtractor {
         var payloadMapping = webhookValidator.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
+        String displayName = payloadMapping.getDisplayName();
+        String repositoryName = read(payload, fields.get(REPOSITORYNAME));
+        String senderName = read(payload, fields.get(SENDERNAME));
+        String url = read(payload, fields.get(URL));
+        String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
         return new GithubEventDto(
                 eventType,
-                payloadMapping.getDisplayName(),
-                read(payload, fields.get(REPOSITORYNAME)),
-                read(payload, fields.get(SENDERNAME)),
-                read(payload, fields.get(URL)),
-                read(payload, fields.get(URLDISPLAYTEXT))
+                displayName,
+                repositoryName,
+                senderName,
+                url,
+                urlDisplayText == null ? displayName : urlDisplayText
         );
     }
 

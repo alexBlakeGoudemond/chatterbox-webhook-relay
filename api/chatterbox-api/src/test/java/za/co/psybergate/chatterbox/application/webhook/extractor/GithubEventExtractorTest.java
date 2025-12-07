@@ -56,62 +56,65 @@ public class GithubEventExtractorTest {
     @DisplayName("Extractor maps to DTO")
     @Test
     public void givenJsonString_WhenExtract_ThenSuccess() {
-        String jsonString = getValidJsonString();
-        JsonNode asJson = conversionUtilities.getAsJson(jsonString);
-        GithubEventDto eventDto = eventExtractor.extract("push", asJson);
+        JsonNode jsonNode = conversionUtilities.getAsJson(getValidJsonString());
+        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
 
         assertNotNull(eventDto);
         assertEquals("push", eventDto.eventType());
-        assertEquals("ChuckNorris", eventDto.repositoryName());
-        assertEquals("wildWest", eventDto.senderName());
+        assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
+        assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
-        assertEquals("dummy push event", eventDto.urlDisplayText());
+        assertEquals("Test message Is here!", eventDto.urlDisplayText());
     }
 
     @DisplayName("Unknown Event: FORBIDDEN")
     @Test
     public void givenJsonString_WithUnknownEvent_WhenExtract_ThenForbidden() {
-        String jsonStringWithUnknownEvent = """
-                        {
-                            "eventType": "unknownEvent"
-                        }
-                """;
-        JsonNode asJson = conversionUtilities.getAsJson(jsonStringWithUnknownEvent);
+        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithUnknownEvent());
         assertThrows(UnrecognizedRequestException.class,
-                () -> eventExtractor.extract("unknownEvent", asJson));
+                () -> eventExtractor.extract("unknownEvent", jsonNode));
     }
 
     @DisplayName("Missing JSON keys: Exception")
     @Test
     public void givenIncompleteJsonString_WhenExtract_ThenFailure() {
-        String jsonStringWithMissingProperties = """
-                    {
-                        "eventType": "push"
-                    }
-                """;
-        JsonNode asJson = conversionUtilities.getAsJson(jsonStringWithMissingProperties);
+        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithMissingProperties());
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.extract("push", asJson));
+                () -> eventExtractor.extract("push", jsonNode));
+    }
+
+    @DisplayName("No UrlDisplayText == eventType")
+    @Test
+    public void givenJsonString_WithNoUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsEventType() {
+        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithNoUrlDisplayText());
+        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+
+        assertNotNull(eventDto);
+        assertEquals("push", eventDto.eventType());
+        assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
+        assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
+        assertEquals("http://localhost:abcd", eventDto.url());
+        assertEquals(eventDto.urlDisplayText(), eventDto.eventType());
+    }
+
+    private String jsonStringWithNoUrlDisplayText() {
+        String pathToFile = "src/test/resources/payload/github-payload-invalid-no-url-display-text.json";
+        return conversionUtilities.readPayload(pathToFile);
+    }
+
+    private String jsonStringWithMissingProperties() {
+        String pathToFile = "src/test/resources/payload/github-payload-invalid-missing-properties.json";
+        return conversionUtilities.readPayload(pathToFile);
+    }
+
+    private String jsonStringWithUnknownEvent() {
+        String pathToFile = "src/test/resources/payload/github-payload-invalid-unknown-event-type.json";
+        return conversionUtilities.readPayload(pathToFile);
     }
 
     private String getValidJsonString() {
-        return """
-                    {
-                        "eventType": "push",
-                        "repository": {
-                            "full_name": "ChuckNorris"
-                        },
-                        "sender": {
-                            "login": "wildWest"
-                        },
-                        "issue": {
-                            "html_url": "http://localhost:abcd"
-                        },
-                        "head_commit": {
-                            "message": "dummy push event"
-                        }
-                    }
-                """;
+        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
+        return conversionUtilities.readPayload(pathToFile);
     }
 
 }

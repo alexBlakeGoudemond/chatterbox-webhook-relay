@@ -20,6 +20,7 @@ chatterbox:
     push:
       displayName: "Push Event"
       fields:
-        repositoryName: "repository.full_name"
+#        repositoryName: "repository.full_name" # intentional - test confirms this is supposed to be present
         senderName: "sender.login"
         url: "issue.html_url"
+        urlDisplayText: "head_commit.message"

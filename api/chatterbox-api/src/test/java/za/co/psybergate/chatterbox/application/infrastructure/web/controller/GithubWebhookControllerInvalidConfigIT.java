@@ -69,7 +69,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
         try {
-            String expectedContentBody = "extract.<return value>.urlDisplayText: must not be null";
+            String expectedContentBody = "extract.<return value>.repositoryName: must not be null";
             mockMvc.perform(httpRequest)
                     .andExpect(status().isInternalServerError())
                     .andExpect(content().string(expectedContentBody));
@@ -90,7 +90,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     }
 
     private String readGithubPayload() {
-        String pathToFile = "src/test/resources/payload/githubPayloadInvalid.json";
+        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
         return conversionUtilities.readPayload(pathToFile);
     }
 
