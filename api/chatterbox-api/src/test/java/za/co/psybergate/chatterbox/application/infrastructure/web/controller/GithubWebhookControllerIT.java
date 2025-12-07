@@ -266,7 +266,7 @@ public class GithubWebhookControllerIT {
     }
 
     private String readGithubPayload() {
-        String pathToFile = "src/test/resources/payload/githubPayloadValid.json";
+        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
         return conversionUtilities.readPayload(pathToFile);
     }
 

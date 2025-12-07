@@ -8,7 +8,7 @@ public record GithubEventDto(
         @NotNull String repositoryName,
         @NotNull String senderName,
         @NotNull String url,
-        @NotNull String urlDisplayText
+        String urlDisplayText
 ) {
 
 }
