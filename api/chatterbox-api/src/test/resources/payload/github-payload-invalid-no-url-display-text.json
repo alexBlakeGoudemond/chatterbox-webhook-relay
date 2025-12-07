@@ -8,8 +8,5 @@
     },
     "issue": {
         "html_url": "http://localhost:abcd"
-    },
-    "head_commit": {
-        "message": "Test message Is here!"
     }
 }

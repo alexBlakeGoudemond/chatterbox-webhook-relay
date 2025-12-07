@@ -55,6 +55,7 @@ chatterbox:
         senderName: "sender.login"
         url: "compare"
         urlDisplayText: "head_commit.message"
+    # todo: investigate how to collapse urlDisplayTets that has newline chars
     pull_request:
       displayName: "Pull Request Event"
       fields:
