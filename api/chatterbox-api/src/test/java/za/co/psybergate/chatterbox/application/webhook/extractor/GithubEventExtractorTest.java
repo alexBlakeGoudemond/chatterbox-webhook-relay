@@ -94,7 +94,28 @@ public class GithubEventExtractorTest {
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
-        assertEquals(eventDto.urlDisplayText(), eventDto.eventType());
+        assertEquals("Push Event", eventDto.urlDisplayText());
+    }
+
+    @DisplayName("Long UrlDisplayText is Truncated")
+    @Test
+    public void givenJsonString_WithLongUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsTruncated(){
+        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithLongUrlDisplayText());
+        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+
+        assertNotNull(eventDto);
+        assertEquals("push", eventDto.eventType());
+        assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
+        assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
+        assertEquals("http://localhost:abcd", eventDto.url());
+
+        assertFalse(eventDto.urlDisplayText().contains("\n"));
+        assertTrue(eventDto.urlDisplayText().contains("..."));
+    }
+
+    private String jsonStringWithLongUrlDisplayText() {
+        String pathToFile = "src/test/resources/payload/github-payload-valid-long-url-display-text.json";
+        return conversionUtilities.readPayload(pathToFile);
     }
 
     private String jsonStringWithNoUrlDisplayText() {

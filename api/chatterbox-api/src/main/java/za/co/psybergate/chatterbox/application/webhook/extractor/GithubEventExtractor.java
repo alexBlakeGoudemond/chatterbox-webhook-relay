@@ -32,19 +32,29 @@ public class GithubEventExtractor {
         var payloadMapping = webhookValidator.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
-        String displayName = payloadMapping.getDisplayName();
-        String repositoryName = read(payload, fields.get(REPOSITORYNAME));
-        String senderName = read(payload, fields.get(SENDERNAME));
-        String url = read(payload, fields.get(URL));
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
+        String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
         return new GithubEventDto(
                 eventType,
-                displayName,
-                repositoryName,
-                senderName,
-                url,
-                urlDisplayText == null ? displayName : urlDisplayText
+                payloadMapping.getDisplayName(),
+                read(payload, fields.get(REPOSITORYNAME)),
+                read(payload, fields.get(SENDERNAME)),
+                read(payload, fields.get(URL)),
+                formattedUrlDisplayText
         );
+    }
+
+    private String format(String urlDisplayText, String displayName) {
+        if (urlDisplayText == null) {
+            return displayName;
+        }
+        urlDisplayText = urlDisplayText.replace("\n\n", " ");
+        urlDisplayText = urlDisplayText.replace("\r\n", " ");
+        int maxLength = 50;
+        if (urlDisplayText.length() > maxLength) {
+            urlDisplayText = urlDisplayText.substring(0, maxLength) + " ...";
+        }
+        return urlDisplayText;
     }
 
     private String read(JsonNode json, String dotPath) {
