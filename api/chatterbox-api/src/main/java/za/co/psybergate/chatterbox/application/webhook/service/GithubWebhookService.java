@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.application.webhook.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
@@ -20,6 +19,8 @@ public class GithubWebhookService implements WebhookService {
 
     private final WebhookLogger webhookLogger;
 
+    private final TeamsSenderService teamsSenderService;
+
     @Override
     public void process(String eventType, JsonNode rawBody) {
         String repositoryName = getRepositoryName(rawBody);
@@ -28,9 +29,7 @@ public class GithubWebhookService implements WebhookService {
 
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
-        // TODO BlakeGoudemond 2025/12/04 | use this information to
-        //  - Prepare a Payload for MS Teams
-        //  - Send the Payload to MS Teams
+        teamsSenderService.process(eventDto);
     }
 
     @Override

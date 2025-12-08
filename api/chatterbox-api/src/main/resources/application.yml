@@ -55,6 +55,8 @@ chatterbox:
         senderName: "sender.login"
         url: "compare"
         urlDisplayText: "head_commit.message"
+      destinations:
+        - "TestChannel"
     pull_request:
       displayName: "Pull Request Event"
       fields:
@@ -62,6 +64,8 @@ chatterbox:
         senderName: "pull_request.user.login"
         url: "pull_request.html_url"
         urlDisplayText: "pull_request.title"
+      destinations:
+        - "TestChannel"
 teams-card-template:
   adaptive-card:
     attachments:

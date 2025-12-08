@@ -43,6 +43,8 @@ chatterbox:
         senderName: "sender.login"
         url: "issue.html_url"
         urlDisplayText: "head_commit.message"
+      destinations:
+        - "TestChannel"
 teams-card-template:
   adaptive-card:
     attachments:

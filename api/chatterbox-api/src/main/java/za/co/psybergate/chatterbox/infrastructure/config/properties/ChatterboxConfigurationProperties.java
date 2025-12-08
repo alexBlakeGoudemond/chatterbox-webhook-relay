@@ -44,6 +44,8 @@ public class ChatterboxConfigurationProperties {
 
         private Map<GithubIncomingMappingFieldKeys, String> fields;
 
+        private List<String> destinations;
+
     }
 
 
