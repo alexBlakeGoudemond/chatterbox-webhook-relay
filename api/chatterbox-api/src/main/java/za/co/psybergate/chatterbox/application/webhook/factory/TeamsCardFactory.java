@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
+import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.TeamsAdaptiveCardTemplateProperties;
 
@@ -34,6 +35,19 @@ public class TeamsCardFactory {
         });
 
         return clone;
+    }
+
+    /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactory#buildCard(Map)]
+    /// to create a [TeamsAdaptiveCardTemplate]
+    public TeamsAdaptiveCardTemplate buildCard(GithubEventDto dto) {
+        Map<String, String> values = Map.of(
+                "displayName", dto.displayName(),
+                "repositoryName", dto.repositoryName(),
+                "senderName", dto.senderName(),
+                "url", dto.url(),
+                "urlDisplayText", dto.urlDisplayText()
+        );
+        return buildCard(values);
     }
 
     private TeamsAdaptiveCardTemplate deepCopy(TeamsAdaptiveCardTemplate src) {
