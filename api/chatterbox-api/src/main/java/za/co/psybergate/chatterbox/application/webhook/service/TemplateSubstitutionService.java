@@ -6,14 +6,27 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO BlakeGoudemond 2025/12/07 | add javadocs to this class
 @Service
 public class TemplateSubstitutionService {
 
     private static final Pattern PLACEHOLDER = Pattern.compile("\\$\\{([^}]+)}");
 
-    public String apply(String template, Map<String, String> values) {
-        Matcher matcher = PLACEHOLDER.matcher(template);
+    /// From a given [Map] of property values, replace all placeholders in the form
+    /// of `${...}` with the appropriate value
+    ///
+    /// For example, if the values are
+    ///
+    /// `[{"displayName", "Pull Request Event"}, {"repositoryName", "psyAlexBlakeGoudemond/chatterbox"}]`
+    ///
+    /// and the textToReplace is
+    ///
+    /// `📢 ${displayName} for ${repositoryName}`
+    ///
+    /// then the replacemed String is:
+    ///
+    /// `📢 Pull Request Event for psyAlexBlakeGoudemond/chatterbox`
+    public String apply(String textToReplace, Map<String, String> values) {
+        Matcher matcher = PLACEHOLDER.matcher(textToReplace);
         StringBuilder stringBuilder = new StringBuilder();
 
         while (matcher.find()) {

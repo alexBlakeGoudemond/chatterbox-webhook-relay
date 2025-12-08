@@ -17,17 +17,18 @@ public class TeamsCardFactory {
 
     private final TemplateSubstitutionService substitutionService;
 
-    // TODO BlakeGoudemond 2025/12/07 | Add Javadoc
+    /// From a given [Map] of property values, create and populate the
+    /// [TeamsAdaptiveCardTemplate]
     public TeamsAdaptiveCardTemplate buildCard(Map<String, String> values) {
         TeamsAdaptiveCardTemplate clone = deepCopy(template); // use Jackson
 
-        clone.getAttachments().forEach(att -> {
-            TeamsAdaptiveCardTemplate.Content content = att.getContent();
+        clone.getAttachments().forEach(attachment -> {
+            var content = attachment.getContent();
 
-            content.getBody().forEach(body -> {
-                String original = body.getText();
-                body.setText(
-                        substitutionService.apply(original, values)
+            content.getBody().forEach(bodyItem -> {
+                String textAsJsonKey = bodyItem.getText();
+                bodyItem.setText(
+                        substitutionService.apply(textAsJsonKey, values)
                 );
             });
         });

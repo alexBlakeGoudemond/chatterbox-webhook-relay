@@ -13,7 +13,6 @@ import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidato
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
@@ -30,28 +29,28 @@ import static org.junit.jupiter.api.Assertions.*;
 /// - `@Validated` on GithubEventExtractor works
 /// - `@Valid` on the return type triggers
 /// - `@NotNull` on the GithubEventDto fields is enforced
-/// - this test throws [ConstraintViolationException] for nulls
 @SpringBootTest(classes = {
         GithubEventExtractor.class,
         WebhookValidatorImpl.class,
         ApplicationConfig.class,
         ConversionUtilitiesImpl.class,
-        WebhookFilter.class,
         WebhookLogger.class,
-        EncryptionUtilitiesImpl.class,
         MethodValidationPostProcessor.class,
         LocalValidatorFactoryBean.class,
 })
 public class GithubEventExtractorTest {
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
     private ConversionUtilities conversionUtilities;
 
     @Autowired
     private GithubEventExtractor eventExtractor;
-
-    @MockitoBean
-    private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
 
     @DisplayName("Extractor maps to DTO")
     @Test

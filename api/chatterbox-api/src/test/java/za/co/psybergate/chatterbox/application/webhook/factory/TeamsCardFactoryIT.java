@@ -1,12 +1,17 @@
 package za.co.psybergate.chatterbox.application.webhook.factory;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,15 +19,20 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-//        (classes = {
-//        TemplateSubstitutionService.class,
-//        TeamsCardFactory.class,
-//        ConversionUtilitiesImpl.class,
-//        TeamsAdaptiveCardTemplateProperties.class,
-//        ApplicationConfig.class,
-//})
+@SpringBootTest(classes = {
+        TeamsCardFactory.class,
+        TeamsAdaptiveCardTemplate.class,
+        TemplateSubstitutionService.class,
+        ApplicationConfig.class,
+        ConversionUtilitiesImpl.class,
+})
 public class TeamsCardFactoryIT {
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
 
     @Autowired
     private TeamsCardFactory teamsCardFactory;
@@ -40,6 +50,7 @@ public class TeamsCardFactoryIT {
             teamsAdaptiveCardTemplate = teamsCardFactory.buildCard(propertiesToUse);
         } catch (Exception e) {
             fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
+            return;
         }
 
         assertNotNull(teamsAdaptiveCardTemplate);
