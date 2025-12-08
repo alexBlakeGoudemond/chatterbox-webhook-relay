@@ -1,5 +1,6 @@
 package za.co.psybergate.chatterbox.domain.template;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -29,7 +30,8 @@ public class TeamsAdaptiveCardTemplate {
 
         private List<BodyItem> body;
 
-        private String $schema = "http://adaptivecards.io/schemas/adaptive-card.json";
+        @JsonProperty("$schema")
+        private String schema = "http://adaptivecards.io/schemas/adaptive-card.json";
 
         private String version = "1.0";
 

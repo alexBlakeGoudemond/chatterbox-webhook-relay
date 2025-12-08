@@ -1,6 +1,8 @@
 package za.co.psybergate.chatterbox.application.webhook.factory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,15 +56,11 @@ public class TeamsCardFactoryIT {
     @DisplayName("Factory(Map) can build template")
     @Test
     public void givenProperties_WhenTemplateIsBuilt_ThenSuccess() {
-        Map<String, String> propertiesToUse = getPropertiesToUse();
-
-        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = null;
-        try {
-            teamsAdaptiveCardTemplate = teamsCardFactory.buildCard(propertiesToUse);
-        } catch (Exception e) {
+        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateUsingMap();
+        if (teamsAdaptiveCardTemplate == null) {
             fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
-            return;
         }
+        ;
 
         assertNotNull(teamsAdaptiveCardTemplate);
         List<TeamsAdaptiveCardTemplate.BodyItem> bodyItems = teamsAdaptiveCardTemplate.getAttachments().getFirst().getContent().getBody();
@@ -74,21 +72,54 @@ public class TeamsCardFactoryIT {
     @DisplayName("Factory(DTO) can build template")
     @Test
     public void givenGithubEventDto_WhenBuildTeamsAdaptiveCard_ThenSuccess() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(getValidJsonString());
-        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
-
-        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = null;
-        try {
-            teamsAdaptiveCardTemplate = teamsCardFactory.buildCard(eventDto);
-        } catch (Exception e) {
+        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateFromJsonString();
+        if (teamsAdaptiveCardTemplate == null) {
             fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
-            return;
         }
 
         assertNotNull(teamsAdaptiveCardTemplate);
         List<TeamsAdaptiveCardTemplate.BodyItem> bodyItems = teamsAdaptiveCardTemplate.getAttachments().getFirst().getContent().getBody();
         for (var bodyItem : bodyItems) {
             assertFalse(bodyItem.getText().contains("${}"));
+        }
+    }
+
+    @DisplayName("Template --> JSON")
+    @Test
+    public void whenCompareTemplate_ToJson_ThenIdentical() {
+        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateFromJsonString();
+        if (teamsAdaptiveCardTemplate == null) {
+            fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode actualJson = objectMapper.valueToTree(teamsAdaptiveCardTemplate);
+        JsonNode expectedJson = null;
+        try {
+            expectedJson = objectMapper.readTree(exampleTeamsPayload());
+        } catch (JsonProcessingException e) {
+            fail("Unexpected issue when converting JsonString into JsonNode", e);
+        }
+
+        assertEquals(expectedJson, actualJson);
+    }
+
+    private TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateFromJsonString() {
+        JsonNode jsonNode = conversionUtilities.getAsJson(getValidJsonString());
+        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+        try {
+            return teamsCardFactory.buildCard(eventDto);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateUsingMap() {
+        Map<String, String> propertiesToUse = getPropertiesToUse();
+        try {
+            return teamsCardFactory.buildCard(propertiesToUse);
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -102,7 +133,7 @@ public class TeamsCardFactoryIT {
         return propertiesToUse;
     }
 
-    private String readExampleTeamsPayload() {
+    private String exampleTeamsPayload() {
         String pathToFile = "src/test/resources/payload/teams-payload-valid.json";
         return conversionUtilities.readPayload(pathToFile);
     }
