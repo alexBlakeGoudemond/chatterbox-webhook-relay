@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderService;
 import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
@@ -83,7 +83,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookLogger.class,
         EncryptionUtilitiesImpl.class,
         ApplicationConfig.class,
-        GithubWebhookService.class,
+        GithubWebhookServiceImpl.class,
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractor.class,
