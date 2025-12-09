@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.application.webhook.factory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
+import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionServiceImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.TeamsAdaptiveCardTemplateProperties;
@@ -16,7 +16,7 @@ public class TeamsCardFactory {
 
     private final TeamsAdaptiveCardTemplateProperties template;
 
-    private final TemplateSubstitutionService substitutionService;
+    private final TemplateSubstitutionServiceImpl substitutionService;
 
     /// From a given [Map] of property values, create and populate the
     /// [TeamsAdaptiveCardTemplate]

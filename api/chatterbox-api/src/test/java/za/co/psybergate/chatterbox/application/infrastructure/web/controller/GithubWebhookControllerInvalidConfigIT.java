@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
+import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         ConversionUtilitiesImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactory.class,
-        TemplateSubstitutionService.class,
+        TemplateSubstitutionServiceImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 @ActiveProfiles({"bad-properties"})
