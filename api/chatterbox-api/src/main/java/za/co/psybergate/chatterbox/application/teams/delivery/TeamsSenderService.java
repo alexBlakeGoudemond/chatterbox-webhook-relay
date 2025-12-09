@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.teams.sending;
+package za.co.psybergate.chatterbox.application.teams.delivery;
 
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 
