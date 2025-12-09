@@ -1,12 +1,13 @@
 package za.co.psybergate.chatterbox.application.webhook.resolver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class WebhookConfigurationResolverImpl implements WebhookConfigurationResolver {
 

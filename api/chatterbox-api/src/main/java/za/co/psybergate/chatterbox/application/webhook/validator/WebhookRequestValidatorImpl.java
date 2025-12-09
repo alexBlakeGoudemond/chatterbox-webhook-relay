@@ -1,12 +1,13 @@
 package za.co.psybergate.chatterbox.application.webhook.validator;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
 

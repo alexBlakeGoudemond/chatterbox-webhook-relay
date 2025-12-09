@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
-import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderServiceImpl;
@@ -86,10 +86,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         GithubWebhookServiceImpl.class,
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
-        GithubEventExtractor.class,
+        GithubEventExtractorImpl.class,
         ConversionUtilitiesImpl.class,
         TeamsSenderServiceImpl.class,
-        TeamsCardFactory.class,
+        TeamsCardFactoryImpl.class,
         TemplateSubstitutionServiceImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
