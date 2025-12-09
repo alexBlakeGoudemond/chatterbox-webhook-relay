@@ -65,6 +65,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
         assertEquals("Test message Is here!", eventDto.urlDisplayText());
+        assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
     }
 
     @DisplayName("Unknown Event: FORBIDDEN")
@@ -103,6 +104,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
         assertEquals("Push Event", eventDto.urlDisplayText());
+        assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
     }
 
     @DisplayName("Long UrlDisplayText is Truncated")
@@ -116,6 +118,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
+        assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
 
         assertFalse(eventDto.urlDisplayText().contains("\n"));
         assertTrue(eventDto.urlDisplayText().contains("..."));
