@@ -1,8 +1,7 @@
-package za.co.psybergate.chatterbox.application.webhook.resolver;
+package za.co.psybergate.chatterbox.application.webhook.extractor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;

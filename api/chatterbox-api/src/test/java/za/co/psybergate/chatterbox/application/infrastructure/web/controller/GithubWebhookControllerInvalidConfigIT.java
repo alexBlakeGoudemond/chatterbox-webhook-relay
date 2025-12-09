@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.webhook.extractor.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionServiceImpl;

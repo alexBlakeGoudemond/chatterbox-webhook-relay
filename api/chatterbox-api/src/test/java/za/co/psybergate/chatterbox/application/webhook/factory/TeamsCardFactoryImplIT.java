@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.webhook.extractor.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionServiceImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
