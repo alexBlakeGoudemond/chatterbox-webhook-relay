@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.extractor.resolver;
+package za.co.psybergate.chatterbox.application.webhook.routing;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

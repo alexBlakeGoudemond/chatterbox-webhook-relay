@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 
 @RestController
 @RequestMapping("${api.prefix}/webhook/github")
