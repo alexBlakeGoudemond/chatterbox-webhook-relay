@@ -4,10 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import reactor.core.publisher.Mono;
+import org.springframework.http.HttpStatus;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class TeamsSenderServiceImplTest {
@@ -26,7 +30,9 @@ public class TeamsSenderServiceImplTest {
         JsonNode jsonNode = jsonConverter.getAsJson(getValidJsonString());
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
 
-        teamsSenderService.send(eventDto);
+        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
+        assertNotNull(httpResponseDto);
+        assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
     }
 
     private String getValidJsonString() {

@@ -7,6 +7,7 @@ import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
@@ -30,7 +31,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
-        teamsSenderService.process(eventDto);
+        HttpResponseDto process = teamsSenderService.process(eventDto);
     }
 
     @Override

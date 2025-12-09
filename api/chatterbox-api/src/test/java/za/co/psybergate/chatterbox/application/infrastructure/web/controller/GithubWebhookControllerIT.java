@@ -76,7 +76,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 ///                  │
 ///                  ▼
 ///        Back to test assertion
-///        (e.g., .andExpect(status().isAccepted()))
+///        (e.g., .andExpect(httpStatus().isAccepted()))
 /// ```
 @Import({
         WebhookFilter.class,

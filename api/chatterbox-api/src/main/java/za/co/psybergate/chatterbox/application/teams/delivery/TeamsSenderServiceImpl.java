@@ -11,8 +11,8 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.io.IOException;
@@ -23,52 +23,45 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class TeamsSenderServiceImpl implements TeamsSenderService {
 
-//    private final WebClient webClient;
-
     private final TeamsCardFactoryImpl teamsCardFactory;
-
-//    private final RestTemplate restTemplate;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // TODO BlakeGoudemond 2025/12/09 | use logger component
     @Override
-    public void process(GithubEventDto eventDto) {
-        String teamsPayload = convertToTeamsPayload(eventDto);
-        System.out.println("teamsPayload = " + teamsPayload);
-//        Mono<Void> send = send(eventDto);
-        // TODO BlakeGoudemond 2025/12/09 | what to do with mono?
+    public HttpResponseDto process(GithubEventDto dto) throws InternalServerException {
+        String teamsDestination = dto.teamsDestination();
+        String jsonString = convertToTeamsPayload(dto);
+        return executeHttpPostRequest(teamsDestination, jsonString);
     }
 
-    /**
-     * Sends the mapped GithubEventDto as an Adaptive Card to a Teams webhook URL.
-     */
     @Override
-    public void send(GithubEventDto dto) {
-        String teamsDestination = dto.teamsDestination();
-        log.info("Sending card to Microsoft Teams webhook: {}", teamsDestination);
-        String jsonString = convertToTeamsPayload(dto);
-        log.debug("Teams Adaptive Card Payload: {}", jsonString);
+    public HttpResponseDto executeHttpPostRequest(String teamsDestination, String jsonString) throws InternalServerException {
+        HttpPost post = new HttpPost(teamsDestination);
+        post.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
+        post.setHeader("Content-Type", "application/json");
 
-        try (CloseableHttpClient client = HttpClients.custom()
-                .disableCookieManagement()
-                .setUserAgent("") // empty to avoid breaking signature
-                .build()) {
-
-            HttpPost post = new HttpPost(teamsDestination);
-            post.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
-            post.setHeader("Content-Type", "application/json");
-
-            client.execute(post, response -> {
-                System.out.println("Status: " + response.getCode());
-                return null;
+        try (CloseableHttpClient client = getCloseableHttpClient()) {
+            return client.execute(post, response -> {
+                int status = response.getCode();
+                String body = null;
+                if (response.getEntity() != null) {
+                    body = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
+                }
+                return new HttpResponseDto(status, body);
             });
         } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when sending POST Request to Teams", e);
+            throw new InternalServerException("Unexpected issue when sending POST Request to Teams", e);
         }
     }
 
-    private String convertToTeamsPayload(GithubEventDto eventDto) {
+    private CloseableHttpClient getCloseableHttpClient() {
+        return HttpClients.custom()
+                .disableCookieManagement()
+                .setUserAgent("")
+                .build();
+    }
+
+    private String convertToTeamsPayload(GithubEventDto eventDto) throws InternalServerException {
         TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = teamsCardFactory.buildCard(eventDto);
         String teamsPayload;
         try {
