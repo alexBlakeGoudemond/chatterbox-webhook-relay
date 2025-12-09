@@ -1,13 +1,13 @@
-package za.co.psybergate.chatterbox.application.webhook.service;
+package za.co.psybergate.chatterbox.application.teams.factory.template;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
-public class TemplateSubstitutionServiceImpl implements TemplateSubstitutionService {
+@Component
+public class TeamsTemplateSubstitutorImpl implements TeamsTemplateSubstitutor {
 
     private static final Pattern PLACEHOLDER = Pattern.compile("\\$\\{([^}]+)}");
 

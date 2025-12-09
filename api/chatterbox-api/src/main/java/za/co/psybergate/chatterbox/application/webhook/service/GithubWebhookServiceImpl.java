@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.application.webhook.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import za.co.psybergate.chatterbox.application.teams.service.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;

@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.extractor.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionServiceImpl;
+import za.co.psybergate.chatterbox.application.webhook.extractor.resolver.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
@@ -30,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {
         TeamsCardFactoryImpl.class,
         TeamsAdaptiveCardTemplate.class,
-        TemplateSubstitutionServiceImpl.class,
+        TeamsTemplateSubstitutorImpl.class,
         ApplicationConfig.class,
         ConversionUtilitiesImpl.class,
         GithubEventExtractorImpl.class,

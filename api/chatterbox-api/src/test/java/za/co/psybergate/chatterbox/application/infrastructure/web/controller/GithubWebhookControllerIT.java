@@ -12,11 +12,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.application.webhook.extractor.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.application.webhook.extractor.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.service.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
@@ -90,7 +90,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         ConversionUtilitiesImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
-        TemplateSubstitutionServiceImpl.class,
+        TeamsTemplateSubstitutorImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {

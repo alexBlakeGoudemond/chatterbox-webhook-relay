@@ -1,11 +1,11 @@
-package za.co.psybergate.chatterbox.application.webhook.service;
+package za.co.psybergate.chatterbox.application.teams.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;

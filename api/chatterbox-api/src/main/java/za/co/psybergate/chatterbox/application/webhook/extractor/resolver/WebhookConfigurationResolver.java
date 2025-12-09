@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.extractor;
+package za.co.psybergate.chatterbox.application.webhook.extractor.resolver;
 
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
