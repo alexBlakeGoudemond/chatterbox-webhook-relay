@@ -19,8 +19,8 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({
         WebhookFilter.class,
         WebhookLogger.class,
-        EncryptionUtilitiesImpl.class,
+        PayloadCryptorImpl.class,
         ApplicationConfig.class,
         GithubWebhookServiceImpl.class,
         WebhookRequestValidatorImpl.class,
@@ -64,7 +64,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private EncryptionUtilities encryptionUtilities;
+    private PayloadCryptor payloadCryptor;
 
     @Autowired
     private JsonConverter jsonConverter;
@@ -87,7 +87,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     }
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
-        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
