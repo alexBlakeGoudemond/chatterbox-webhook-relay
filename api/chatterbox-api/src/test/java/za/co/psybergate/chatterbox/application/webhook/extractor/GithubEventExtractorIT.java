@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
+import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /// - `@NotNull` on the GithubEventDto fields is enforced
 @SpringBootTest(classes = {
         GithubEventExtractor.class,
-        WebhookValidatorImpl.class,
+        WebhookConfigurationResolverImpl.class,
         ApplicationConfig.class,
         ConversionUtilitiesImpl.class,
         WebhookLogger.class,

@@ -12,10 +12,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderService;
 import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
-import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
+import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
@@ -38,7 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         EncryptionUtilitiesImpl.class,
         ApplicationConfig.class,
         GithubWebhookService.class,
-        WebhookValidatorImpl.class,
+        WebhookRequestValidatorImpl.class,
+        WebhookConfigurationResolverImpl.class,
         GithubEventExtractor.class,
         ConversionUtilitiesImpl.class,
         TeamsSenderService.class,

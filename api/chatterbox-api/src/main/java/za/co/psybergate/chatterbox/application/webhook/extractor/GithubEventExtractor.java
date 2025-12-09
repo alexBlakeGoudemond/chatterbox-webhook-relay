@@ -7,9 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
+import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.AcceptedRepository;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys;
 
 import java.util.Map;
@@ -22,7 +21,7 @@ import static za.co.psybergate.chatterbox.infrastructure.config.properties.Chatt
 @Validated
 public class GithubEventExtractor {
 
-    private final WebhookValidator webhookValidator;
+    private final WebhookConfigurationResolver webhookConfigurationResolver;
 
     /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
     ///
@@ -30,11 +29,11 @@ public class GithubEventExtractor {
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Valid
     public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException {
-        var payloadMapping = webhookValidator.getPayloadMapping(eventType);
+        var payloadMapping = webhookConfigurationResolver.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
         String repositoryName = read(payload, fields.get(REPOSITORYNAME));
-        String teamsDestinationUrl = webhookValidator.getDestinationUrl(repositoryName);
+        String teamsDestinationUrl = webhookConfigurationResolver.getDestinationUrl(repositoryName);
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
         String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
         return new GithubEventDto(

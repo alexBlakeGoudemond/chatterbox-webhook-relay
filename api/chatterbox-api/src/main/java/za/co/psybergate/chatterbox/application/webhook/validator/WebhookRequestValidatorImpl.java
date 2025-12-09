@@ -3,13 +3,12 @@ package za.co.psybergate.chatterbox.application.webhook.validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 @Service
 @RequiredArgsConstructor
-public class WebhookValidatorImpl implements WebhookValidator {
+public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
 
     private final ChatterboxConfigurationProperties configurationProperties;
 
@@ -35,27 +34,6 @@ public class WebhookValidatorImpl implements WebhookValidator {
         String responseContent =
                 String.format("Webhook received; no work done; unrecognized repository '%s'", repositoryName);
         throw new UnrecognizedRequestException(responseContent);
-    }
-
-    // TODO BlakeGoudemond 2025/12/09 | move to another component
-    @Override
-    public ChatterboxConfigurationProperties.PayloadMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
-        var payloadMapping = configurationProperties.getGithubIncomingMappings().get(eventType);
-        if (payloadMapping == null) {
-            throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
-        }
-        return payloadMapping;
-    }
-
-    // TODO BlakeGoudemond 2025/12/09 | move to another component
-    @Override
-    public String getDestinationUrl(String repositoryName) throws InternalServerException {
-        for (ChatterboxConfigurationProperties.AcceptedRepository acceptedRepository : configurationProperties.getGithubRepositoriesAccepted()) {
-            if (acceptedRepository.getName().equals(repositoryName)) {
-                return configurationProperties.getTeamsDestinationUrl(acceptedRepository.getDestinationChannel());
-            }
-        }
-        throw new InternalServerException("Unable to find the destination for " + repositoryName);
     }
 
 }
