@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
+import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "chatterbox")
 public class ChatterboxConfigurationProperties {
 
-    private List<String> githubRepositoriesAccepted;
+    private List<AcceptedRepository> githubRepositoriesAccepted;
 
     private List<TeamsDestination> teamsDestinationsAccepted;
 
@@ -24,8 +25,23 @@ public class ChatterboxConfigurationProperties {
     }
 
     public boolean acceptsRepository(String repositoryName) {
-        repositoryName = repositoryName.replace("\"", "");
-        return githubRepositoriesAccepted.contains(repositoryName);
+        for (AcceptedRepository acceptedRepository : githubRepositoriesAccepted) {
+            if (acceptedRepository.getName().equals(repositoryName)) {
+                return true;
+            }
+        }
+        return false;
+//        repositoryName = repositoryName.replace("\"", "");
+//        return githubRepositoriesAccepted.contains(repositoryName);
+    }
+
+    public String getTeamsDestinationUrl(String destinationChannel) {
+        for (TeamsDestination teamsDestination : teamsDestinationsAccepted) {
+            if (teamsDestination.getChannelName().equals(destinationChannel)) {
+                return teamsDestination.getWebhookUrl();
+            }
+        }
+        throw new InternalServerException("Unable to find the teams destination channel " + destinationChannel);
     }
 
     @Data
@@ -34,6 +50,15 @@ public class ChatterboxConfigurationProperties {
         private String channelName;
 
         private String webhookUrl;
+
+    }
+
+    @Data
+    public static class AcceptedRepository {
+
+        private String name;
+
+        private String destinationChannel;
 
     }
 

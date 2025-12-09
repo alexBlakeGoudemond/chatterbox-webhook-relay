@@ -23,7 +23,7 @@ public class TeamsSenderService {
 
     public void process(GithubEventDto eventDto) {
         String teamsPayload = convertToTeamsPayload(eventDto);
-
+        System.out.println("teamsPayload = " + teamsPayload);
     }
 
     private String convertToTeamsPayload(GithubEventDto eventDto) {

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.AcceptedRepository;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys;
 
 import java.util.Map;
@@ -32,15 +33,18 @@ public class GithubEventExtractor {
         var payloadMapping = webhookValidator.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
+        String repositoryName = read(payload, fields.get(REPOSITORYNAME));
+        String teamsDestinationUrl = webhookValidator.getDestinationUrl(repositoryName);
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
         String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
-                read(payload, fields.get(REPOSITORYNAME)),
+                repositoryName,
                 read(payload, fields.get(SENDERNAME)),
                 read(payload, fields.get(URL)),
-                formattedUrlDisplayText
+                formattedUrlDisplayText,
+                teamsDestinationUrl
         );
     }
 
