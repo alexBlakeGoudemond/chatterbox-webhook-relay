@@ -9,4 +9,4 @@ COPY target/chatterbox-*.jar chatterbox.jar
 EXPOSE 8080
 
 # Run the app
-ENTRYPOINT ["java", "-jar", "chatterbox.jar"]
+ENTRYPOINT ["java", "-jar", "chatterbox.jar", "-Dspring.profiles.active=prod"]

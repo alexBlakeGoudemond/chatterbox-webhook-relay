@@ -37,3 +37,5 @@ build/
 
 # Additional files for convenience scripting
 /tmp/
+/src/main/resources/application-prod.yml
+/src/test/resources/application-live-url.yml
