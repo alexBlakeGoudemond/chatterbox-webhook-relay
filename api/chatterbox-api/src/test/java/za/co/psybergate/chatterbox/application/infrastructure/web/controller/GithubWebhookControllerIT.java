@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtr
 import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.webhook.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderService;
+import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
@@ -88,7 +88,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractor.class,
         ConversionUtilitiesImpl.class,
-        TeamsSenderService.class,
+        TeamsSenderServiceImpl.class,
         TeamsCardFactory.class,
         TemplateSubstitutionService.class,
 })

@@ -19,7 +19,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final WebhookLogger webhookLogger;
 
-    private final TeamsSenderService teamsSenderService;
+    private final TeamsSenderServiceImpl teamsSenderService;
 
     @Override
     public void process(String eventType, JsonNode rawBody) {
