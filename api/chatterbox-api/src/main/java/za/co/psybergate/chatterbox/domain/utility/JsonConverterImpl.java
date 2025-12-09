@@ -12,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Component
-public class ConversionUtilitiesImpl implements ConversionUtilities {
+public class JsonConverterImpl implements JsonConverter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

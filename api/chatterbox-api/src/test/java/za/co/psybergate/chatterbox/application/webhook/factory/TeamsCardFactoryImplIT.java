@@ -16,8 +16,8 @@ import za.co.psybergate.chatterbox.application.webhook.extractor.resolver.Webhoo
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
         TeamsAdaptiveCardTemplate.class,
         TeamsTemplateSubstitutorImpl.class,
         ApplicationConfig.class,
-        ConversionUtilitiesImpl.class,
+        JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
         WebhookConfigurationResolverImpl.class,
         WebhookLogger.class,
@@ -51,7 +51,7 @@ public class TeamsCardFactoryImplIT {
     private TeamsCardFactory teamsCardFactory;
 
     @Autowired
-    private ConversionUtilities conversionUtilities;
+    private JsonConverter jsonConverter;
 
     @Autowired
     private GithubEventExtractor eventExtractor;
@@ -108,7 +108,7 @@ public class TeamsCardFactoryImplIT {
     }
 
     private TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateFromJsonString() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(getValidJsonString());
+        JsonNode jsonNode = jsonConverter.getAsJson(getValidJsonString());
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
         try {
             return teamsCardFactory.buildCard(eventDto);
@@ -138,12 +138,12 @@ public class TeamsCardFactoryImplIT {
 
     private String exampleTeamsPayload() {
         String pathToFile = "src/test/resources/payload/teams-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
     private String getValidJsonString() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
 }

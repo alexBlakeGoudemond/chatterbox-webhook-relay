@@ -17,8 +17,8 @@ import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServ
 import za.co.psybergate.chatterbox.application.teams.sending.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractorImpl.class,
-        ConversionUtilitiesImpl.class,
+        JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
         TeamsTemplateSubstitutorImpl.class,
@@ -67,7 +67,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     private EncryptionUtilities encryptionUtilities;
 
     @Autowired
-    private ConversionUtilities conversionUtilities;
+    private JsonConverter jsonConverter;
 
     /// One of the properties that the codebase expects is a field `urlDisplayText`.
     /// This test uses a properties file where this field is NOT included; the assertion is that
@@ -99,7 +99,7 @@ public class GithubWebhookControllerInvalidConfigIT {
 
     private String readGithubPayload() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
 }

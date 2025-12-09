@@ -11,8 +11,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import za.co.psybergate.chatterbox.application.webhook.extractor.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
         GithubEventExtractorImpl.class,
         WebhookConfigurationResolverImpl.class,
         ApplicationConfig.class,
-        ConversionUtilitiesImpl.class,
+        JsonConverterImpl.class,
         WebhookLogger.class,
         MethodValidationPostProcessor.class,
         LocalValidatorFactoryBean.class,
@@ -48,7 +48,7 @@ public class GithubEventExtractorImplIT {
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
-    private ConversionUtilities conversionUtilities;
+    private JsonConverter jsonConverter;
 
     @Autowired
     private GithubEventExtractor eventExtractor;
@@ -56,7 +56,7 @@ public class GithubEventExtractorImplIT {
     @DisplayName("Extractor maps to DTO")
     @Test
     public void givenJsonString_WhenExtract_ThenSuccess() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(getValidJsonString());
+        JsonNode jsonNode = jsonConverter.getAsJson(getValidJsonString());
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
 
         assertNotNull(eventDto);
@@ -70,7 +70,7 @@ public class GithubEventExtractorImplIT {
     @DisplayName("Unknown Event: FORBIDDEN")
     @Test
     public void givenJsonString_WithUnknownEvent_WhenExtract_ThenForbidden() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithUnknownEvent());
+        JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithUnknownEvent());
         assertThrows(UnrecognizedRequestException.class,
                 () -> eventExtractor.extract("unknownEvent", jsonNode));
     }
@@ -78,7 +78,7 @@ public class GithubEventExtractorImplIT {
     @DisplayName("Missing All JSON keys: Exception")
     @Test
     public void givenIncompleteJsonString_WhenExtract_ThenFailure() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithMissingProperties());
+        JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithMissingProperties());
         assertThrows(InternalServerException.class,
                 () -> eventExtractor.extract("push", jsonNode));
     }
@@ -86,7 +86,7 @@ public class GithubEventExtractorImplIT {
     @DisplayName("Missing Most JSON keys: Exception")
     @Test
     public void givenPartialJsonString_WithRepositoryName_WhenExtract_ThenFailure() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithEventTypeAndRepositoryName());
+        JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithEventTypeAndRepositoryName());
         assertThrows(ConstraintViolationException.class,
                 () -> eventExtractor.extract("push", jsonNode));
     }
@@ -94,7 +94,7 @@ public class GithubEventExtractorImplIT {
     @DisplayName("No UrlDisplayText == eventType")
     @Test
     public void givenJsonString_WithNoUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsEventType() {
-        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithNoUrlDisplayText());
+        JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithNoUrlDisplayText());
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
 
         assertNotNull(eventDto);
@@ -108,7 +108,7 @@ public class GithubEventExtractorImplIT {
     @DisplayName("Long UrlDisplayText is Truncated")
     @Test
     public void givenJsonString_WithLongUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsTruncated(){
-        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithLongUrlDisplayText());
+        JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithLongUrlDisplayText());
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
 
         assertNotNull(eventDto);
@@ -123,32 +123,32 @@ public class GithubEventExtractorImplIT {
 
     private String jsonStringWithLongUrlDisplayText() {
         String pathToFile = "src/test/resources/payload/github-payload-valid-long-url-display-text.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
     private String jsonStringWithNoUrlDisplayText() {
         String pathToFile = "src/test/resources/payload/github-payload-invalid-no-url-display-text.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
     private String jsonStringWithEventTypeAndRepositoryName() {
         String pathToFile = "src/test/resources/payload/github-payload-invalid-contains-event-type-and-repository-name.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
     private String jsonStringWithMissingProperties() {
         String pathToFile = "src/test/resources/payload/github-payload-invalid-missing-properties.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
     private String jsonStringWithUnknownEvent() {
         String pathToFile = "src/test/resources/payload/github-payload-invalid-unknown-event-type.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
     private String getValidJsonString() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
 }

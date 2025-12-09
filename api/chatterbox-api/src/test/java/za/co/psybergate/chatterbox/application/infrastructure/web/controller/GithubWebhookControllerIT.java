@@ -18,8 +18,8 @@ import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServ
 import za.co.psybergate.chatterbox.application.teams.sending.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -87,7 +87,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractorImpl.class,
-        ConversionUtilitiesImpl.class,
+        JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
         TeamsTemplateSubstitutorImpl.class,
@@ -111,7 +111,7 @@ public class GithubWebhookControllerIT {
     private EncryptionUtilities encryptionUtilities;
 
     @Autowired
-    private ConversionUtilities conversionUtilities;
+    private JsonConverter jsonConverter;
 
     @DisplayName("Missing JSON properties: BAD_REQUEST")
     @Test
@@ -149,7 +149,7 @@ public class GithubWebhookControllerIT {
     public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
         String unrecognizedRepositoryName = "unknownOwner/unknownRepository";
 
-        JsonNode jsonNode = conversionUtilities.getAsJson(readGithubPayload());
+        JsonNode jsonNode = jsonConverter.getAsJson(readGithubPayload());
         if (!(jsonNode instanceof ObjectNode)) {
             fail("Unable to mutate JsonNode - needed for the test to change the RepositoryName");
         }
@@ -275,7 +275,7 @@ public class GithubWebhookControllerIT {
 
     private String readGithubPayload() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
 }
