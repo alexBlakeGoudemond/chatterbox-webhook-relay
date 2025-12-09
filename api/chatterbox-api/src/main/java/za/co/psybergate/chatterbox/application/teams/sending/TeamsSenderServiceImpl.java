@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.teams.service;
+package za.co.psybergate.chatterbox.application.teams.sending;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

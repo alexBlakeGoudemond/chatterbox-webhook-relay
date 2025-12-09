@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtr
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.webhook.extractor.resolver.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.application.teams.service.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.sending.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
