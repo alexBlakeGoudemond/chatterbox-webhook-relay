@@ -31,7 +31,9 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
-        HttpResponseDto process = teamsSenderService.process(eventDto);
+        webhookLogger.logSendingDtoToTeams(eventDto);
+        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
+        webhookLogger.logTeamsResponse(httpResponseDto);
     }
 
     @Override
