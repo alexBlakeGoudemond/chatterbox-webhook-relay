@@ -15,6 +15,7 @@ import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -38,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
         MethodValidationPostProcessor.class,
         LocalValidatorFactoryBean.class,
 })
-public class GithubEventExtractorTest {
+public class GithubEventExtractorIT {
 
     @MockitoBean
     private WebhookFilter webhookFilter;
@@ -74,10 +75,18 @@ public class GithubEventExtractorTest {
                 () -> eventExtractor.extract("unknownEvent", jsonNode));
     }
 
-    @DisplayName("Missing JSON keys: Exception")
+    @DisplayName("Missing All JSON keys: Exception")
     @Test
     public void givenIncompleteJsonString_WhenExtract_ThenFailure() {
         JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithMissingProperties());
+        assertThrows(InternalServerException.class,
+                () -> eventExtractor.extract("push", jsonNode));
+    }
+
+    @DisplayName("Missing Most JSON keys: Exception")
+    @Test
+    public void givenPartialJsonString_WithRepositoryName_WhenExtract_ThenFailure() {
+        JsonNode jsonNode = conversionUtilities.getAsJson(jsonStringWithEventTypeAndRepositoryName());
         assertThrows(ConstraintViolationException.class,
                 () -> eventExtractor.extract("push", jsonNode));
     }
@@ -119,6 +128,11 @@ public class GithubEventExtractorTest {
 
     private String jsonStringWithNoUrlDisplayText() {
         String pathToFile = "src/test/resources/payload/github-payload-invalid-no-url-display-text.json";
+        return conversionUtilities.readPayload(pathToFile);
+    }
+
+    private String jsonStringWithEventTypeAndRepositoryName() {
+        String pathToFile = "src/test/resources/payload/github-payload-invalid-contains-event-type-and-repository-name.json";
         return conversionUtilities.readPayload(pathToFile);
     }
 
