@@ -6,4 +6,6 @@ public interface TeamsSenderService {
 
     void process(GithubEventDto eventDto);
 
+    void send(GithubEventDto dto);
+
 }

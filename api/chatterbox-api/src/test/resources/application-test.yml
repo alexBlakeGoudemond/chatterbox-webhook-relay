@@ -11,6 +11,13 @@ server:
 logging:
   level:
     root: INFO
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+    apache:
+      http: DEBUG
 
 common:
   logging:
@@ -29,7 +36,7 @@ webhook:
 chatterbox:
   github-repositories-accepted:
     - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
-      destinationChannel: General
+      destinationChannel: TestChannel
     - name: psyAlexBlakeGoudemond/chatterbox
       destinationChannel: TestChannel
   teams-destinations-accepted:
