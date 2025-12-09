@@ -11,7 +11,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.webhook.service.TeamsSenderService;
+import za.co.psybergate.chatterbox.application.webhook.service.TemplateSubstitutionService;
 import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
 import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
@@ -38,6 +41,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookValidatorImpl.class,
         GithubEventExtractor.class,
         ConversionUtilitiesImpl.class,
+        TeamsSenderService.class,
+        TeamsCardFactory.class,
+        TemplateSubstitutionService.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 @ActiveProfiles({"bad-properties"})
@@ -69,7 +75,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
         try {
-            String expectedContentBody = "extract.<return value>.repositoryName: must not be null";
+            String expectedContentBody = "extract.<return value>.senderName: must not be null";
             mockMvc.perform(httpRequest)
                     .andExpect(status().isInternalServerError())
                     .andExpect(content().string(expectedContentBody));
