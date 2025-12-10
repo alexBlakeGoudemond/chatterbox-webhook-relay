@@ -81,7 +81,7 @@ public class WebhookFilter implements Filter {
         if (!payloadCryptor.isIdentical(expected, signature256)) {
             webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);
-            throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match body");
+            throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match rawBody");
         }
 
         webhookLogger.logValidSignature();

@@ -26,10 +26,8 @@ public interface TeamsSenderService {
     ///     - `Accept`
     /// - Returns the result wrapped in a typed `HttpResponseDto`.
     ///
-    /// @param teamsDestination the full URL of the HTTP endpoint or Teams webhook
-    /// @param jsonString the JSON payload to send as the POST body
-    /// @return an `HttpResponseDto` containing the HTTP status code and optional body
+    /// @return an `HttpResponseDto` containing the HTTP status code and optional rawBody
     /// @throws InternalServerException if an I/O or network-related issue occurs during execution
-    HttpResponseDto executeHttpPostRequest(String teamsDestination, String jsonString) throws InternalServerException;
+    HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws InternalServerException;
 
 }
