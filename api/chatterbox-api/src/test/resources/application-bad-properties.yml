@@ -12,7 +12,7 @@ chatterbox:
     - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
       destinationChannel: General
     - name: psyAlexBlakeGoudemond/chatterbox
-      destinationChannel: TestChannel
+      destinationChannel: UndefinedTeamsChannel
   teams-destinations-accepted:
     - channelName: "General"
       webhookUrl: "https://outlook.office.com/webhook/..."

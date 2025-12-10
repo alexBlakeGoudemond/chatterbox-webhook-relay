@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys;
+import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Override
     @Valid
-    public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException {
+    public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException, UnrecognizedRequestException {
         var payloadMapping = webhookConfigurationResolver.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 

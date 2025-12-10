@@ -31,8 +31,6 @@ public class ChatterboxConfigurationProperties {
             }
         }
         return false;
-//        repositoryName = repositoryName.replace("\"", "");
-//        return githubRepositoriesAccepted.contains(repositoryName);
     }
 
     public String getTeamsDestinationUrl(String destinationChannel) {
