@@ -1,0 +1,28 @@
+{
+    "type": "message",
+    "attachments": [
+        {
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "content": {
+                "type": "AdaptiveCard",
+                "msteams": {
+                    "width": "Full"
+                },
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "📢 Push Event for psyAlexBlakeGoudemond/chatterbox",
+                        "wrap": true
+                    },
+                    {
+                        "type": "TextBlock",
+                        "text": "⁉️ Details: [Test message Is here!](http://localhost:abcd) created by psyAlexBlakeGoudemond",
+                        "wrap": true
+                    }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.0"
+            }
+        }
+    ]
+}

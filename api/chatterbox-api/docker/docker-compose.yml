@@ -20,7 +20,9 @@ services:
     container_name: chatterbox-api
     environment:
       TZ: Africa/Johannesburg
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      - ./api/logs/chatterbox-api:/var/log/chatterbox-api
     restart: unless-stopped
     networks:
       - chatterbox-net

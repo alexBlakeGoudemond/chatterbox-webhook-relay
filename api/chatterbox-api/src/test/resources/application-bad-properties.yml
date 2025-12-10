@@ -9,8 +9,10 @@ webhook:
     secret: secret
 chatterbox:
   github-repositories-accepted:
-    - Psybergate-Knowledge-Repository/mentoring_software_foundations
-    - psyAlexBlakeGoudemond/chatterbox
+    - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
+      destinationChannel: General
+    - name: psyAlexBlakeGoudemond/chatterbox
+      destinationChannel: TestChannel
   teams-destinations-accepted:
     - channelName: "General"
       webhookUrl: "https://outlook.office.com/webhook/..."
@@ -20,7 +22,7 @@ chatterbox:
     push:
       displayName: "Push Event"
       fields:
-#        repositoryName: "repository.full_name" # intentional - test confirms this is supposed to be present
-        senderName: "sender.login"
+        repositoryName: "repository.full_name" # intentional - test confirms this is supposed to be present
+#        senderName: "sender.login"
         url: "issue.html_url"
         urlDisplayText: "head_commit.message"
