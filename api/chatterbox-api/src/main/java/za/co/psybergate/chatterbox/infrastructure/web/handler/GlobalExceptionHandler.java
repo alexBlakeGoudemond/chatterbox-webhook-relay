@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    // TODO BlakeGoudemond 2025/12/10 | somehow produce InternalServerError through Controller test and assert this is received
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<String> internalServer(InternalServerException ex) {
         return ResponseEntity

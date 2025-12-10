@@ -36,12 +36,9 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
 
     @Override
     public HttpResponseDto executeHttpPostRequest(String teamsDestination, String jsonString) throws InternalServerException {
-        HttpPost post = new HttpPost(teamsDestination);
-        post.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
-        post.setHeader("Content-Type", "application/json");
-
+        HttpPost httpPost = getHttpPost(teamsDestination, jsonString);
         try (CloseableHttpClient client = getCloseableHttpClient()) {
-            return client.execute(post, response -> {
+            return client.execute(httpPost, response -> {
                 int status = response.getCode();
                 String body = null;
                 if (response.getEntity() != null) {
@@ -52,6 +49,14 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
         } catch (IOException e) {
             throw new InternalServerException("Unexpected issue when sending POST Request to Teams", e);
         }
+    }
+
+    // TODO BlakeGoudemond 2025/12/10 | Mock this in a test and set the following to assert a 401 post.setHeader("Authorization", "Bearer broken-test-token");
+    private HttpPost getHttpPost(String teamsDestination, String jsonString) {
+        HttpPost httpPost = new HttpPost(teamsDestination);
+        httpPost.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
+        httpPost.setHeader("Content-Type", "application/json");
+        return httpPost;
     }
 
     private CloseableHttpClient getCloseableHttpClient() {
