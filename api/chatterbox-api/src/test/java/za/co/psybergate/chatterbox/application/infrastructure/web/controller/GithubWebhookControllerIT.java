@@ -11,13 +11,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
-import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -72,17 +76,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 ///                  │
 ///                  ▼
 ///        Back to test assertion
-///        (e.g., .andExpect(status().isAccepted()))
+///        (e.g., .andExpect(httpStatus().isAccepted()))
 /// ```
 @Import({
         WebhookFilter.class,
         WebhookLogger.class,
-        EncryptionUtilitiesImpl.class,
+        PayloadCryptorImpl.class,
         ApplicationConfig.class,
-        GithubWebhookService.class,
-        WebhookValidatorImpl.class,
-        GithubEventExtractor.class,
-        ConversionUtilitiesImpl.class,
+        GithubWebhookServiceImpl.class,
+        WebhookRequestValidatorImpl.class,
+        WebhookConfigurationResolverImpl.class,
+        GithubEventExtractorImpl.class,
+        JsonConverterImpl.class,
+        TeamsSenderServiceImpl.class,
+        TeamsCardFactoryImpl.class,
+        TeamsTemplateSubstitutorImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
@@ -100,10 +108,10 @@ public class GithubWebhookControllerIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private EncryptionUtilities encryptionUtilities;
+    private PayloadCryptor payloadCryptor;
 
     @Autowired
-    private ConversionUtilities conversionUtilities;
+    private JsonConverter jsonConverter;
 
     @DisplayName("Missing JSON properties: BAD_REQUEST")
     @Test
@@ -141,7 +149,7 @@ public class GithubWebhookControllerIT {
     public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
         String unrecognizedRepositoryName = "unknownOwner/unknownRepository";
 
-        JsonNode jsonNode = conversionUtilities.getAsJson(readGithubPayload());
+        JsonNode jsonNode = jsonConverter.getAsJson(readGithubPayload());
         if (!(jsonNode instanceof ObjectNode)) {
             fail("Unable to mutate JsonNode - needed for the test to change the RepositoryName");
         }
@@ -234,7 +242,7 @@ public class GithubWebhookControllerIT {
     }
 
     private MockHttpServletRequestBuilder getHttpRequestUnknownEvent(String payloadSecret, String payload, String unknownEventType) {
-        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -245,7 +253,7 @@ public class GithubWebhookControllerIT {
     }
 
     private MockHttpServletRequestBuilder getHttpRequestValidNoEncoding(String payloadSecret, String payload) {
-        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .content(payload)
@@ -255,7 +263,7 @@ public class GithubWebhookControllerIT {
     }
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
-        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -267,7 +275,7 @@ public class GithubWebhookControllerIT {
 
     private String readGithubPayload() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
 }

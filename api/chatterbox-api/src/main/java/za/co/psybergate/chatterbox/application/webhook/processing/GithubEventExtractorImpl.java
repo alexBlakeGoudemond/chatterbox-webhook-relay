@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.extractor;
+package za.co.psybergate.chatterbox.application.webhook.processing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidator;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.GithubIncomingMappingFieldKeys;
 
@@ -19,28 +19,32 @@ import static za.co.psybergate.chatterbox.infrastructure.config.properties.Chatt
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class GithubEventExtractor {
+public class GithubEventExtractorImpl implements GithubEventExtractor{
 
-    private final WebhookValidator webhookValidator;
+    private final WebhookConfigurationResolver webhookConfigurationResolver;
 
     /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
     ///
     /// The [GithubEventDto] has simple validation setup through the constructor of the record.
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
+    @Override
     @Valid
     public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException {
-        var payloadMapping = webhookValidator.getPayloadMapping(eventType);
+        var payloadMapping = webhookConfigurationResolver.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
+        String repositoryName = read(payload, fields.get(REPOSITORYNAME));
+        String teamsDestinationUrl = webhookConfigurationResolver.getDestinationUrl(repositoryName);
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
         String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
-                read(payload, fields.get(REPOSITORYNAME)),
+                repositoryName,
                 read(payload, fields.get(SENDERNAME)),
                 read(payload, fields.get(URL)),
-                formattedUrlDisplayText
+                formattedUrlDisplayText,
+                teamsDestinationUrl
         );
     }
 

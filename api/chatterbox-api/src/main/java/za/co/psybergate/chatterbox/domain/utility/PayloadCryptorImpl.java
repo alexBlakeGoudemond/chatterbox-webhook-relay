@@ -7,7 +7,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 @Component
-public class EncryptionUtilitiesImpl implements EncryptionUtilities {
+public class PayloadCryptorImpl implements PayloadCryptor {
 
     @Override
     public String encryptUsingSHA256(String secret, String body) throws InternalServerException {

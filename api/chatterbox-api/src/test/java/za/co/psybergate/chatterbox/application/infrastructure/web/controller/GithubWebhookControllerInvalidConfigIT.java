@@ -10,13 +10,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.webhook.extractor.GithubEventExtractor;
-import za.co.psybergate.chatterbox.application.webhook.service.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.webhook.validator.WebhookValidatorImpl;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.ConversionUtilitiesImpl;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilitiesImpl;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -32,12 +36,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({
         WebhookFilter.class,
         WebhookLogger.class,
-        EncryptionUtilitiesImpl.class,
+        PayloadCryptorImpl.class,
         ApplicationConfig.class,
-        GithubWebhookService.class,
-        WebhookValidatorImpl.class,
-        GithubEventExtractor.class,
-        ConversionUtilitiesImpl.class,
+        GithubWebhookServiceImpl.class,
+        WebhookRequestValidatorImpl.class,
+        WebhookConfigurationResolverImpl.class,
+        GithubEventExtractorImpl.class,
+        JsonConverterImpl.class,
+        TeamsSenderServiceImpl.class,
+        TeamsCardFactoryImpl.class,
+        TeamsTemplateSubstitutorImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 @ActiveProfiles({"bad-properties"})
@@ -56,10 +64,10 @@ public class GithubWebhookControllerInvalidConfigIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private EncryptionUtilities encryptionUtilities;
+    private PayloadCryptor payloadCryptor;
 
     @Autowired
-    private ConversionUtilities conversionUtilities;
+    private JsonConverter jsonConverter;
 
     /// One of the properties that the codebase expects is a field `urlDisplayText`.
     /// This test uses a properties file where this field is NOT included; the assertion is that
@@ -69,7 +77,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
         try {
-            String expectedContentBody = "extract.<return value>.repositoryName: must not be null";
+            String expectedContentBody = "extract.<return value>.senderName: must not be null";
             mockMvc.perform(httpRequest)
                     .andExpect(status().isInternalServerError())
                     .andExpect(content().string(expectedContentBody));
@@ -79,7 +87,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     }
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
-        String encryptedSignature = encryptionUtilities.encryptUsingSHA256(payloadSecret, payload);
+        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
         return post(apiPrefix + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -91,7 +99,7 @@ public class GithubWebhookControllerInvalidConfigIT {
 
     private String readGithubPayload() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return conversionUtilities.readPayload(pathToFile);
+        return jsonConverter.readPayload(pathToFile);
     }
 
 }
