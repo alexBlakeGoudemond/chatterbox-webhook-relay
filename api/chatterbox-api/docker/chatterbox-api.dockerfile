@@ -2,9 +2,6 @@ FROM eclipse-temurin:21-jdk-jammy
 
 WORKDIR /app
 
-# Create log directories
-RUN mkdir -p /var/log/chatterbox-api/archived
-
 # Copy the built jar into the container
 COPY target/chatterbox-*.jar chatterbox.jar
 

@@ -22,7 +22,7 @@ services:
       TZ: Africa/Johannesburg
       SPRING_PROFILES_ACTIVE: prod
     volumes:
-      - ./api/logs:/var/log/chatterbox-api
+      - ./api/logs/chatterbox-api:/var/log/chatterbox-api
     restart: unless-stopped
     networks:
       - chatterbox-net
