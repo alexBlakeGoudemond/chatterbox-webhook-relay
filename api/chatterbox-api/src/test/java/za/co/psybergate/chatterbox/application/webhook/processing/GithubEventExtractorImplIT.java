@@ -80,7 +80,7 @@ public class GithubEventExtractorImplIT {
     @Test
     public void givenIncompleteJsonString_WhenExtract_ThenFailure() {
         JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithMissingProperties());
-        assertThrows(InternalServerException.class,
+        assertThrows(UnrecognizedRequestException.class,
                 () -> eventExtractor.extract("push", jsonNode));
     }
 

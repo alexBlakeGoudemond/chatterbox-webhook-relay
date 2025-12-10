@@ -11,8 +11,10 @@ chatterbox:
   github-repositories-accepted:
     - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
       destinationChannel: General
-    - name: psyAlexBlakeGoudemond/chatterbox
+    - name: psyAlexBlakeGoudemond/chatterbox/undefined
       destinationChannel: UndefinedTeamsChannel
+    - name: psyAlexBlakeGoudemond/chatterbox
+      destinationChannel: TestChannel
   teams-destinations-accepted:
     - channelName: "General"
       webhookUrl: "https://outlook.office.com/webhook/..."

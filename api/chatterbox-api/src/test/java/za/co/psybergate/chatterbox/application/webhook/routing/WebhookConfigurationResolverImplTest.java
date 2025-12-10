@@ -51,7 +51,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Unknown Teams Destination Channel Name gives Exception")
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
-        Assertions.assertThrows(InternalServerException.class, () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox"));
+        Assertions.assertThrows(InternalServerException.class, () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
     }
 
 }
