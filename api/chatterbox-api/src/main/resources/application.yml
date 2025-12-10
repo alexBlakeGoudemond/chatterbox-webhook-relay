@@ -40,8 +40,10 @@ webhook:
     secret: secret
 chatterbox:
   github-repositories-accepted:
-    - Psybergate-Knowledge-Repository/mentoring_software_foundations
-    - psyAlexBlakeGoudemond/chatterbox
+    - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
+      destinationChannel: TestChannel
+    - name: psyAlexBlakeGoudemond/chatterbox
+      destinationChannel: TestChannel
   teams-destinations-accepted:
     - channelName: "General"
       webhookUrl: "https://outlook.office.com/webhook/..."
@@ -55,7 +57,8 @@ chatterbox:
         senderName: "sender.login"
         url: "compare"
         urlDisplayText: "head_commit.message"
-    # todo: investigate how to collapse urlDisplayTets that has newline chars
+      destinations:
+        - "TestChannel"
     pull_request:
       displayName: "Pull Request Event"
       fields:
@@ -63,3 +66,14 @@ chatterbox:
         senderName: "pull_request.user.login"
         url: "pull_request.html_url"
         urlDisplayText: "pull_request.title"
+      destinations:
+        - "TestChannel"
+teams-card-template:
+  adaptive-card:
+    attachments:
+      - content:
+          msteams:
+            width: Full
+          body:
+            - text: "📢 ${displayName} for ${repositoryName}"
+            - text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"

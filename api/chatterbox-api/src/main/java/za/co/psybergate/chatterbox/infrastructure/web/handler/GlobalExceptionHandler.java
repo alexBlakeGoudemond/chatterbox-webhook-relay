@@ -33,12 +33,11 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    // TODO BlakeGoudemond 2025/12/06 | if a piece of code inside the service layer throws this, bring it back
-//    @ExceptionHandler(InternalServerException.class)
-//    public ResponseEntity<String> internalServer(InternalServerException ex) {
-//        return ResponseEntity
-//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(ex.getMessage());
-//    }
+    @ExceptionHandler(InternalServerException.class)
+    public ResponseEntity<String> internalServer(InternalServerException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
+    }
 
 }

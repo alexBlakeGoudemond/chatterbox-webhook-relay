@@ -6,4 +6,8 @@ public class InternalServerException extends ApplicationException {
         super(message, e);
     }
 
+    public InternalServerException(String message) {
+        super(message);
+    }
+
 }

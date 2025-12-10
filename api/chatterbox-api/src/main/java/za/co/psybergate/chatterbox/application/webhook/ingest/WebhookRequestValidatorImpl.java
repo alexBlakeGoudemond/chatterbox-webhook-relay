@@ -1,14 +1,14 @@
-package za.co.psybergate.chatterbox.application.webhook.validator;
+package za.co.psybergate.chatterbox.application.webhook.ingest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class WebhookValidatorImpl implements WebhookValidator {
+public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
 
     private final ChatterboxConfigurationProperties configurationProperties;
 
@@ -34,15 +34,6 @@ public class WebhookValidatorImpl implements WebhookValidator {
         String responseContent =
                 String.format("Webhook received; no work done; unrecognized repository '%s'", repositoryName);
         throw new UnrecognizedRequestException(responseContent);
-    }
-
-    @Override
-    public ChatterboxConfigurationProperties.PayloadMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
-        var payloadMapping = configurationProperties.getGithubIncomingMappings().get(eventType);
-        if (payloadMapping == null) {
-            throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
-        }
-        return payloadMapping;
     }
 
 }

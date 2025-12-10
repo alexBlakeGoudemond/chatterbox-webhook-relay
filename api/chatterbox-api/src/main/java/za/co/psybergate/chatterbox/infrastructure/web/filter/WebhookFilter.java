@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.domain.utility.EncryptionUtilities;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
@@ -26,13 +26,13 @@ public class WebhookFilter implements Filter {
 
     private final WebhookLogger webhookLogger;
 
-    private final EncryptionUtilities encryptionUtilities;
+    private final PayloadCryptor payloadCryptor;
 
     private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    public WebhookFilter(WebhookLogger webhookLogger, EncryptionUtilities encryptionUtilities, WebhookRuntimeMetrics webhookRuntimeMetrics) {
+    public WebhookFilter(WebhookLogger webhookLogger, PayloadCryptor payloadCryptor, WebhookRuntimeMetrics webhookRuntimeMetrics) {
         this.webhookLogger = webhookLogger;
-        this.encryptionUtilities = encryptionUtilities;
+        this.payloadCryptor = payloadCryptor;
         this.webhookRuntimeMetrics = webhookRuntimeMetrics;
     }
 
@@ -77,8 +77,8 @@ public class WebhookFilter implements Filter {
             throw new UnauthorizedException("Missing X-Hub-Signature-256");
         }
 
-        String expected = encryptionUtilities.encryptUsingSHA256(webhookSecret, rawBody);
-        if (!encryptionUtilities.isIdentical(expected, signature256)) {
+        String expected = payloadCryptor.encryptUsingSHA256(webhookSecret, rawBody);
+        if (!payloadCryptor.isIdentical(expected, signature256)) {
             webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);
             throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match body");

@@ -6,7 +6,7 @@ WORKDIR /app
 COPY target/chatterbox-*.jar chatterbox.jar
 
 # Expose the port Spring Boot runs on
-EXPOSE 8080
+EXPOSE 1234
 
 # Run the app
 ENTRYPOINT ["java", "-jar", "chatterbox.jar"]
