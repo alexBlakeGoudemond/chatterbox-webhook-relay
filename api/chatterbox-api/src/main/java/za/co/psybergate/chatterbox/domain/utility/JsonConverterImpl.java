@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class JsonConverterImpl implements JsonConverter {
         try {
             return Files.readString(Paths.get(pathToFile));
         } catch (IOException e) {
-            throw new ApplicationException("Could not read github payload file", e);
+            throw new InternalServerException("Could not read github payload file", e);
         }
     }
 

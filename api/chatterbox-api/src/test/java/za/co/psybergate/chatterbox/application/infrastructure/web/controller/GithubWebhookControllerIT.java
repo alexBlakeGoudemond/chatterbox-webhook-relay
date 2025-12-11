@@ -95,8 +95,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerIT {
 
-    // TODO BlakeGoudemond 2025/12/10 | separate test class to confirm metrics working
-    
     @Value("${api.prefix}")
     private String apiPrefix;
 
