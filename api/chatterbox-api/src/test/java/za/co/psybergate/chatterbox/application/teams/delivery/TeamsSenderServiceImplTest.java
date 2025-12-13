@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,12 @@ public class TeamsSenderServiceImplTest {
     @Autowired
     private TeamsCardFactory teamsCardFactory;
 
+    /// Send an actual test to the MS Teams API and assert that the HttpResponse
+    /// information is as-expected.
+    ///
+    /// This test is annotated with a Tag that `maven-surefire-plugin` is made aware of.
+    /// This means that running `mvn clean install` will NOT include this by default
+    @Tag("live-integration")
     @DisplayName("Teams Sender Service can process DTO")
     @Test
     public void givenGithubEventDto_WhenTeamsSenderServiceProcessesDto_ThenSuccess() {

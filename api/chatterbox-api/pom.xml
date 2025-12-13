@@ -163,6 +163,7 @@
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
+                    <excludedGroups>live-integration</excludedGroups>
                 </configuration>
             </plugin>
 

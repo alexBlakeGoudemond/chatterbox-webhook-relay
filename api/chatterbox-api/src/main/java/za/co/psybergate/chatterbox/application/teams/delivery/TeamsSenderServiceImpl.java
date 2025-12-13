@@ -22,6 +22,7 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
 
     private final TeamsCardFactory teamsCardFactory;
 
+    // TODO BlakeGoudemond 2025/12/11 | modify that one test to use Mockito to simulate success instead of mvn clean install publishing to teams
     @Override
     public HttpResponseDto process(GithubEventDto dto) throws InternalServerException {
         String teamsDestination = dto.teamsDestination();

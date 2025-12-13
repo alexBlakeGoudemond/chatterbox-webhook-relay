@@ -38,7 +38,8 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Unknown eventType gives Exception")
     @Test
     public void givenUnrecognizedEventType_WhenGetPayloadMapping_ThenException() {
-        Assertions.assertThrows(UnrecognizedRequestException.class, () -> resolver.getPayloadMapping("unknownEventType"));
+        Assertions.assertThrows(UnrecognizedRequestException.class,
+                () -> resolver.getPayloadMapping("unknownEventType"));
     }
 
     @DisplayName("Known Teams Destination Channel Name succeeds")
@@ -51,7 +52,8 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Unknown Teams Destination Channel Name gives Exception")
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
-        Assertions.assertThrows(InternalServerException.class, () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
+        Assertions.assertThrows(InternalServerException.class,
+                () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
     }
 
 }

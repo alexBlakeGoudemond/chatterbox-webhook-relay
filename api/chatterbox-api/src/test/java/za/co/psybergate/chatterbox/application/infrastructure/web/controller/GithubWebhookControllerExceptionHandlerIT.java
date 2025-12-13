@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +18,6 @@ import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImp
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
@@ -38,7 +36,6 @@ import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import({
