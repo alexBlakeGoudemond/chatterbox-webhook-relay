@@ -163,6 +163,7 @@
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
+                    <excludedGroups>live-integration</excludedGroups>
                 </configuration>
             </plugin>
 
@@ -190,6 +191,7 @@
                         <include>**/Test*.java</include>
                         <exclude>**/*Test.java</exclude>
                     </excludes>
+                    <excludedGroups>live-integration</excludedGroups>
                 </configuration>
             </plugin>
 

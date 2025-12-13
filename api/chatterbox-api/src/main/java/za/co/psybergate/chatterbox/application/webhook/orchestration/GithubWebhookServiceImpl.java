@@ -40,7 +40,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     public String getRepositoryName(JsonNode rawBody) throws BadRequestException {
         String repositoryName = rawBody.path("repository").path("full_name").asText(null);
         if (repositoryName == null) {
-            throw new BadRequestException("Unable to parse 'repository.full_name' from raw body");
+            throw new BadRequestException("Unable to parse 'repository.full_name' from raw rawBody");
         }
         return repositoryName;
     }

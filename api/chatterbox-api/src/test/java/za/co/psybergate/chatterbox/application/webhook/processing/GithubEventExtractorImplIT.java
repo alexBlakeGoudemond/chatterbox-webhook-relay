@@ -63,14 +63,14 @@ public class GithubEventExtractorImplIT {
         assertEquals("push", eventDto.eventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
-        assertEquals("http://localhost:abcd", eventDto.url());
+        assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
         assertEquals("Test message Is here!", eventDto.urlDisplayText());
         assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
     }
 
-    @DisplayName("Unknown Event: FORBIDDEN")
+    @DisplayName("Unknown Event: Exception")
     @Test
-    public void givenJsonString_WithUnknownEvent_WhenExtract_ThenForbidden() {
+    public void givenJsonString_WithUnknownEvent_WhenExtract_ThenException() {
         JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithUnknownEvent());
         assertThrows(UnrecognizedRequestException.class,
                 () -> eventExtractor.extract("unknownEvent", jsonNode));
@@ -78,21 +78,21 @@ public class GithubEventExtractorImplIT {
 
     @DisplayName("Missing All JSON keys: Exception")
     @Test
-    public void givenIncompleteJsonString_WhenExtract_ThenFailure() {
+    public void givenIncompleteJsonString_WhenExtract_ThenException() {
         JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithMissingProperties());
-        assertThrows(InternalServerException.class,
+        assertThrows(UnrecognizedRequestException.class,
                 () -> eventExtractor.extract("push", jsonNode));
     }
 
     @DisplayName("Missing Most JSON keys: Exception")
     @Test
-    public void givenPartialJsonString_WithRepositoryName_WhenExtract_ThenFailure() {
+    public void givenPartialJsonString_WithRepositoryName_WhenExtract_ThenException() {
         JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithEventTypeAndRepositoryName());
         assertThrows(ConstraintViolationException.class,
                 () -> eventExtractor.extract("push", jsonNode));
     }
 
-    @DisplayName("No UrlDisplayText == eventType")
+    @DisplayName("No UrlDisplayText; then eventType")
     @Test
     public void givenJsonString_WithNoUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsEventType() {
         JsonNode jsonNode = jsonConverter.getAsJson(jsonStringWithNoUrlDisplayText());
@@ -117,7 +117,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("push", eventDto.eventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
-        assertEquals("http://localhost:abcd", eventDto.url());
+        assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
         assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
 
         assertFalse(eventDto.urlDisplayText().contains("\n"));

@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.domain.utility;
 
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import javax.crypto.Mac;
@@ -10,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class PayloadCryptorImpl implements PayloadCryptor {
 
     @Override
-    public String encryptUsingSHA256(String secret, String body) throws InternalServerException {
+    public String encryptUsingSHA256(String secret, String body) throws ApplicationException {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
