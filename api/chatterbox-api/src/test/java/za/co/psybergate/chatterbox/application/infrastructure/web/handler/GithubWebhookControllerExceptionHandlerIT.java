@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.infrastructure.web.controller;
+package za.co.psybergate.chatterbox.application.infrastructure.web.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;

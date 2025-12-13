@@ -93,7 +93,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         TeamsTemplateSubstitutorImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
-public class GithubWebhookControllerIT {
+public class GithubWebhookControllerMockedTeamsIT {
 
     @Value("${api.prefix}")
     private String apiPrefix;

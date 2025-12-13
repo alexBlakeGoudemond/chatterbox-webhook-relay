@@ -8,7 +8,7 @@
         "login": "psyAlexBlakeGoudemond"
     },
     "issue": {
-        "html_url": "http://localhost:abcd"
+        "html_url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif"
     },
     "head_commit": {
         "message": "Task/design internal dtos (#14)\n\n* Model an Extractor to convert JSON into DTOs\n\n* Confirm Validation working via Test for Extractor\n\n* Model properties as Enum\n\n* Improve modelling of the Webhook Properties with the Enum in the Field Map\n\n* Refactor where possible\n\n* Adjust test suite to pass after refactor\n\n* Todos for later\n\n* Confirm that invalid properties yield a 500 status\n\n* Better name the badProperties class and add a javadoc\n\n* Ensure that codebase throws more specific form of ApplicationException\n\n* All logs to be defined in WebhookLogger\n\n* Review todos and refactor where possible\n\n* Place JSON payloads in dedicated directory\n\n* Use RequestHeader outright to get CaseSensitive header\n\n* Fix application properties for push events"
