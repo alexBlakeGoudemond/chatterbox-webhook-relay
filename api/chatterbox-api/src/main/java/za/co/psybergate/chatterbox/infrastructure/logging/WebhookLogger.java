@@ -42,7 +42,7 @@ public class WebhookLogger {
     }
 
     public void logSendingDtoToTeams(GithubEventDto eventDto) {
-        log.info("[Delivery] Sending '{}' to MS Teams", eventDto.displayName());
+        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), eventDto.teamsDestination());
     }
 
     public void logTeamsResponse(HttpResponseDto httpResponseDto) {

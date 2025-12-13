@@ -37,7 +37,7 @@ public class PayloadCryptorTest {
             return;
         }
 
-        Assertions.fail("Expected an Exception to be thrown due to the null json body");
+        Assertions.fail("Expected an Exception to be thrown due to the null json rawBody");
     }
 
     @Test

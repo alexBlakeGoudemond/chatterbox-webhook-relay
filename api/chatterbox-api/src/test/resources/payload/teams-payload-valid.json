@@ -16,7 +16,7 @@
                     },
                     {
                         "type": "TextBlock",
-                        "text": "⁉️ Details: [Test message Is here!](http://localhost:abcd) created by psyAlexBlakeGoudemond",
+                        "text": "⁉️ Details: [Test message Is here!](https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif) created by psyAlexBlakeGoudemond",
                         "wrap": true
                     }
                 ],

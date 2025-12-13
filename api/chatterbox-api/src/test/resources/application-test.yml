@@ -11,13 +11,6 @@ server:
 logging:
   level:
     root: INFO
-    org:
-      springframework:
-        web:
-          client:
-            RestTemplate: DEBUG
-    apache:
-      http: DEBUG
 
 common:
   logging:

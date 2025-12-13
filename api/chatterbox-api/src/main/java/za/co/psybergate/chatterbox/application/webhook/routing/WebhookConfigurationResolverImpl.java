@@ -3,7 +3,6 @@ package za.co.psybergate.chatterbox.application.webhook.routing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 @Component
@@ -22,13 +21,13 @@ public class WebhookConfigurationResolverImpl implements WebhookConfigurationRes
     }
 
     @Override
-    public String getDestinationUrl(String repositoryName) throws InternalServerException {
+    public String getDestinationUrl(String repositoryName) throws UnrecognizedRequestException {
         for (ChatterboxConfigurationProperties.AcceptedRepository acceptedRepository : configurationProperties.getGithubRepositoriesAccepted()) {
             if (acceptedRepository.getName().equals(repositoryName)) {
                 return configurationProperties.getTeamsDestinationUrl(acceptedRepository.getDestinationChannel());
             }
         }
-        throw new InternalServerException("Unable to find the destination for " + repositoryName);
+        throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
 
 }
