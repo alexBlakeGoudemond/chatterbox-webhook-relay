@@ -55,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 ///        │   WebhookFilter         │ ───────────> Depends on:
 ///        ├─────────────────────────┤              - WebhookLogger
 ///        │ 1. Reads headers        │                (Imported)
-///        │ 2. Reads raw body       │              - EncryptionUtilities
+///        │ 2. Reads raw rawBody       │              - EncryptionUtilities
 ///        │ 3. Validates sig        │                (Imported; implementation)
 ///        │ 4. Logs events          │              - WebhookMetrics
 ///        │ 5. Calls metrics        │                (Mocked)
@@ -93,7 +93,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         TeamsTemplateSubstitutorImpl.class,
 })
 @WebMvcTest(GithubWebhookController.class)
-public class GithubWebhookControllerIT {
+public class GithubWebhookControllerMockedTeamsIT {
 
     @Value("${api.prefix}")
     private String apiPrefix;
@@ -119,7 +119,7 @@ public class GithubWebhookControllerIT {
         String incompletePayload = "{}";
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret, incompletePayload);
         try {
-            String expectedContentBody = "Unable to parse 'repository.full_name' from raw body";
+            String expectedContentBody = "Unable to parse 'repository.full_name' from raw rawBody";
             mockMvc.perform(httpRequest)
                     .andExpect(status().isBadRequest())
                     .andExpect(content().string(expectedContentBody));

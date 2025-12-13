@@ -10,8 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /// Custom wrapper that caches immediately.
-/// This allows the filter to read the raw request body for validation (e.g., signature checks)
-/// while ensuring that downstream controllers and other filters can still read the body normally.
+/// This allows the filter to read the raw request rawBody for validation (e.g., signature checks)
+/// while ensuring that downstream controllers and other filters can still read the rawBody normally.
 @Getter
 public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
