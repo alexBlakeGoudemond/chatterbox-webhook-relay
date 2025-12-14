@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.application.infrastructure.web.filter;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,18 +16,38 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
 import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
+import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+        WebhookFilter.class,
+        WebhookLogger.class,
+        PayloadCryptorImpl.class,
+        ApplicationConfig.class,
+        WebhookRequestValidatorImpl.class,
+        WebhookConfigurationResolverImpl.class,
+        JsonConverterImpl.class,
+        WebhookRuntimeMetrics.class,
+        SimpleMeterRegistry.class,
+})
 @AutoConfigureMockMvc
 public class WebhookFilterIT {
+
+    private static int webhookSignatureFailureCounter = 0;
 
     // TODO BlakeGoudemond 2025/12/14 | extract these settings to WebhookConfig
     @Value("${api.prefix}")
@@ -86,6 +107,7 @@ public class WebhookFilterIT {
 
         UnauthorizedException unauthorizedException = assertThrows(UnauthorizedException.class, () -> mockMvc.perform(httpRequest));
         assertEquals("Missing X-Hub-Signature-256", unauthorizedException.getMessage());
+        webhookSignatureFailureCounter++;
 
         Counter counter = meterRegistry
                 .get("webhook.signature.failures")
@@ -93,7 +115,7 @@ public class WebhookFilterIT {
                 .counter();
 
         assertNotNull(counter);
-        assertEquals(1.0, counter.count());
+        assertEquals(webhookSignatureFailureCounter, counter.count());
     }
 
     @DisplayName("Bad Signature: webhook.signature.failures increments")
@@ -103,6 +125,7 @@ public class WebhookFilterIT {
 
         UnauthorizedException unauthorizedException = assertThrows(UnauthorizedException.class, () -> mockMvc.perform(httpRequest));
         assertEquals("Invalid X-Hub-Signature-256 - does not match rawBody", unauthorizedException.getMessage());
+        webhookSignatureFailureCounter++;
 
         Counter counter = meterRegistry
                 .get("webhook.signature.failures")
@@ -110,7 +133,7 @@ public class WebhookFilterIT {
                 .counter();
 
         assertNotNull(counter);
-        assertEquals(1.0, counter.count());
+        assertEquals(webhookSignatureFailureCounter, counter.count());
     }
 
     private MockHttpServletRequestBuilder getHttpRequestInvalidSignature(String payloadSecret, String payload) {
