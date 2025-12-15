@@ -43,7 +43,7 @@ chatterbox:
   source:
     github:
       repository:
-        destination-mappings:
+        destination-mapping:
           - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
             destinationChannel: TestChannel
           - name: psyAlexBlakeGoudemond/chatterbox

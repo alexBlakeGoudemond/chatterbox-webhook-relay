@@ -9,10 +9,10 @@ import java.util.List;
 @ConfigurationProperties(prefix = "chatterbox.source.github.repository")
 public class ChatterboxSourceGithubRepositoryProperties {
 
-    private List<DestinationMappings> destinationMappings;
+    private List<DestinationMapping> destinationMapping;
 
     public boolean acceptsRepository(String repositoryName) {
-        for (DestinationMappings destinationMapping : destinationMappings) {
+        for (DestinationMapping destinationMapping : destinationMapping) {
             if (destinationMapping.getName().equalsIgnoreCase(repositoryName)) {
                 return true;
             }
@@ -21,7 +21,7 @@ public class ChatterboxSourceGithubRepositoryProperties {
     }
 
     @Data
-    public static class DestinationMappings {
+    public static class DestinationMapping {
 
         private String name;
 
