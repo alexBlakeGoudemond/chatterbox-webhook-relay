@@ -7,7 +7,7 @@ spring:
     ansi:
       enabled: ALWAYS
   banner:
-    location: banners-coloured/banner-chatterbox-colour-002.txt
+    location: banners-coloured/banner-chatterbox-colour-003.txt
 
 api:
   prefix: /api
