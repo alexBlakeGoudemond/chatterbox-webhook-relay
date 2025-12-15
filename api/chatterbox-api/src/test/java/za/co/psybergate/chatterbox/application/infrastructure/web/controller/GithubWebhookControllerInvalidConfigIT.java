@@ -76,7 +76,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     @DisplayName("Invalid Properties: INTERNAL SERVER ERROR")
     @Test
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getDetails().getSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), readGithubPayload());
         try {
             String expectedContentBody = "extract.<return value>.senderName: must not be null";
             mockMvc.perform(httpRequest)

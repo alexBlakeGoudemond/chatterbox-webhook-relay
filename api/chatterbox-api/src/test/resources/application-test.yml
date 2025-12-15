@@ -81,7 +81,6 @@ chatterbox:
   security:
     webhook:
       github:
-        details:
-          secret: secret
+        secret: secret
   api:
     prefix: /api

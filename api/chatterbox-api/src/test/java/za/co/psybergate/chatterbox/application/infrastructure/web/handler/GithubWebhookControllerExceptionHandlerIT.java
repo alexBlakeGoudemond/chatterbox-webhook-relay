@@ -92,10 +92,6 @@ public class GithubWebhookControllerExceptionHandlerIT {
         }
     }
 
-    private String webhookSecret() {
-        return securityWebhookGithubProperties.getDetails().getSecret();
-    }
-
     @DisplayName("UnrecognizedRequestException -> FORBIDDEN")
     @Test
     public void whenServiceRaisesUnrecognizedRequestException_ThenHandlerProducesForbidden() {
@@ -150,6 +146,10 @@ public class GithubWebhookControllerExceptionHandlerIT {
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", encryptedSignature);
+    }
+
+    private String webhookSecret() {
+        return securityWebhookGithubProperties.getSecret();
     }
 
     private String readGithubPayload() {

@@ -80,7 +80,7 @@ public class WebhookFilter implements Filter {
             throw new UnauthorizedException("Missing X-Hub-Signature-256");
         }
 
-        String expected = payloadCryptor.encryptUsingSHA256(securityWebhookGithubProperties.getDetails().getSecret(), rawBody);
+        String expected = payloadCryptor.encryptUsingSHA256(securityWebhookGithubProperties.getSecret(), rawBody);
         if (!payloadCryptor.isIdentical(expected, signature256)) {
             webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);

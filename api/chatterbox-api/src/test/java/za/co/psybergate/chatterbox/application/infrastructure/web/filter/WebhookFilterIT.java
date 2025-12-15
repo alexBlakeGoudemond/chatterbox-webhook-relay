@@ -100,10 +100,6 @@ public class WebhookFilterIT {
         assertEquals(1.0, counter.count());
     }
 
-    private String webhookSecret() {
-        return securityWebhookGithubProperties.getDetails().getSecret();
-    }
-
     @DisplayName("No Signature: webhook.signature.failures increments")
     @Test
     void givenPayloadNoSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
@@ -179,6 +175,10 @@ public class WebhookFilterIT {
 
     private String apiPrefix() {
         return chatterboxApiProperties.getPrefix();
+    }
+
+    private String webhookSecret() {
+        return securityWebhookGithubProperties.getSecret();
     }
 
 }

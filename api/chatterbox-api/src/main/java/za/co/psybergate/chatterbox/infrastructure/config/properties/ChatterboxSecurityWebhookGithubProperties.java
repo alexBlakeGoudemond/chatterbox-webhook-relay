@@ -7,13 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "chatterbox.security.webhook.github")
 public class ChatterboxSecurityWebhookGithubProperties {
 
-    private SecurityDetail details;
-
-    @Data
-    public static class SecurityDetail {
-
-        private String secret;
-
-    }
+    private String secret;
 
 }

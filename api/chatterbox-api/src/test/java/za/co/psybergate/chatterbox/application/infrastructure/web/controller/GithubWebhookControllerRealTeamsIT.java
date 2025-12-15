@@ -82,7 +82,7 @@ public class GithubWebhookControllerRealTeamsIT {
     @DisplayName("Sending to Live MS Teams: ACCEPTED")
     @Test
     void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getDetails().getSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), readGithubPayload());
         try {
             String expectedContentBody = "Webhook received; work underway";
             mockMvc.perform(httpRequest)

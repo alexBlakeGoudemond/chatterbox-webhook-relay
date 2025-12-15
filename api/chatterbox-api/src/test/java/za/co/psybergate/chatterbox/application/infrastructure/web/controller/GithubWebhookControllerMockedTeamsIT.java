@@ -129,10 +129,6 @@ public class GithubWebhookControllerMockedTeamsIT {
         }
     }
 
-    private String webhookSecret() {
-        return securityWebhookGithubProperties.getDetails().getSecret();
-    }
-
     @DisplayName("Unrecognized event: FORBIDDEN")
     @Test
     public void givenValidPayload_AndUnacceptedEventType_ThenHttpStatusOk() {
@@ -238,6 +234,10 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     private String apiPrefix() {
         return chatterboxApiProperties.getPrefix();
+    }
+
+    private String webhookSecret() {
+        return securityWebhookGithubProperties.getSecret();
     }
 
     private MockHttpServletRequestBuilder getHttpRequestInvalidSignature() {
