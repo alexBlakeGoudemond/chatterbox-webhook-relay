@@ -2,6 +2,13 @@ spring:
   application:
     name: chatterbox-api
 
+  # Allows for ANSI additions, particularly to the banner.txt
+  output:
+    ansi:
+      enabled: ALWAYS
+  banner:
+    location: banners-coloured/banner-chatterbox-colour-001.txt
+
 api:
   prefix: /api
 
