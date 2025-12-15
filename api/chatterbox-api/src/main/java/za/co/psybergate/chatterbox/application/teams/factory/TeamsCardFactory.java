@@ -4,7 +4,7 @@ import org.apache.hc.core5.http.ClassicHttpResponse;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 import java.util.Map;
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 @Component

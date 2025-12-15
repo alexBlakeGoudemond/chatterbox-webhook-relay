@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.BadRequestException;
+import za.co.psybergate.chatterbox.application.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

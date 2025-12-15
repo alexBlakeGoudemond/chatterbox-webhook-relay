@@ -4,7 +4,7 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 public interface TeamsSenderService {
 

@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 

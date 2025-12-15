@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

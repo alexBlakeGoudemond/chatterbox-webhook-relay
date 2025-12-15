@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.webhook.security;
 
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

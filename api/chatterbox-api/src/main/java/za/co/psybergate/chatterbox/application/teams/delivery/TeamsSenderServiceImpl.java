@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

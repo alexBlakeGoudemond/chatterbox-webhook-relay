@@ -1,4 +1,6 @@
-package za.co.psybergate.chatterbox.infrastructure.exception;
+package za.co.psybergate.chatterbox.infrastructure.web.exception;
+
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 public class BadRequestException extends ApplicationException {
 

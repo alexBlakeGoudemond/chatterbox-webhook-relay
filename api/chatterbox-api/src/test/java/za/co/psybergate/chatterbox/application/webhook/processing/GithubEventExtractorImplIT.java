@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 

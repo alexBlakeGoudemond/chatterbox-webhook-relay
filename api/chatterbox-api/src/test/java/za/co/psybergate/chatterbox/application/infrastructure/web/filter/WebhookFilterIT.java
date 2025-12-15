@@ -26,7 +26,7 @@ import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 

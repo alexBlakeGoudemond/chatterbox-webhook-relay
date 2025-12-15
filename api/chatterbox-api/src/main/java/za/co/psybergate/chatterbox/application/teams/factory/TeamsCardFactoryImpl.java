@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -62,8 +62,7 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
     }
 
     private TeamsAdaptiveCardDefinition deepCopy(TeamsAdaptiveCardDefinition src) {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(src, TeamsAdaptiveCardDefinition.class);
+        return objectMapper.convertValue(src, TeamsAdaptiveCardDefinition.class);
     }
 
     @Override
