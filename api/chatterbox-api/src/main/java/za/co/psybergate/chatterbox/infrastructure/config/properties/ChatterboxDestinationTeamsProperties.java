@@ -7,7 +7,7 @@ import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestE
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "chatterbox.destination.teams")
+@ConfigurationProperties(prefix = "chatterbox.destinations.teams")
 public class ChatterboxDestinationTeamsProperties {
 
     private List<AcceptedChannel> acceptedChannel;

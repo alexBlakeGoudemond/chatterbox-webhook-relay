@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "chatterbox.source.github.repository")
+@ConfigurationProperties(prefix = "chatterbox.sources.github.repository")
 public class ChatterboxSourceGithubRepositoryProperties {
 
     private List<DestinationMapping> destinationMapping;

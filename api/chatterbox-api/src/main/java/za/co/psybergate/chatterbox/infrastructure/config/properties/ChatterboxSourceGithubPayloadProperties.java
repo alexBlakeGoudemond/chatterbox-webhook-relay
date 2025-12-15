@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestE
 import java.util.Map;
 
 @Data
-@ConfigurationProperties(prefix = "chatterbox.source.github.payload")
+@ConfigurationProperties(prefix = "chatterbox.sources.github.payload")
 public class ChatterboxSourceGithubPayloadProperties {
 
     private Map<String, EventMapping> eventMapping;

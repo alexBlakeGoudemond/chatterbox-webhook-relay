@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "chatterbox.delivery.teams")
+@ConfigurationProperties(prefix = "chatterbox.deliveries.teams")
 public class ChatterboxDeliveryTeamsProperties {
 
     private TeamsAdaptiveCardDefinition adaptiveCardDefinition;

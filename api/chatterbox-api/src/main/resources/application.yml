@@ -40,7 +40,7 @@ packages:
       level: za.co.psybergate.chatterbox
 
 chatterbox:
-  source:
+  sources:
     github:
       repository:
         destination-mapping:
@@ -57,14 +57,14 @@ chatterbox:
               senderName: "sender.login"
               url: "issue.html_url"
               urlDisplayText: "head_commit.message"
-  destination:
+  destinations:
     teams:
       accepted-channel:
         - channelName: "General"
           webhookUrl: "https://outlook.office.com/webhook/..."
         - channelName: "TestChannel"
           webhookUrl: "https://outlook.office.com/webhook/..."
-  delivery:
+  deliveries:
     teams:
       adaptive-card-definition:
         type: "message"
