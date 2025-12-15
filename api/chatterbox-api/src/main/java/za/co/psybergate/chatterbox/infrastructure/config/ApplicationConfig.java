@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 @Configuration
 @EnableConfigurationProperties({
         ChatterboxApiProperties.class,
-        ChatterboxDeliveryTeamsTemplateCardAdaptiveProperties.class,
+        ChatterboxDeliveryTeamsProperties.class,
         ChatterboxDestinationTeamsProperties.class,
         ChatterboxSecurityWebhookGithubProperties.class,
         ChatterboxSourceGithubPayloadProperties.class,

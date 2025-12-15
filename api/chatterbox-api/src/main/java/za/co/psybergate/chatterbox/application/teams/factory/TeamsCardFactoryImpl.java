@@ -10,7 +10,7 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsTemplateCardAdaptiveProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TeamsCardFactoryImpl implements TeamsCardFactory {
 
-    private final ChatterboxDeliveryTeamsTemplateCardAdaptiveProperties template;
+    private final ChatterboxDeliveryTeamsProperties teamsProperties;
 
     private final TeamsTemplateSubstitutorImpl substitutionService;
 
@@ -31,7 +31,7 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
     /// [TeamsAdaptiveCardTemplate]
     @Override
     public TeamsAdaptiveCardTemplate buildCard(Map<String, String> values) {
-        TeamsAdaptiveCardTemplate clone = deepCopy(template); // use Jackson
+        TeamsAdaptiveCardTemplate clone = deepCopy(teamsProperties.getAdaptiveCardTemplate()); // use Jackson
 
         clone.getAttachments().forEach(attachment -> {
             var content = attachment.getContent();
