@@ -10,7 +10,6 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.TeamsAdaptiveCardTemplateProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.io.IOException;

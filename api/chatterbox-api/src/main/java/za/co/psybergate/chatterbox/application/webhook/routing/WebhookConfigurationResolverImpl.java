@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.application.webhook.routing;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 @Component

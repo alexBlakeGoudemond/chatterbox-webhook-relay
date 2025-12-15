@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.PayloadMapping;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
