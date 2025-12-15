@@ -1,0 +1,21 @@
+${AnsiBackground.BLACK}                                                                                                                                                      ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}                  #########                                                                                                                           ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}                ###       ###                                                                                                                         ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}              ###           ###                                                                                                                       ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}              ##    #####    ##                     :####:  ##                                                          ##                            ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}             ##    ##   ##    ##                    ######  ##                    ##        ##                          ##                            ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}             ###   ### ###   ###                  :##:  .#  ##                    ##        ##                          ##                            ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}              ##     ####                         ##        ##.####    :####    #######   #######    .####:    ##.####  ##.###:    .####.   ###  ###  ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}               ###      ###                       ##.       #######    ######   #######   #######   .######:   #######  #######:  .######.   ##::##   ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}                 ###     ###                      ##        ###  :##   #:  :##    ##        ##      ##:  :##   ###.     ###  ###  ###  ###   :####:   ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}                ##        ###  ###                ##        ##    ##    :#####    ##        ##      ########   ##       ##.  .##  ##.  .##    ####    ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}      ####     ##          ###########            ##.       ##    ##  .#######    ##        ##      ########   ##       ##    ##  ##    ##    :##:    ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}    ###       ##                     ###          ##        ##    ##  ## .  ##    ##        ##      ##         ##       ##.  .##  ##.  .##    ####    ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}   ##     #####                ###     ##         :##:  .#  ##    ##  ##:  ###    ##.       ##.     ###.  :#   ##       ###  ###  ###  ###   :####:   ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}   ##   ### ###              ### ###   ##           ######  ##    ##  ########    #####     #####   .#######   ##       #######:  .######.   ##::##   ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}   ##   ##   ##    ############   ##   ##           :####:  ##    ##    ###.##    .####     .####    .#####:   ##       ##.###:    .####.   ###  ###  ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}   ##    ######   ##         ######    ##                                                                                                             ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}    ##           ###                  ###                                                                                                             ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}     ###       ####       ###       ###                                                                                                               ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}       #########            #########                                                                                                                 ${AnsiBackground.DEFAULT}
+${AnsiBackground.BLACK}                                                                                                                                                      ${AnsiBackground.DEFAULT}
