@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.infrastructure.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -14,20 +14,23 @@ import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
         ChatterboxApiProperties.class,
         ChatterboxDeliveryTeamsTemplateCardAdaptiveProperties.class,
         ChatterboxDestinationTeamsProperties.class,
-        ChatterboxSecurityWebhookProperties.class,
+        ChatterboxSecurityWebhookGithubProperties.class,
         ChatterboxSourceGithubPayloadProperties.class,
         ChatterboxSourceGithubRepositoryProperties.class,
 })
 public class ApplicationConfig {
 
-    @Value("${api.prefix}")
-    private String apiPrefix;
+    private final ChatterboxApiProperties chatterboxApiProperties;
+
+    public ApplicationConfig(ChatterboxApiProperties chatterboxApiProperties) {
+        this.chatterboxApiProperties = chatterboxApiProperties;
+    }
 
     @Bean
     public FilterRegistrationBean<WebhookFilter> applicationWebhookFilter(WebhookFilter webhookFilter) {
         FilterRegistrationBean<WebhookFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(webhookFilter);
-        String url = apiPrefix + "/webhook/*";
+        String url = chatterboxApiProperties.getDetails().getPrefix() + "/webhook/*";
         registration.addUrlPatterns(url); // only intercept webhook endpoints
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;

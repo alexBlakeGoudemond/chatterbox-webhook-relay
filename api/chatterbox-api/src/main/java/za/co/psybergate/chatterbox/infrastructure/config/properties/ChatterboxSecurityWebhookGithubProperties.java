@@ -4,8 +4,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "chatterbox.security.webhook")
-public class ChatterboxSecurityWebhookProperties {
+@ConfigurationProperties(prefix = "chatterbox.security.webhook.github")
+public class ChatterboxSecurityWebhookGithubProperties {
 
     private SecurityDetail details;
 
