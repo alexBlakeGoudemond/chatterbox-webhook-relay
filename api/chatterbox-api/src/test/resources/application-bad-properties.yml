@@ -30,7 +30,7 @@ chatterbox:
           webhookUrl: "https://outlook.office.com/webhook/..."
   delivery:
     teams:
-      adaptive-card-template:
+      adaptive-card-definition:
         type: "message"
         attachments:
           - contentType: "application/vnd.microsoft.card.adaptive"

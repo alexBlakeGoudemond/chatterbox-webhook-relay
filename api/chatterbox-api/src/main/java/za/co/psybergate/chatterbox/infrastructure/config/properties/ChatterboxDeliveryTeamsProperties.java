@@ -10,10 +10,10 @@ import java.util.List;
 @ConfigurationProperties(prefix = "chatterbox.delivery.teams")
 public class ChatterboxDeliveryTeamsProperties {
 
-    private TeamsAdaptiveCardTemplate adaptiveCardTemplate;
+    private TeamsAdaptiveCardDefinition adaptiveCardDefinition;
 
     @Data
-    public static class TeamsAdaptiveCardTemplate {
+    public static class TeamsAdaptiveCardDefinition {
 
         private String type = "message";
 
@@ -63,6 +63,5 @@ public class ChatterboxDeliveryTeamsProperties {
         }
 
     }
-
 
 }

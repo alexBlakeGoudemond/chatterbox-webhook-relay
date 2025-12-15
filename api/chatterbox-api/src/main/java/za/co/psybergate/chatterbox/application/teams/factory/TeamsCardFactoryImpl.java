@@ -10,7 +10,7 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.io.IOException;
@@ -28,10 +28,10 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /// From a given [Map] of property values, create and populate the
-    /// [TeamsAdaptiveCardTemplate]
+    /// [TeamsAdaptiveCardDefinition]
     @Override
-    public TeamsAdaptiveCardTemplate buildCard(Map<String, String> values) {
-        TeamsAdaptiveCardTemplate clone = deepCopy(teamsProperties.getAdaptiveCardTemplate()); // use Jackson
+    public TeamsAdaptiveCardDefinition buildCard(Map<String, String> values) {
+        TeamsAdaptiveCardDefinition clone = deepCopy(teamsProperties.getAdaptiveCardDefinition()); // use Jackson
 
         clone.getAttachments().forEach(attachment -> {
             var content = attachment.getContent();
@@ -48,9 +48,9 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
     }
 
     /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactoryImpl#buildCard(Map)]
-    /// to create a [TeamsAdaptiveCardTemplate]
+    /// to create a [TeamsAdaptiveCardDefinition]
     @Override
-    public TeamsAdaptiveCardTemplate buildCard(GithubEventDto dto) {
+    public TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto) {
         Map<String, String> values = Map.of(
                 "displayName", dto.displayName(),
                 "repositoryName", dto.repositoryName(),
@@ -61,17 +61,17 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
         return buildCard(values);
     }
 
-    private TeamsAdaptiveCardTemplate deepCopy(TeamsAdaptiveCardTemplate src) {
+    private TeamsAdaptiveCardDefinition deepCopy(TeamsAdaptiveCardDefinition src) {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(src, TeamsAdaptiveCardTemplate.class);
+        return mapper.convertValue(src, TeamsAdaptiveCardDefinition.class);
     }
 
     @Override
     public String getAsTeamsPayloadString(GithubEventDto eventDto) throws InternalServerException {
-        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = buildCard(eventDto);
+        TeamsAdaptiveCardDefinition teamsAdaptiveCardDefinition = buildCard(eventDto);
         String teamsPayload;
         try {
-            teamsPayload = objectMapper.writeValueAsString(teamsAdaptiveCardTemplate);
+            teamsPayload = objectMapper.writeValueAsString(teamsAdaptiveCardDefinition);
         } catch (JsonProcessingException e) {
             throw new InternalServerException("Unexpected issue when converting EventDto to Json String", e);
         }

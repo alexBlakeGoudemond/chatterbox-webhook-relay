@@ -10,9 +10,9 @@ import java.util.Map;
 
 public interface TeamsCardFactory {
 
-    ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate buildCard(Map<String, String> values);
+    ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition buildCard(Map<String, String> values);
 
-    ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate buildCard(GithubEventDto dto);
+    ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto);
 
     String getAsTeamsPayloadString(GithubEventDto eventDto) throws InternalServerException;
 
