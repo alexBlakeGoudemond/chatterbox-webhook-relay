@@ -10,10 +10,10 @@ import java.util.List;
 @ConfigurationProperties(prefix = "chatterbox.destination.teams")
 public class ChatterboxDestinationTeamsProperties {
 
-    private List<AcceptedChannel> channelsAccepted;
+    private List<AcceptedChannel> acceptedChannel;
 
     public String getUrl(String teamsChannel) {
-        for (AcceptedChannel acceptedChannel : channelsAccepted) {
+        for (AcceptedChannel acceptedChannel : acceptedChannel) {
             if (acceptedChannel.getChannelName().equalsIgnoreCase(teamsChannel)) {
                 return acceptedChannel.getWebhookUrl();
             }

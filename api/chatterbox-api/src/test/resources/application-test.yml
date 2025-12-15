@@ -53,7 +53,7 @@ chatterbox:
               urlDisplayText: "head_commit.message"
   destination:
     teams:
-      channels-accepted:
+      accepted-channel:
         - channelName: "General"
           webhookUrl: "https://outlook.office.com/webhook/..."
         - channelName: "TestChannel"
