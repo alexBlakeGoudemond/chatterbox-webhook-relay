@@ -7,13 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "chatterbox.api")
 public class ChatterboxApiProperties {
 
-    private ApiDetail details;
-
-    @Data
-    public static class ApiDetail {
-
-        private String prefix;
-
-    }
+    private String prefix;
 
 }

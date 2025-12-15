@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 
 @RestController
-@RequestMapping("${chatterbox.api.details.prefix}/webhook/github")
+@RequestMapping("${chatterbox.api.prefix}/webhook/github")
 @RequiredArgsConstructor
 @Slf4j
 public class GithubWebhookController {

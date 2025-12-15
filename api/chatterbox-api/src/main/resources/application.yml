@@ -90,5 +90,4 @@ chatterbox:
         details:
           secret: secret
   api:
-    details:
-      prefix: /api
+    prefix: /api

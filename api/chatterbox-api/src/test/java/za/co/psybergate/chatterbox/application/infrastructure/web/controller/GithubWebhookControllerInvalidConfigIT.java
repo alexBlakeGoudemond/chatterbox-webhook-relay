@@ -89,7 +89,7 @@ public class GithubWebhookControllerInvalidConfigIT {
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(chatterboxApiProperties.getDetails().getPrefix() + "/webhook/github")
+        return post(chatterboxApiProperties.getPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)

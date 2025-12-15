@@ -152,10 +152,6 @@ public class WebhookFilterIT {
                 .header("X-Hub-Signature-256", encryptedSignature);
     }
 
-    private String apiPrefix() {
-        return chatterboxApiProperties.getDetails().getPrefix();
-    }
-
     private MockHttpServletRequestBuilder getHttpRequestNoSignature(String payload) {
         return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
@@ -179,6 +175,10 @@ public class WebhookFilterIT {
     private String readGithubPayload() {
         String pathToFile = "src/test/resources/payload/github-payload-valid.json";
         return jsonConverter.readPayload(pathToFile);
+    }
+
+    private String apiPrefix() {
+        return chatterboxApiProperties.getPrefix();
     }
 
 }

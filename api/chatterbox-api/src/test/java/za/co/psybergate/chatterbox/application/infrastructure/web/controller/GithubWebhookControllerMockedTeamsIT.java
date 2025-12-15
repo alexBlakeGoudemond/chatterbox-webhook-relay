@@ -237,7 +237,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     }
 
     private String apiPrefix() {
-        return chatterboxApiProperties.getDetails().getPrefix();
+        return chatterboxApiProperties.getPrefix();
     }
 
     private MockHttpServletRequestBuilder getHttpRequestInvalidSignature() {

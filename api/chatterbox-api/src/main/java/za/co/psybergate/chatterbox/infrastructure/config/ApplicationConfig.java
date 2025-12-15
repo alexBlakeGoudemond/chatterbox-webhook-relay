@@ -29,7 +29,7 @@ public class ApplicationConfig {
     public FilterRegistrationBean<WebhookFilter> applicationWebhookFilter(WebhookFilter webhookFilter) {
         FilterRegistrationBean<WebhookFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(webhookFilter);
-        String url = chatterboxApiProperties.getDetails().getPrefix() + "/webhook/*";
+        String url = chatterboxApiProperties.getPrefix() + "/webhook/*";
         registration.addUrlPatterns(url); // only intercept webhook endpoints
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;
