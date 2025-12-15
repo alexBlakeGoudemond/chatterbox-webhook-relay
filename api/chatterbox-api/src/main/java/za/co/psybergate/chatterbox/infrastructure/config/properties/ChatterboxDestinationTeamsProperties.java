@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 import java.util.List;
 
@@ -10,6 +11,15 @@ import java.util.List;
 public class ChatterboxDestinationTeamsProperties {
 
     private List<AcceptedChannel> channelsAccepted;
+
+    public String getUrl(String teamsChannel) {
+        for (AcceptedChannel acceptedChannel : channelsAccepted) {
+            if (acceptedChannel.getChannelName().equalsIgnoreCase(teamsChannel)) {
+                return acceptedChannel.getWebhookUrl();
+            }
+        }
+        throw new UnrecognizedRequestException("Unable to find teansChannel: '" + teamsChannel + "'");
+    }
 
     @Data
     public static class AcceptedChannel {

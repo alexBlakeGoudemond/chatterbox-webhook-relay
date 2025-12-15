@@ -10,6 +10,7 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsTemplateCardAdaptiveProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TeamsCardFactoryImpl implements TeamsCardFactory {
 
-    private final TeamsAdaptiveCardTemplateProperties template;
+    private final ChatterboxDeliveryTeamsTemplateCardAdaptiveProperties template;
 
     private final TeamsTemplateSubstitutorImpl substitutionService;
 

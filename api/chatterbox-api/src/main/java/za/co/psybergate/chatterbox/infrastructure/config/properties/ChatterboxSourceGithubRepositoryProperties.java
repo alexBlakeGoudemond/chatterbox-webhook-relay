@@ -11,6 +11,15 @@ public class ChatterboxSourceGithubRepositoryProperties {
 
     private List<DestinationMappings> destinationMappings;
 
+    public boolean acceptsRepository(String repositoryName) {
+        for (DestinationMappings destinationMapping : destinationMappings) {
+            if (destinationMapping.getName().equalsIgnoreCase(repositoryName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Data
     public static class DestinationMappings {
 

@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 
@@ -11,6 +12,17 @@ import java.util.Map;
 public class ChatterboxSourceGithubPayloadProperties {
 
     private Map<String, EventMapping> eventMappings;
+
+    public boolean containsEvent(String eventType) {
+        return eventMappings.containsKey(eventType);
+    }
+
+    public EventMapping getEventMapping(String eventType) throws UnrecognizedRequestException {
+        if (!containsEvent(eventType)) {
+            throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
+        }
+        return eventMappings.get(eventType);
+    }
 
     @Data
     public static class EventMapping {
