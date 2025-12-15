@@ -11,17 +11,17 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "chatterbox.source.github.payload")
 public class ChatterboxSourceGithubPayloadProperties {
 
-    private Map<String, EventMapping> eventMappings;
+    private Map<String, EventMapping> eventMapping;
 
     public boolean containsEvent(String eventType) {
-        return eventMappings.containsKey(eventType);
+        return eventMapping.containsKey(eventType);
     }
 
     public EventMapping getEventMapping(String eventType) throws UnrecognizedRequestException {
         if (!containsEvent(eventType)) {
             throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
         }
-        return eventMappings.get(eventType);
+        return eventMapping.get(eventType);
     }
 
     @Data

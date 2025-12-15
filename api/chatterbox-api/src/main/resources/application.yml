@@ -49,7 +49,7 @@ chatterbox:
           - name: psyAlexBlakeGoudemond/chatterbox
             destinationChannel: TestChannel
       payload:
-        event-mappings:
+        event-mapping:
           push:
             displayName: "Push Event"
             fields:
