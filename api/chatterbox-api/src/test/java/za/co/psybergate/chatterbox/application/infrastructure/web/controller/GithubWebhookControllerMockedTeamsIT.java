@@ -24,6 +24,8 @@ import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
 import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -94,12 +96,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerMockedTeamsIT {
+    
+    @Autowired
+    private ChatterboxApiProperties chatterboxApiProperties;
 
-    @Value("${api.prefix}")
-    private String apiPrefix;
-
-    @Value("${webhook.github.secret}")
-    private String webhookSecret;
+    @Autowired
+    private ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
@@ -117,7 +119,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     @Test
     public void givenIncompletePayload_MissingJsonProperties_ThenHttpStatusOk() {
         String incompletePayload = "{}";
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret, incompletePayload);
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret(), incompletePayload);
         try {
             String expectedContentBody = "Unable to parse 'repository.full_name' from raw rawBody";
             mockMvc.perform(httpRequest)
@@ -128,11 +130,15 @@ public class GithubWebhookControllerMockedTeamsIT {
         }
     }
 
+    private String webhookSecret() {
+        return securityWebhookGithubProperties.getDetails().getSecret();
+    }
+
     @DisplayName("Unrecognized event: FORBIDDEN")
     @Test
     public void givenValidPayload_AndUnacceptedEventType_ThenHttpStatusOk() {
         String unknownEventType = "strangeEvent";
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestUnknownEvent(webhookSecret, readGithubPayload(), unknownEventType);
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestUnknownEvent(webhookSecret(), readGithubPayload(), unknownEventType);
         try {
             String responseContent =
                     String.format("Webhook received; no work done; unrecognized event '%s'", unknownEventType);
@@ -156,7 +162,7 @@ public class GithubWebhookControllerMockedTeamsIT {
         ObjectNode nodeWithContentToReplace = (ObjectNode) jsonNode.get("repository");
         nodeWithContentToReplace.put("full_name", unrecognizedRepositoryName);
 
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, jsonNode.toString());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), jsonNode.toString());
         try {
             String expectedContentBody =
                     String.format("Webhook received; no work done; unrecognized repository '%s'", unrecognizedRepositoryName);
@@ -197,7 +203,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     @DisplayName("Encrypted signature: ACCEPTED")
     @Test
     void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
         try {
             String expectedContentBody = "Webhook received; work underway";
             mockMvc.perform(httpRequest)
@@ -211,7 +217,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     @DisplayName("Signature, No UTF-8: ACCEPTED")
     @Test
     void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret, readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValidNoEncoding(webhookSecret(), readGithubPayload());
         try {
             String expectedContentBody = "Webhook received; work underway";
             mockMvc.perform(httpRequest)
@@ -223,7 +229,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     }
 
     private MockHttpServletRequestBuilder getHttpRequestNoSignature() {
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(readGithubPayload())
@@ -231,19 +237,23 @@ public class GithubWebhookControllerMockedTeamsIT {
                 .header("X-GitHub-Event", "push");
     }
 
+    private String apiPrefix() {
+        return chatterboxApiProperties.getDetails().getPrefix();
+    }
+
     private MockHttpServletRequestBuilder getHttpRequestInvalidSignature() {
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(readGithubPayload())
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
-                .header("X-Hub-Signature-256", webhookSecret);
+                .header("X-Hub-Signature-256", webhookSecret());
     }
 
     private MockHttpServletRequestBuilder getHttpRequestUnknownEvent(String payloadSecret, String payload, String unknownEventType) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)
@@ -254,7 +264,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     private MockHttpServletRequestBuilder getHttpRequestValidNoEncoding(String payloadSecret, String payload) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .content(payload)
                 .header("X-GitHub-Delivery", "123")
@@ -264,7 +274,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)

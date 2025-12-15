@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +23,8 @@ import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
 import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -54,11 +55,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles({"test", "live-url"})
 public class GithubWebhookControllerRealTeamsIT {
 
-    @Value("${api.prefix}")
-    private String apiPrefix;
+    @Autowired
+    private ChatterboxApiProperties chatterboxApiProperties;
 
-    @Value("${webhook.github.secret}")
-    private String webhookSecret;
+    @Autowired
+    private ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
@@ -81,7 +82,7 @@ public class GithubWebhookControllerRealTeamsIT {
     @DisplayName("Sending to Live MS Teams: ACCEPTED")
     @Test
     void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getDetails().getSecret(), readGithubPayload());
         try {
             String expectedContentBody = "Webhook received; work underway";
             mockMvc.perform(httpRequest)
@@ -94,7 +95,7 @@ public class GithubWebhookControllerRealTeamsIT {
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(apiPrefix + "/webhook/github")
+        return post(chatterboxApiProperties.getDetails().getPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)

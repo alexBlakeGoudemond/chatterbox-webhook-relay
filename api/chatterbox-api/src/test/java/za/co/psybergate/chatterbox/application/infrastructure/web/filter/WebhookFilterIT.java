@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -25,6 +24,8 @@ import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
 import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -49,12 +50,11 @@ public class WebhookFilterIT {
 
     private static int webhookSignatureFailureCounter = 0;
 
-    // TODO BlakeGoudemond 2025/12/14 | extract these settings to WebhookConfig
-    @Value("${api.prefix}")
-    private String apiPrefix;
+    @Autowired
+    private ChatterboxApiProperties chatterboxApiProperties;
 
-    @Value("${webhook.github.secret}")
-    private String webhookSecret;
+    @Autowired
+    private ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties;    
 
     @Autowired
     private MeterRegistry meterRegistry;
@@ -83,7 +83,7 @@ public class WebhookFilterIT {
     @DisplayName("webhook.payload.successes increments")
     @Test
     void givenValidPayload_WhenHttpRequestMade_ThenCustomMetricExists() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret, readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
 
         try {
             mockMvc.perform(httpRequest).andReturn();
@@ -98,6 +98,10 @@ public class WebhookFilterIT {
 
         assertNotNull(counter);
         assertEquals(1.0, counter.count());
+    }
+
+    private String webhookSecret() {
+        return securityWebhookGithubProperties.getDetails().getSecret();
     }
 
     @DisplayName("No Signature: webhook.signature.failures increments")
@@ -121,7 +125,7 @@ public class WebhookFilterIT {
     @DisplayName("Bad Signature: webhook.signature.failures increments")
     @Test
     void givenPayloadInvalidSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestInvalidSignature(webhookSecret, readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestInvalidSignature(webhookSecret(), readGithubPayload());
 
         UnauthorizedException unauthorizedException = assertThrows(UnauthorizedException.class, () -> mockMvc.perform(httpRequest));
         assertEquals("Invalid X-Hub-Signature-256 - does not match rawBody", unauthorizedException.getMessage());
@@ -139,7 +143,7 @@ public class WebhookFilterIT {
     private MockHttpServletRequestBuilder getHttpRequestInvalidSignature(String payloadSecret, String payload) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
         encryptedSignature += "abc234";
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)
@@ -148,8 +152,12 @@ public class WebhookFilterIT {
                 .header("X-Hub-Signature-256", encryptedSignature);
     }
 
+    private String apiPrefix() {
+        return chatterboxApiProperties.getDetails().getPrefix();
+    }
+
     private MockHttpServletRequestBuilder getHttpRequestNoSignature(String payload) {
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)
@@ -159,7 +167,7 @@ public class WebhookFilterIT {
 
     private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
         String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(apiPrefix + "/webhook/github")
+        return post(apiPrefix() + "/webhook/github")
                 .contentType(APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(payload)
