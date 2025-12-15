@@ -13,11 +13,12 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.template.TeamsAdaptiveCardTemplate;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
 import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate.Attachment.BodyItem;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
@@ -29,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         TeamsCardFactoryImpl.class,
-        TeamsAdaptiveCardTemplate.class,
         TeamsTemplateSubstitutorImpl.class,
         ApplicationConfig.class,
         JsonConverterImpl.class,
@@ -57,14 +57,13 @@ public class TeamsCardFactoryImplIT {
     @DisplayName("Factory(Map) can build template")
     @Test
     public void givenProperties_WhenTemplateIsBuilt_ThenSuccess() {
-        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateUsingMap();
+        ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateUsingMap();
         if (teamsAdaptiveCardTemplate == null) {
             fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
         }
-        ;
 
         assertNotNull(teamsAdaptiveCardTemplate);
-        List<TeamsAdaptiveCardTemplate.BodyItem> bodyItems = teamsAdaptiveCardTemplate.getAttachments().getFirst().getContent().getBody();
+        List<BodyItem> bodyItems = teamsAdaptiveCardTemplate.getAttachments().getFirst().getContent().getBody();
         for (var bodyItem : bodyItems) {
             assertFalse(bodyItem.getText().contains("${}"));
         }
@@ -73,13 +72,13 @@ public class TeamsCardFactoryImplIT {
     @DisplayName("Factory(DTO) can build template")
     @Test
     public void givenGithubEventDto_WhenBuildTeamsAdaptiveCard_ThenSuccess() {
-        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateFromJsonString();
+        ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateFromJsonString();
         if (teamsAdaptiveCardTemplate == null) {
             fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
         }
 
         assertNotNull(teamsAdaptiveCardTemplate);
-        List<TeamsAdaptiveCardTemplate.BodyItem> bodyItems = teamsAdaptiveCardTemplate.getAttachments().getFirst().getContent().getBody();
+        List<ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate.Attachment.BodyItem> bodyItems = teamsAdaptiveCardTemplate.getAttachments().getFirst().getContent().getBody();
         for (var bodyItem : bodyItems) {
             assertFalse(bodyItem.getText().contains("${}"));
         }
@@ -88,7 +87,7 @@ public class TeamsCardFactoryImplIT {
     @DisplayName("Template --> JSON")
     @Test
     public void whenCompareTemplate_ToJson_ThenIdentical() {
-        TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateFromJsonString();
+        ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate teamsAdaptiveCardTemplate = getTeamsAdaptiveCardTemplateFromJsonString();
         if (teamsAdaptiveCardTemplate == null) {
             fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
         }
@@ -105,7 +104,7 @@ public class TeamsCardFactoryImplIT {
         assertEquals(expectedJson, actualJson);
     }
 
-    private TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateFromJsonString() {
+    private ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateFromJsonString() {
         JsonNode jsonNode = jsonConverter.getAsJson(getValidJsonString());
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
         try {
@@ -115,7 +114,7 @@ public class TeamsCardFactoryImplIT {
         }
     }
 
-    private TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateUsingMap() {
+    private ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardTemplate getTeamsAdaptiveCardTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
             return teamsCardFactory.buildCard(propertiesToUse);
