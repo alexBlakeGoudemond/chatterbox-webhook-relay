@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
-import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
-import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
-import za.co.psybergate.chatterbox.domain.utility.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
+import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;

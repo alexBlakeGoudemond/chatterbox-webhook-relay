@@ -13,8 +13,8 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
-import za.co.psybergate.chatterbox.domain.utility.JsonConverterImpl;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;

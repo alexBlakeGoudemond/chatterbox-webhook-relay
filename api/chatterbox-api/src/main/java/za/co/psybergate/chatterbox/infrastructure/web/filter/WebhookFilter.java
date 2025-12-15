@@ -4,7 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
+import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
