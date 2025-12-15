@@ -9,9 +9,6 @@ spring:
   banner:
     location: banners-coloured/banner-chatterbox-colour-003.txt
 
-api:
-  prefix: /api
-
 common:
   logging:
     appender:
@@ -42,45 +39,56 @@ packages:
     logging:
       level: za.co.psybergate.chatterbox
 
-webhook:
-  github:
-    secret: secret
 chatterbox:
-  github-repositories-accepted:
-    - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
-      destinationChannel: TestChannel
-    - name: psyAlexBlakeGoudemond/chatterbox
-      destinationChannel: TestChannel
-  teams-destinations-accepted:
-    - channelName: "General"
-      webhookUrl: "https://outlook.office.com/webhook/..."
-    - channelName: "TestChannel"
-      webhookUrl: "https://outlook.office.com/webhook/..."
-  github-incoming-mappings:
-    push:
-      displayName: "Push Event"
-      fields:
-        repositoryName: "repository.full_name"
-        senderName: "sender.login"
-        url: "compare"
-        urlDisplayText: "head_commit.message"
-      destinations:
-        - "TestChannel"
-    pull_request:
-      displayName: "Pull Request Event"
-      fields:
-        repositoryName: "repository.full_name"
-        senderName: "pull_request.user.login"
-        url: "pull_request.html_url"
-        urlDisplayText: "pull_request.title"
-      destinations:
-        - "TestChannel"
-teams-card-template:
-  adaptive-card:
-    attachments:
-      - content:
-          msteams:
-            width: Full
-          body:
-            - text: "📢 ${displayName} for ${repositoryName}"
-            - text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
+  source:
+    github:
+      repository:
+        destination-mappings:
+          - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
+            destinationChannel: TestChannel
+          - name: psyAlexBlakeGoudemond/chatterbox
+            destinationChannel: TestChannel
+      payload:
+        event-mappings:
+          push:
+            displayName: "Push Event"
+            fields:
+              repositoryName: "repository.full_name"
+              senderName: "sender.login"
+              url: "issue.html_url"
+              urlDisplayText: "head_commit.message"
+  destination:
+    teams:
+      channels-accepted:
+        - channelName: "General"
+          webhookUrl: "https://outlook.office.com/webhook/..."
+        - channelName: "TestChannel"
+          webhookUrl: "https://outlook.office.com/webhook/..."
+  delivery:
+    teams:
+      templates:
+        card:
+          adaptive:
+            type: "message"
+            attachments:
+              - contentType: "application/vnd.microsoft.card.adaptive"
+                content:
+                  type: "AdaptiveCard"
+                  version: "1.0"
+                  msteams:
+                    width: Full
+                  body:
+                    - type: "TextBlock"
+                      text: "📢 ${displayName} for ${repositoryName}"
+                      wrap: true
+                    - type: "TextBlock"
+                      text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
+                      wrap: true
+  security:
+    webhook:
+      github:
+        details:
+          secret: secret
+  api:
+    details:
+      prefix: /api
