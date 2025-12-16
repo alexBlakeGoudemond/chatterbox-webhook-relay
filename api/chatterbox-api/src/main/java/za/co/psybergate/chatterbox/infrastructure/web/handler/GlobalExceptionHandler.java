@@ -1,43 +1,50 @@
 package za.co.psybergate.chatterbox.infrastructure.web.handler;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.BadRequestException;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.InternalServerException;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.InfrastructureException;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> badRequest(Exception ex) {
+    private final WebhookLogger webhookLogger;
+
+    // TODO BlakeGoudemond 2025/12/16 | consider @Order(Ordered.HIGHEST_PRECEDENCE)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handleValidation(ConstraintViolationException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(UnrecognizedRequestException.class)
-    public ResponseEntity<String> forbidden(Exception ex) {
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<String> handleApplication(ApplicationException ex) {
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> constraintViolation(ConstraintViolationException ex) {
+    @ExceptionHandler(InfrastructureException.class)
+    public ResponseEntity<String> handleInfrastructure(InfrastructureException ex) {
+        webhookLogger.logExceptionDetails(ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Internal Server Error");
     }
 
-    @ExceptionHandler(InternalServerException.class)
-    public ResponseEntity<String> internalServer(InternalServerException ex) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleUnexpected(Exception ex) {
+        webhookLogger.logExceptionDetails(ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Something went wrong");
     }
 
 }

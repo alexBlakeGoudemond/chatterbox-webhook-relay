@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
@@ -19,19 +21,17 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.BadRequestException;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.InternalServerException;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.InfrastructureException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -77,61 +77,61 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @Qualifier("githubWebhookServiceImpl")
     private GithubWebhookService githubWebhookService;
 
-    @DisplayName("InternalServerException -> INTERNAL_SERVER_ERROR")
+    @DisplayName("ConstraintViolationException -> BAD_REQUEST")
     @Test
-    public void whenServiceRaisesInternalServerException_ThenHandlerProducesInternalServerError() {
-        Mockito.doThrow(InternalServerException.class)
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
-
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
-        try {
-            mockMvc.perform(httpRequest)
-                    .andExpect(status().isInternalServerError());
-        } catch (Exception e) {
-            fail("Expected the HttpRequest to produce the expected HttpRequest", e);
-        }
-    }
-
-    @DisplayName("UnrecognizedRequestException -> FORBIDDEN")
-    @Test
-    public void whenServiceRaisesUnrecognizedRequestException_ThenHandlerProducesForbidden() {
-        Mockito.doThrow(UnrecognizedRequestException.class)
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
-
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
-        try {
-            mockMvc.perform(httpRequest)
-                    .andExpect(status().isForbidden());
-        } catch (Exception e) {
-            fail("Expected the HttpRequest to produce the expected HttpRequest", e);
-        }
-    }
-
-    @DisplayName("ConstraintViolationException -> INTERNAL_SERVER_ERROR")
-    @Test
-    public void whenServiceRaisesConstraintViolationException_ThenHandlerProducesInternalServerError() {
+    public void whenServiceRaisesConstraintViolationException_ThenHandlerProducesBadRequest() {
         Mockito.doThrow(ConstraintViolationException.class)
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
 
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
         try {
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isBadRequest());
         } catch (Exception e) {
             fail("Expected the HttpRequest to produce the expected HttpRequest", e);
         }
     }
 
-    @DisplayName("BadRequestException -> BAD_REQUEST")
+    @DisplayName("ApplicationException -> BAD_REQUEST")
     @Test
-    public void whenServiceRaisesBadRequestException_ThenHandlerProducesBadRequest() {
-        Mockito.doThrow(BadRequestException.class)
+    public void whenServiceRaisesApplicationException_ThenHandlerProducesBadRequest() {
+        Mockito.doThrow(ApplicationException.class)
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
 
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
         try {
             mockMvc.perform(httpRequest)
                     .andExpect(status().isBadRequest());
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to produce the expected HttpRequest", e);
+        }
+    }
+
+    @DisplayName("Infrastructure Exception -> INTERNAL_SERVER_ERROR")
+    @Test
+    public void whenServiceRaisesInfrastructureException_ThenHandlerProducesInternalServerError() {
+        Mockito.doThrow(InfrastructureException.class)
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
+        try {
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isInternalServerError());
+        } catch (Exception e) {
+            fail("Expected the HttpRequest to produce the expected HttpRequest", e);
+        }
+    }
+
+    @DisplayName("External Exception -> INTERNAL_SERVER_ERROR")
+    @Test
+    public void whenServiceRaisesExternalException_ThenHandlerProducesInternalServerError() {
+        Mockito.doThrow(RuntimeException.class)
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
+        try {
+            mockMvc.perform(httpRequest)
+                    .andExpect(status().isInternalServerError());
         } catch (Exception e) {
             fail("Expected the HttpRequest to produce the expected HttpRequest", e);
         }
