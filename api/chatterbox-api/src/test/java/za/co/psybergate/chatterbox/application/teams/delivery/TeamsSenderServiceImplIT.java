@@ -14,18 +14,19 @@ import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.utility.JsonConverter;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles({"live-url"})
-public class TeamsSenderServiceImplTest {
+public class TeamsSenderServiceImplIT {
 
     @Autowired
-    private JsonConverter jsonConverter;
+    private JsonFileReader jsonFileReader;
 
     @Autowired
     private GithubEventExtractor eventExtractor;
@@ -76,13 +77,8 @@ public class TeamsSenderServiceImplTest {
     }
 
     private GithubEventDto getGithubEventDto() {
-        JsonNode jsonNode = jsonConverter.getAsJson(getValidJsonString());
+        JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         return eventExtractor.extract("push", jsonNode);
-    }
-
-    private String getValidJsonString() {
-        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return jsonConverter.readPayload(pathToFile);
     }
 
 }

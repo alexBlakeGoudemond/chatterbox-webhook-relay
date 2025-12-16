@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.infrastructure.exception.BadRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +23,11 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final TeamsSenderServiceImpl teamsSenderService;
 
+    private final JsonConverter jsonConverter;
+
     @Override
     public void process(String eventType, JsonNode rawBody) {
-        String repositoryName = getRepositoryName(rawBody);
+        String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
 
@@ -34,15 +36,6 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookLogger.logSendingDtoToTeams(eventDto);
         HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
         webhookLogger.logTeamsResponse(httpResponseDto);
-    }
-
-    @Override
-    public String getRepositoryName(JsonNode rawBody) throws BadRequestException {
-        String repositoryName = rawBody.path("repository").path("full_name").asText(null);
-        if (repositoryName == null) {
-            throw new BadRequestException("Unable to parse 'repository.full_name' from raw rawBody");
-        }
-        return repositoryName;
     }
 
 }

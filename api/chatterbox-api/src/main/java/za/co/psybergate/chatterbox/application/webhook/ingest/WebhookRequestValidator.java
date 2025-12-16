@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.application.webhook.ingest;
 
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 
 /// Entry point, validates and normalizes input
 public interface WebhookRequestValidator {

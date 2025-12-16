@@ -8,9 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties.PayloadMapping;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +30,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Known eventType succeeds")
     @Test
     public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
-        PayloadMapping payloadMapping = resolver.getPayloadMapping("push");
+        EventMapping payloadMapping = resolver.getPayloadMapping("push");
         assertNotNull(payloadMapping);
     }
 
@@ -52,7 +51,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Unknown Teams Destination Channel Name gives Exception")
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
-        Assertions.assertThrows(InternalServerException.class,
+        Assertions.assertThrows(UnrecognizedRequestException.class,
                 () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
     }
 
