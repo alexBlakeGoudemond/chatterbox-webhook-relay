@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles({"live-url"})
-public class TeamsSenderServiceImplTest {
+public class TeamsSenderServiceImplIT {
 
     @Autowired
     private JsonFileReader jsonFileReader;
