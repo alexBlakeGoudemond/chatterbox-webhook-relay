@@ -3,12 +3,12 @@ package za.co.psybergate.chatterbox.infrastructure.web.filter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.domain.utility.PayloadCryptor;
+import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnauthorizedException;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.InternalServerException;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
@@ -21,8 +21,7 @@ import static za.co.psybergate.chatterbox.infrastructure.logging.MDC_KEYS.THREAD
 @Component
 public class WebhookFilter implements Filter {
 
-    @Value("${webhook.github.secret}")
-    private String webhookSecret;
+    private final ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties;
 
     private final WebhookLogger webhookLogger;
 
@@ -30,10 +29,14 @@ public class WebhookFilter implements Filter {
 
     private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    public WebhookFilter(WebhookLogger webhookLogger, PayloadCryptor payloadCryptor, WebhookRuntimeMetrics webhookRuntimeMetrics) {
+    public WebhookFilter(WebhookLogger webhookLogger,
+                         PayloadCryptor payloadCryptor,
+                         WebhookRuntimeMetrics webhookRuntimeMetrics,
+                         ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties) {
         this.webhookLogger = webhookLogger;
         this.payloadCryptor = payloadCryptor;
         this.webhookRuntimeMetrics = webhookRuntimeMetrics;
+        this.securityWebhookGithubProperties = securityWebhookGithubProperties;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class WebhookFilter implements Filter {
     private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,
                                       String event,
                                       String delivery,
-                                      String signature256) throws UnauthorizedException {
+                                      String signature256) throws InvalidSignatureException {
         byte[] bodyBytes = getBodyAsBytes(wrappedRequest);
         String encoding = getCharacterEncoding(wrappedRequest);
         String rawBody = getRawBody(bodyBytes, encoding);
@@ -74,14 +77,14 @@ public class WebhookFilter implements Filter {
         if (signature256 == null) {
             webhookLogger.logMissingSignature();
             webhookRuntimeMetrics.recordSignatureFailure(event);
-            throw new UnauthorizedException("Missing X-Hub-Signature-256");
+            throw new InvalidSignatureException("Missing X-Hub-Signature-256");
         }
 
-        String expected = payloadCryptor.encryptUsingSHA256(webhookSecret, rawBody);
+        String expected = payloadCryptor.encryptUsingSHA256(securityWebhookGithubProperties.getSecret(), rawBody);
         if (!payloadCryptor.isIdentical(expected, signature256)) {
             webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);
-            throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match rawBody");
+            throw new InvalidSignatureException("Invalid X-Hub-Signature-256 - does not match rawBody");
         }
 
         webhookLogger.logValidSignature();

@@ -1,8 +1,7 @@
-package za.co.psybergate.chatterbox.domain.utility;
+package za.co.psybergate.chatterbox.application.webhook.security;
 
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.exception.ApplicationException;
-import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,7 +19,7 @@ public class PayloadCryptorImpl implements PayloadCryptor {
             byte[] rawHmac = mac.doFinal(body.getBytes());
             return "sha256=" + bytesToHex(rawHmac);
         } catch (Exception e) {
-            throw new InternalServerException("Failed to calculate HMAC", e);
+            throw new ApplicationException("Failed to calculate HMAC", e);
         }
     }
 

@@ -2,21 +2,24 @@ package za.co.psybergate.chatterbox.application.webhook.ingest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxConfigurationProperties;
-import za.co.psybergate.chatterbox.infrastructure.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 @Component
 @RequiredArgsConstructor
 public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
 
-    private final ChatterboxConfigurationProperties configurationProperties;
+    private final ChatterboxSourceGithubPayloadProperties payloadProperties;
+
+    private final ChatterboxSourceGithubRepositoryProperties repositoryProperties;
 
     private final WebhookLogger webhookLogger;
 
     @Override
     public void assertAcceptedEvent(String eventType) throws UnrecognizedRequestException {
-        if (configurationProperties.containsEvent(eventType)) {
+        if (payloadProperties.containsEvent(eventType)) {
             return;
         }
         webhookLogger.logUnknownEventType(eventType);
@@ -27,7 +30,7 @@ public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
 
     @Override
     public void assertAcceptedRepository(String repositoryName) throws UnrecognizedRequestException {
-        if (configurationProperties.acceptsRepository(repositoryName)) {
+        if (repositoryProperties.acceptsRepository(repositoryName)) {
             return;
         }
         webhookLogger.logUnrecognizedRepository(repositoryName);
