@@ -16,12 +16,11 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
@@ -29,7 +28,6 @@ import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookCo
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,16 +46,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
         TeamsTemplateSubstitutorImpl.class,
+        GithubHttpRequestFactory.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 @ActiveProfiles({"bad-properties"})
 public class GithubWebhookControllerInvalidConfigIT {
-
-    @Autowired
-    private ChatterboxApiProperties chatterboxApiProperties;
-
-    @Autowired
-    private ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
@@ -66,10 +59,10 @@ public class GithubWebhookControllerInvalidConfigIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private PayloadCryptor payloadCryptor;
+    private JsonFileReader jsonFileReader;
 
     @Autowired
-    private JsonFileReader jsonFileReader;
+    private GithubHttpRequestFactory githubHttpRequestFactory;
 
     /// One of the properties that the codebase expects is a field `urlDisplayText`.
     /// This test uses a properties file where this field is NOT included; the assertion is that
@@ -77,7 +70,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     @DisplayName("Invalid Properties: BAD_REQUEST")
     @Test
     void whenPostToGithubWebhook_WithInvalidProperties_ThenBadRequest() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), jsonFileReader.getGithubPayloadValidAsString());
+        MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "extract.<return value>.senderName: must not be null";
             mockMvc.perform(httpRequest)
@@ -86,17 +79,6 @@ public class GithubWebhookControllerInvalidConfigIT {
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);
         }
-    }
-
-    private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
-        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(chatterboxApiProperties.getPrefix() + "/webhook/github")
-                .contentType(APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(payload)
-                .header("X-GitHub-Delivery", "123")
-                .header("X-GitHub-Event", "push")
-                .header("X-Hub-Signature-256", encryptedSignature);
     }
 
 }
