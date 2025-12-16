@@ -50,8 +50,7 @@ public class WebhookLogger {
     }
 
     public void logExceptionDetails(Exception ex) {
-        log.error("[Exception] Exception encountered: {}, {}", ex.getClass().getSimpleName(), ex.getMessage());
-        ex.printStackTrace(); // TODO BlakeGoudemond 2025/12/16 | make better
+        log.error("[Exception] Exception encountered: {}", ex.getClass().getSimpleName(), ex);
     }
 
 }

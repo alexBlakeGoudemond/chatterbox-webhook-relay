@@ -78,7 +78,6 @@ public class WebhookFilterIT {
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
     }
 
-    // TODO BlakeGoudemond 2025/12/14 | consider profile fr live tests with @EnabledIfEnvironmentVariable(named = "RUN_REAL_WEBHOOKS", matches = "true")
     // TODO BlakeGoudemond 2025/12/14 | extract to method like performWebhook - then put in helper class
     @DisplayName("webhook.payload.successes increments")
     @Test
