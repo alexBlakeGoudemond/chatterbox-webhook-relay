@@ -1,6 +1,5 @@
 package za.co.psybergate.chatterbox.application.teams.factory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -13,13 +12,13 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.util.HashMap;
@@ -49,7 +48,7 @@ public class TeamsCardFactoryImplIT {
     private TeamsCardFactory teamsCardFactory;
 
     @Autowired
-    private JsonConverter jsonConverter;
+    private JsonFileReader jsonFileReader;
 
     @Autowired
     private GithubEventExtractor eventExtractor;
@@ -94,18 +93,13 @@ public class TeamsCardFactoryImplIT {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode actualJson = objectMapper.valueToTree(teamsAdaptiveCardDefinition);
-        JsonNode expectedJson = null;
-        try {
-            expectedJson = objectMapper.readTree(exampleTeamsPayload());
-        } catch (JsonProcessingException e) {
-            fail("Unexpected issue when converting JsonString into JsonNode", e);
-        }
+        JsonNode expectedJson = jsonFileReader.getTeamsPayloadValid();
 
         assertEquals(expectedJson, actualJson);
     }
 
     private ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateFromJsonString() {
-        JsonNode jsonNode = jsonConverter.getAsJson(getValidJsonString());
+        JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
         try {
             return teamsCardFactory.buildCard(eventDto);
@@ -131,16 +125,6 @@ public class TeamsCardFactoryImplIT {
         propertiesToUse.put("urlDisplayText", "Test message Is here!");
         propertiesToUse.put("displayName", "Pull Request Event");
         return propertiesToUse;
-    }
-
-    private String exampleTeamsPayload() {
-        String pathToFile = "src/test/resources/payload/teams-payload-valid.json";
-        return jsonConverter.readPayload(pathToFile);
-    }
-
-    private String getValidJsonString() {
-        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return jsonConverter.readPayload(pathToFile);
     }
 
 }

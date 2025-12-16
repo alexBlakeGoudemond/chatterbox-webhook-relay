@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
@@ -68,7 +68,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     private PayloadCryptor payloadCryptor;
 
     @Autowired
-    private JsonConverter jsonConverter;
+    private JsonFileReader jsonFileReader;
 
     /// One of the properties that the codebase expects is a field `urlDisplayText`.
     /// This test uses a properties file where this field is NOT included; the assertion is that
@@ -76,7 +76,7 @@ public class GithubWebhookControllerInvalidConfigIT {
     @DisplayName("Invalid Properties: INTERNAL SERVER ERROR")
     @Test
     void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "extract.<return value>.senderName: must not be null";
             mockMvc.perform(httpRequest)
@@ -96,11 +96,6 @@ public class GithubWebhookControllerInvalidConfigIT {
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", encryptedSignature);
-    }
-
-    private String readGithubPayload() {
-        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return jsonConverter.readPayload(pathToFile);
     }
 
 }

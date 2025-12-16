@@ -13,7 +13,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
@@ -23,12 +22,12 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InfrastructureException;
@@ -71,7 +70,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     private PayloadCryptor payloadCryptor;
 
     @Autowired
-    private JsonConverter jsonConverter;
+    private JsonFileReader jsonFileReader;
 
     @MockitoBean
     @Qualifier("githubWebhookServiceImpl")
@@ -83,7 +82,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
         Mockito.doThrow(ConstraintViolationException.class)
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
 
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequest)
                     .andExpect(status().isBadRequest());
@@ -98,7 +97,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
         Mockito.doThrow(ApplicationException.class)
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
 
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequest)
                     .andExpect(status().isBadRequest());
@@ -113,7 +112,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
         Mockito.doThrow(InfrastructureException.class)
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
 
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequest)
                     .andExpect(status().isInternalServerError());
@@ -128,7 +127,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
         Mockito.doThrow(RuntimeException.class)
                 .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
 
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequest)
                     .andExpect(status().isInternalServerError());
@@ -151,10 +150,5 @@ public class GithubWebhookControllerExceptionHandlerIT {
     private String webhookSecret() {
         return securityWebhookGithubProperties.getSecret();
     }
-
-    private String readGithubPayload() {
-        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return jsonConverter.readPayload(pathToFile);
-    }
-
+    
 }

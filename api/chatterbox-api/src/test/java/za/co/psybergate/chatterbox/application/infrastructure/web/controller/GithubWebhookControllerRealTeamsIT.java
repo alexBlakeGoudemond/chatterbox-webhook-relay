@@ -3,7 +3,6 @@ package za.co.psybergate.chatterbox.application.infrastructure.web.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -18,7 +17,7 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
@@ -72,7 +71,7 @@ public class GithubWebhookControllerRealTeamsIT {
     private PayloadCryptor payloadCryptor;
 
     @Autowired
-    private JsonConverter jsonConverter;
+    private JsonFileReader jsonFileReader;
 
     /// Send an actual test to the MS Teams API and assert that the HttpResponse
     /// information is as-expected.
@@ -83,7 +82,7 @@ public class GithubWebhookControllerRealTeamsIT {
     @DisplayName("Sending to Live MS Teams: ACCEPTED")
     @Test
     void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), readGithubPayload());
+        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";
             mockMvc.perform(httpRequest)
@@ -103,11 +102,6 @@ public class GithubWebhookControllerRealTeamsIT {
                 .header("X-GitHub-Delivery", "123")
                 .header("X-GitHub-Event", "push")
                 .header("X-Hub-Signature-256", encryptedSignature);
-    }
-
-    private String readGithubPayload() {
-        String pathToFile = "src/test/resources/payload/github-payload-valid.json";
-        return jsonConverter.readPayload(pathToFile);
     }
 
 }

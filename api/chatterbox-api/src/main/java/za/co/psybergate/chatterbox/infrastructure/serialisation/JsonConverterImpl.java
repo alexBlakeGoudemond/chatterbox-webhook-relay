@@ -8,6 +8,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
@@ -31,6 +32,11 @@ public class JsonConverterImpl implements JsonConverter {
         } catch (IOException e) {
             throw new ApplicationException("Could not read github payload file", e);
         }
+    }
+
+    @Override
+    public String readPayload(Path pathToFile) {
+        return readPayload(pathToFile.toString());
     }
 
     @Override
