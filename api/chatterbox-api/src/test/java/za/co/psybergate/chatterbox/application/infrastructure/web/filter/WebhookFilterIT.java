@@ -26,7 +26,7 @@ import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.UnauthorizedException;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
@@ -105,8 +105,8 @@ public class WebhookFilterIT {
     void givenPayloadNoSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestNoSignature(readGithubPayload());
 
-        UnauthorizedException unauthorizedException = assertThrows(UnauthorizedException.class, () -> mockMvc.perform(httpRequest));
-        assertEquals("Missing X-Hub-Signature-256", unauthorizedException.getMessage());
+        InvalidSignatureException invalidSignatureException = assertThrows(InvalidSignatureException.class, () -> mockMvc.perform(httpRequest));
+        assertEquals("Missing X-Hub-Signature-256", invalidSignatureException.getMessage());
         webhookSignatureFailureCounter++;
 
         Counter counter = meterRegistry
@@ -123,8 +123,8 @@ public class WebhookFilterIT {
     void givenPayloadInvalidSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestInvalidSignature(webhookSecret(), readGithubPayload());
 
-        UnauthorizedException unauthorizedException = assertThrows(UnauthorizedException.class, () -> mockMvc.perform(httpRequest));
-        assertEquals("Invalid X-Hub-Signature-256 - does not match rawBody", unauthorizedException.getMessage());
+        InvalidSignatureException invalidSignatureException = assertThrows(InvalidSignatureException.class, () -> mockMvc.perform(httpRequest));
+        assertEquals("Invalid X-Hub-Signature-256 - does not match rawBody", invalidSignatureException.getMessage());
         webhookSignatureFailureCounter++;
 
         Counter counter = meterRegistry

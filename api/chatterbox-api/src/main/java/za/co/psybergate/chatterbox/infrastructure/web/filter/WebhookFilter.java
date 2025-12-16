@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InternalServerException;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.UnauthorizedException;
+import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class WebhookFilter implements Filter {
     private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,
                                       String event,
                                       String delivery,
-                                      String signature256) throws UnauthorizedException {
+                                      String signature256) throws InvalidSignatureException {
         byte[] bodyBytes = getBodyAsBytes(wrappedRequest);
         String encoding = getCharacterEncoding(wrappedRequest);
         String rawBody = getRawBody(bodyBytes, encoding);
@@ -77,14 +77,14 @@ public class WebhookFilter implements Filter {
         if (signature256 == null) {
             webhookLogger.logMissingSignature();
             webhookRuntimeMetrics.recordSignatureFailure(event);
-            throw new UnauthorizedException("Missing X-Hub-Signature-256");
+            throw new InvalidSignatureException("Missing X-Hub-Signature-256");
         }
 
         String expected = payloadCryptor.encryptUsingSHA256(securityWebhookGithubProperties.getSecret(), rawBody);
         if (!payloadCryptor.isIdentical(expected, signature256)) {
             webhookLogger.logInvalidSignature(expected, signature256);
             webhookRuntimeMetrics.recordSignatureFailure(event);
-            throw new UnauthorizedException("Invalid X-Hub-Signature-256 - does not match rawBody");
+            throw new InvalidSignatureException("Invalid X-Hub-Signature-256 - does not match rawBody");
         }
 
         webhookLogger.logValidSignature();
