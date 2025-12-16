@@ -16,15 +16,15 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractorImpl.class,
+        JsonFileReader.class,
         JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
@@ -73,14 +74,14 @@ public class GithubWebhookControllerInvalidConfigIT {
     /// One of the properties that the codebase expects is a field `urlDisplayText`.
     /// This test uses a properties file where this field is NOT included; the assertion is that
     /// a 500 Http StatusCode is produced
-    @DisplayName("Invalid Properties: INTERNAL SERVER ERROR")
+    @DisplayName("Invalid Properties: BAD_REQUEST")
     @Test
-    void whenPostToGithubWebhook_WithInvalidProperties_ThenInternalServerError() {
+    void whenPostToGithubWebhook_WithInvalidProperties_ThenBadRequest() {
         MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(securityWebhookGithubProperties.getSecret(), jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "extract.<return value>.senderName: must not be null";
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isInternalServerError())
+                    .andExpect(status().isBadRequest())
                     .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);

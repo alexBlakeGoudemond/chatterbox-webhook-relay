@@ -46,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractorImpl.class,
+        JsonFileReader.class,
         JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,

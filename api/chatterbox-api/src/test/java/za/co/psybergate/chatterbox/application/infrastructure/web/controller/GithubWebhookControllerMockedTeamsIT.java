@@ -17,15 +17,15 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
@@ -88,6 +88,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventExtractorImpl.class,
+        JsonFileReader.class,
         JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
@@ -129,25 +130,25 @@ public class GithubWebhookControllerMockedTeamsIT {
         }
     }
 
-    @DisplayName("Unrecognized event: FORBIDDEN")
+    @DisplayName("Unrecognized event: BAD_REQUEST")
     @Test
-    public void givenValidPayload_AndUnacceptedEventType_ThenHttpStatusOk() {
+    public void givenValidPayload_AndUnacceptedEventType_ThenBadRequest() {
         String unknownEventType = "strangeEvent";
         MockHttpServletRequestBuilder httpRequest = getHttpRequestUnknownEvent(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString(), unknownEventType);
         try {
             String responseContent =
                     String.format("Webhook received; no work done; unrecognized event '%s'", unknownEventType);
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isForbidden())
+                    .andExpect(status().isBadRequest())
                     .andExpect(content().string(responseContent));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an Exception", e);
         }
     }
 
-    @DisplayName("Unrecognized Repository: FORBIDDEN")
+    @DisplayName("Unrecognized Repository: BAD_REQUEST")
     @Test
-    public void givenValidPayload_AndUnacceptedRepositoryName_ThenHttpStatusOk() {
+    public void givenValidPayload_AndUnacceptedRepositoryName_ThenBadRequest() {
         String unrecognizedRepositoryName = "unknownOwner/unknownRepository";
 
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
@@ -162,7 +163,7 @@ public class GithubWebhookControllerMockedTeamsIT {
             String expectedContentBody =
                     String.format("Webhook received; no work done; unrecognized repository '%s'", unrecognizedRepositoryName);
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isForbidden())
+                    .andExpect(status().isBadRequest())
                     .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an Exception", e);

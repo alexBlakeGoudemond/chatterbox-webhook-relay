@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
         TeamsCardFactoryImpl.class,
         TeamsTemplateSubstitutorImpl.class,
         ApplicationConfig.class,
+        JsonFileReader.class,
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
         WebhookConfigurationResolverImpl.class,
