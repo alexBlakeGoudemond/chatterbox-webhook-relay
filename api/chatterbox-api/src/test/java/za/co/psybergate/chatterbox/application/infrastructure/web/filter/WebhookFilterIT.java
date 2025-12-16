@@ -18,21 +18,17 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest(classes = {
         WebhookFilter.class,
@@ -45,17 +41,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         JsonConverterImpl.class,
         WebhookRuntimeMetrics.class,
         SimpleMeterRegistry.class,
+        GithubHttpRequestFactory.class,
 })
 @AutoConfigureMockMvc
 public class WebhookFilterIT {
 
     private static int webhookSignatureFailureCounter = 0;
-
-    @Autowired
-    private ChatterboxApiProperties chatterboxApiProperties;
-
-    @Autowired
-    private ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties;    
 
     @Autowired
     private MeterRegistry meterRegistry;
@@ -68,10 +59,10 @@ public class WebhookFilterIT {
     private GithubWebhookService githubWebhookService;
 
     @Autowired
-    private PayloadCryptor payloadCryptor;
+    private JsonFileReader jsonFileReader;
 
     @Autowired
-    private JsonFileReader jsonFileReader;
+    private GithubHttpRequestFactory githubHttpRequestFactory;
 
     @BeforeEach
     public void setup() {
@@ -83,7 +74,7 @@ public class WebhookFilterIT {
     @DisplayName("webhook.payload.successes increments")
     @Test
     void givenValidPayload_WhenHttpRequestMade_ThenCustomMetricExists() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestValid(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString());
+        MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
 
         try {
             mockMvc.perform(httpRequest).andReturn();
@@ -103,7 +94,7 @@ public class WebhookFilterIT {
     @DisplayName("No Signature: webhook.signature.failures increments")
     @Test
     void givenPayloadNoSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestNoSignature(jsonFileReader.getGithubPayloadValidAsString());
+        MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestNoSignature(jsonFileReader.getGithubPayloadValidAsString());
 
         InvalidSignatureException invalidSignatureException = assertThrows(InvalidSignatureException.class, () -> mockMvc.perform(httpRequest));
         assertEquals("Missing X-Hub-Signature-256", invalidSignatureException.getMessage());
@@ -121,7 +112,7 @@ public class WebhookFilterIT {
     @DisplayName("Bad Signature: webhook.signature.failures increments")
     @Test
     void givenPayloadInvalidSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
-        MockHttpServletRequestBuilder httpRequest = getHttpRequestInvalidSignature(webhookSecret(), jsonFileReader.getGithubPayloadValidAsString());
+        MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestInvalidSignature(jsonFileReader.getGithubPayloadValidAsString());
 
         InvalidSignatureException invalidSignatureException = assertThrows(InvalidSignatureException.class, () -> mockMvc.perform(httpRequest));
         assertEquals("Invalid X-Hub-Signature-256 - does not match rawBody", invalidSignatureException.getMessage());
@@ -134,46 +125,6 @@ public class WebhookFilterIT {
 
         assertNotNull(counter);
         assertEquals(webhookSignatureFailureCounter, counter.count());
-    }
-
-    private MockHttpServletRequestBuilder getHttpRequestInvalidSignature(String payloadSecret, String payload) {
-        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        encryptedSignature += "abc234";
-        return post(apiPrefix() + "/webhook/github")
-                .contentType(APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(payload)
-                .header("X-GitHub-Delivery", "123")
-                .header("X-GitHub-Event", "push")
-                .header("X-Hub-Signature-256", encryptedSignature);
-    }
-
-    private MockHttpServletRequestBuilder getHttpRequestNoSignature(String payload) {
-        return post(apiPrefix() + "/webhook/github")
-                .contentType(APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(payload)
-                .header("X-GitHub-Delivery", "123")
-                .header("X-GitHub-Event", "push");
-    }
-
-    private MockHttpServletRequestBuilder getHttpRequestValid(String payloadSecret, String payload) {
-        String encryptedSignature = payloadCryptor.encryptUsingSHA256(payloadSecret, payload);
-        return post(apiPrefix() + "/webhook/github")
-                .contentType(APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(payload)
-                .header("X-GitHub-Delivery", "123")
-                .header("X-GitHub-Event", "push")
-                .header("X-Hub-Signature-256", encryptedSignature);
-    }
-
-    private String apiPrefix() {
-        return chatterboxApiProperties.getPrefix();
-    }
-
-    private String webhookSecret() {
-        return securityWebhookGithubProperties.getSecret();
     }
 
 }
