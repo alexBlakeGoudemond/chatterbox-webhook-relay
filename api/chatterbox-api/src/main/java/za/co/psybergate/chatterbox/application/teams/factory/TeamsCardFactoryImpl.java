@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition;
-import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -66,19 +66,19 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
     }
 
     @Override
-    public String getAsTeamsPayloadString(GithubEventDto eventDto) throws InternalServerException {
+    public String getAsTeamsPayloadString(GithubEventDto eventDto) throws ApplicationException {
         TeamsAdaptiveCardDefinition teamsAdaptiveCardDefinition = buildCard(eventDto);
         String teamsPayload;
         try {
             teamsPayload = objectMapper.writeValueAsString(teamsAdaptiveCardDefinition);
         } catch (JsonProcessingException e) {
-            throw new InternalServerException("Unexpected issue when converting EventDto to Json String", e);
+            throw new ApplicationException("Unexpected issue when converting EventDto to Json String", e);
         }
         return teamsPayload;
     }
 
     @Override
-    public HttpResponseDto getHttpResponseDto(ClassicHttpResponse response) throws InternalServerException {
+    public HttpResponseDto getHttpResponseDto(ClassicHttpResponse response) {
         int status = response.getCode();
         String rawBody = null;
         JsonNode jsonNode = null;
@@ -89,19 +89,19 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
         return new HttpResponseDto(status, rawBody, jsonNode);
     }
 
-    private JsonNode getJsonNode(String rawBody) throws InternalServerException {
+    private JsonNode getJsonNode(String rawBody) {
         try {
             return objectMapper.readTree(rawBody);
         } catch (Exception e) {
-            throw new InternalServerException("Unexpected issue when converting String into a JsonNode", e);
+            throw new ApplicationException("Unexpected issue when converting String into a JsonNode", e);
         }
     }
 
-    private String getAsString(ClassicHttpResponse response) throws InternalServerException {
+    private String getAsString(ClassicHttpResponse response) {
         try {
             return new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new InternalServerException("Unable to parse the Response Body into a String", e);
+            throw new ApplicationException("Unable to parse the Response Body into a String", e);
         }
     }
 

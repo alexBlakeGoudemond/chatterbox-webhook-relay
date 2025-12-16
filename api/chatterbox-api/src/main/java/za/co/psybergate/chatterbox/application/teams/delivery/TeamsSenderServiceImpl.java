@@ -7,10 +7,10 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,9 +22,8 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
 
     private final TeamsCardFactory teamsCardFactory;
 
-    // TODO BlakeGoudemond 2025/12/11 | modify that one test to use Mockito to simulate success instead of mvn clean install publishing to teams
     @Override
-    public HttpResponseDto process(GithubEventDto dto) throws InternalServerException {
+    public HttpResponseDto process(GithubEventDto dto) {
         String teamsDestination = dto.teamsDestination();
         String jsonString = teamsCardFactory.getAsTeamsPayloadString(dto);
         HttpPost httpPost = getHttpPost(teamsDestination, jsonString);
@@ -32,11 +31,11 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
     }
 
     @Override
-    public HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws InternalServerException {
+    public HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws ApplicationException {
         try (CloseableHttpClient client = getCloseableHttpClient()) {
             return client.execute(httpPost, teamsCardFactory::getHttpResponseDto);
         } catch (IOException e) {
-            throw new InternalServerException("Unexpected issue when sending POST Request to Teams", e);
+            throw new ApplicationException("Unexpected issue when sending POST Request to Teams", e);
         }
     }
 

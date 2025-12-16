@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.exception.InternalServerException;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,28 +16,28 @@ public class JsonConverterImpl implements JsonConverter {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public JsonNode getAsJson(String jsonString) throws InternalServerException {
+    public JsonNode getAsJson(String jsonString) throws ApplicationException {
         try {
             return objectMapper.readTree(jsonString);
         } catch (JsonProcessingException e) {
-            throw new InternalServerException("Unable to convert String into JSON", e);
+            throw new ApplicationException("Unable to convert String into JSON", e);
         }
     }
 
     @Override
-    public String readPayload(String pathToFile) {
+    public String readPayload(String pathToFile) throws ApplicationException {
         try {
             return Files.readString(Paths.get(pathToFile));
         } catch (IOException e) {
-            throw new InternalServerException("Could not read github payload file", e);
+            throw new ApplicationException("Could not read github payload file", e);
         }
     }
 
     @Override
-    public String getRepositoryName(JsonNode rawBody) throws InternalServerException {
+    public String getRepositoryName(JsonNode rawBody) throws ApplicationException {
         String repositoryName = rawBody.path("repository").path("full_name").asText(null);
         if (repositoryName == null) {
-            throw new InternalServerException("Unable to parse 'repository.full_name' from raw rawBody");
+            throw new ApplicationException("Unable to parse 'repository.full_name' from raw rawBody");
         }
         return repositoryName;
     }

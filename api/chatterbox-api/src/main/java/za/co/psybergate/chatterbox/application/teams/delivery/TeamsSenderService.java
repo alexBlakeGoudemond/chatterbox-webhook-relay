@@ -2,13 +2,13 @@ package za.co.psybergate.chatterbox.application.teams.delivery;
 
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.application.exception.InternalServerException;
 
 public interface TeamsSenderService {
 
-    HttpResponseDto process(GithubEventDto dto) throws InternalServerException;
+    HttpResponseDto process(GithubEventDto dto);
 
     /// Executes an HTTP POST request to a Microsoft Teams webhook (or any HTTP endpoint) using a
     /// configured [CloseableHttpClient].
@@ -27,7 +27,7 @@ public interface TeamsSenderService {
     /// - Returns the result wrapped in a typed `HttpResponseDto`.
     ///
     /// @return an `HttpResponseDto` containing the HTTP status code and optional rawBody
-    /// @throws InternalServerException if an I/O or network-related issue occurs during execution
-    HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws InternalServerException;
+    /// @throws ApplicationException if an I/O or network-related issue occurs during execution
+    HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws ApplicationException;
 
 }
