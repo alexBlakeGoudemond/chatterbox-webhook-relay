@@ -1,8 +1,11 @@
 package za.co.psybergate.chatterbox.application.github.delivery;
 
+import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -14,11 +17,14 @@ import java.util.function.Predicate;
 
 // TODO BlakeGoudemond 2025/12/19 | eventually hook up to a cron job or job that runs on startup
 @Service
+@RequiredArgsConstructor
 public class GithubPollingServiceImpl implements GithubPollingService {
+
+    private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
 
     public void doSomeWork() throws IOException {
         GitHub gitHub = new GitHubBuilder()
-                .withOAuthToken("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")
+                .withOAuthToken(apiGithubProperties.getToken())
                 .build();
         GHRepository repository = gitHub.getRepository("psyAlexBlakeGoudemond/chatterbox");
         LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 19, 10, 0);

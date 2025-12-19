@@ -7,6 +7,10 @@ import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -17,20 +21,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
         GithubPollingServiceImpl.class,
+        ApplicationConfig.class,
 })
 @ActiveProfiles({"test", "live-url"})
 public class GithubPollingServiceImplTest {
 
+    @MockitoBean
+    private WebhookFilter webhookFilter;
+
+    @Autowired
+    private ChatterboxSecurityApiGithubProperties apiGithubProperties;
+
     @Autowired
     private GithubPollingService githubPollingService;
 
-    // TODO BlakeGoudemond 2025/12/19 | place auth token in properties
     @Tag("live-integration")
     @DisplayName("Can Query Commits")
     @Test
     public void givenRepositoryDetails_AndStartingDate_WhenQueryCommits_ThenSuccess() throws IOException {
         GitHub gitHub = new GitHubBuilder()
-                .withOAuthToken("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")
+                .withOAuthToken(apiGithubProperties.getToken())
                 .build();
         GHRepository repository = gitHub.getRepository("psyAlexBlakeGoudemond/chatterbox");
         LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 15, 10, 0);
@@ -45,7 +55,7 @@ public class GithubPollingServiceImplTest {
     @Test
     public void givenRepositoryDetails_AndStartingDate_WhenQueryPullRequests_ThenSuccess() throws IOException {
         GitHub gitHub = new GitHubBuilder()
-                .withOAuthToken("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")
+                .withOAuthToken(apiGithubProperties.getToken())
                 .build();
         GHRepository repository = gitHub.getRepository("psyAlexBlakeGoudemond/chatterbox");
         LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 15, 10, 0);
