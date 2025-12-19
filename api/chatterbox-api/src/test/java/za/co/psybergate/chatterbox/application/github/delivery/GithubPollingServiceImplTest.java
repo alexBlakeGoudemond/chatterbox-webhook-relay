@@ -45,7 +45,7 @@ public class GithubPollingServiceImplTest {
         GHRepository repository = gitHub.getRepository("psyAlexBlakeGoudemond/chatterbox");
         LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 15, 10, 0);
 
-        List<GHCommit> commitsSince = githubPollingService.getCommitsSince(repository, lastReceivedUpdate);
+        List<GHCommit> commitsSince = githubPollingService.getCommitsSince(repository, lastReceivedUpdate, LocalDateTime.now());
         assertNotNull(commitsSince);
         assertFalse(commitsSince.isEmpty());
     }
@@ -60,7 +60,7 @@ public class GithubPollingServiceImplTest {
         GHRepository repository = gitHub.getRepository("psyAlexBlakeGoudemond/chatterbox");
         LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 15, 10, 0);
 
-        List<GHPullRequest> pullRequestsSince = githubPollingService.getPullRequestsSince(repository, lastReceivedUpdate);
+        List<GHPullRequest> pullRequestsSince = githubPollingService.getPullRequestsSince(repository, lastReceivedUpdate, LocalDateTime.now());
         assertNotNull(pullRequestsSince);
         assertFalse(pullRequestsSince.isEmpty());
     }

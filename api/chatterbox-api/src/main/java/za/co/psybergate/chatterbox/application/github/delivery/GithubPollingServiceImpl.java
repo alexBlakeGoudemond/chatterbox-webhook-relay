@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.application.github.delivery;
 
 import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
@@ -37,10 +36,19 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime lastReceivedUpdate) {
+        return getCommitsSince(repository, lastReceivedUpdate, LocalDateTime.now());
+    }
+
+    // TODO BlakeGoudemond 2025/12/19 | log where helpful
+    @Override
+    public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return repository.queryCommits()
-                    .since(lastReceivedUpdate.toEpochSecond(ZoneOffset.UTC))
+                    .since(startDate.toEpochSecond(ZoneOffset.UTC))
                     .list()
+                    .toList()
+                    .stream()
+                    .filter(commitIsBetween(startDate, endDate))
                     .toList();
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when retrieving Commits", e);
@@ -49,28 +57,46 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime lastReceivedUpdate) {
+        return getPullRequestsSince(repository, lastReceivedUpdate, LocalDateTime.now());
+    }
+
+    @Override
+    public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return repository.queryPullRequests()
                     .state(GHIssueState.ALL)
                     .list()
                     .toList()
                     .stream()
-                    .filter(isAfter(lastReceivedUpdate))
+                    .filter(pullRequestIsBetween(startDate, endDate))
                     .toList();
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when retrieving PullRequests", e);
         }
     }
 
-    private Predicate<GHPullRequest> isAfter(LocalDateTime lastReceivedUpdate) {
-        ZoneId zoneId = ZoneId.of("Z");
-
-        Instant instant = lastReceivedUpdate.atZone(zoneId).toInstant();
-        return pr -> {
+    private Predicate<GHCommit> commitIsBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        Instant startDateAsInstant = startDate.atZone(ZoneOffset.UTC).toInstant();
+        Instant endDateAsInstant = endDate.atZone(ZoneOffset.UTC).toInstant();
+        return commit -> {
             try {
-                return pr.getUpdatedAt().toInstant().isAfter(instant);
+                Instant commitAsInstant = commit.getCommitDate().toInstant();
+                return commitAsInstant.isAfter(startDateAsInstant) && commitAsInstant.isBefore(endDateAsInstant);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ApplicationException("Unexpected issue when retrieving CommitDate", e);
+            }
+        };
+    }
+
+    private Predicate<GHPullRequest> pullRequestIsBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        Instant startDateAsInstant = startDate.atZone(ZoneOffset.UTC).toInstant();
+        Instant endDateAsInstant = endDate.atZone(ZoneOffset.UTC).toInstant();
+        return pullRequest -> {
+            try {
+                Instant pullRequestAsInstant = pullRequest.getUpdatedAt().toInstant();
+                return pullRequestAsInstant.isAfter(startDateAsInstant) && pullRequestAsInstant.isBefore(endDateAsInstant);
+            } catch (IOException e) {
+                throw new ApplicationException("Unexpected issue when retrieving UpdatedAt", e);
             }
         };
     }
