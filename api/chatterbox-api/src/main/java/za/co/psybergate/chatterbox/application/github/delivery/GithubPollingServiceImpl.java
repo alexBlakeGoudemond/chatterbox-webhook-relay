@@ -5,11 +5,11 @@ import org.kohsuke.github.*;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.function.Predicate;
@@ -19,8 +19,11 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class GithubPollingServiceImpl implements GithubPollingService {
 
+    private final WebhookLogger  webhookLogger;
+
     private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
 
+    // TODO BlakeGoudemond 2025/12/20 | method to loop through each accepted repo and check if any updates since <xDate>
     public void doSomeWork() throws IOException {
         GitHub gitHub = new GitHubBuilder()
                 .withOAuthToken(apiGithubProperties.getToken())
@@ -39,17 +42,19 @@ public class GithubPollingServiceImpl implements GithubPollingService {
         return getCommitsSince(repository, lastReceivedUpdate, LocalDateTime.now());
     }
 
-    // TODO BlakeGoudemond 2025/12/19 | log where helpful
     @Override
     public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
+        webhookLogger.logQueryingGithubApi("commits", repository, startDate, endDate);
         try {
-            return repository.queryCommits()
+            List<GHCommit> commits = repository.queryCommits()
                     .since(startDate.toEpochSecond(ZoneOffset.UTC))
                     .list()
                     .toList()
                     .stream()
                     .filter(commitIsBetween(startDate, endDate))
                     .toList();
+            webhookLogger.logQueryingGithubApiCompleted("commits", commits);
+            return commits;
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when retrieving Commits", e);
         }
@@ -62,14 +67,17 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
+        webhookLogger.logQueryingGithubApi("pullRequests", repository, startDate, endDate);
         try {
-            return repository.queryPullRequests()
+            List<GHPullRequest> pullRequests = repository.queryPullRequests()
                     .state(GHIssueState.ALL)
                     .list()
                     .toList()
                     .stream()
                     .filter(pullRequestIsBetween(startDate, endDate))
                     .toList();
+            webhookLogger.logQueryingGithubApiCompleted("pullRequests", pullRequests);
+            return pullRequests;
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when retrieving PullRequests", e);
         }
