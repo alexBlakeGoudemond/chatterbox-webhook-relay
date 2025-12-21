@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
@@ -33,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         WebhookLogger.class,
 })
 @ActiveProfiles({"test", "live-url"})
-public class GithubPollingServiceImplTest {
+public class GithubPollingServiceImplIT {
 
     @MockitoBean
     private WebhookFilter webhookFilter;
@@ -110,14 +111,6 @@ public class GithubPollingServiceImplTest {
         } catch (IOException e) {
             throw new ApplicationException("Unable to retrieve repository", e);
         }
-    }
-
-    public record RepositoryDetail(String repositoryFullName, LocalDateTime fromDate, LocalDateTime toDate) {
-
-        private RepositoryDetail(String repositoryFullName, String fromDate, String toDate) {
-            this(repositoryFullName, LocalDateTime.parse(fromDate), LocalDateTime.parse(toDate));
-        }
-
     }
 
 }

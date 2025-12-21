@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
@@ -21,14 +22,12 @@ import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,6 +50,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GithubWebhookController.class)
 @ActiveProfiles({"bad-properties"})
 public class GithubWebhookControllerInvalidConfigIT {
+
+    @MockitoBean
+    private GithubPollingService githubPollingService;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it

@@ -31,10 +31,11 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     @Valid
-    public GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime lastReceivedDate) {
+    public GithubRepositoryInformationDto getRecentUpdates(String repositoryFullName, LocalDateTime lastReceivedDate) {
+        GHRepository githubRepository = getGithubRepository(repositoryFullName);
         LocalDateTime untilDate = LocalDateTime.now();
-        List<GHCommit> commitsSince = getCommitsSince(repository, lastReceivedDate, untilDate);
-        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(repository, lastReceivedDate, untilDate);
+        List<GHCommit> commitsSince = getCommitsSince(githubRepository, lastReceivedDate, untilDate);
+        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(githubRepository, lastReceivedDate, untilDate);
         return new GithubRepositoryInformationDto(lastReceivedDate, untilDate, pullRequestsSince, commitsSince);
     }
 

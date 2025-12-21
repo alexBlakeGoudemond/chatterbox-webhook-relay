@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface GithubPollingService {
 
-    GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime lastReceivedDate);
+    GithubRepositoryInformationDto getRecentUpdates(String repositoryFullName, LocalDateTime lastReceivedDate);
 
     GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime fromDate, LocalDateTime untilDate);
 
