@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface GithubPollingService {
 
+    GHRepository getGithubRepository(String repositoryFullName);
+
     List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime lastReceivedUpdate);
 
     // TODO BlakeGoudemond 2025/12/19 | log where helpful

@@ -25,16 +25,33 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     // TODO BlakeGoudemond 2025/12/20 | method to loop through each accepted repo and check if any updates since <xDate>
     public void doSomeWork() throws IOException {
-        GitHub gitHub = new GitHubBuilder()
-                .withOAuthToken(apiGithubProperties.getToken())
-                .build();
-        GHRepository repository = gitHub.getRepository("psyAlexBlakeGoudemond/chatterbox");
+        GHRepository repository = getGithubRepository("psyAlexBlakeGoudemond/chatterbox");
         LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 19, 10, 0);
 
         List<GHPullRequest> pullRequestsSince = getPullRequestsSince(repository, lastReceivedUpdate);
         List<GHCommit> commitsSince = getCommitsSince(repository, lastReceivedUpdate);
         System.out.println("pullRequestsSince = " + pullRequestsSince);
         System.out.println("commitsSince = " + commitsSince);
+    }
+
+    @Override
+    public GHRepository getGithubRepository(String repositoryFullName) {
+        GitHub gitHub = getGithubApiHandle();
+        try {
+            return gitHub.getRepository(repositoryFullName);
+        } catch (IOException e) {
+            throw new ApplicationException("Unexpected issue when creating Repository from name", e);
+        }
+    }
+
+    private GitHub getGithubApiHandle() {
+        try {
+            return new GitHubBuilder()
+                    .withOAuthToken(apiGithubProperties.getToken())
+                    .build();
+        } catch (IOException e) {
+            throw new ApplicationException("Unexpected issue when creating Github API handle", e);
+        }
     }
 
     @Override
