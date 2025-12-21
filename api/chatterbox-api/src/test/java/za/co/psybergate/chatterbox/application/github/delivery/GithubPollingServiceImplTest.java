@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -80,6 +81,20 @@ public class GithubPollingServiceImplTest {
         List<GHPullRequest> pullRequestsSince = githubPollingService.getPullRequestsSince(repository, lastReceivedUpdate, untilDate);
         assertNotNull(pullRequestsSince);
         assertFalse(pullRequestsSince.isEmpty());
+    }
+
+    @Tag("live-integration")
+    @ParameterizedTest(name = "All Updates; {index}: repo:{0}")
+    @MethodSource("repositoryDetails")
+    public void givenRepositoryDetails_AndStartingDate_WhenQueryAllUpdates_ThenSuccess(RepositoryDetail repositoryDetail) {
+        GHRepository repository = getGithubRepository(repositoryDetail.repositoryFullName());
+        LocalDateTime lastReceivedUpdate = repositoryDetail.fromDate();
+        LocalDateTime untilDate = repositoryDetail.toDate();
+
+        GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(repository, lastReceivedUpdate, untilDate);
+        assertNotNull(recentUpdates);
+        assertFalse(recentUpdates.commits().isEmpty());
+        assertFalse(recentUpdates.pullRequests().isEmpty());
     }
 
     private static Stream<Arguments> repositoryDetails() {

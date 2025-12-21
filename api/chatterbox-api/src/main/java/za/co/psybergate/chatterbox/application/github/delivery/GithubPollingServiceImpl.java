@@ -1,9 +1,12 @@
 package za.co.psybergate.chatterbox.application.github.delivery;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.*;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
@@ -17,6 +20,7 @@ import java.util.function.Predicate;
 // TODO BlakeGoudemond 2025/12/19 | eventually hook up to a cron job or job that runs on startup
 @Service
 @RequiredArgsConstructor
+@Validated
 public class GithubPollingServiceImpl implements GithubPollingService {
 
     private final WebhookLogger  webhookLogger;
@@ -24,14 +28,22 @@ public class GithubPollingServiceImpl implements GithubPollingService {
     private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
 
     // TODO BlakeGoudemond 2025/12/20 | method to loop through each accepted repo and check if any updates since <xDate>
-    public void doSomeWork() throws IOException {
-        GHRepository repository = getGithubRepository("psyAlexBlakeGoudemond/chatterbox");
-        LocalDateTime lastReceivedUpdate = LocalDateTime.of(2025, 12, 19, 10, 0);
 
-        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(repository, lastReceivedUpdate);
-        List<GHCommit> commitsSince = getCommitsSince(repository, lastReceivedUpdate);
-        System.out.println("pullRequestsSince = " + pullRequestsSince);
-        System.out.println("commitsSince = " + commitsSince);
+    @Override
+    @Valid
+    public GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime lastReceivedDate) {
+        LocalDateTime untilDate = LocalDateTime.now();
+        List<GHCommit> commitsSince = getCommitsSince(repository, lastReceivedDate, untilDate);
+        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(repository, lastReceivedDate, untilDate);
+        return new GithubRepositoryInformationDto(lastReceivedDate, untilDate, pullRequestsSince, commitsSince);
+    }
+
+    @Override
+    @Valid
+    public GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime fromDate, LocalDateTime untilDate) {
+        List<GHCommit> commitsSince = getCommitsSince(repository, fromDate, untilDate);
+        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(repository, fromDate, untilDate);
+        return new GithubRepositoryInformationDto(fromDate, untilDate, pullRequestsSince, commitsSince);
     }
 
     @Override
