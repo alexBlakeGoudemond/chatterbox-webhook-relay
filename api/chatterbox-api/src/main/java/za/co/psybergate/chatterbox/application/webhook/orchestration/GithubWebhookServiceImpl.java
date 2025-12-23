@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import org.kohsuke.github.GHPullRequest;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
@@ -49,7 +50,6 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     public void pollGithubForChanges(String repositoryName, LocalDateTime lastReceivedTime) {
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(repositoryName, lastReceivedTime);
-        System.out.println("recentUpdates = " + recentUpdates);
         throw new ApplicationException("Not yet finished - need to convert updates into list of GithubEventDto and send");
     }
 
