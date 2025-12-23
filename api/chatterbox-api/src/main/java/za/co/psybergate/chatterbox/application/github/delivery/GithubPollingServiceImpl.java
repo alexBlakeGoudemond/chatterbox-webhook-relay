@@ -23,9 +23,7 @@ import java.util.function.Predicate;
 @Validated
 public class GithubPollingServiceImpl implements GithubPollingService {
 
-    private final WebhookLogger  webhookLogger;
-
-    private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
+    private final WebhookLogger webhookLogger;
 
     // TODO BlakeGoudemond 2025/12/20 | method to loop through each accepted repo and check if any updates since <xDate>
 
@@ -60,7 +58,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
     private GitHub getGithubApiHandle() {
         try {
             return new GitHubBuilder()
-                    .withOAuthToken(apiGithubProperties.getToken())
+//                    .withOAuthToken(apiGithubProperties.getToken())
                     .build();
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when creating Github API handle", e);
