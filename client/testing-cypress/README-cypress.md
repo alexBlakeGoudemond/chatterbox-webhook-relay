@@ -26,14 +26,16 @@ npm install cypress --save-dev
 npx cypress open
 ```
 
-If this is the first time setup of Cypress on the machine, a window will open that is similar to this: 
-![cypress-open-screenshot](cypress-open-screenshot.png)
+If this is the first time setup of Cypress on the machine, a window will ope asking you to accept some Ts and Cs
+
+You should then be able to see something like this
+![cypress-welcome-screenshot](cypress-welcome-screenshot.png)
 
 ### E2E Testing
 
 By clicking the E2E Testing section in the Cypress UI, you get some files created for free.
 
-```bash
+```text
 ├─ cypress/
 │  ├─ fixtures/        ← test data (we won’t need this yet)
 │  ├─ support/         ← global hooks & helpers
