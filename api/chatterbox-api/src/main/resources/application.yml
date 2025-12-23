@@ -86,5 +86,8 @@ chatterbox:
     webhook:
       github:
         secret: secret
+    api:
+      github:
+        token: "github_pat_123abc"
   api:
     prefix: /api
