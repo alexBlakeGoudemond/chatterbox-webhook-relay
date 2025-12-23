@@ -46,8 +46,21 @@ By clicking the E2E Testing section in the Cypress UI, you get some files create
 └─ package.json
 ```
 
+
+## Running Tests
+
+We can either use commands to run the tests (and then generate videos) or we can use the UI.
+
+If using the command-line, checkout the Makefile. 
+
+Else:
+
 In the Cypress UI, we select a browser for our tests to run in
 ![cypress-e2e-browser-screenshot](cypress-e2e-browser-screenshot.png)
 
 And then by Clicking on the Focus icon (if not automatically redirected):
 ![cypress-e2e-browser-focussed-screenshot](cypress-e2e-browser-focussed-screenshot.png)
+
+By clicking on the specific test, it will run
+![cypress-ui-test-demo-screenshot](cypress-ui-test-demo-screenshot.png)
+
