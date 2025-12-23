@@ -26,6 +26,8 @@ curl http://chatterbox:1234/actuator/prometheus | grep webhook
 - Confirm the datasource is `http://prometheus:9090` and not localhost
 - Confirm dashboard is pulling the correct metrics
 
+> If prompted for a password, default username and password is `admin`
+
 # Architecture Diagram
 
 ```bash
