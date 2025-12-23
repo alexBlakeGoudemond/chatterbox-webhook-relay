@@ -41,6 +41,7 @@
         <micrometer-registry-prometheus.version>1.15.4</micrometer-registry-prometheus.version>
         <httpclient5.version>5.5</httpclient5.version>
         <httpcore5.version>5.3.5</httpcore5.version>
+        <github-api.version>1.330</github-api.version>
     </properties>
 
 	<dependencies>
@@ -113,6 +114,15 @@
             <groupId>org.apache.httpcomponents.core5</groupId>
             <artifactId>httpcore5</artifactId>
             <version>${httpcore5.version}</version>
+        </dependency>
+
+        <!--
+        Used to interact with Github's API
+        -->
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>${github-api.version}</version>
         </dependency>
 
 
