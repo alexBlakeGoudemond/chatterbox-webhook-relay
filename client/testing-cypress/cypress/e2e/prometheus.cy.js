@@ -19,7 +19,11 @@ describe('Observability - Prometheus scraping Chatterbox', () => {
         cy.contains('Execute').click()
         
         // Metric appears (allow scrape delay)
-        cy.contains(METRIC_NAME, { timeout: 30000 })
-            .should('be.visible')
+        cy.get('table tbody tr')
+            .contains('webhook_payload_successes_total')
+            .parent()  // go to the row
+            .should('contain.text', 'event="push"')
+            .and('contain.text', 'instance="chatterbox:1234"')
+
     })
 })
