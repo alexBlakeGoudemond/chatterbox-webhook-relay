@@ -45,3 +45,9 @@ By clicking the E2E Testing section in the Cypress UI, you get some files create
 ├─ cypress.config.js   ← config
 └─ package.json
 ```
+
+In the Cypress UI, we select a browser for our tests to run in
+![cypress-e2e-browser-screenshot](cypress-e2e-browser-screenshot.png)
+
+And then by Clicking on the Focus icon (if not automatically redirected):
+![cypress-e2e-browser-focussed-screenshot](cypress-e2e-browser-focussed-screenshot.png)
