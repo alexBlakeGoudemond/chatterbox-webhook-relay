@@ -16,12 +16,5 @@ public interface GithubPollingService {
 
     GHRepository getGithubRepository(String repositoryFullName);
 
-    List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime lastReceivedUpdate);
-
-    List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate);
-
-    List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime lastReceivedUpdate);
-
-    List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate);
 
 }

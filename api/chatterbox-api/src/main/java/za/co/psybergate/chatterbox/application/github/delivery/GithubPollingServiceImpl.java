@@ -65,12 +65,12 @@ public class GithubPollingServiceImpl implements GithubPollingService {
         }
     }
 
-    @Override
+//    @Override
     public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime lastReceivedUpdate) {
         return getCommitsSince(repository, lastReceivedUpdate, LocalDateTime.now());
     }
 
-    @Override
+//    @Override
     public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
         webhookLogger.logQueryingGithubApi("commits", repository, startDate, endDate);
         try {
@@ -88,12 +88,12 @@ public class GithubPollingServiceImpl implements GithubPollingService {
         }
     }
 
-    @Override
+//    @Override
     public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime lastReceivedUpdate) {
         return getPullRequestsSince(repository, lastReceivedUpdate, LocalDateTime.now());
     }
 
-    @Override
+//    @Override
     public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
         webhookLogger.logQueryingGithubApi("pullRequests", repository, startDate, endDate);
         try {
