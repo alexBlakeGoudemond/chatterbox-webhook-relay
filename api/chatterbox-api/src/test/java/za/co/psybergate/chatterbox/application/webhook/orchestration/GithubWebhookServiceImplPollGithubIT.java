@@ -21,14 +21,17 @@ public class GithubWebhookServiceImplPollGithubIT {
     @Autowired
     private GithubWebhookService githubWebhookService;
 
+    // TODO BlakeGoudemond 2025/12/26 | fix 1 commit issue with url
     @Tag("live-integration")
     @ParameterizedTest(name = "Commits; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
     public void testGithubWebhookService(RepositoryDetail repositoryDetail) {
+        String owner = repositoryDetail.repositoryOwner();
         String repositoryFullName = repositoryDetail.repositoryName();
-        LocalDateTime lastReceivedUpdate = repositoryDetail.fromDate();
+        LocalDateTime fromDate = repositoryDetail.fromDate();
+        LocalDateTime untilDate = repositoryDetail.toDate();
 
-        githubWebhookService.pollGithubForChanges(repositoryFullName, lastReceivedUpdate);
+        githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
     }
 
     private static Stream<Arguments> repositoryDetails() {

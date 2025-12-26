@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 
 import java.time.LocalDateTime;
@@ -19,13 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles({"test", "live-url"})
 class GithubPollingServiceTest {
 
-    // TODO BlakeGoudemond 2025/12/23 | build up from here; also add event mapping for commits for this
     @Autowired
-    private GithubPollingService pollingService;
+    private GithubPollingServiceImpl pollingService;
 
     @ParameterizedTest(name = "Commits; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void givenRepositoryDetailsAndStartingDate_WhenPollCommits_ThenSuccess(RepositoryDetail repositoryDetail) {
+    public void givenRepositoryDetailsAndDates_WhenPollCommits_ThenSuccess(RepositoryDetail repositoryDetail) {
         String owner = repositoryDetail.repositoryOwner();
         String repositoryName = repositoryDetail.repositoryName();
         LocalDateTime fromDate = repositoryDetail.fromDate();
@@ -36,13 +36,26 @@ class GithubPollingServiceTest {
 
     @ParameterizedTest(name = "Pull Requests; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void givenRepositoryDetailsAndStartingDate_WhenPollPullRequests_ThenSuccess(RepositoryDetail repositoryDetail) {
+    public void givenRepositoryDetailsAndDates_WhenPollPullRequests_ThenSuccess(RepositoryDetail repositoryDetail) {
         String owner = repositoryDetail.repositoryOwner();
         String repositoryName = repositoryDetail.repositoryName();
         LocalDateTime fromDate = repositoryDetail.fromDate();
         LocalDateTime untilDate = repositoryDetail.toDate();
         JsonNode pullRequestsSince = pollingService.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(pullRequestsSince);
+    }
+
+    @ParameterizedTest(name = "Recent Updates; {index}: repo:{0}")
+    @MethodSource("repositoryDetails")
+    public void givenRepositoryDetailsAndDates_WhenPollRecentUpdates_ThenSuccess(RepositoryDetail repositoryDetail) {
+        String owner = repositoryDetail.repositoryOwner();
+        String repositoryName = repositoryDetail.repositoryName();
+        LocalDateTime fromDate = repositoryDetail.fromDate();
+        LocalDateTime untilDate = repositoryDetail.toDate();
+        GithubRepositoryInformationDto recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        assertNotNull(recentUpdates);
+        assertNotNull(recentUpdates.commits());
+        assertNotNull(recentUpdates.pullRequests());
     }
 
     private static Stream<Arguments> repositoryDetails() {

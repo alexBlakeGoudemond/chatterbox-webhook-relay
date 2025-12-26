@@ -38,12 +38,14 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
         String teamsDestinationUrl = webhookConfigurationResolver.getDestinationUrl(repositoryName);
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
         String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
+        String senderName = read(payload, fields.get(SENDERNAME));
+        String url = read(payload, fields.get(URL));
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
                 repositoryName,
-                read(payload, fields.get(SENDERNAME)),
-                read(payload, fields.get(URL)),
+                senderName,
+                url,
                 formattedUrlDisplayText,
                 teamsDestinationUrl
         );

@@ -3,8 +3,7 @@ package za.co.psybergate.chatterbox.application.webhook.orchestration;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
+import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
@@ -30,7 +29,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final JsonConverter jsonConverter;
 
-    private final GithubPollingService githubPollingService;
+    private final GithubPollingServiceImpl githubPollingService;
 
     @Override
     public void process(String eventType, JsonNode rawBody) {
@@ -38,18 +37,33 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
 
+        deliverToTeams(eventType, rawBody);
+    }
+
+
+    @Override
+    public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
+        pollGithubForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
+    }
+
+    @Override
+    public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
+        GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        for (JsonNode commit : recentUpdates.commits()) {
+            deliverToTeams("commit", commit);
+        }
+        for (JsonNode pullRequest : recentUpdates.pullRequests()) {
+            deliverToTeams("pull_request", pullRequest);
+        }
+    }
+
+    private void deliverToTeams(String eventType, JsonNode rawBody) {
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
         webhookLogger.logSendingDtoToTeams(eventDto);
         HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
         webhookLogger.logTeamsResponse(httpResponseDto);
-    }
-
-    @Override
-    public void pollGithubForChanges(String repositoryName, LocalDateTime lastReceivedTime) {
-        webhookRequestValidator.assertAcceptedRepository(repositoryName);
-        GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(repositoryName, lastReceivedTime);
-        throw new ApplicationException("Not yet finished - need to convert updates into list of GithubEventDto and send");
     }
 
 }
