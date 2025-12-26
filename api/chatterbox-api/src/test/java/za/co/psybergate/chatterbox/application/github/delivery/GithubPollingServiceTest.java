@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.application.github.delivery;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Named;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles({"test", "live-url"})
-class GithubWebClientPollingServiceImplTest {
+class GithubPollingServiceTest {
 
     // TODO BlakeGoudemond 2025/12/23 | build up from here; also add event mapping for commits for this
     @Autowired
-    private GithubWebClientPollingServiceImpl pollingService;
+    private GithubPollingService pollingService;
 
     @ParameterizedTest(name = "Commits; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
