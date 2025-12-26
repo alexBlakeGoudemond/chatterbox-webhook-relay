@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles({"test", "live-url"})
-class GithubPollingServiceTest {
+class GithubPollingServiceIT {
 
     @Autowired
     private GithubPollingServiceImpl pollingService;

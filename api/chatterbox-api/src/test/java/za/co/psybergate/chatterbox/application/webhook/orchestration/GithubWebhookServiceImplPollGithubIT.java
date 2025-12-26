@@ -21,9 +21,9 @@ public class GithubWebhookServiceImplPollGithubIT {
     @Autowired
     private GithubWebhookService githubWebhookService;
 
-    // TODO BlakeGoudemond 2025/12/26 | fix 1 commit issue with url
+    // TODO BlakeGoudemond 2025/12/26 | add PR name to commits etc?
     @Tag("live-integration")
-    @ParameterizedTest(name = "Commits; {index}: repo:{0}")
+    @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
     public void testGithubWebhookService(RepositoryDetail repositoryDetail) {
         String owner = repositoryDetail.repositoryOwner();

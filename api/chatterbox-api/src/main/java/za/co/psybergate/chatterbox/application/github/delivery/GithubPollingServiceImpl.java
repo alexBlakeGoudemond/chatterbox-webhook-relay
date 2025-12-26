@@ -34,7 +34,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
     public @Valid GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate){
         JsonNode commitsSince = getCommitsSince(owner, repositoryName, fromDate, untilDate);
         JsonNode pullRequestsSince = getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
-        return new GithubRepositoryInformationDto(fromDate, untilDate, commitsSince, pullRequestsSince);
+        return new GithubRepositoryInformationDto(fromDate, untilDate, pullRequestsSince, commitsSince);
     }
 
     @Override
