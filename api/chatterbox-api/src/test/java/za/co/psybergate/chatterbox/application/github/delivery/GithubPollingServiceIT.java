@@ -14,6 +14,7 @@ import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
@@ -54,8 +55,8 @@ class GithubPollingServiceIT {
         LocalDateTime untilDate = repositoryDetail.toDate();
         GithubRepositoryInformationDto recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         assertNotNull(recentUpdates);
-        assertNotNull(recentUpdates.commits());
-        assertNotNull(recentUpdates.pullRequests());
+        assertNotNull(recentUpdates.getGithubEventTypeDetails());
+        assertFalse(recentUpdates.getGithubEventTypeDetails().isEmpty());
     }
 
     private static Stream<Arguments> repositoryDetails() {

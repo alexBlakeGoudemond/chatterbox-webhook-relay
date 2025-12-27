@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServ
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.domain.api.GithubApiEventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
@@ -15,6 +17,9 @@ import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+
+import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -52,22 +57,26 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
-        for (JsonNode commit : recentUpdates.commits()) {
-            appendToJsonNode(commit, "full_name", repositoryFullName);
-            deliverToTeams("poll_commit", commit);
-        }
-        for (JsonNode pullRequest : recentUpdates.pullRequests()) {
-            appendToJsonNode(pullRequest, "full_name", repositoryFullName);
-            deliverToTeams("poll_pull_request", pullRequest);
+        for (Map.Entry<GithubApiEventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
+            ArrayNode arrayNode = entry.getValue();
+            GithubApiEventType eventType = entry.getKey();
+            appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
+            deliverToTeams(eventType, arrayNode); // TODO BlakeGoudemond 2025/12/27 | forEach entry in Array
         }
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void appendToJsonNode(JsonNode jsonNode, String jsonKey, String jsonValue) {
-        if (jsonNode.isObject()) {
-            ObjectNode objectNode = (ObjectNode) jsonNode;
-            objectNode.put(jsonKey, jsonValue);
+    private void appendToArrayNode(ArrayNode arrayNode, String jsonKey, String jsonValue) {
+        for (JsonNode node : arrayNode) {
+            if (node.isObject()) {
+                ObjectNode objectNode = (ObjectNode) node;
+                objectNode.put(jsonKey, jsonValue);
+            }
         }
+    }
+
+    private void deliverToTeams(GithubApiEventType eventType, JsonNode jsonNode) {
+        deliverToTeams(eventType.getValue(), jsonNode);
     }
 
     private void deliverToTeams(String eventType, JsonNode rawBody) {

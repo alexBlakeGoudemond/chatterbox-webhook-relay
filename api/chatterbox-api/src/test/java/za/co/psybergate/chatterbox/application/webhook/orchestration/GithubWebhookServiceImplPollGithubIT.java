@@ -21,7 +21,6 @@ public class GithubWebhookServiceImplPollGithubIT {
     @Autowired
     private GithubWebhookService githubWebhookService;
 
-    // TODO BlakeGoudemond 2025/12/26 | add PR name to commits etc?
     @Tag("live-integration")
     @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
