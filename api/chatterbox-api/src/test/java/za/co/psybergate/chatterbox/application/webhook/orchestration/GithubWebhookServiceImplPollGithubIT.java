@@ -8,15 +8,47 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
+import za.co.psybergate.chatterbox.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-// TODO BlakeGoudemond 2025/12/21 | reduce scope later
-@SpringBootTest
+@SpringBootTest(classes = {
+        GithubWebhookServiceImpl.class,
+        WebhookRequestValidatorImpl.class,
+        GithubEventExtractorImpl.class,
+        WebhookLogger.class,
+        TeamsSenderServiceImpl.class,
+        JsonConverterImpl.class,
+        GithubPollingServiceImpl.class,
+        ApplicationConfig.class,
+        WebhookConfigurationResolverImpl.class,
+        TeamsCardFactoryImpl.class,
+        JsonFileReader.class,
+        TeamsTemplateSubstitutorImpl.class,
+})
 @ActiveProfiles({"test", "live-url"})
 public class GithubWebhookServiceImplPollGithubIT {
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
     private GithubWebhookService githubWebhookService;

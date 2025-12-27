@@ -8,8 +8,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
@@ -17,9 +21,18 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+        GithubPollingServiceImpl.class,
+        ApplicationConfig.class,
+})
 @ActiveProfiles({"test", "live-url"})
 class GithubPollingServiceIT {
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
 
     @Autowired
     private GithubPollingServiceImpl pollingService;
