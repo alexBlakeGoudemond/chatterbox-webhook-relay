@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
@@ -50,11 +51,22 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         for (JsonNode commit : recentUpdates.commits()) {
-            deliverToTeams("commit", commit);
+            appendToJsonNode(commit, "full_name", repositoryFullName);
+            deliverToTeams("poll_commit", commit);
         }
         for (JsonNode pullRequest : recentUpdates.pullRequests()) {
-            deliverToTeams("pull_request", pullRequest);
+            appendToJsonNode(pullRequest, "full_name", repositoryFullName);
+            deliverToTeams("poll_pull_request", pullRequest);
+        }
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void appendToJsonNode(JsonNode jsonNode, String jsonKey, String jsonValue) {
+        if (jsonNode.isObject()) {
+            ObjectNode objectNode = (ObjectNode) jsonNode;
+            objectNode.put(jsonKey, jsonValue);
         }
     }
 
