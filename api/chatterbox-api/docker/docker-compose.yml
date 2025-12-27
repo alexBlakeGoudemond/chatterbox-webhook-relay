@@ -21,9 +21,31 @@ services:
     environment:
       TZ: Africa/Johannesburg
       SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: postgres://user:password@db:5432/chatterbox
     volumes:
       - ./api/logs/chatterbox-api:/var/log/chatterbox-api
     restart: unless-stopped
+    networks:
+      - chatterbox-net
+    depends_on:
+      - postgres
+
+  postgres:
+    image: chatterbox-postgres:dev
+    build:
+      context: .
+      dockerfile: chatterbox-postgres.dockerfile
+    container_name: chatterbox-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chatterbox
+      TZ: Africa/Johannesburg #UTC+2
+    volumes:
+      - ./postgres/ddl:/docker-entrypoint-initdb.d
+      - ./postgres/data:/var/lib/postgresql/data
     networks:
       - chatterbox-net
 
