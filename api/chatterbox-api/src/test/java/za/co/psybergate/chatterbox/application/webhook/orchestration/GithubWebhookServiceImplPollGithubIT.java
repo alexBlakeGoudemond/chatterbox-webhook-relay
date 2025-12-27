@@ -56,7 +56,7 @@ public class GithubWebhookServiceImplPollGithubIT {
     @Tag("live-integration")
     @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void testGithubWebhookService(RepositoryDetail repositoryDetail) {
+    public void whenPollRecentChanges_ThenSuccess(RepositoryDetail repositoryDetail) {
         String owner = repositoryDetail.repositoryOwner();
         String repositoryFullName = repositoryDetail.repositoryName();
         LocalDateTime fromDate = repositoryDetail.fromDate();
