@@ -1,142 +1,135 @@
 package za.co.psybergate.chatterbox.application.github.delivery;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.kohsuke.github.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.domain.api.GithubApiEventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityApiGithubProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
-import java.util.function.Predicate;
 
-// TODO BlakeGoudemond 2025/12/19 | eventually hook up to a cron job or job that runs on startup
+import static za.co.psybergate.chatterbox.domain.api.GithubApiEventType.POLL_COMMIT;
+import static za.co.psybergate.chatterbox.domain.api.GithubApiEventType.POLL_PULL_REQUEST;
+
 @Service
-@RequiredArgsConstructor
-@Validated
 public class GithubPollingServiceImpl implements GithubPollingService {
 
-    private final WebhookLogger  webhookLogger;
+    private final WebClient githubClient;
 
-    private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
+    private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 
-    // TODO BlakeGoudemond 2025/12/20 | method to loop through each accepted repo and check if any updates since <xDate>
+    private final WebhookLogger webhookLogger;
 
-    @Override
-    @Valid
-    public GithubRepositoryInformationDto getRecentUpdates(String repositoryFullName, LocalDateTime lastReceivedDate) {
-        GHRepository githubRepository = getGithubRepository(repositoryFullName);
-        LocalDateTime untilDate = LocalDateTime.now();
-        List<GHCommit> commitsSince = getCommitsSince(githubRepository, lastReceivedDate, untilDate);
-        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(githubRepository, lastReceivedDate, untilDate);
-        return new GithubRepositoryInformationDto(lastReceivedDate, untilDate, pullRequestsSince, commitsSince);
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    public GithubPollingServiceImpl(@Qualifier("githubClient") WebClient webClient,
+                                    ChatterboxSourceGithubPayloadProperties payloadProperties, WebhookLogger webhookLogger) {
+        this.githubClient = webClient;
+        this.payloadProperties = payloadProperties;
+        this.webhookLogger = webhookLogger;
     }
 
     @Override
-    @Valid
-    public GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime fromDate, LocalDateTime untilDate) {
-        List<GHCommit> commitsSince = getCommitsSince(repository, fromDate, untilDate);
-        List<GHPullRequest> pullRequestsSince = getPullRequestsSince(repository, fromDate, untilDate);
-        return new GithubRepositoryInformationDto(fromDate, untilDate, pullRequestsSince, commitsSince);
+    public GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate) {
+        return getRecentUpdates(owner, repositoryName, fromDate, LocalDateTime.now(ZoneOffset.UTC));
     }
 
     @Override
-    public GHRepository getGithubRepository(String repositoryFullName) {
-        GitHub gitHub = getGithubApiHandle();
-        try {
-            return gitHub.getRepository(repositoryFullName);
-        } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when creating Repository from name", e);
-        }
-    }
-
-    private GitHub getGithubApiHandle() {
-        try {
-            return new GitHubBuilder()
-                    .withOAuthToken(apiGithubProperties.getToken())
-                    .build();
-        } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when creating Github API handle", e);
-        }
-    }
-
-    @Override
-    public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime lastReceivedUpdate) {
-        return getCommitsSince(repository, lastReceivedUpdate, LocalDateTime.now());
-    }
-
-    @Override
-    public List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
-        webhookLogger.logQueryingGithubApi("commits", repository, startDate, endDate);
-        try {
-            List<GHCommit> commits = repository.queryCommits()
-                    .since(startDate.toEpochSecond(ZoneOffset.UTC))
-                    .list()
-                    .toList()
-                    .stream()
-                    .filter(commitIsBetween(startDate, endDate))
-                    .toList();
-            webhookLogger.logQueryingGithubApiCompleted("commits", commits);
-            return commits;
-        } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when retrieving Commits", e);
-        }
-    }
-
-    @Override
-    public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime lastReceivedUpdate) {
-        return getPullRequestsSince(repository, lastReceivedUpdate, LocalDateTime.now());
-    }
-
-    @Override
-    public List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
-        webhookLogger.logQueryingGithubApi("pullRequests", repository, startDate, endDate);
-        try {
-            List<GHPullRequest> pullRequests = repository.queryPullRequests()
-                    .state(GHIssueState.ALL)
-                    .list()
-                    .toList()
-                    .stream()
-                    .filter(pullRequestIsBetween(startDate, endDate))
-                    .toList();
-            webhookLogger.logQueryingGithubApiCompleted("pullRequests", pullRequests);
-            return pullRequests;
-        } catch (IOException e) {
-            throw new ApplicationException("Unexpected issue when retrieving PullRequests", e);
-        }
-    }
-
-    private Predicate<GHCommit> commitIsBetween(LocalDateTime startDate, LocalDateTime endDate) {
-        Instant startDateAsInstant = startDate.atZone(ZoneOffset.UTC).toInstant();
-        Instant endDateAsInstant = endDate.atZone(ZoneOffset.UTC).toInstant();
-        return commit -> {
-            try {
-                Instant commitAsInstant = commit.getCommitDate().toInstant();
-                return commitAsInstant.isAfter(startDateAsInstant) && commitAsInstant.isBefore(endDateAsInstant);
-            } catch (IOException e) {
-                throw new ApplicationException("Unexpected issue when retrieving CommitDate", e);
+    public @Valid GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate){
+        webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        GithubRepositoryInformationDto informationDto = new GithubRepositoryInformationDto(fromDate, untilDate);
+        for (String eventMapping : payloadProperties.getEventMapping().keySet()) {
+            boolean eventExists = GithubApiEventType.contains(eventMapping);
+            if (!eventExists) {
+                continue;
             }
-        };
+            GithubApiEventType eventType = GithubApiEventType.get(eventMapping);
+            switch (eventType) {
+                case POLL_COMMIT:
+                    informationDto.add(POLL_COMMIT, getCommitsSince(owner, repositoryName, fromDate, untilDate));
+                    break;
+                case POLL_PULL_REQUEST:
+                    informationDto.add(POLL_PULL_REQUEST, getPullRequestsSince(owner, repositoryName, fromDate, untilDate));
+                default:
+                    break;
+            }
+        }
+        return informationDto;
     }
 
-    private Predicate<GHPullRequest> pullRequestIsBetween(LocalDateTime startDate, LocalDateTime endDate) {
-        Instant startDateAsInstant = startDate.atZone(ZoneOffset.UTC).toInstant();
-        Instant endDateAsInstant = endDate.atZone(ZoneOffset.UTC).toInstant();
-        return pullRequest -> {
-            try {
-                Instant pullRequestAsInstant = pullRequest.getUpdatedAt().toInstant();
-                return pullRequestAsInstant.isAfter(startDateAsInstant) && pullRequestAsInstant.isBefore(endDateAsInstant);
-            } catch (IOException e) {
-                throw new ApplicationException("Unexpected issue when retrieving UpdatedAt", e);
+    @Override
+    public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate) {
+        return getCommitsSince(owner, repositoryName, fromDate, LocalDateTime.now());
+    }
+
+    @Override
+    public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        webhookLogger.logGithubPollEventType("commits", owner, repositoryName, fromDate, untilDate);
+        ArrayNode commits = githubClient.get()
+                .uri(uri -> uri
+                        .path("/repos/{owner}/{repo}/commits")
+                        .queryParam("since", fromDate.toString())
+                        .queryParam("until", untilDate.toString())
+                        .build(owner, repositoryName))
+                .retrieve()
+                .bodyToMono(ArrayNode.class)
+                .block();
+        if (commits == null) {
+            throw new ApplicationException("No commits found when polling Repository");
+        }
+        return commits;
+    }
+
+    @Override
+    public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate) {
+        return getPullRequestsSince(owner, repositoryName, fromDate, LocalDateTime.now());
+    }
+
+    @Override
+    public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        webhookLogger.logGithubPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
+        ArrayNode pullRequests = githubClient.get()
+                .uri(uri -> uri
+                        .path("/repos/{owner}/{repo}/pulls")
+                        .queryParam("state", "all")
+                        .queryParam("sort", "created")
+                        .queryParam("direction", "desc")
+                        .queryParam("per_page", 20)
+                        .build(owner, repositoryName)
+                )
+                .retrieve()
+                .bodyToMono(ArrayNode.class)
+                .block();
+        if (pullRequests == null) {
+            throw new ApplicationException("No pull requests found when polling Repository");
+        }
+        return filterByDateRange(pullRequests, fromDate, untilDate);
+    }
+
+    private ArrayNode filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
+        ArrayNode filtered = mapper.createArrayNode();
+        Instant from = fromDate.toInstant(ZoneOffset.UTC);
+        Instant until = untilDate.toInstant(ZoneOffset.UTC);
+        for (JsonNode pr : prArray) {
+            JsonNode mergedAtNode = pr.get("merged_at");
+            if (mergedAtNode == null || mergedAtNode.isNull()) {
+                continue;
             }
-        };
+            Instant mergedAt = Instant.parse(mergedAtNode.asText());
+            if (!mergedAt.isBefore(from) && !mergedAt.isAfter(until)) {
+                filtered.add(pr);
+            }
+        }
+        return filtered;
     }
 
 }

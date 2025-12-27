@@ -1,16 +1,17 @@
 package za.co.psybergate.chatterbox.application.webhook.processing;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 
 import java.util.Map;
 
@@ -38,12 +39,14 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
         String teamsDestinationUrl = webhookConfigurationResolver.getDestinationUrl(repositoryName);
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
         String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
+        String senderName = read(payload, fields.get(SENDERNAME));
+        String url = read(payload, fields.get(URL));
         return new GithubEventDto(
                 eventType,
                 payloadMapping.getDisplayName(),
                 repositoryName,
-                read(payload, fields.get(SENDERNAME)),
-                read(payload, fields.get(URL)),
+                senderName,
+                url,
                 formattedUrlDisplayText,
                 teamsDestinationUrl
         );

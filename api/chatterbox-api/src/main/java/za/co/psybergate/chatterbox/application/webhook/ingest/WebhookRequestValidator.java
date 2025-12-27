@@ -9,4 +9,6 @@ public interface WebhookRequestValidator {
 
     void assertAcceptedRepository(String repositoryName) throws UnrecognizedRequestException;
 
+    void assertAcceptedRepository(String owner, String repositoryName) throws UnrecognizedRequestException;
+
 }
