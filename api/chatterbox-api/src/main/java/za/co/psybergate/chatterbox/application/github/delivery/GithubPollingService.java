@@ -1,27 +1,24 @@
 package za.co.psybergate.chatterbox.application.github.delivery;
 
-import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface GithubPollingService {
 
-    GithubRepositoryInformationDto getRecentUpdates(String repositoryFullName, LocalDateTime lastReceivedDate);
+    GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate);
 
-    GithubRepositoryInformationDto getRecentUpdates(GHRepository repository, LocalDateTime fromDate, LocalDateTime untilDate);
+    GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    GHRepository getGithubRepository(String repositoryFullName);
+    ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate);
 
-    List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime lastReceivedUpdate);
+    /// [API Contract for Commits](https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28)
+    ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    List<GHCommit> getCommitsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate);
+    ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate);
 
-    List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime lastReceivedUpdate);
-
-    List<GHPullRequest> getPullRequestsSince(GHRepository repository, LocalDateTime startDate, LocalDateTime endDate);
+    /// [API Contract for Pull Requests](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-pull-requests)
+    ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
 }

@@ -1,6 +1,5 @@
 package za.co.psybergate.chatterbox.application.infrastructure.web.controller;
 
-import org.apache.hc.core5.http.HttpRequestFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
@@ -25,8 +23,6 @@ import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
@@ -59,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GithubWebhookControllerRealTeamsIT {
 
     @MockitoBean
-    private GithubPollingService githubPollingService;
+    private GithubPollingServiceImpl githubPollingService;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it

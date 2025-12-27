@@ -1,17 +1,39 @@
 package za.co.psybergate.chatterbox.domain.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.validation.constraints.NotNull;
-import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHPullRequest;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import za.co.psybergate.chatterbox.domain.api.GithubApiEventType;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public record GithubRepositoryInformationDto(
-        @NotNull LocalDateTime fromDate,
-        @NotNull LocalDateTime untilDate,
-        @NotNull List<GHPullRequest> pullRequests,
-        @NotNull List<GHCommit> commits
-) {
+@Getter
+@ToString
+@EqualsAndHashCode
+public class GithubRepositoryInformationDto {
+
+    private final @NotNull LocalDateTime fromDate;
+
+    private final @NotNull LocalDateTime untilDate;
+
+    private final @NotNull Map<GithubApiEventType, ArrayNode> githubEventTypeDetails;
+
+    public GithubRepositoryInformationDto(
+            @NotNull LocalDateTime fromDate,
+            @NotNull LocalDateTime untilDate
+    ) {
+        this.fromDate = fromDate;
+        this.untilDate = untilDate;
+        this.githubEventTypeDetails = new HashMap<>();
+    }
+
+    public void add(GithubApiEventType githubApiEventType, ArrayNode arrayNode) {
+        githubEventTypeDetails.put(githubApiEventType, arrayNode);
+    }
 
 }
