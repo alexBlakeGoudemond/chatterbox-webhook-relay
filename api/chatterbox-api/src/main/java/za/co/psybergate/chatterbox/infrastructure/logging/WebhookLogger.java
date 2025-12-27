@@ -1,13 +1,11 @@
 package za.co.psybergate.chatterbox.infrastructure.logging;
 
 import lombok.extern.slf4j.Slf4j;
-import org.kohsuke.github.GHRepository;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @Slf4j
@@ -57,12 +55,12 @@ public class WebhookLogger {
         log.error("[Exception] Exception encountered: {}", ex.getClass().getSimpleName(), ex);
     }
 
-    public void logQueryingGithubApi(String queryType, GHRepository repository, LocalDateTime startDate, LocalDateTime endDate) {
-        log.info("[GithubAPI] querying '{}' generated in '{}' for {} - {}", queryType, repository.getName(), startDate, endDate);
+    public void logGithubPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        log.info("[GithubAPI] querying '{}/{}' for any updates since {} - {}", owner, repositoryName, fromDate, untilDate);
     }
 
-    public <T> void logQueryingGithubApiCompleted(String queryPurpose, List<T> results) {
-        log.info("[GithubAPI] query completed successfully for '{}';  found: {}", queryPurpose, results.size());
+    public void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        log.info("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
     }
 
 }

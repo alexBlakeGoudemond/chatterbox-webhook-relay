@@ -57,6 +57,27 @@ chatterbox:
               senderName: "sender.login"
               url: "issue.html_url"
               urlDisplayText: "head_commit.message"
+          pull_request:
+            displayName: "Pull Request Event"
+            fields:
+              repositoryName: "repository.full_name"
+              senderName: "pull_request.user.login"
+              url: "pull_request.html_url"
+              urlDisplayText: "pull_request.title"
+          poll_commit:
+            displayName: "Commit Event"
+            fields:
+              repositoryName: "full_name"
+              senderName: "commit.author.name"
+              url: "commit.url"
+              urlDisplayText: "commit.message" #
+          poll_pull_request:
+            displayName: "Pull Request Event"
+            fields:
+              repositoryName: "full_name"
+              senderName: "user.login"
+              url: "html_url"
+              urlDisplayText: "title"
   destinations:
     teams:
       accepted-channel:

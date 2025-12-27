@@ -10,20 +10,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+        TeamsSenderServiceImpl.class,
+        JsonFileReader.class,
+        JsonConverterImpl.class,
+        GithubEventExtractorImpl.class,
+        WebhookConfigurationResolverImpl.class,
+        TeamsSenderServiceImpl.class,
+        TeamsCardFactoryImpl.class,
+        TeamsTemplateSubstitutorImpl.class,
+        ApplicationConfig.class
+})
 @ActiveProfiles({"live-url"})
 public class TeamsSenderServiceImplIT {
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
     private JsonFileReader jsonFileReader;

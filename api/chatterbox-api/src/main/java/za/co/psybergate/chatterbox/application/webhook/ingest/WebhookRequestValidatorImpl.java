@@ -39,4 +39,10 @@ public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
         throw new UnrecognizedRequestException(responseContent);
     }
 
+    @Override
+    public void assertAcceptedRepository(String owner, String repositoryName) throws UnrecognizedRequestException {
+        String repositoryFullName = String.format("%s/%s", owner, repositoryName);
+        assertAcceptedRepository(repositoryFullName);
+    }
+
 }
