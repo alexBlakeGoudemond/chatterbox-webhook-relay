@@ -36,15 +36,27 @@
         <maven-compiler-plugin.target>21</maven-compiler-plugin.target>
         <maven-compiler-plugin.release>21</maven-compiler-plugin.release>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
-        <maven-test-plugin.version>3.0.0</maven-test-plugin.version>
+        <maven-test-plugin.version>3.2.5</maven-test-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <micrometer-registry-prometheus.version>1.15.4</micrometer-registry-prometheus.version>
         <httpclient5.version>5.5</httpclient5.version>
         <httpcore5.version>5.3.5</httpcore5.version>
         <github-api.version>1.330</github-api.version>
+        <junit-jupiter.version>5.10.1</junit-jupiter.version>
+        <maven-plugin.excludeTags>live-integration</maven-plugin.excludeTags>
     </properties>
 
-	<dependencies>
+    <profiles>
+        <profile>
+            <id>live-integration</id>
+            <properties>
+                <groups>live-integration</groups>
+            </properties>
+        </profile>
+    </profiles>
+
+
+    <dependencies>
 
         <!--
             Psybergate Managed Dependency
@@ -86,6 +98,13 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -117,7 +136,7 @@
         </dependency>
 
         <!--
-        Used to interact with Github's API
+        Used to interact with Github's API // todo add to docs and mention why not being used (converting to JsonNode does extra calls)
         -->
         <dependency>
             <groupId>org.kohsuke</groupId>
@@ -173,7 +192,9 @@
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
-                    <excludedGroups>live-integration</excludedGroups>
+                    <properties>
+                        <excludeTags>${maven-plugin.excludeTags}</excludeTags>
+                    </properties>
                 </configuration>
             </plugin>
 
@@ -201,7 +222,9 @@
                         <include>**/Test*.java</include>
                         <exclude>**/*Test.java</exclude>
                     </excludes>
-                    <excludedGroups>live-integration</excludedGroups>
+                    <properties>
+                        <excludeTags>${maven-plugin.excludeTags}</excludeTags>
+                    </properties>
                 </configuration>
             </plugin>
 
