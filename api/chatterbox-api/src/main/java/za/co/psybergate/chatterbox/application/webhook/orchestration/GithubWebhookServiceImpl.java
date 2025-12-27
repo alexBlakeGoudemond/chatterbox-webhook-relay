@@ -61,7 +61,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
             ArrayNode arrayNode = entry.getValue();
             GithubApiEventType eventType = entry.getKey();
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
-            deliverToTeams(eventType, arrayNode); // TODO BlakeGoudemond 2025/12/27 | forEach entry in Array
+            deliverAllToTeams(eventType, arrayNode);
         }
     }
 
@@ -75,8 +75,10 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private void deliverToTeams(GithubApiEventType eventType, JsonNode jsonNode) {
-        deliverToTeams(eventType.getValue(), jsonNode);
+    private void deliverAllToTeams(GithubApiEventType eventType, ArrayNode arrayNode) {
+        for (JsonNode jsonNode : arrayNode) {
+            deliverToTeams(eventType.getValue(), jsonNode);
+        }
     }
 
     private void deliverToTeams(String eventType, JsonNode rawBody) {
