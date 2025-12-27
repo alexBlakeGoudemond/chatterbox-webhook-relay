@@ -43,14 +43,15 @@
         <httpcore5.version>5.3.5</httpcore5.version>
         <github-api.version>1.330</github-api.version>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
-        <maven-plugin.excludeTags>live-integration</maven-plugin.excludeTags>
+        <maven-plugin.excludedGroups>live-integration</maven-plugin.excludedGroups>
     </properties>
 
     <profiles>
         <profile>
             <id>live-integration</id>
             <properties>
-                <groups>live-integration</groups>
+                <!-- Override the property - exclude nothing; allows Live tests to run with this profile enabled -->
+                <maven-plugin.excludedGroups/>
             </properties>
         </profile>
     </profiles>
@@ -192,9 +193,7 @@
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
-                    <properties>
-                        <excludeTags>${maven-plugin.excludeTags}</excludeTags>
-                    </properties>
+                    <excludedGroups>${maven-plugin.excludedGroups}</excludedGroups>
                 </configuration>
             </plugin>
 
@@ -222,9 +221,7 @@
                         <include>**/Test*.java</include>
                         <exclude>**/*Test.java</exclude>
                     </excludes>
-                    <properties>
-                        <excludeTags>${maven-plugin.excludeTags}</excludeTags>
-                    </properties>
+                    <excludedGroups>${maven-plugin.excludedGroups}</excludedGroups>
                 </configuration>
             </plugin>
 

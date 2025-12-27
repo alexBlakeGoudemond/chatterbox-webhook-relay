@@ -25,8 +25,6 @@ import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
