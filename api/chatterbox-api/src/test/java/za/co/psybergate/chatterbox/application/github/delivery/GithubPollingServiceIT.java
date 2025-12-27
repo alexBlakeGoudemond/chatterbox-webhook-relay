@@ -13,6 +13,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = {
         GithubPollingServiceImpl.class,
         ApplicationConfig.class,
+        WebhookLogger.class,
 })
 @ActiveProfiles({"test", "live-url"})
 class GithubPollingServiceIT {

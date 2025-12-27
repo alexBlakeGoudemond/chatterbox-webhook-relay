@@ -11,6 +11,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.api.GithubApiEventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,12 +27,15 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 
+    private final WebhookLogger webhookLogger;
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     public GithubPollingServiceImpl(@Qualifier("githubClient") WebClient webClient,
-                                    ChatterboxSourceGithubPayloadProperties payloadProperties) {
+                                    ChatterboxSourceGithubPayloadProperties payloadProperties, WebhookLogger webhookLogger) {
         this.githubClient = webClient;
         this.payloadProperties = payloadProperties;
+        this.webhookLogger = webhookLogger;
     }
 
     @Override
@@ -41,6 +45,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     public @Valid GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate){
+        webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
         GithubRepositoryInformationDto informationDto = new GithubRepositoryInformationDto(fromDate, untilDate);
         for (String eventMapping : payloadProperties.getEventMapping().keySet()) {
             boolean eventExists = GithubApiEventType.contains(eventMapping);
@@ -68,7 +73,8 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        ArrayNode arrayNode = githubClient.get()
+        webhookLogger.logGithubPollEventType("commits", owner, repositoryName, fromDate, untilDate);
+        ArrayNode commits = githubClient.get()
                 .uri(uri -> uri
                         .path("/repos/{owner}/{repo}/commits")
                         .queryParam("since", fromDate.toString())
@@ -77,10 +83,10 @@ public class GithubPollingServiceImpl implements GithubPollingService {
                 .retrieve()
                 .bodyToMono(ArrayNode.class)
                 .block();
-        if (arrayNode == null) {
+        if (commits == null) {
             throw new ApplicationException("No commits found when polling Repository");
         }
-        return arrayNode;
+        return commits;
     }
 
     @Override
@@ -90,7 +96,8 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     @Override
     public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        ArrayNode prArray = githubClient.get()
+        webhookLogger.logGithubPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
+        ArrayNode pullRequests = githubClient.get()
                 .uri(uri -> uri
                         .path("/repos/{owner}/{repo}/pulls")
                         .queryParam("state", "all")
@@ -102,10 +109,10 @@ public class GithubPollingServiceImpl implements GithubPollingService {
                 .retrieve()
                 .bodyToMono(ArrayNode.class)
                 .block();
-        if (prArray == null) {
+        if (pullRequests == null) {
             throw new ApplicationException("No pull requests found when polling Repository");
         }
-        return filterByDateRange(prArray, fromDate, untilDate);
+        return filterByDateRange(pullRequests, fromDate, untilDate);
     }
 
     private ArrayNode filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
