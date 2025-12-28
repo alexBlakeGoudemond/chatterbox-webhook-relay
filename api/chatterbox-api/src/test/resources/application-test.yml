@@ -44,7 +44,7 @@ chatterbox:
             destinationChannel: TestChannel
       payload:
         event-mapping:
-          webhook_push:
+          push:
             displayName: "Push Event"
             fields:
               repositoryName: "repository.full_name"

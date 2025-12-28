@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
@@ -38,7 +39,9 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPollingServiceImpl githubPollingService;
 
-    private final WebhookReceivedStore  webhookReceivedStore;
+    private final WebhookReceivedStore webhookReceivedStore;
+
+    private final GithubPolledStore githubPolledStore;
 
     @Override
     public void process(String eventType, String deliveryId, JsonNode rawBody) {
@@ -46,8 +49,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
 
-        HttpResponseDto httpResponseDto = deliverToTeams(eventType, rawBody);
-        // TODO BlakeGoudemond 2025/12/28 | persist webhook_received
+        // TODO BlakeGoudemond 2025/12/28 | persist webhook_received - received
+        HttpResponseDto httpResponseDto = deliverToTeams(eventType, deliveryId, rawBody);
     }
 
 
@@ -64,8 +67,9 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
             EventType eventType = entry.getKey();
+            // TODO BlakeGoudemond 2025/12/28 | based on eventType - get different uniqueId and pass along
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
-            deliverAllToTeams(eventType, arrayNode);
+            deliverAllToTeams(eventType, null, arrayNode);
         }
     }
 
@@ -79,20 +83,21 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private void deliverAllToTeams(EventType eventType, ArrayNode arrayNode) {
+    private void deliverAllToTeams(EventType eventType, String uniqueId, ArrayNode arrayNode) {
         for (JsonNode jsonNode : arrayNode) {
-            HttpResponseDto httpResponseDto = deliverToTeams(eventType.name(), jsonNode);
-            // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item
+            // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item - received
+            HttpResponseDto httpResponseDto = deliverToTeams(eventType.name(), uniqueId, jsonNode);
         }
     }
 
     @Override
-    public HttpResponseDto deliverToTeams(String eventType, JsonNode rawBody) {
+    public HttpResponseDto deliverToTeams(String eventType, String uniqueId, JsonNode rawBody) {
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
         webhookLogger.logSendingDtoToTeams(eventDto);
         HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
         webhookLogger.logTeamsResponse(httpResponseDto);
+        // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item - processed_successfully
         return httpResponseDto;
     }
 

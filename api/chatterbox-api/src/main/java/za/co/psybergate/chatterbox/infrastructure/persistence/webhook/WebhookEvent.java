@@ -11,10 +11,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-@Table(
-        name = "webhook_event",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"webhook_id", "repository_full_name"})
-)
+@Table(name = "webhook_event")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -36,6 +33,9 @@ public class WebhookEvent {
 
     @Column(columnDefinition = "jsonb", nullable = false)
     private String payload;
+
+    @Column(columnDefinition = "delivery_destination", nullable = false)
+    private String deliveryDestination;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -62,12 +62,12 @@ public class WebhookEvent {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         WebhookEvent that = (WebhookEvent) object;
-        return Objects.equals(webhookId, that.webhookId) && Objects.equals(repositoryFullName, that.repositoryFullName);
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && eventType == that.eventType && Objects.equals(payload, that.payload) && Objects.equals(deliveryDestination, that.deliveryDestination) && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(webhookId, repositoryFullName);
+        return Objects.hash(repositoryFullName, webhookId, eventType, payload, deliveryDestination, status);
     }
 
 }

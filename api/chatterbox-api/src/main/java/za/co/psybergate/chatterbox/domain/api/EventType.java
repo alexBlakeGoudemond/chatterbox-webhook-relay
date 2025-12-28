@@ -16,8 +16,8 @@ import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSo
 @Getter
 public enum EventType {
 
-    WEBHOOK_PUSH,
-    WEBHOOK_PULL_REQUEST,
+    PUSH,
+    PULL_REQUEST,
     POLL_COMMIT,
     POLL_PULL_REQUEST;
 

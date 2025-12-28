@@ -50,14 +50,14 @@ chatterbox:
             destinationChannel: TestChannel
       payload:
         event-mapping:
-          webhook_push:
+          push:
             displayName: "Push Event"
             fields:
               repositoryName: "repository.full_name"
               senderName: "sender.login"
               url: "issue.html_url"
               urlDisplayText: "head_commit.message"
-          webhook_pull_request:
+          pull_request:
             displayName: "Pull Request Event"
             fields:
               repositoryName: "repository.full_name"

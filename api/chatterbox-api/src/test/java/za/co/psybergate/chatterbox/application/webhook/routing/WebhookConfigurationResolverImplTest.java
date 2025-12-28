@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
@@ -30,7 +31,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Known eventType succeeds")
     @Test
     public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
-        EventMapping payloadMapping = resolver.getPayloadMapping("push");
+        EventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH.name());
         assertNotNull(payloadMapping);
     }
 

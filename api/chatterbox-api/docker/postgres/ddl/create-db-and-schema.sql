@@ -2,7 +2,7 @@ DROP type if exists EVENT_STATUS;
 CREATE TYPE EVENT_STATUS AS ENUM ('RECEIVED', 'PROCESSING', 'PROCESSED_SUCCESS', 'PROCESSED_FAILURE');
 
 DROP type if exists EVENT_TYPE;
-CREATE TYPE EVENT_TYPE AS ENUM ('WEBHOOK_PUSH', 'WEBHOOK_PULL_REQUEST', 'POLL_COMMIT', 'POLL_PULL_REQUEST');
+CREATE TYPE EVENT_TYPE AS ENUM ('PUSH', 'PULL_REQUEST', 'POLL_COMMIT', 'POLL_PULL_REQUEST');
 
 DROP table if EXISTS webhook_event;
 CREATE TABLE webhook_event
@@ -12,12 +12,11 @@ CREATE TABLE webhook_event
     webhook_id           TEXT UNIQUE  NOT NULL, -- X-GitHub-Delivery
     event_type           EVENT_TYPE   NOT NULL,
     payload              JSONB        NOT NULL, -- raw JSON payload
+    delivery_destination TEXT         NOT NULL, -- MS Teams, etc.
     status               EVENT_STATUS NOT NULL,
     error_message        TEXT,
     received_at          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     processed_at         TIMESTAMP,
-
-    UNIQUE (webhook_id, repository_full_name)
 );
 
 
@@ -29,10 +28,9 @@ CREATE TABLE github_polled_event
     event_type           EVENT_TYPE   NOT NULL,
     source_id            TEXT         NOT NULL, -- commit sha, pull_request id, issue id etc
     payload              JSONB        NOT NULL, -- raw JSON payload
+    delivery_destination TEXT         NOT NULL, -- MS Teams, etc.
     status               EVENT_STATUS NOT NULL,
     error_message        TEXT,
     fetched_at           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     processed_at         TIMESTAMP,
-
-    UNIQUE (event_type, source_id, repository_full_name)
 );

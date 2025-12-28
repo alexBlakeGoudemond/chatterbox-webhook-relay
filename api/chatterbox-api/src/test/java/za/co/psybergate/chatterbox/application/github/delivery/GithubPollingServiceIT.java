@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -37,7 +39,13 @@ class GithubPollingServiceIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private GithubPollingServiceImpl pollingService;
+    private GithubPollingService pollingService;
+
+    @MockitoBean
+    private WebhookReceivedStore webhookReceivedStore;
+
+    @MockitoBean
+    private GithubPolledStore githubPolledStore;
 
     // TODO BlakeGoudemond 2025/12/28 | figure out what the webhookId is - Github-Delivery or something else?
     // TODO BlakeGoudemond 2025/12/28 | once figured out - use it to construct WebhookReceived from Github EventDto

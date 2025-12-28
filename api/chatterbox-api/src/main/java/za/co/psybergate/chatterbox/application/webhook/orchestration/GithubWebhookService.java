@@ -15,5 +15,5 @@ public interface GithubWebhookService {
 
     void pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    HttpResponseDto deliverToTeams(String eventType, JsonNode rawBody);
+    HttpResponseDto deliverToTeams(String eventType, String uniqueId, JsonNode rawBody);
 }

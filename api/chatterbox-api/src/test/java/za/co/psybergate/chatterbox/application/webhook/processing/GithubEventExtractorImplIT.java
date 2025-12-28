@@ -11,6 +11,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -57,10 +58,10 @@ public class GithubEventExtractorImplIT {
     @Test
     public void givenJsonString_WhenExtract_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH.name(), jsonNode);
 
         assertNotNull(eventDto);
-        assertEquals("push", eventDto.eventType());
+        assertEquals(EventType.PUSH.name(), eventDto.eventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
@@ -81,7 +82,7 @@ public class GithubEventExtractorImplIT {
     public void givenIncompleteJsonString_WhenExtract_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadMissingProperties();
         assertThrows(UnrecognizedRequestException.class,
-                () -> eventExtractor.extract("push", jsonNode));
+                () -> eventExtractor.extract(EventType.PUSH.name(), jsonNode));
     }
 
     @DisplayName("Missing Most JSON keys: Exception")
@@ -89,17 +90,17 @@ public class GithubEventExtractorImplIT {
     public void givenPartialJsonString_WithRepositoryName_WhenExtract_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadInvalidEventTypeAndRepositoryName();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.extract("push", jsonNode));
+                () -> eventExtractor.extract(EventType.PUSH.name(), jsonNode));
     }
 
     @DisplayName("No UrlDisplayText; then eventType")
     @Test
     public void givenJsonString_WithNoUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsEventType() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadNoDisplayText();
-        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH.name(), jsonNode);
 
         assertNotNull(eventDto);
-        assertEquals("push", eventDto.eventType());
+        assertEquals(EventType.PUSH.name(), eventDto.eventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
@@ -111,10 +112,10 @@ public class GithubEventExtractorImplIT {
     @Test
     public void givenJsonString_WithLongUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsTruncated(){
         JsonNode jsonNode = jsonFileReader.getGithubPayloadLongDisplayText();
-        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH.name(), jsonNode);
 
         assertNotNull(eventDto);
-        assertEquals("push", eventDto.eventType());
+        assertEquals(EventType.PUSH.name(), eventDto.eventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());

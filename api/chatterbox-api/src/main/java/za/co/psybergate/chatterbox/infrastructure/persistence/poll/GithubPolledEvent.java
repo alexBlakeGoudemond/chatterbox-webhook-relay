@@ -11,10 +11,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-@Table(
-        name = "github_polled_event",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"event_type", "source_id", "repository_full_name"})
-)
+@Table(name = "github_polled_event")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,6 +33,9 @@ public class GithubPolledEvent {
 
     @Column(columnDefinition = "jsonb", nullable = false)
     private String payload;
+
+    @Column(columnDefinition = "delivery_destination", nullable = false)
+    private String deliveryDestination;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -62,12 +62,12 @@ public class GithubPolledEvent {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         GithubPolledEvent that = (GithubPolledEvent) object;
-        return eventType == that.eventType && Objects.equals(sourceId, that.sourceId) && Objects.equals(repositoryFullName, that.repositoryFullName);
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && eventType == that.eventType && Objects.equals(sourceId, that.sourceId) && Objects.equals(payload, that.payload) && Objects.equals(deliveryDestination, that.deliveryDestination) && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventType, sourceId, repositoryFullName);
+        return Objects.hash(repositoryFullName, eventType, sourceId, payload, deliveryDestination, status);
     }
 
 }
