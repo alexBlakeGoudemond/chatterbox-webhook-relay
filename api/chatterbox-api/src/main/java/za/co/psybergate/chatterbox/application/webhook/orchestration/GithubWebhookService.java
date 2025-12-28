@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 
 import java.time.LocalDateTime;
 
@@ -14,5 +15,5 @@ public interface GithubWebhookService {
 
     void pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    void deliverToTeams(String eventType, String deliveryId, JsonNode rawBody);
+    HttpResponseDto deliverToTeams(String eventType, JsonNode rawBody);
 }

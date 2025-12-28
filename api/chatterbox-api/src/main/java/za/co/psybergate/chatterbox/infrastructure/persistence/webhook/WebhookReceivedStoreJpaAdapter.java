@@ -15,7 +15,7 @@ public class WebhookReceivedStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookReceived storeWebhook(WebhookReceived webhook) {
+    public WebhookEvent storeWebhook(WebhookEvent webhook) {
         return repository.save(webhook);
     }
 
@@ -25,13 +25,13 @@ public class WebhookReceivedStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookReceived getLatestWebhook() {
+    public WebhookEvent getLatestWebhook() {
         return repository.findFirstByOrderByIdDesc();
     }
 
     @Override
     public void storeWebhook(GithubEventDto eventDto, JsonNode rawBody) {
-        WebhookReceived webhookReceived = new WebhookReceived();
+        WebhookEvent webhookEvent = new WebhookEvent();
     }
 
 }

@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WebhookReceivedJpaRepository extends JpaRepository<WebhookReceived, Long> {
+public interface WebhookReceivedJpaRepository extends JpaRepository<WebhookEvent, Long> {
 
     boolean existsByWebhookId(String webhookId);
 
-    WebhookReceived findFirstByOrderByIdDesc();
+    WebhookEvent findFirstByOrderByIdDesc();
 
 }

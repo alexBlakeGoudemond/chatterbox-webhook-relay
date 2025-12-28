@@ -14,30 +14,24 @@ import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSo
 /// These properties may also be expected by Services and thus must
 /// be defined in the properties file
 @Getter
-public enum GithubApiEventType {
+public enum EventType {
 
-    PUSH("push"),
-    PULL_REQUEST("pull_request"),
-    POLL_COMMIT("poll_commit"),
-    POLL_PULL_REQUEST("poll_pull_request");
-
-    GithubApiEventType(String value) {
-        this.value = value;
-    }
-
-    private final String value;
+    WEBHOOK_PUSH,
+    WEBHOOK_PULL_REQUEST,
+    POLL_COMMIT,
+    POLL_PULL_REQUEST;
 
     public static boolean contains(String eventMapping) {
-        for (GithubApiEventType eventType : values()) {
-            if (eventType.value.equals(eventMapping))
+        for (EventType eventType : values()) {
+            if (eventType.name().equals(eventMapping))
                 return true;
         }
         return false;
     }
 
-    public static GithubApiEventType get(String eventMapping) {
-        for (GithubApiEventType eventType : values()) {
-            if (eventType.value.equals(eventMapping))
+    public static EventType get(String eventMapping) {
+        for (EventType eventType : values()) {
+            if (eventType.name().equals(eventMapping))
                 return eventType;
         }
         throw new ApplicationException("Unknown event type " + eventMapping);

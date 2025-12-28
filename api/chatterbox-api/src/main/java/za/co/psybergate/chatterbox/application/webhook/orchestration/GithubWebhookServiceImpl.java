@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.domain.api.GithubApiEventType;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
@@ -47,7 +46,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
 
-        deliverToTeams(eventType, deliveryId, rawBody);
+        HttpResponseDto httpResponseDto = deliverToTeams(eventType, rawBody);
+        // TODO BlakeGoudemond 2025/12/28 | persist webhook_received
     }
 
 
@@ -61,9 +61,9 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
-        for (Map.Entry<GithubApiEventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
+        for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
-            GithubApiEventType eventType = entry.getKey();
+            EventType eventType = entry.getKey();
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
             deliverAllToTeams(eventType, arrayNode);
         }
@@ -79,22 +79,21 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private void deliverAllToTeams(GithubApiEventType eventType, ArrayNode arrayNode) {
+    private void deliverAllToTeams(EventType eventType, ArrayNode arrayNode) {
         for (JsonNode jsonNode : arrayNode) {
-            deliverToTeams(eventType.getValue(), null, jsonNode);
+            HttpResponseDto httpResponseDto = deliverToTeams(eventType.getValue(), jsonNode);
+            // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item
         }
     }
 
     @Override
-    public void deliverToTeams(String eventType, String deliveryId, JsonNode rawBody) {
+    public HttpResponseDto deliverToTeams(String eventType, JsonNode rawBody) {
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
         webhookLogger.logSendingDtoToTeams(eventDto);
         HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
         webhookLogger.logTeamsResponse(httpResponseDto);
-        if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
-//            webhookReceivedStore.storeWebhook(eventDto, rawBody)
-        }
+        return httpResponseDto;
     }
 
 }

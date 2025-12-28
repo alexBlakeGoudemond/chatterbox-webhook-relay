@@ -1,11 +1,38 @@
-DROP table if EXISTS webhook_received;
+DROP type if exists EVENT_STATUS;
+CREATE TYPE EVENT_STATUS AS ENUM ('RECEIVED', 'PROCESSING', 'PROCESSED_SUCCESS', 'PROCESSED_FAILURE');
 
-CREATE TABLE webhook_received
+DROP type if exists EVENT_TYPE;
+CREATE TYPE EVENT_TYPE AS ENUM ('WEBHOOK_PUSH', 'WEBHOOK_PULL_REQUEST', 'POLL_COMMIT', 'POLL_PULL_REQUEST');
+
+DROP table if EXISTS webhook_event;
+CREATE TABLE webhook_event
 (
     id                   SERIAL PRIMARY KEY,
-    webhook_id           TEXT UNIQUE, -- 'GitHub delivery ID',
-    repository_full_name TEXT,        -- 'e.g., <organisation>/<someRepository>',
-    event_type           TEXT,        -- 'e.g., push, pull_request',
-    payload              JSONB,       -- 'raw JSON payload'
-    processed_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    repository_full_name TEXT         NOT NULL, -- e.g., <organisation>/<someRepository>
+    webhook_id           TEXT UNIQUE  NOT NULL, -- X-GitHub-Delivery
+    event_type           EVENT_TYPE   NOT NULL,
+    payload              JSONB        NOT NULL, -- raw JSON payload
+    status               EVENT_STATUS NOT NULL,
+    error_message        TEXT,
+    received_at          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at         TIMESTAMP,
+
+    UNIQUE (webhook_id, repository_full_name)
+);
+
+
+DROP Table if Exists github_polled_event;
+CREATE TABLE github_polled_event
+(
+    id                   SERIAL PRIMARY KEY,
+    repository_full_name TEXT         NOT NULL, -- e.g., <organisation>/<someRepository>
+    event_type           EVENT_TYPE   NOT NULL,
+    source_id            TEXT         NOT NULL, -- commit sha, pull_request id, issue id etc
+    payload              JSONB        NOT NULL, -- raw JSON payload
+    status               EVENT_STATUS NOT NULL,
+    error_message        TEXT,
+    fetched_at           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at         TIMESTAMP,
+
+    UNIQUE (event_type, source_id, repository_full_name)
 );
