@@ -81,7 +81,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private void deliverAllToTeams(EventType eventType, ArrayNode arrayNode) {
         for (JsonNode jsonNode : arrayNode) {
-            HttpResponseDto httpResponseDto = deliverToTeams(eventType.getValue(), jsonNode);
+            HttpResponseDto httpResponseDto = deliverToTeams(eventType.name(), jsonNode);
             // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item
         }
     }

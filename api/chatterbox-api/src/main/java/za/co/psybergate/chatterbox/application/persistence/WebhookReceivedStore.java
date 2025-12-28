@@ -8,10 +8,10 @@ public interface WebhookReceivedStore {
 
     WebhookEvent storeWebhook(WebhookEvent webhook);
 
-    boolean hasAlreadyBeenStored(String webhookId);
+    WebhookEvent storeWebhook(GithubEventDto eventDto, JsonNode rawBody);
 
-    WebhookEvent getLatestWebhook();
+    boolean hasAlreadyBeenStored(String repositoryFullName, String webhookId);
 
-    void storeWebhook(GithubEventDto eventDto, JsonNode rawBody);
+    WebhookEvent getLatestWebhook(String repositoryFullName);
 
 }
