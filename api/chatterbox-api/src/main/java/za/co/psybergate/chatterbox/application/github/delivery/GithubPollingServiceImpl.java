@@ -32,7 +32,8 @@ public class GithubPollingServiceImpl implements GithubPollingService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public GithubPollingServiceImpl(@Qualifier("githubClient") WebClient webClient,
-                                    ChatterboxSourceGithubPayloadProperties payloadProperties, WebhookLogger webhookLogger) {
+                                    ChatterboxSourceGithubPayloadProperties payloadProperties,
+                                    WebhookLogger webhookLogger) {
         this.githubClient = webClient;
         this.payloadProperties = payloadProperties;
         this.webhookLogger = webhookLogger;

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
@@ -37,13 +39,15 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPollingServiceImpl githubPollingService;
 
+    private final WebhookReceivedStore  webhookReceivedStore;
+
     @Override
-    public void process(String eventType, JsonNode rawBody) {
+    public void process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
 
-        deliverToTeams(eventType, rawBody);
+        deliverToTeams(eventType, deliveryId, rawBody);
     }
 
 
@@ -77,16 +81,20 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private void deliverAllToTeams(GithubApiEventType eventType, ArrayNode arrayNode) {
         for (JsonNode jsonNode : arrayNode) {
-            deliverToTeams(eventType.getValue(), jsonNode);
+            deliverToTeams(eventType.getValue(), null, jsonNode);
         }
     }
 
-    private void deliverToTeams(String eventType, JsonNode rawBody) {
+    @Override
+    public void deliverToTeams(String eventType, String deliveryId, JsonNode rawBody) {
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
         webhookLogger.logSendingDtoToTeams(eventDto);
         HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
         webhookLogger.logTeamsResponse(httpResponseDto);
+        if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
+//            webhookReceivedStore.storeWebhook(eventDto, rawBody)
+        }
     }
 
 }

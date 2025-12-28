@@ -48,6 +48,7 @@ services:
       - ./postgres/data:/var/lib/postgresql/data
     networks:
       - chatterbox-net
+    restart: unless-stopped
 
   nginx:
     image: chatterbox-nginx:dev
