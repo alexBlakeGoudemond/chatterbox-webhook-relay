@@ -9,14 +9,14 @@ CREATE TABLE webhook_event
 (
     id                   SERIAL PRIMARY KEY,
     repository_full_name TEXT         NOT NULL, -- e.g., <organisation>/<someRepository>
-    webhook_id           TEXT UNIQUE  NOT NULL, -- X-GitHub-Delivery
+    webhook_id           TEXT         NOT NULL, -- X-GitHub-Delivery
     event_type           EVENT_TYPE   NOT NULL,
     payload              JSONB        NOT NULL, -- raw JSON payload
     delivery_destination TEXT         NOT NULL, -- MS Teams, etc.
     status               EVENT_STATUS NOT NULL,
     error_message        TEXT,
     received_at          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    processed_at         TIMESTAMP,
+    processed_at         TIMESTAMP
 );
 
 
@@ -32,5 +32,5 @@ CREATE TABLE github_polled_event
     status               EVENT_STATUS NOT NULL,
     error_message        TEXT,
     fetched_at           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    processed_at         TIMESTAMP,
+    processed_at         TIMESTAMP
 );
