@@ -31,7 +31,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Known eventType succeeds")
     @Test
     public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
-        EventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH.name());
+        EventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH);
         assertNotNull(payloadMapping);
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
@@ -48,9 +49,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
-
-        // TODO BlakeGoudemond 2025/12/28 | persist webhook_received - received
-        HttpResponseDto httpResponseDto = deliverToTeams(eventType, deliveryId, rawBody);
+        HttpResponseDto httpResponseDto = deliverToTeams(EventType.get(eventType), deliveryId, rawBody);
     }
 
 
@@ -67,9 +66,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
             EventType eventType = entry.getKey();
-            // TODO BlakeGoudemond 2025/12/28 | based on eventType - get different uniqueId and pass along
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
-            deliverAllToTeams(eventType, null, arrayNode);
+            deliverAllToTeams(eventType, arrayNode);
         }
     }
 
@@ -83,22 +81,39 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private void deliverAllToTeams(EventType eventType, String uniqueId, ArrayNode arrayNode) {
+    private void deliverAllToTeams(EventType eventType, ArrayNode arrayNode) {
         for (JsonNode jsonNode : arrayNode) {
-            // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item - received
-            HttpResponseDto httpResponseDto = deliverToTeams(eventType.name(), uniqueId, jsonNode);
+            String uniqueId = getUniqueId(eventType, jsonNode);
+            HttpResponseDto httpResponseDto = deliverToTeams(eventType, uniqueId, jsonNode);
         }
     }
 
+    // TODO BlakeGoudemond 2025/12/30 | in time, persist here and send to teams in separate class
     @Override
-    public HttpResponseDto deliverToTeams(String eventType, String uniqueId, JsonNode rawBody) {
+    public HttpResponseDto deliverToTeams(EventType eventType, String uniqueId, JsonNode rawBody) {
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
         webhookLogger.logSendingDtoToTeams(eventDto);
         HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
         webhookLogger.logTeamsResponse(httpResponseDto);
-        // TODO BlakeGoudemond 2025/12/28 | persist github_polled_item - processed_successfully
+        // TODO BlakeGoudemond 2025/12/28 | test that this works
+//        webhookReceivedStore.storeWebhook(uniqueId, eventDto, rawBody);
         return httpResponseDto;
+    }
+
+    private String getUniqueId(EventType eventType, JsonNode jsonNode) {
+        String uniqueId;
+        switch (eventType) {
+            case POLL_COMMIT:
+                uniqueId = jsonNode.get("sha").asText();
+                break;
+            case POLL_PULL_REQUEST:
+                uniqueId = jsonNode.get("merge_commit_sha").asText();
+                break;
+            default:
+                throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
+        }
+        return uniqueId;
     }
 
 }

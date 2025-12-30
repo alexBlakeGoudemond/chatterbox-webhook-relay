@@ -23,7 +23,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEvent storeWebhook(GithubEventDto eventDto, JsonNode rawBody) {
+    public WebhookEvent storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+        WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
         throw new ApplicationException("Webhook event store method not implemented yet");
     }
 

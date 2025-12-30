@@ -1,11 +1,13 @@
 package za.co.psybergate.chatterbox.infrastructure.persistence.webhook;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -56,6 +58,10 @@ public class WebhookEvent {
         this.eventType = eventType;
         this.payload = payload;
         this.status = status;
+    }
+
+    public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), rawBody.toString(), EventStatus.RECEIVED);
     }
 
     @Override
