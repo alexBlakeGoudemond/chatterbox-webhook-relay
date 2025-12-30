@@ -31,7 +31,7 @@ public enum EventType {
 
     public static EventType get(String eventMapping) {
         for (EventType eventType : values()) {
-            if (eventType.name().equals(eventMapping))
+            if (eventType.name().equalsIgnoreCase(eventMapping))
                 return eventType;
         }
         throw new ApplicationException("Unknown event type " + eventMapping);
