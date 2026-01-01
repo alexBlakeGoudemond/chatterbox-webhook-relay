@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -31,7 +33,19 @@ public class WebhookEventLog {
     private String deliveryDestinationUrl;
 
     @Column(name = "delivered_at")
-    private Instant delivered_at;
+    @Convert(converter = LocalDateTimeToInstantConverter.class)
+    private LocalDateTime delivered_at;
+
+    public WebhookEventLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
+        this.webhookEventId = webhookEventId;
+        this.deliveryDestination = deliveryDestination;
+        this.deliveryDestinationUrl = deliveryDestinationUrl;
+        this.delivered_at = delivered_at;
+    }
+
+    public WebhookEventLog(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
+        this(webhookEvent.getId(), destinationName, destinationUrl, LocalDateTime.now());
+    }
 
     @Override
     public boolean equals(Object object) {

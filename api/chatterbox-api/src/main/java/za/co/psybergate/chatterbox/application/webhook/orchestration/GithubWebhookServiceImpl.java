@@ -37,7 +37,6 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPolledStore githubPolledStore;
 
-    // TODO BlakeGoudemond 2026/01/01 | create cron job to check for updates - then deliver
     // TODO BlakeGoudemond 2026/01/01 | persist now
     @Override
     public void process(String eventType, String deliveryId, JsonNode rawBody) {

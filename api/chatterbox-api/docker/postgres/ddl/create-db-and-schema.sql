@@ -41,7 +41,7 @@ CREATE table webhook_event_log
     delivery_destination     TEXT   NOT NULL, -- MS Teams, etc.
     delivery_destination_url TEXT   NOT NULL, -- MS Teams, etc.
     delivered_at             TIMESTAMP
-)
+);
 
 Drop Table if exists github_polled_event_log;
 CREATE table github_polled_event_log
@@ -51,4 +51,4 @@ CREATE table github_polled_event_log
     delivery_destination     TEXT   NOT NULL, -- MS Teams, etc.
     delivery_destination_url TEXT   NOT NULL, -- MS Teams, etc.
     delivered_at             TIMESTAMP
-)
+);

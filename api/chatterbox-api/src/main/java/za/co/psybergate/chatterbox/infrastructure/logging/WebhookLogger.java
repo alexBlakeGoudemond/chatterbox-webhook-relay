@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLog;
 
 import java.time.LocalDateTime;
 
@@ -61,6 +63,14 @@ public class WebhookLogger {
 
     public void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         log.info("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
+    }
+
+    public void logStoringEvent(WebhookEvent webhook) {
+        log.debug("[Storage] Storing webhook event: {}", webhook);
+    }
+
+    public void logDeliveringEvent(WebhookEventLog webhookEventLog) {
+        log.debug("[Storage] webhook event delivered: {}]", webhookEventLog);
     }
 
 }
