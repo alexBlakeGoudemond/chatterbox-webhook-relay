@@ -6,11 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -29,16 +33,19 @@ public class GithubPolledEvent {
     private String repositoryFullName;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
     @Column(name = "source_id", nullable = false)
     private String sourceId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     private String payload;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private EventStatus status;
 
@@ -46,21 +53,24 @@ public class GithubPolledEvent {
     private String errorMessage;
 
     @Column(name = "fetched_at", nullable = false, updatable = false)
-    private Instant fetchedAt = Instant.now();
+    @Convert(converter = LocalDateTimeToInstantConverter.class)
+    private LocalDateTime fetchedAt;
 
     @Column(name = "processed_at")
-    private Instant processedAt;
+    @Convert(converter = LocalDateTimeToInstantConverter.class)
+    private LocalDateTime processedAt;
 
-    public GithubPolledEvent(EventType eventType, String sourceId, String repositoryFullName, String payload, EventStatus status) {
+    public GithubPolledEvent(EventType eventType, String sourceId, String repositoryFullName, String payload, EventStatus status, LocalDateTime fetchedAt) {
         this.eventType = eventType;
         this.sourceId = sourceId;
         this.repositoryFullName = repositoryFullName;
         this.payload = payload;
         this.status = status;
+        this.fetchedAt = fetchedAt;
     }
 
     public GithubPolledEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), rawBody.toString(), EventStatus.RECEIVED);
+        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override

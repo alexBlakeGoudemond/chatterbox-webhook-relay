@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLog;
 
 @Repository
-public interface GithubPolledEventLogJpaRepository extends JpaRepository<WebhookEventLog, Long> {
+public interface GithubPolledEventLogJpaRepository extends JpaRepository<GithubPolledEventLog, Long> {
 
 }

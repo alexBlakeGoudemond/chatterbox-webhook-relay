@@ -11,8 +11,10 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -51,21 +53,24 @@ public class WebhookEvent {
     private String errorMessage;
 
     @Column(name = "received_at", nullable = false, updatable = false)
-    private Instant receivedAt = Instant.now();
+    @Convert(converter = LocalDateTimeToInstantConverter.class)
+    private LocalDateTime receivedAt;
 
     @Column(name = "processed_at")
-    private Instant processedAt;
+    @Convert(converter = LocalDateTimeToInstantConverter.class)
+    private LocalDateTime processedAt;
 
-    public WebhookEvent(String webhookId, String repositoryFullName, EventType eventType, String payload, EventStatus status) {
+    public WebhookEvent(String webhookId, String repositoryFullName, EventType eventType, String payload, EventStatus status, LocalDateTime receivedAt) {
         this.webhookId = webhookId;
         this.repositoryFullName = repositoryFullName;
         this.eventType = eventType;
         this.payload = payload;
         this.status = status;
+        this.receivedAt = receivedAt;
     }
 
     public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), rawBody.toString(), EventStatus.RECEIVED);
+        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override

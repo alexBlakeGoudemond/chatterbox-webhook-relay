@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Transactional
-public class WebhookEventStoreJpaAdapterTest {
+public class WebhookEventStoreJpaAdapterIT {
 
     @Autowired
     private WebhookEventStoreJpaAdapter adapter;

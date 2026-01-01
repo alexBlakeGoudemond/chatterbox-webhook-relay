@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventLog;
 
 public interface GithubPolledStore {
 
@@ -15,5 +16,7 @@ public interface GithubPolledStore {
 
     GithubPolledEvent getLatestEvent(String repositoryFullName);
 
-    void logDelivery(GithubPolledEvent polledEvent);
+    GithubPolledEventLog storeDelivery(GithubPolledEventLog polledEventLog);
+
+    GithubPolledEventLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrk);
 }

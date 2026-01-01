@@ -7,7 +7,6 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 @Component
 @Transactional
@@ -46,8 +45,14 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public void logDelivery(GithubPolledEvent polledEvent){
-        throw new ApplicationException("Not implemented");
+    public GithubPolledEventLog storeDelivery(GithubPolledEventLog polledEventLog){
+        return logRepository.save(polledEventLog);
+    }
+
+    @Override
+    public GithubPolledEventLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl){
+        GithubPolledEventLog polledEventLog = new GithubPolledEventLog(polledEvent, exampleDestination, exampleDestinationUrl);
+        return storeDelivery(polledEventLog);
     }
 
 }
