@@ -12,7 +12,6 @@ CREATE TABLE webhook_event
     webhook_id           TEXT         NOT NULL, -- X-GitHub-Delivery
     event_type           EVENT_TYPE   NOT NULL,
     payload              JSONB        NOT NULL, -- raw JSON payload
-    delivery_destination TEXT         NOT NULL, -- MS Teams, etc.
     status               EVENT_STATUS NOT NULL,
     error_message        TEXT,
     received_at          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -28,9 +27,27 @@ CREATE TABLE github_polled_event
     event_type           EVENT_TYPE   NOT NULL,
     source_id            TEXT         NOT NULL, -- commit sha, pull_request id, issue id etc
     payload              JSONB        NOT NULL, -- raw JSON payload
-    delivery_destination TEXT         NOT NULL, -- MS Teams, etc.
     status               EVENT_STATUS NOT NULL,
     error_message        TEXT,
     fetched_at           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     processed_at         TIMESTAMP
 );
+
+-- todo add these as Entities
+Drop Table if exists webhook_event_log;
+CREATE table webhook_event_log
+(
+    id                   serial PRIMARY KEY,
+    webhook_event_id     serial not null, -- ID of the corresponding webhook_event
+    delivery_destination TEXT   NOT NULL, -- MS Teams, etc.
+    delivered_at         TIMESTAMP
+)
+
+Drop Table if exists github_polled_event_log;
+CREATE table github_polled_event_log
+(
+    id                     serial PRIMARY KEY,
+    github_polled_event_id serial not null, -- ID of the corresponding github_polled_event
+    delivery_destination   TEXT   NOT NULL, -- MS Teams, etc.
+    delivered_at           TIMESTAMP
+)

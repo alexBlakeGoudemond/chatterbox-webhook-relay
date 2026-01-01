@@ -10,7 +10,7 @@ public class GithubPolledEventStoreJpaAdapterTest {
     @Autowired
     private GithubPolledEventStoreJpaAdapter adapter;
 
-    @Test
+//    @Test
     public void x() {
         // TODO BlakeGoudemond 2025/12/28 | finish up here
     }
