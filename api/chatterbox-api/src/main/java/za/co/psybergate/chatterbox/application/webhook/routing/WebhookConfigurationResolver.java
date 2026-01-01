@@ -11,6 +11,6 @@ public interface WebhookConfigurationResolver {
 
     ChatterboxSourceGithubPayloadProperties.EventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException;
 
-    String getDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
+    String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
 
 }

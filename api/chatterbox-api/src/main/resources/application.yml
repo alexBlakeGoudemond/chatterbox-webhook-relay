@@ -45,9 +45,9 @@ chatterbox:
       repository:
         destination-mapping:
           - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
-            destinationChannel: TestChannel
+            teamsDestinationChannel: TestChannel
           - name: psyAlexBlakeGoudemond/chatterbox
-            destinationChannel: TestChannel
+            teamsDestinationChannel: TestChannel
       payload:
         event-mapping:
           push:

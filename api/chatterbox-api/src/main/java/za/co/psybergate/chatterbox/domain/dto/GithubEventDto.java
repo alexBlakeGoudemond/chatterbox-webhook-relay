@@ -9,7 +9,6 @@ public record GithubEventDto(
         @NotNull String repositoryName,
         @NotNull String senderName,
         @NotNull String url,
-        @NotNull String urlDisplayText,
-        @NotNull String teamsDestination) {
+        @NotNull String urlDisplayText) {
 
 }

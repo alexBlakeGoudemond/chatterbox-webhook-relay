@@ -44,6 +44,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPolledStore githubPolledStore;
 
+    // TODO BlakeGoudemond 2026/01/01 | create cron job to check for updates - then deliver
+    // TODO BlakeGoudemond 2026/01/01 | persist now
     @Override
     public void process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
@@ -93,8 +95,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     public HttpResponseDto deliverToTeams(EventType eventType, String uniqueId, JsonNode rawBody) {
         GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
         webhookLogger.logWebhookReceived(eventDto);
-        webhookLogger.logSendingDtoToTeams(eventDto);
-        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
+        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto, "https://default758c91982b5e499ea7d9a53ebc9eca.e5.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a61dfe6851ae4531afef2750e1a2bb2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mQAx9I7BbGtmbh1G1j3VgM7RPwnJzSK09HLwbJa7k2g"); // TODO BlakeGoudemond 2026/01/01 | address hardcoded later
         webhookLogger.logTeamsResponse(httpResponseDto);
         // TODO BlakeGoudemond 2025/12/28 | test that this works
 //        webhookReceivedStore.storeWebhook(uniqueId, eventDto, rawBody);

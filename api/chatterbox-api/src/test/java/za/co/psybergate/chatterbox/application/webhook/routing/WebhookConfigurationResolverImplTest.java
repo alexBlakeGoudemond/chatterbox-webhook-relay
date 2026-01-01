@@ -46,7 +46,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Known Teams Destination Channel Name succeeds")
     @Test
     public void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
-        String destinationUrl = resolver.getDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
+        String destinationUrl = resolver.getTeamsDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
         assertNotNull(destinationUrl);
     }
 
@@ -54,7 +54,7 @@ public class WebhookConfigurationResolverImplTest {
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
         Assertions.assertThrows(UnrecognizedRequestException.class,
-                () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
+                () -> resolver.getTeamsDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
     }
 
 }

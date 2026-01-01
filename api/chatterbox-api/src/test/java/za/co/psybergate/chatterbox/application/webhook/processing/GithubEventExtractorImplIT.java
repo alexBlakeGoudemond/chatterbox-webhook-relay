@@ -15,6 +15,7 @@ import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurat
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.helper.TestConfigurationResolver;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -40,6 +41,8 @@ import static org.junit.jupiter.api.Assertions.*;
         WebhookLogger.class,
         MethodValidationPostProcessor.class,
         LocalValidatorFactoryBean.class,
+        WebhookConfigurationResolverImpl.class,
+        TestConfigurationResolver.class,
 })
 public class GithubEventExtractorImplIT {
 
@@ -55,6 +58,9 @@ public class GithubEventExtractorImplIT {
     @Autowired
     private GithubEventExtractor eventExtractor;
 
+    @Autowired
+    private TestConfigurationResolver configurationResolver;
+
     @DisplayName("Extractor maps to DTO")
     @Test
     public void givenJsonString_WhenExtract_ThenSuccess() {
@@ -67,7 +73,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
         assertEquals("Test message Is here!", eventDto.urlDisplayText());
-        assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
+        assertEquals("https://outlook.office.com/webhook/...", configurationResolver.getTeamsDestinationUrl(eventDto));
     }
 
     @DisplayName("Unknown Event: Exception")
@@ -82,7 +88,7 @@ public class GithubEventExtractorImplIT {
     @Test
     public void givenIncompleteJsonString_WhenExtract_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadMissingProperties();
-        assertThrows(UnrecognizedRequestException.class,
+        assertThrows(ConstraintViolationException.class,
                 () -> eventExtractor.extract(EventType.PUSH, jsonNode));
     }
 
@@ -106,7 +112,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
         assertEquals("Push Event", eventDto.urlDisplayText());
-        assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
+        assertEquals("https://outlook.office.com/webhook/...", configurationResolver.getTeamsDestinationUrl(eventDto));
     }
 
     @DisplayName("Long UrlDisplayText is Truncated")
@@ -120,7 +126,7 @@ public class GithubEventExtractorImplIT {
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
-        assertEquals("https://outlook.office.com/webhook/...", eventDto.teamsDestination());
+        assertEquals("https://outlook.office.com/webhook/...", configurationResolver.getTeamsDestinationUrl(eventDto));
 
         assertFalse(eventDto.urlDisplayText().contains("\n"));
         assertTrue(eventDto.urlDisplayText().contains("..."));

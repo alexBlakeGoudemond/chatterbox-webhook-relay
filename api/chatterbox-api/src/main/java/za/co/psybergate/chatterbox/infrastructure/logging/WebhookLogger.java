@@ -43,8 +43,8 @@ public class WebhookLogger {
         log.debug("[Validation] Repository '{}' is not whitelisted as an accepted repository", repositoryName);
     }
 
-    public void logSendingDtoToTeams(GithubEventDto eventDto) {
-        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), eventDto.teamsDestination());
+    public void logSendingDtoToTeams(GithubEventDto eventDto, String teamsDestination) {
+        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), teamsDestination);
     }
 
     public void logTeamsResponse(HttpResponseDto httpResponseDto) {

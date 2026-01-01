@@ -29,10 +29,10 @@ public class WebhookConfigurationResolverImpl implements WebhookConfigurationRes
     }
 
     @Override
-    public String getDestinationUrl(String repositoryName) throws UnrecognizedRequestException {
+    public String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException {
         for (ChatterboxSourceGithubRepositoryProperties.DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
             if (destinationMapping.getName().equals(repositoryName)) {
-                return destinationTeamsProperties.getUrl(destinationMapping.getDestinationChannel());
+                return destinationTeamsProperties.getUrl(destinationMapping.getTeamsDestinationChannel());
             }
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
