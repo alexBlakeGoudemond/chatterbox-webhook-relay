@@ -11,6 +11,7 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -101,7 +102,7 @@ public class TeamsCardFactoryImplIT {
 
     private ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateFromJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.extract("push", jsonNode);
+        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         try {
             return teamsCardFactory.buildCard(eventDto);
         } catch (Exception e) {

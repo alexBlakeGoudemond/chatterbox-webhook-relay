@@ -31,9 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Docker data we dont want to track
 /docker/nginx/logs/
 /docker/prometheus/data/
 /docker/grafana/data/
+/docker/postgres/data/
 
 # Additional files for convenience scripting
 /tmp/

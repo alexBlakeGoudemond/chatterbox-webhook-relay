@@ -72,7 +72,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @Test
     public void whenServiceRaisesConstraintViolationException_ThenHandlerProducesBadRequest() {
         Mockito.doThrow(ConstraintViolationException.class)
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -87,7 +87,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @Test
     public void whenServiceRaisesApplicationException_ThenHandlerProducesBadRequest() {
         Mockito.doThrow(ApplicationException.class)
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -102,7 +102,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @Test
     public void whenServiceRaisesInfrastructureException_ThenHandlerProducesInternalServerError() {
         Mockito.doThrow(InfrastructureException.class)
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -117,7 +117,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @Test
     public void whenServiceRaisesExternalException_ThenHandlerProducesInternalServerError() {
         Mockito.doThrow(RuntimeException.class)
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {

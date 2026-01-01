@@ -8,6 +8,16 @@ spring:
       enabled: ALWAYS
   banner:
     location: banners-coloured/banner-chatterbox-test-colour-001.txt
+  datasource:
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:54321/chatterbox
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none   # or update / none / create-drop
+    show-sql: true
 
 server:
   port: 8082
@@ -15,6 +25,8 @@ server:
 logging:
   level:
     root: INFO
+    org.springframework.boot.autoconfigure.jdbc: DEBUG
+
 
 management:
   endpoints:
