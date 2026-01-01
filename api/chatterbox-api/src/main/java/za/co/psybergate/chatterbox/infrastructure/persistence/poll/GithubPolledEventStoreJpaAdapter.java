@@ -28,6 +28,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         return repository.save(event);
     }
 
+    // TODO BlakeGoudemond 2026/01/01 | log storage
     @Override
     public GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);

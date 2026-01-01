@@ -27,6 +27,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         return repository.save(webhook);
     }
 
+    // TODO BlakeGoudemond 2026/01/01 | log storage
     @Override
     public WebhookEvent storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
