@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.domain.api.GithubApiEventType;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -17,8 +17,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import static za.co.psybergate.chatterbox.domain.api.GithubApiEventType.POLL_COMMIT;
-import static za.co.psybergate.chatterbox.domain.api.GithubApiEventType.POLL_PULL_REQUEST;
+import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_COMMIT;
+import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_PULL_REQUEST;
 
 @Service
 public class GithubPollingServiceImpl implements GithubPollingService {
@@ -32,7 +32,8 @@ public class GithubPollingServiceImpl implements GithubPollingService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public GithubPollingServiceImpl(@Qualifier("githubClient") WebClient webClient,
-                                    ChatterboxSourceGithubPayloadProperties payloadProperties, WebhookLogger webhookLogger) {
+                                    ChatterboxSourceGithubPayloadProperties payloadProperties,
+                                    WebhookLogger webhookLogger) {
         this.githubClient = webClient;
         this.payloadProperties = payloadProperties;
         this.webhookLogger = webhookLogger;
@@ -48,11 +49,11 @@ public class GithubPollingServiceImpl implements GithubPollingService {
         webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
         GithubRepositoryInformationDto informationDto = new GithubRepositoryInformationDto(fromDate, untilDate);
         for (String eventMapping : payloadProperties.getEventMapping().keySet()) {
-            boolean eventExists = GithubApiEventType.contains(eventMapping);
+            boolean eventExists = EventType.contains(eventMapping);
             if (!eventExists) {
                 continue;
             }
-            GithubApiEventType eventType = GithubApiEventType.get(eventMapping);
+            EventType eventType = EventType.get(eventMapping);
             switch (eventType) {
                 case POLL_COMMIT:
                     informationDto.add(POLL_COMMIT, getCommitsSince(owner, repositoryName, fromDate, untilDate));

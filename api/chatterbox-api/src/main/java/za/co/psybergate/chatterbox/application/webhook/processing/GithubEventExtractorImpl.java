@@ -1,7 +1,6 @@
 package za.co.psybergate.chatterbox.application.webhook.processing;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys;
 
@@ -25,13 +25,19 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
 
     private final WebhookConfigurationResolver webhookConfigurationResolver;
 
+    @Override
+    public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException, UnrecognizedRequestException {
+        return extract(EventType.get(eventType), payload);
+    }
+
+
     /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
     ///
     /// The [GithubEventDto] has simple validation setup through the constructor of the record.
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Override
     @Valid
-    public GithubEventDto extract(String eventType, JsonNode payload) throws ConstraintViolationException, UnrecognizedRequestException {
+    public GithubEventDto extract(EventType eventType, JsonNode payload) throws ConstraintViolationException, UnrecognizedRequestException {
         var payloadMapping = webhookConfigurationResolver.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 

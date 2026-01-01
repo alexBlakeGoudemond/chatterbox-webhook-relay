@@ -69,3 +69,11 @@ spin-up:
 	$(MAKE) docker-up
 	$(MAKE) ngrok-start
 	$(MAKE) live-webhook-test
+
+# `\l` → list all databases
+# `\c` <db_name> → connect to a database
+# `\dt` → list all tables in the current database
+# `\d` <table_name> → describe a table (columns, types, indexes)
+# `\q` → quit psql
+postgres-login:
+	docker exec -it chatterbox-postgres psql -U user -d chatterbox

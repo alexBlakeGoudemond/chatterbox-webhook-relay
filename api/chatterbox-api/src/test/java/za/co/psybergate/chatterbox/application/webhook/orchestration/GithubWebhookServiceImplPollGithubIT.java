@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
@@ -49,6 +51,12 @@ public class GithubWebhookServiceImplPollGithubIT {
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
+
+    @MockitoBean
+    private WebhookReceivedStore webhookReceivedStore;
+
+    @MockitoBean
+    private GithubPolledStore githubPolledStore;
 
     @Autowired
     private GithubWebhookService githubWebhookService;
