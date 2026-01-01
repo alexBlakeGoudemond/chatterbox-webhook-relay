@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 
 @Component
 @Transactional
@@ -13,8 +14,12 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     private final WebhookEventJpaRepository repository;
 
-    public WebhookEventStoreJpaAdapter(WebhookEventJpaRepository repository) {
+    private final WebhookEventLogJpaRepository logRepository;
+
+    public WebhookEventStoreJpaAdapter(WebhookEventJpaRepository repository,
+                                       WebhookEventLogJpaRepository logRepository) {
         this.repository = repository;
+        this.logRepository = logRepository;
     }
 
     @Override
@@ -36,6 +41,11 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public WebhookEvent getLatestWebhook(String repositoryFullName) {
         return repository.findFirstByRepositoryFullNameOrderByIdDesc(repositoryFullName);
+    }
+
+    @Override
+    public void logDelivery(GithubPolledEvent polledEvent){
+        throw new ApplicationException("Not implemented");
     }
 
 }

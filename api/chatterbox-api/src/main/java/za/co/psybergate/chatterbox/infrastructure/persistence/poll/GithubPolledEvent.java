@@ -1,11 +1,14 @@
 package za.co.psybergate.chatterbox.infrastructure.persistence.poll;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -15,6 +18,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class GithubPolledEvent {
 
     @Id
@@ -53,6 +57,10 @@ public class GithubPolledEvent {
         this.repositoryFullName = repositoryFullName;
         this.payload = payload;
         this.status = status;
+    }
+
+    public GithubPolledEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), rawBody.toString(), EventStatus.RECEIVED);
     }
 
     @Override

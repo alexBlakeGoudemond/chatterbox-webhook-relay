@@ -9,10 +9,11 @@ public interface GithubPolledStore {
 
     GithubPolledEvent storeEvent(GithubPolledEvent event);
 
-    GithubPolledEvent storeEvent(GithubEventDto eventDto, JsonNode rawBody);
+    GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
     boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId);
 
     GithubPolledEvent getLatestEvent(String repositoryFullName);
 
+    void logDelivery(GithubPolledEvent polledEvent);
 }

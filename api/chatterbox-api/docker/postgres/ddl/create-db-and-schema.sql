@@ -33,21 +33,22 @@ CREATE TABLE github_polled_event
     processed_at         TIMESTAMP
 );
 
--- todo add these as Entities
 Drop Table if exists webhook_event_log;
 CREATE table webhook_event_log
 (
-    id                   serial PRIMARY KEY,
-    webhook_event_id     serial not null, -- ID of the corresponding webhook_event
-    delivery_destination TEXT   NOT NULL, -- MS Teams, etc.
-    delivered_at         TIMESTAMP
+    id                       serial PRIMARY KEY,
+    webhook_event_id         serial not null, -- ID of the corresponding webhook_event
+    delivery_destination     TEXT   NOT NULL, -- MS Teams, etc.
+    delivery_destination_url TEXT   NOT NULL, -- MS Teams, etc.
+    delivered_at             TIMESTAMP
 )
 
 Drop Table if exists github_polled_event_log;
 CREATE table github_polled_event_log
 (
-    id                     serial PRIMARY KEY,
-    github_polled_event_id serial not null, -- ID of the corresponding github_polled_event
-    delivery_destination   TEXT   NOT NULL, -- MS Teams, etc.
-    delivered_at           TIMESTAMP
+    id                       serial PRIMARY KEY,
+    github_polled_event_id   serial not null, -- ID of the corresponding github_polled_event
+    delivery_destination     TEXT   NOT NULL, -- MS Teams, etc.
+    delivery_destination_url TEXT   NOT NULL, -- MS Teams, etc.
+    delivered_at             TIMESTAMP
 )

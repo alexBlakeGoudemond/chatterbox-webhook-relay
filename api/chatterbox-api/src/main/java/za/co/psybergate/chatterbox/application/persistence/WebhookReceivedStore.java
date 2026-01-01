@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.application.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 public interface WebhookReceivedStore {
@@ -14,4 +15,5 @@ public interface WebhookReceivedStore {
 
     WebhookEvent getLatestWebhook(String repositoryFullName);
 
+    void logDelivery(GithubPolledEvent polledEvent);
 }
