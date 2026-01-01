@@ -17,6 +17,7 @@ import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTempl
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.helper.JsonFileReader;
@@ -103,7 +104,7 @@ public class TeamsSenderServiceImplIT {
 
     private GithubEventDto getGithubEventDto() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.extract("push", jsonNode);
+        return eventExtractor.extract(EventType.PUSH, jsonNode);
     }
 
 }

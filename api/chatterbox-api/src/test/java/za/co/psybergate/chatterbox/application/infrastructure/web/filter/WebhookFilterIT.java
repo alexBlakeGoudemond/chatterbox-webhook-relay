@@ -67,7 +67,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.doNothing()
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.any(JsonNode.class));
+                .when(githubWebhookService).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
     }
 
     @DisplayName("webhook.payload.successes increments")

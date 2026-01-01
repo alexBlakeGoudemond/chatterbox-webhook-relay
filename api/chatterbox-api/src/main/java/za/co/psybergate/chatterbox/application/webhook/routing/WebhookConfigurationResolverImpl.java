@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.application.webhook.routing;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
@@ -19,7 +20,12 @@ public class WebhookConfigurationResolverImpl implements WebhookConfigurationRes
 
     @Override
     public ChatterboxSourceGithubPayloadProperties.EventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
-        return payloadProperties.getEventMapping(eventType);
+        return getPayloadMapping(EventType.get(eventType));
+    }
+
+    @Override
+    public ChatterboxSourceGithubPayloadProperties.EventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException {
+        return payloadProperties.getEventMapping(eventType.name());
     }
 
     @Override
