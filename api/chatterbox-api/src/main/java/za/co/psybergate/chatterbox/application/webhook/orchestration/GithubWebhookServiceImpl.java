@@ -14,10 +14,13 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME;
@@ -53,17 +56,19 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     }
 
     @Override
-    public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        // TODO BlakeGoudemond 2026/01/01 | Does the filter fire for this method? Its not wired to controller
+    public List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
+        List<GithubPolledEvent> updates = new ArrayList<>();
         for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
             EventType eventType = entry.getKey();
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
-            storeEvents(eventType, arrayNode);
+            List<GithubPolledEvent> githubPolledEvents = storeEvents(eventType, arrayNode);
+            updates.addAll(githubPolledEvents);
         }
+        return updates;
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -76,12 +81,15 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private void storeEvents(EventType eventType, ArrayNode arrayNode) {
+    private List<GithubPolledEvent> storeEvents(EventType eventType, ArrayNode arrayNode) {
+        List<GithubPolledEvent> updates = new ArrayList<>();
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = getUniqueId(eventType, jsonNode);
             GithubEventDto eventDto = getEventDto(eventType.name(), jsonNode);
-            githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
+            GithubPolledEvent polledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
+            updates.add(polledEvent);
         }
+        return updates;
     }
 
     private GithubEventDto getEventDto(String eventType, JsonNode rawBody) {
