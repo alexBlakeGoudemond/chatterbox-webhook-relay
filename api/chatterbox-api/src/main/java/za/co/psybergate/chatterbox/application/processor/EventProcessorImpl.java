@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.coordinator;
+package za.co.psybergate.chatterbox.application.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class DeliveryCoordinatorImpl implements DeliveryCoordinator {
+public class EventProcessorImpl implements EventProcessor {
 
     private final WebhookLogger webhookLogger;
 
@@ -42,9 +42,23 @@ public class DeliveryCoordinatorImpl implements DeliveryCoordinator {
         }
     }
 
+    @Override
+    public void processPolledEvents() {
+        List<DestinationMapping> destinationMappings = repositoryProperties.getDestinationMapping();
+        for (DestinationMapping destinationMapping : destinationMappings) {
+            processPolledEvents(destinationMapping);
+        }
+    }
+
     private void processWebhookEvents(DestinationMapping destinationMapping) {
         for (WebhookEvent webhookEvent : webhookReceivedStore.getLatestWebhooks(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEvent);
+        }
+    }
+
+    private void processPolledEvents(DestinationMapping destinationMapping) {
+        for (GithubPolledEvent latestEvent : githubPolledStore.getLatestEvents(destinationMapping.getName())) {
+            deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEvent);
         }
     }
 
@@ -58,21 +72,6 @@ public class DeliveryCoordinatorImpl implements DeliveryCoordinator {
         }else{
             webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_FAILURE, httpResponseDto.rawBody());
         }
-    }
-
-    @Override
-    public void processPolledEvents() {
-        List<DestinationMapping> destinationMappings = repositoryProperties.getDestinationMapping();
-        for (DestinationMapping destinationMapping : destinationMappings) {
-            processPolledEvents(destinationMapping);
-        }
-    }
-
-    private void processPolledEvents(DestinationMapping destinationMapping) {
-        for (GithubPolledEvent latestEvent : githubPolledStore.getLatestEvents(destinationMapping.getName())) {
-            deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEvent);
-        }
-
     }
 
     @SuppressWarnings("DuplicatedCode")
