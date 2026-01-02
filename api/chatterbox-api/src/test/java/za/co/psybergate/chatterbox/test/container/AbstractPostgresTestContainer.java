@@ -1,6 +1,5 @@
 package za.co.psybergate.chatterbox.test.container;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;

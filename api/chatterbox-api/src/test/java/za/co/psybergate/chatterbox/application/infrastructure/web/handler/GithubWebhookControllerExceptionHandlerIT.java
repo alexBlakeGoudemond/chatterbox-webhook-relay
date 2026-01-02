@@ -21,8 +21,6 @@ import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebho
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
-import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -30,6 +28,8 @@ import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImp
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InfrastructureException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 

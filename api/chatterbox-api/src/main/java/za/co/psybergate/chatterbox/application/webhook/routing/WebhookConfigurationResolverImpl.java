@@ -2,11 +2,11 @@ package za.co.psybergate.chatterbox.application.webhook.routing;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 
 @Component
 @RequiredArgsConstructor
