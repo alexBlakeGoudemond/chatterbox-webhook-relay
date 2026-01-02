@@ -175,7 +175,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Missing signature fails")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenExceptionThrown() {
+    public void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenExceptionThrown() {
         MockHttpServletRequestBuilder httpRequestNoSignature = githubHttpRequestFactory.getHttpRequestNoSignature(jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequestNoSignature);
@@ -188,7 +188,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Invalid signature fails")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenExceptionThrown() {
+    public void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenExceptionThrown() {
         MockHttpServletRequestBuilder httpRequestInvalidSignature = githubHttpRequestFactory.getHttpRequestInvalidSignature(jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequestInvalidSignature);
@@ -201,7 +201,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Encrypted signature: ACCEPTED")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
+    public void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";
@@ -215,7 +215,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Signature, No UTF-8: ACCEPTED")
     @Test
-    void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
+    public void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValidNoEncoding(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";

@@ -47,9 +47,6 @@ class GithubPollingServiceIT {
     @MockitoBean
     private GithubPolledStore githubPolledStore;
 
-    // TODO BlakeGoudemond 2025/12/28 | figure out what the webhookId is - Github-Delivery or something else?
-    // TODO BlakeGoudemond 2025/12/28 | once figured out - use it to construct WebhookReceived from Github EventDto
-    // TODO BlakeGoudemond 2025/12/28 | then save to Postgres and write tests
     @ParameterizedTest(name = "Commits; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
     public void givenRepositoryDetailsAndDates_WhenPollCommits_ThenSuccess(RepositoryDetail repositoryDetail) {

@@ -38,7 +38,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public WebhookEvent storeWebhook(WebhookEvent webhook) {
         webhookLogger.logStoringEvent(webhook);
-        return repository.save(webhook);
+        WebhookEvent save = repository.save(webhook);
+        return save;
     }
 
     @Override

@@ -97,18 +97,11 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     }
 
     private String getUniqueId(EventType eventType, JsonNode jsonNode) {
-        String uniqueId;
-        switch (eventType) {
-            case POLL_COMMIT:
-                uniqueId = jsonNode.get("sha").asText();
-                break;
-            case POLL_PULL_REQUEST:
-                uniqueId = jsonNode.get("merge_commit_sha").asText();
-                break;
-            default:
-                throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
-        }
-        return uniqueId;
+        return switch (eventType) {
+            case POLL_COMMIT -> jsonNode.get("sha").asText();
+            case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
+            default -> throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
+        };
     }
 
 }
