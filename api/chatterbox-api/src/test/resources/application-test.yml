@@ -13,6 +13,15 @@ spring:
     password: password
     url: jdbc:postgresql://localhost:54321/chatterbox
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      max-lifetime: 30000 # 30s; reduces the chance Hikari validates closed connections on shutdown
+      idle-timeout: 10000 # 10s
+      connection-test-query: SELECT 1
+      health-check-properties:
+        connectivityCheckTimeout: 1
+      leak-detection-threshold: 0
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
