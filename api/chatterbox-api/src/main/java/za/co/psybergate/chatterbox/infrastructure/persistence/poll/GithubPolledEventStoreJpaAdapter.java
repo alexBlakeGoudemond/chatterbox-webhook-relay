@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+
+import java.util.List;
 
 @Component
 @Transactional
@@ -38,8 +41,8 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public GithubPolledEvent getLatestEvent(String repositoryFullName) {
-        return repository.findFirstByRepositoryFullNameOrderByIdDesc(repositoryFullName);
+    public List<GithubPolledEvent> getLatestEvents(String repositoryFullName) {
+        return repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
     }
 
     @Override
@@ -51,6 +54,19 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEventLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl){
         GithubPolledEventLog polledEventLog = new GithubPolledEventLog(polledEvent, exampleDestination, exampleDestinationUrl);
         return storeDelivery(polledEventLog);
+    }
+
+    @Override
+    public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus) {
+        polledEvent.setEventStatus(eventStatus);
+        repository.save(polledEvent);
+    }
+
+    @Override
+    public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse) {
+        polledEvent.setEventStatus(eventStatus);
+        polledEvent.setErrorMessage(responseDtoErrorResponse);
+        repository.save(polledEvent);
     }
 
 }

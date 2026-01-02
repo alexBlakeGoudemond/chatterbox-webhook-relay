@@ -58,7 +58,7 @@ public class GithubPolledEvent {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
-    private EventStatus status;
+    private EventStatus eventStatus;
 
     @Column(name = "error_message")
     private String errorMessage;
@@ -89,7 +89,7 @@ public class GithubPolledEvent {
         this.eventUrl = eventUrl;
         this.eventUrlDisplayText = eventUrlDisplayText;
         this.payload = payload;
-        this.status = status;
+        this.eventStatus = status;
         this.fetchedAt = fetchedAt;
     }
 
@@ -101,12 +101,12 @@ public class GithubPolledEvent {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         GithubPolledEvent that = (GithubPolledEvent) object;
-        return Objects.equals(repositoryFullName, that.repositoryFullName) && eventType == that.eventType && Objects.equals(sourceId, that.sourceId) && Objects.equals(payload, that.payload) && status == that.status;
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && eventType == that.eventType && Objects.equals(sourceId, that.sourceId) && Objects.equals(payload, that.payload) && eventStatus == that.eventStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(repositoryFullName, eventType, sourceId, payload, status);
+        return Objects.hash(repositoryFullName, eventType, sourceId, payload, eventStatus);
     }
 
 }
