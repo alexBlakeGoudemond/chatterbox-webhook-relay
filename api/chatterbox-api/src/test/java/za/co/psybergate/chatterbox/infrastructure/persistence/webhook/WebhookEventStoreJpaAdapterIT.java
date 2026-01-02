@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

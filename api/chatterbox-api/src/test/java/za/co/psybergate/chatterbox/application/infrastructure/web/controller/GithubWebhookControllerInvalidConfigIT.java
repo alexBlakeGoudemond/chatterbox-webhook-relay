@@ -20,8 +20,8 @@ import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebho
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
