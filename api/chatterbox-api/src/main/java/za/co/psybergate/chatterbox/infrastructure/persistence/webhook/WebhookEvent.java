@@ -39,6 +39,18 @@ public class WebhookEvent {
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
+    @Column(name = "display_name", nullable = false)
+    private String displayName;
+
+    @Column(name = "sender_name", nullable = false)
+    private String senderName;
+
+    @Column(name = "event_url", nullable = false)
+    private String eventUrl;
+
+    @Column(name = "event_url_display_text", nullable = false)
+    private String eventUrlDisplayText;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     private String payload;
@@ -46,7 +58,7 @@ public class WebhookEvent {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
-    private EventStatus status;
+    private EventStatus eventStatus;
 
     @Column(name = "error_message")
     private String errorMessage;
@@ -59,29 +71,42 @@ public class WebhookEvent {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime processedAt;
 
-    public WebhookEvent(String webhookId, String repositoryFullName, EventType eventType, String payload, EventStatus status, LocalDateTime receivedAt) {
+    public WebhookEvent(String webhookId,
+                        String repositoryFullName,
+                        EventType eventType,
+                        String displayName,
+                        String senderName,
+                        String eventUrl,
+                        String eventUrlDisplayText,
+                        String payload,
+                        EventStatus eventStatus,
+                        LocalDateTime receivedAt) {
         this.webhookId = webhookId;
         this.repositoryFullName = repositoryFullName;
         this.eventType = eventType;
+        this.displayName = displayName;
+        this.senderName = senderName;
+        this.eventUrl = eventUrl;
+        this.eventUrlDisplayText = eventUrlDisplayText;
         this.payload = payload;
-        this.status = status;
+        this.eventStatus = eventStatus;
         this.receivedAt = receivedAt;
     }
 
     public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
+        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         WebhookEvent that = (WebhookEvent) object;
-        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && eventType == that.eventType && Objects.equals(payload, that.payload) && status == that.status;
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && eventType == that.eventType && Objects.equals(payload, that.payload) && eventStatus == that.eventStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(repositoryFullName, webhookId, eventType, payload, status);
+        return Objects.hash(repositoryFullName, webhookId, eventType, payload, eventStatus);
     }
 
 }

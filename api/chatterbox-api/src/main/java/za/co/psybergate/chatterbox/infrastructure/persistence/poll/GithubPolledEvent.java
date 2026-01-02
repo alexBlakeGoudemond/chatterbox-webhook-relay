@@ -31,13 +31,25 @@ public class GithubPolledEvent {
     @Column(name = "repository_full_name", nullable = false)
     private String repositoryFullName;
 
+    @Column(name = "source_id", nullable = false)
+    private String sourceId;
+
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
-    @Column(name = "source_id", nullable = false)
-    private String sourceId;
+    @Column(name = "display_name", nullable = false)
+    private String displayName;
+
+    @Column(name = "sender_name", nullable = false)
+    private String senderName;
+
+    @Column(name = "event_url", nullable = false)
+    private String eventUrl;
+
+    @Column(name = "event_url_display_text", nullable = false)
+    private String eventUrlDisplayText;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
@@ -59,17 +71,30 @@ public class GithubPolledEvent {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime processedAt;
 
-    public GithubPolledEvent(EventType eventType, String sourceId, String repositoryFullName, String payload, EventStatus status, LocalDateTime fetchedAt) {
+    public GithubPolledEvent(EventType eventType,
+                             String sourceId,
+                             String repositoryFullName,
+                             String displayName,
+                             String senderName,
+                             String eventUrl,
+                             String eventUrlDisplayText,
+                             String payload,
+                             EventStatus status,
+                             LocalDateTime fetchedAt) {
         this.eventType = eventType;
         this.sourceId = sourceId;
         this.repositoryFullName = repositoryFullName;
+        this.displayName = displayName;
+        this.senderName = senderName;
+        this.eventUrl = eventUrl;
+        this.eventUrlDisplayText = eventUrlDisplayText;
         this.payload = payload;
         this.status = status;
         this.fetchedAt = fetchedAt;
     }
 
     public GithubPolledEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
+        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override
