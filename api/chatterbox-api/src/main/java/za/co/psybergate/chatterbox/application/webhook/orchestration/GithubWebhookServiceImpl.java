@@ -14,6 +14,7 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
@@ -37,15 +38,13 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPolledStore githubPolledStore;
 
-    // TODO BlakeGoudemond 2026/01/01 | persist now
     @Override
-    public void process(String eventType, String deliveryId, JsonNode rawBody) {
+    public WebhookEvent process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
-        // TODO BlakeGoudemond 2026/01/01 | part of filter?
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
+        return webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
     }
 
     @Override

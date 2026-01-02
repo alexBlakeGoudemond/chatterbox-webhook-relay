@@ -1,8 +1,7 @@
 package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 /// `ingest → process → route → send downstream`
 public interface GithubWebhookService {
 
-    void process(String eventType, String deliveryId, JsonNode rawBody);
+    WebhookEvent process(String eventType, String deliveryId, JsonNode rawBody);
 
     void pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
 
