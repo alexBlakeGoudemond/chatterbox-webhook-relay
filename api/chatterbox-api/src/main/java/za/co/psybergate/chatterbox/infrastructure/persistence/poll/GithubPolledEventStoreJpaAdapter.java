@@ -94,4 +94,19 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         }
     }
 
+    @Override
+    public GithubPolledEvent getEvent(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
+    }
+
+    @Override
+    public List<GithubPolledEventLog> getDeliveryLogs(Long id) {
+        try {
+            return logRepository.findAllByGithubPolledEventId(id);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);
+        }
+    }
+
 }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
@@ -24,7 +25,9 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventLog;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLog;
@@ -73,6 +76,9 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private WebhookReceivedStore webhookReceivedStore;
 
     @Autowired
+    private GithubPolledStore githubPolledStore;
+
+    @Autowired
     private JsonFileReader jsonFileReader;
 
     @Autowired
@@ -80,12 +86,15 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
 
     private WebhookEvent persistedWebhookEvent;
 
+    private GithubPolledEvent persistedGithubPolledEvent;
+
     @BeforeEach
     public void setup() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
         this.persistedWebhookEvent = webhookReceivedStore.storeWebhook(uniqueId, eventDto, jsonNode);
+        this.persistedGithubPolledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
     }
 
     @DisplayName("Processing Webhook Events creates Delivery Logs")
@@ -103,7 +112,23 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
             assertNotNull(webhookEventLog);
             assertEquals(webhookEventLog.getWebhookEventId(), retrievedWebhookEvent.getId());
         }
+    }
 
+    @DisplayName("Processing Github Polled Events creates Delivery Logs")
+    @Tag("live-integration")
+    @Test
+    public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists(){
+        eventProcessor.processPolledEvents();
+        GithubPolledEvent retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.getId());
+        assertNotNull(retrievedPolledEvent);
+        assertEquals(retrievedPolledEvent.getId(), persistedGithubPolledEvent.getId());
+        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.getEventStatus());
+
+        List<GithubPolledEventLog> polledEventLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
+        for (GithubPolledEventLog polledEventLog : polledEventLogs) {
+            assertNotNull(polledEventLog);
+            assertEquals(polledEventLog.getGithubPolledEventId(), retrievedPolledEvent.getId());
+        }
     }
 
 }

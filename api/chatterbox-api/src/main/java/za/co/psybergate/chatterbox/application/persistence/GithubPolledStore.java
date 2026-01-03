@@ -27,4 +27,8 @@ public interface GithubPolledStore {
 
     void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse);
 
+    GithubPolledEvent getEvent(Long id);
+
+    List<GithubPolledEventLog> getDeliveryLogs(Long id);
+
 }

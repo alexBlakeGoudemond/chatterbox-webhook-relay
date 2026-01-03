@@ -80,7 +80,7 @@ public class EventProcessorImpl implements EventProcessor {
     private void deliverToTeams(String teamsDestinationChannel, GithubPolledEvent polledEvent) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(polledEvent, destinationUrl);
-        if (httpResponseDto.httpStatus() == HttpStatus.OK.value()) {
+        if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
             githubPolledStore.storeDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
             githubPolledStore.setProcessedStatus(polledEvent, EventStatus.PROCESSED_SUCCESS);
         }else{
