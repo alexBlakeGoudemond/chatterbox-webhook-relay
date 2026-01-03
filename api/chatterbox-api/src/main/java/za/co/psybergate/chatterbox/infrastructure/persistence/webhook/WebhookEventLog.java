@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -28,7 +30,7 @@ public class WebhookEventLog {
     @Column(name = "delivery_destination")
     private String deliveryDestination;
 
-    @Column(name = "delivery_destination_url")
+    @Column(name = "delivery_destination_url", columnDefinition = "text")
     private String deliveryDestinationUrl;
 
     @Column(name = "delivered_at")

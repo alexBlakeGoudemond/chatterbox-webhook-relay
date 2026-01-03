@@ -38,6 +38,7 @@ public class EventProcessorImpl implements EventProcessor {
     public void processWebhookEvents() {
         List<DestinationMapping> destinationMappings = repositoryProperties.getDestinationMapping();
         for (DestinationMapping destinationMapping : destinationMappings) {
+            webhookLogger.logProcessingEvents(destinationMapping);
             processWebhookEvents(destinationMapping);
         }
     }
@@ -46,6 +47,7 @@ public class EventProcessorImpl implements EventProcessor {
     public void processPolledEvents() {
         List<DestinationMapping> destinationMappings = repositoryProperties.getDestinationMapping();
         for (DestinationMapping destinationMapping : destinationMappings) {
+            webhookLogger.logProcessingEvents(destinationMapping);
             processPolledEvents(destinationMapping);
         }
     }
@@ -64,9 +66,9 @@ public class EventProcessorImpl implements EventProcessor {
 
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, WebhookEvent webhookEvent) {
-        HttpResponseDto httpResponseDto = deliverToTeams(webhookEvent, teamsDestinationChannel);
-        if (httpResponseDto.httpStatus() == HttpStatus.OK.value()) {
-            String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
+        String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
+        HttpResponseDto httpResponseDto = deliverToTeams(webhookEvent, destinationUrl);
+        if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
             webhookReceivedStore.storeDelivery(webhookEvent, teamsDestinationChannel, destinationUrl);
             webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
         }else{
@@ -76,9 +78,9 @@ public class EventProcessorImpl implements EventProcessor {
 
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, GithubPolledEvent polledEvent) {
-        HttpResponseDto httpResponseDto = deliverToTeams(polledEvent, teamsDestinationChannel);
+        String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
+        HttpResponseDto httpResponseDto = deliverToTeams(polledEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.OK.value()) {
-            String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
             githubPolledStore.storeDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
             githubPolledStore.setProcessedStatus(polledEvent, EventStatus.PROCESSED_SUCCESS);
         }else{

@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLog;
 
@@ -71,6 +73,10 @@ public class WebhookLogger {
 
     public void logDeliveringEvent(WebhookEventLog webhookEventLog) {
         log.debug("[Storage] webhook event delivered: {}]", webhookEventLog);
+    }
+
+    public void logProcessingEvents(DestinationMapping destinationMapping) {
+        log.info("[Processing] Processing Received Webhook events for destination: {}", destinationMapping.getName());
     }
 
 }

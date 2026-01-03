@@ -26,4 +26,8 @@ public interface WebhookReceivedStore {
 
     void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus, String responseDtoErrorResponse);
 
+    WebhookEvent getWebhook(Long id);
+
+    List<WebhookEventLog> getDeliveryLogs(Long id);
+
 }

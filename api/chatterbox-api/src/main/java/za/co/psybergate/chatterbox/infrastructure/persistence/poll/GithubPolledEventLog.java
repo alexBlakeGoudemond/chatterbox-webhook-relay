@@ -28,7 +28,7 @@ public class GithubPolledEventLog {
     @Column(name = "delivery_destination")
     private String deliveryDestination;
 
-    @Column(name = "delivery_destination_url")
+    @Column(name = "delivery_destination_url", columnDefinition = "text")
     private String deliveryDestinationUrl;
 
     @Column(name = "delivered_at")

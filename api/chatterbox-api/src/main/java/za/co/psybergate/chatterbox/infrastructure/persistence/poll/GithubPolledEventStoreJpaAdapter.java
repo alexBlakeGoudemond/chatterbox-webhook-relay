@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.persistence.poll;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
@@ -26,7 +27,11 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     @Override
     public GithubPolledEvent storeEvent(GithubPolledEvent event) {
-        return repository.save(event);
+        try {
+            return repository.save(event);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
     }
 
     @Override
@@ -37,17 +42,29 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     @Override
     public boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId) {
-        return repository.findFirstByRepositoryFullNameAndEventTypeAndSourceIdOrderByIdDesc(repositoryFullName, eventType, sourceId);
+        try {
+            return repository.findFirstByRepositoryFullNameAndEventTypeAndSourceIdOrderByIdDesc(repositoryFullName, eventType, sourceId);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to confirm if GithubPolledEvent exists", e);
+        }
     }
 
     @Override
     public List<GithubPolledEvent> getLatestEvents(String repositoryFullName) {
-        return repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+        try {
+            return repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
+        }
     }
 
     @Override
     public GithubPolledEventLog storeDelivery(GithubPolledEventLog polledEventLog){
-        return logRepository.save(polledEventLog);
+        try {
+            return logRepository.save(polledEventLog);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to Store Delivery information of the event", e);
+        }
     }
 
     @Override
@@ -59,14 +76,22 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     @Override
     public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus) {
         polledEvent.setEventStatus(eventStatus);
-        repository.save(polledEvent);
+        try {
+            repository.save(polledEvent);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
     }
 
     @Override
     public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse) {
         polledEvent.setEventStatus(eventStatus);
         polledEvent.setErrorMessage(responseDtoErrorResponse);
-        repository.save(polledEvent);
+        try {
+            repository.save(polledEvent);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
     }
 
 }

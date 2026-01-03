@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.persistence.webhook;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
@@ -30,18 +31,30 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     @Override
     public boolean hasAlreadyBeenStored(String repositoryFullName, String webhookId) {
-        return repository.findFirstByRepositoryFullNameAndWebhookIdOrderByIdDesc(repositoryFullName, webhookId);
+        try {
+            return repository.findFirstByRepositoryFullNameAndWebhookIdOrderByIdDesc(repositoryFullName, webhookId);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to confirm if WebhookEvent exists", e);
+        }
     }
 
     @Override
     public List<WebhookEvent> getLatestWebhooks(String repositoryFullName) {
-        return repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+        try {
+            return repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve WebhookEvents", e);
+        }
     }
 
     @Override
     public WebhookEvent storeWebhook(WebhookEvent webhook) {
         webhookLogger.logStoringEvent(webhook);
-        return repository.save(webhook);
+        try {
+            return repository.save(webhook);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to Store WebhookEvent", e);
+        }
     }
 
     @Override
@@ -53,7 +66,11 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public WebhookEventLog storeDelivery(WebhookEventLog webhookEventLog) {
         webhookLogger.logDeliveringEvent(webhookEventLog);
-        return logRepository.save(webhookEventLog);
+        try {
+            return logRepository.save(webhookEventLog);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to Store the Delivery information of the event", e);
+        }
     }
 
     @Override
@@ -65,14 +82,37 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus) {
         webhookEvent.setEventStatus(eventStatus);
-        repository.save(webhookEvent);
+        try {
+            repository.save(webhookEvent);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the WebhookEvent", e);
+        }
     }
 
     @Override
     public void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus, String responseDtoErrorResponse) {
         webhookEvent.setEventStatus(eventStatus);
         webhookEvent.setErrorMessage(responseDtoErrorResponse);
-        repository.save(webhookEvent);
+        try {
+            repository.save(webhookEvent);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the WebhookEvent", e);
+        }
+    }
+
+    @Override
+    public WebhookEvent getWebhook(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
+    }
+
+    @Override
+    public List<WebhookEventLog> getDeliveryLogs(Long webhookEventId) {
+        try {
+            return logRepository.findAllByWebhookEventId(webhookEventId);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve WebhookEventLogs", e);
+        }
     }
 
 }
