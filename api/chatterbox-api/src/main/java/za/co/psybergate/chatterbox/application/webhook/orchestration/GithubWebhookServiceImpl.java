@@ -4,22 +4,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
-import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME;
@@ -30,45 +33,57 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final WebhookRequestValidator webhookRequestValidator;
 
-    private final GithubEventExtractorImpl eventExtractor;
-
-    private final WebhookLogger webhookLogger;
-
-    private final TeamsSenderServiceImpl teamsSenderService;
-
+    private final GithubEventExtractor eventExtractor;
+    
     private final JsonConverter jsonConverter;
 
-    private final GithubPollingServiceImpl githubPollingService;
+    private final GithubPollingService githubPollingService;
 
     private final WebhookReceivedStore webhookReceivedStore;
 
     private final GithubPolledStore githubPolledStore;
 
+    private final ApplicationEventPublisher publisher;
+
+
     @Override
-    public void process(String eventType, String deliveryId, JsonNode rawBody) {
+    public WebhookEvent process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
-        HttpResponseDto httpResponseDto = deliverToTeams(EventType.get(eventType), deliveryId, rawBody);
-    }
-
-
-    @Override
-    public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
-        pollGithubForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
+        GithubEventDto eventDto = getEventDto(eventType, rawBody);
+        WebhookEvent webhookEvent = webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
+        publisher.publishEvent(new WebhookEventProcessed());
+        return webhookEvent;
     }
 
     @Override
-    public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
+        return pollGithubForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
+    }
+
+    @Override
+    public List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
+        List<GithubPolledEvent> updates = new ArrayList<>();
         for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
             EventType eventType = entry.getKey();
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
-            deliverAllToTeams(eventType, arrayNode);
+            List<GithubPolledEvent> githubPolledEvents = storeEvents(eventType, arrayNode);
+            updates.addAll(githubPolledEvents);
         }
+        return updates;
+    }
+
+    @Override
+    public List<GithubPolledEvent> pollGithubForChanges(String repositoryFullName, LocalDateTime receivedAt) {
+        String[] repositoryDetails = repositoryFullName.split("/");
+        String owner = repositoryDetails[0];
+        String repositoryName = repositoryDetails[1];
+        return pollGithubForChanges(owner, repositoryName, receivedAt);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -81,39 +96,27 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private void deliverAllToTeams(EventType eventType, ArrayNode arrayNode) {
+    private List<GithubPolledEvent> storeEvents(EventType eventType, ArrayNode arrayNode) {
+        List<GithubPolledEvent> updates = new ArrayList<>();
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = getUniqueId(eventType, jsonNode);
-            HttpResponseDto httpResponseDto = deliverToTeams(eventType, uniqueId, jsonNode);
+            GithubEventDto eventDto = getEventDto(eventType.name(), jsonNode);
+            GithubPolledEvent polledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
+            updates.add(polledEvent);
         }
+        return updates;
     }
 
-    // TODO BlakeGoudemond 2025/12/30 | in time, persist here and send to teams in separate class
-    @Override
-    public HttpResponseDto deliverToTeams(EventType eventType, String uniqueId, JsonNode rawBody) {
-        GithubEventDto eventDto = eventExtractor.extract(eventType, rawBody);
-        webhookLogger.logWebhookReceived(eventDto);
-        webhookLogger.logSendingDtoToTeams(eventDto);
-        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
-        webhookLogger.logTeamsResponse(httpResponseDto);
-        // TODO BlakeGoudemond 2025/12/28 | test that this works
-//        webhookReceivedStore.storeWebhook(uniqueId, eventDto, rawBody);
-        return httpResponseDto;
+    private GithubEventDto getEventDto(String eventType, JsonNode rawBody) {
+        return eventExtractor.extract(eventType, rawBody);
     }
 
     private String getUniqueId(EventType eventType, JsonNode jsonNode) {
-        String uniqueId;
-        switch (eventType) {
-            case POLL_COMMIT:
-                uniqueId = jsonNode.get("sha").asText();
-                break;
-            case POLL_PULL_REQUEST:
-                uniqueId = jsonNode.get("merge_commit_sha").asText();
-                break;
-            default:
-                throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
-        }
-        return uniqueId;
+        return switch (eventType) {
+            case POLL_COMMIT -> jsonNode.get("sha").asText();
+            case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
+            default -> throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
+        };
     }
 
 }

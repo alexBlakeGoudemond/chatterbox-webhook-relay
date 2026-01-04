@@ -19,14 +19,15 @@ import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestVali
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,13 +67,14 @@ public class WebhookFilterIT {
 
     @BeforeEach
     public void setup() {
-        Mockito.doNothing()
-                .when(githubWebhookService).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
+        Mockito.when(
+                githubWebhookService.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                )).thenReturn(new WebhookEvent());
     }
 
     @DisplayName("webhook.payload.successes increments")
     @Test
-    void givenValidPayload_WhenHttpRequestMade_ThenCustomMetricExists() {
+    public void givenValidPayload_WhenHttpRequestMade_ThenCustomMetricExists() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
 
         try {
@@ -92,7 +94,7 @@ public class WebhookFilterIT {
 
     @DisplayName("No Signature: webhook.signature.failures increments")
     @Test
-    void givenPayloadNoSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
+    public void givenPayloadNoSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestNoSignature(jsonFileReader.getGithubPayloadValidAsString());
 
         InvalidSignatureException invalidSignatureException = assertThrows(InvalidSignatureException.class, () -> mockMvc.perform(httpRequest));
@@ -110,7 +112,7 @@ public class WebhookFilterIT {
 
     @DisplayName("Bad Signature: webhook.signature.failures increments")
     @Test
-    void givenPayloadInvalidSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
+    public void givenPayloadInvalidSignature_WhenHttpRequestMade_ThenCustomMetricExists() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestInvalidSignature(jsonFileReader.getGithubPayloadValidAsString());
 
         InvalidSignatureException invalidSignatureException = assertThrows(InvalidSignatureException.class, () -> mockMvc.perform(httpRequest));

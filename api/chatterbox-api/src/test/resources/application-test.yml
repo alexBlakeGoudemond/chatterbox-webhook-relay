@@ -13,11 +13,22 @@ spring:
     password: password
     url: jdbc:postgresql://localhost:54321/chatterbox
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      max-lifetime: 30000 # 30s; reduces the chance Hikari validates closed connections on shutdown
+      idle-timeout: 10000 # 10s
+      connection-test-query: SELECT 1
+      health-check-properties:
+        connectivityCheckTimeout: 1
+      leak-detection-threshold: 0
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none   # or update / none / create-drop
+      ddl-auto: create-drop   # or update / none / create-drop
     show-sql: true
+    properties:
+      hibernate.format_sql: true
 
 server:
   port: 8082
@@ -26,6 +37,7 @@ logging:
   level:
     root: INFO
     org.springframework.boot.autoconfigure.jdbc: DEBUG
+#    org.hibernate.tool.schema: DEBUG
 
 
 management:
@@ -46,14 +58,24 @@ packages:
       level: za.co.psybergate.chatterbox
 
 chatterbox:
+  polled-event-executor:
+    thread-count: 1
+    max-pool-size: 1
+    queue-capacity: 10
+    thread-name-prefix: "polled-event-"
+  webhook-event-executor:
+    thread-count: 1
+    max-pool-size: 1
+    queue-capacity: 10
+    thread-name-prefix: "webhook-event-"
   sources:
     github:
       repository:
         destination-mapping:
           - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
-            destinationChannel: TestChannel
+            teamsDestinationChannel: TestChannel
           - name: psyAlexBlakeGoudemond/chatterbox
-            destinationChannel: TestChannel
+            teamsDestinationChannel: TestChannel
       payload:
         event-mapping:
           push:
@@ -61,7 +83,7 @@ chatterbox:
             fields:
               repositoryName: "repository.full_name"
               senderName: "sender.login"
-              url: "issue.html_url"
+              url: "compare"
               urlDisplayText: "head_commit.message"
   destinations:
     teams:

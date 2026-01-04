@@ -6,7 +6,5 @@
     "sender": {
         "login": "psyAlexBlakeGoudemond"
     },
-    "issue": {
-        "html_url": "http://localhost:abcd"
-    }
+    "compare": "http://localhost:abcd"
 }

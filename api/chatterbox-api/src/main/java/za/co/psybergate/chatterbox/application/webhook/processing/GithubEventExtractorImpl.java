@@ -30,7 +30,6 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
         return extract(EventType.get(eventType), payload);
     }
 
-
     /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
     ///
     /// The [GithubEventDto] has simple validation setup through the constructor of the record.
@@ -42,19 +41,18 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
         String repositoryName = read(payload, fields.get(REPOSITORYNAME));
-        String teamsDestinationUrl = webhookConfigurationResolver.getDestinationUrl(repositoryName);
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
-        String formattedUrlDisplayText = format(urlDisplayText, payloadMapping.getDisplayName());
+        String displayName = payloadMapping.getDisplayName();
+        String formattedUrlDisplayText = format(urlDisplayText, displayName);
         String senderName = read(payload, fields.get(SENDERNAME));
         String url = read(payload, fields.get(URL));
         return new GithubEventDto(
                 eventType,
-                payloadMapping.getDisplayName(),
+                displayName,
                 repositoryName,
                 senderName,
                 url,
-                formattedUrlDisplayText,
-                teamsDestinationUrl
+                formattedUrlDisplayText
         );
     }
 

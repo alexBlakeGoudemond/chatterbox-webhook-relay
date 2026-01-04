@@ -5,9 +5,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @Transactional
@@ -17,36 +21,109 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     private final GithubPolledEventLogJpaRepository logRepository;
 
+    private final WebhookLogger webhookLogger;
+
     public GithubPolledEventStoreJpaAdapter(GithubPolledEventJpaRepository repository,
-                                            GithubPolledEventLogJpaRepository logRepository) {
+                                            GithubPolledEventLogJpaRepository logRepository,
+                                            WebhookLogger webhookLogger) {
         this.repository = repository;
         this.logRepository = logRepository;
+        this.webhookLogger = webhookLogger;
+    }
+
+    @Override
+    public boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId) {
+        try {
+            return repository.findFirstByRepositoryFullNameAndEventTypeAndSourceIdOrderByIdDesc(repositoryFullName, eventType, sourceId);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to confirm if GithubPolledEvent exists", e);
+        }
+    }
+
+    @Override
+    public List<GithubPolledEvent> getLatestEvents(String repositoryFullName) {
+        try {
+            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+            if (githubPolledEvents.isEmpty()) {
+                webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
+            }
+            return githubPolledEvents;
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
+        }
     }
 
     @Override
     public GithubPolledEvent storeEvent(GithubPolledEvent event) {
-        return repository.save(event);
+        webhookLogger.logStoringEvent(event);
+        try {
+            GithubPolledEvent save = repository.save(event);
+            webhookLogger.logEventStored(save);
+            return save;
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
     }
 
     @Override
     public GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
-        throw new ApplicationException("Not implemented");
+        return storeEvent(webhook);
     }
 
     @Override
-    public boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId) {
-        return repository.findFirstByRepositoryFullNameAndEventTypeAndSourceIdOrderByIdDesc(repositoryFullName, eventType, sourceId);
+    public GithubPolledEventDeliveryLog storeDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
+        webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
+        try {
+            GithubPolledEventDeliveryLog save = logRepository.save(polledEventDeliveryLog);
+            webhookLogger.logEventDelivered(save);
+            return save;
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to Store Delivery information of the event", e);
+        }
     }
 
     @Override
-    public GithubPolledEvent getLatestEvent(String repositoryFullName) {
-        return repository.findFirstByRepositoryFullNameOrderByIdDesc(repositoryFullName);
+    public GithubPolledEventDeliveryLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl){
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent, exampleDestination, exampleDestinationUrl);
+        return storeDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public void logDelivery(GithubPolledEvent polledEvent){
-        throw new ApplicationException("Not implemented");
+    public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus) {
+        polledEvent.setEventStatus(eventStatus);
+        polledEvent.setProcessedAt(LocalDateTime.now());
+        try {
+            repository.save(polledEvent);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
+    }
+
+    @Override
+    public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse) {
+        polledEvent.setEventStatus(eventStatus);
+        polledEvent.setErrorMessage(responseDtoErrorResponse);
+        try {
+            repository.save(polledEvent);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
+    }
+
+    @Override
+    public GithubPolledEvent getEvent(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
+    }
+
+    @Override
+    public List<GithubPolledEventDeliveryLog> getDeliveryLogs(Long id) {
+        try {
+            return logRepository.findAllByGithubPolledEventId(id);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);
+        }
     }
 
 }

@@ -7,11 +7,11 @@ chatterbox:
       repository:
         destination-mapping:
           - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
-            destinationChannel: General
+            teamsDestinationChannel: General
           - name: psyAlexBlakeGoudemond/chatterbox/undefined
-            destinationChannel: UndefinedTeamsChannel
+            teamsDestinationChannel: UndefinedTeamsChannel
           - name: psyAlexBlakeGoudemond/chatterbox
-            destinationChannel: TestChannel
+            teamsDestinationChannel: TestChannel
       payload:
         event-mapping:
           push:
@@ -19,7 +19,7 @@ chatterbox:
             fields:
               repositoryName: "repository.full_name" # intentional - test confirms this is supposed to be present
               #        senderName: "sender.login"
-              url: "issue.html_url"
+              url: "compare"
               urlDisplayText: "head_commit.message"
   destinations:
     teams:

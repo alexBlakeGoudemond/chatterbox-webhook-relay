@@ -11,6 +11,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,9 +23,11 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
 
     private final TeamsCardFactory teamsCardFactory;
 
+    private final WebhookLogger webhookLogger;
+
     @Override
-    public HttpResponseDto process(GithubEventDto dto) {
-        String teamsDestination = dto.teamsDestination();
+    public HttpResponseDto process(GithubEventDto dto, String teamsDestination) {
+        webhookLogger.logSendingDtoToTeams(dto, teamsDestination);
         String jsonString = teamsCardFactory.getAsTeamsPayloadString(dto);
         HttpPost httpPost = getHttpPost(teamsDestination, jsonString);
         return executeHttpPostRequest(httpPost);

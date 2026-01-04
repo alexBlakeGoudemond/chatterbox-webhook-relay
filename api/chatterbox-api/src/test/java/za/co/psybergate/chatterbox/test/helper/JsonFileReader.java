@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.helper;
+package za.co.psybergate.chatterbox.test.helper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
