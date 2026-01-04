@@ -37,9 +37,9 @@ public class CatchUpRunner implements ApplicationRunner {
             findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName);
             webhookEventsFound = true;
         }
-//        if (webhookEventsFound) {
+        if (webhookEventsFound) {
             publisher.publishEvent(new PolledEventsProcessed());
-//        }
+        }
     }
 
     private void findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {

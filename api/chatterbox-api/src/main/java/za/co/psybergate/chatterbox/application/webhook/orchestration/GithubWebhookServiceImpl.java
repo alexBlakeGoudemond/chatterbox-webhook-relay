@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
@@ -14,6 +15,7 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
@@ -41,13 +43,18 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPolledStore githubPolledStore;
 
+    private final ApplicationEventPublisher publisher;
+
+
     @Override
     public WebhookEvent process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        return webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
+        WebhookEvent webhookEvent = webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
+        publisher.publishEvent(new WebhookEventProcessed());
+        return webhookEvent;
     }
 
     @Override
