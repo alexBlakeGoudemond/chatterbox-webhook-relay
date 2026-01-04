@@ -21,7 +21,9 @@ services:
     environment:
       TZ: Africa/Johannesburg
       SPRING_PROFILES_ACTIVE: prod
-      DATABASE_URL: postgres://user:password@db:5432/chatterbox
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chatterbox
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
     volumes:
       - ./api/logs/chatterbox-api:/var/log/chatterbox-api
     restart: unless-stopped

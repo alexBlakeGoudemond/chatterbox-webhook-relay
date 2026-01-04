@@ -8,6 +8,27 @@ spring:
       enabled: ALWAYS
   banner:
     location: banners-coloured/banner-chatterbox-colour-003.txt
+  datasource:
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:54321/chatterbox
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      max-lifetime: 30000 # 30s; reduces the chance Hikari validates closed connections on shutdown
+      idle-timeout: 10000 # 10s
+      connection-test-query: SELECT 1
+      health-check-properties:
+        connectivityCheckTimeout: 1
+      leak-detection-threshold: 0
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update   # or update / none / create-drop
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
 
 common:
   logging:

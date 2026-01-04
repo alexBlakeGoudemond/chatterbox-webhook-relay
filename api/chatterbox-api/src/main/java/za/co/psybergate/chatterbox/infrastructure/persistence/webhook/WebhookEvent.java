@@ -36,7 +36,7 @@ public class WebhookEvent {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_type", nullable = false)
+    @Column(name = "event_type", nullable = false, columnDefinition = "event_type")
     private EventType eventType;
 
     @Column(name = "display_name", nullable = false)
@@ -52,12 +52,12 @@ public class WebhookEvent {
     private String eventUrlDisplayText;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb", nullable = false)
+    @Column(name = "payload", columnDefinition = "jsonb", nullable = false)
     private String payload;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(nullable = false)
+    @Column(name = "event_status", nullable = false, columnDefinition = "event_status")
     private EventStatus eventStatus;
 
     @Column(name = "error_message")
