@@ -86,7 +86,7 @@ chatterbox:
             fields:
               repositoryName: "repository.full_name"
               senderName: "sender.login"
-              url: "issue.html_url"
+              url: "compare"
               urlDisplayText: "head_commit.message"
           pull_request:
             displayName: "Pull Request Event"

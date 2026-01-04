@@ -85,12 +85,12 @@ public class WebhookLogger {
     }
 
     private String truncate(Object object) {
-        return truncate(object.toString(), 100);
+        return truncate(object.toString(), 300);
     }
 
     @SuppressWarnings("SameParameterValue")
     private String truncate(String str, int length) {
-        return str.length() > length ? str.substring(0, length - 3) + "..." : str;
+        return str.length() > length ? str.substring(0, length - 4) + " ..." : str;
     }
 
 }

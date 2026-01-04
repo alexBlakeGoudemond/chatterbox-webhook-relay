@@ -19,7 +19,7 @@ chatterbox:
             fields:
               repositoryName: "repository.full_name" # intentional - test confirms this is supposed to be present
               #        senderName: "sender.login"
-              url: "issue.html_url"
+              url: "compare"
               urlDisplayText: "head_commit.message"
   destinations:
     teams:

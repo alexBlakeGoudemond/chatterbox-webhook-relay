@@ -16,7 +16,7 @@ CREATE TABLE webhook_event
     event_url              TEXT         NOT NULL,
     event_url_display_text TEXT         NOT NULL,
     payload                JSONB        NOT NULL, -- raw JSON payload
-    status                 EVENT_STATUS NOT NULL,
+    event_status           EVENT_STATUS NOT NULL,
     error_message          TEXT,
     received_at            TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     processed_at           TIMESTAMP
@@ -35,7 +35,7 @@ CREATE TABLE github_polled_event
     event_url              TEXT         NOT NULL,
     event_url_display_text TEXT         NOT NULL,
     payload                JSONB        NOT NULL, -- raw JSON payload
-    status                 EVENT_STATUS NOT NULL,
+    event_status           EVENT_STATUS NOT NULL,
     error_message          TEXT,
     fetched_at             TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     processed_at           TIMESTAMP
