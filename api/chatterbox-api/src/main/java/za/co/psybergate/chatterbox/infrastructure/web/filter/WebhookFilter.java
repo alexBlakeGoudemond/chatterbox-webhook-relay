@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

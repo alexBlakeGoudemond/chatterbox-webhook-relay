@@ -20,11 +20,13 @@ import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurat
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 
 import java.nio.charset.StandardCharsets;
 
@@ -40,7 +42,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
         TeamsTemplateSubstitutorImpl.class,
-        ApplicationConfig.class
+        ApplicationConfig.class,
+        TestConfigurationResolver.class,
+        WebhookConfigurationResolverImpl.class,
+        WebhookLogger.class,
 })
 @ActiveProfiles({"live-url"})
 public class TeamsSenderServiceImplIT {
@@ -63,6 +68,9 @@ public class TeamsSenderServiceImplIT {
     @Autowired
     private TeamsCardFactory teamsCardFactory;
 
+    @Autowired
+    private TestConfigurationResolver configurationResolver;
+
     /// Send an actual test to the MS Teams API and assert that the HttpResponse
     /// information is as-expected.
     ///
@@ -73,8 +81,9 @@ public class TeamsSenderServiceImplIT {
     @Test
     public void givenGithubEventDto_WhenTeamsSenderServiceProcessesDto_ThenSuccess() {
         GithubEventDto eventDto = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto);
+        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
     }
@@ -83,10 +92,10 @@ public class TeamsSenderServiceImplIT {
     @Test
     public void givenGithubEventDto_AndBadHttpPost_WhenExecuteHttp_ThenUnauthorised() {
         GithubEventDto eventDto = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        String teamsDestination = eventDto.teamsDestination();
         String jsonString = teamsCardFactory.getAsTeamsPayloadString(eventDto);
-        HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestination, jsonString);
+        HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = teamsSenderService.executeHttpPostRequest(httpPost);
         assertNotNull(httpResponseDto);
