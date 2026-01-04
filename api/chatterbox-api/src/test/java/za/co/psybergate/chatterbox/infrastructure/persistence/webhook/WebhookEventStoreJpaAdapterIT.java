@@ -4,21 +4,45 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class WebhookEventStoreJpaAdapterIT {
+@DataJpaTest
+@Import({
+        WebhookEventStoreJpaAdapter.class,
+        JsonFileReader.class,
+        JsonConverterImpl.class,
+        GithubEventExtractorImpl.class,
+        WebhookConfigurationResolverImpl.class,
+        ApplicationConfig.class,
+        WebhookLogger.class,
+})
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Testcontainers
+public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer {
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
     private WebhookEventStoreJpaAdapter adapter;
@@ -31,7 +55,6 @@ public class WebhookEventStoreJpaAdapterIT {
 
     @DisplayName("Can save WebhookEvent")
     @Test
-    @Rollback
     public void givenPayloadAndEventDto_WhenStoreWebhook_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
@@ -42,7 +65,6 @@ public class WebhookEventStoreJpaAdapterIT {
 
     @DisplayName("Can save WebhookEventLog")
     @Test
-    @Rollback
     public void givenWebhookEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
