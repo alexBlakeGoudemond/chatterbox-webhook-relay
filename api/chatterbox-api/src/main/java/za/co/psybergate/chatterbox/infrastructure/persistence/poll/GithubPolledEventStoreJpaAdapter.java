@@ -10,6 +10,7 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -74,7 +75,9 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEventDeliveryLog storeDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
         webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
         try {
-            return logRepository.save(polledEventDeliveryLog);
+            GithubPolledEventDeliveryLog save = logRepository.save(polledEventDeliveryLog);
+            webhookLogger.logEventDelivered(save);
+            return save;
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store Delivery information of the event", e);
         }
@@ -89,6 +92,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     @Override
     public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus) {
         polledEvent.setEventStatus(eventStatus);
+        polledEvent.setProcessedAt(LocalDateTime.now());
         try {
             repository.save(polledEvent);
         } catch (Exception e) {

@@ -2,10 +2,10 @@ package za.co.psybergate.chatterbox.infrastructure.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.time.LocalDateTime;
 
@@ -69,12 +69,16 @@ public class WebhookLogger {
         log.debug("[Storage] Storing webhook event: {}", truncate(webhook));
     }
 
-    public void logDeliveringEvent(Object webhookEvent) {
-        log.debug("[Storage] webhook event delivered: {}", truncate(webhookEvent));
+    public void logEventStored(Object webhookEvent) {
+        log.trace("[Storage] webhook event stored: {}", truncate(webhookEvent, -1));
     }
 
-    public void logEventStored(Object webhookEvent) {
-        log.trace("[Storage] Stored webhook event: {}", truncate(webhookEvent));
+    public void logDeliveringEvent(Object webhookEvent) {
+        log.debug("[Storage] delivering webhook event: {}", truncate(webhookEvent));
+    }
+
+    public void logEventDelivered(Object webhookEvent) {
+        log.trace("[Storage] webhook event delivered: {}", truncate(webhookEvent, -1));
     }
 
     public void logProcessingEvents(DestinationMapping destinationMapping) {
@@ -94,8 +98,18 @@ public class WebhookLogger {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private String truncate(String str, int length) {
-        return str.length() > length ? str.substring(0, length - 4) + " ..." : str;
+    private String truncate(Object object, int length) {
+        return truncate(object.toString(), length);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private String truncate(String string, int length) {
+        if (string == null || string.isEmpty()) {
+            throw new ApplicationException("Cannot truncate null/empty string");
+        } else if (length <= 0) {
+            return string;
+        }
+        return string.length() > length ? string.substring(0, length - 4) + " ..." : string;
     }
 
 }
