@@ -30,10 +30,10 @@ public class ThreadConfig {
 
     @Bean("webhookEventExecutor")
     public ThreadPoolTaskExecutor webhookEventExecutor() {
-        int threadCount = polledEventExecutorProperties.getThreadCount();
-        int maxPoolSize = polledEventExecutorProperties.getMaxPoolSize();
-        int queueCapacity = polledEventExecutorProperties.getQueueCapacity();
-        String threadNamePrefix = polledEventExecutorProperties.getThreadNamePrefix();
+        int threadCount = webhookEventExecutorProperties.getThreadCount();
+        int maxPoolSize = webhookEventExecutorProperties.getMaxPoolSize();
+        int queueCapacity = webhookEventExecutorProperties.getQueueCapacity();
+        String threadNamePrefix = webhookEventExecutorProperties.getThreadNamePrefix();
         ThreadPoolTaskExecutor executor = createExecutor(threadCount, maxPoolSize, queueCapacity, threadNamePrefix);
         executor.initialize();
         return executor;

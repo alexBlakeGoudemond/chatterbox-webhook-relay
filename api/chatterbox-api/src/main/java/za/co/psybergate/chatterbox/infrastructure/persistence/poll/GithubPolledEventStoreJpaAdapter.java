@@ -56,7 +56,9 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEvent storeEvent(GithubPolledEvent event) {
         webhookLogger.logStoringEvent(event);
         try {
-            return repository.save(event);
+            GithubPolledEvent save = repository.save(event);
+            webhookLogger.logEventStored(save);
+            return save;
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the GithubPolledEvent", e);
         }

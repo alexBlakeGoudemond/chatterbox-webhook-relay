@@ -51,7 +51,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public WebhookEvent storeWebhook(WebhookEvent webhook) {
         webhookLogger.logStoringEvent(webhook);
         try {
-            return repository.save(webhook);
+            WebhookEvent save = repository.save(webhook);
+            webhookLogger.logEventStored(webhook);
+            return save;
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store WebhookEvent", e);
         }

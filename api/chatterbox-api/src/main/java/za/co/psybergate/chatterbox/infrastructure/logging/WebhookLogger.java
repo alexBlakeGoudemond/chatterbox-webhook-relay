@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.time.LocalDateTime;
 
@@ -70,6 +71,10 @@ public class WebhookLogger {
 
     public void logDeliveringEvent(Object webhookEvent) {
         log.debug("[Storage] webhook event delivered: {}", truncate(webhookEvent));
+    }
+
+    public void logEventStored(Object webhookEvent) {
+        log.trace("[Storage] Stored webhook event: {}", truncate(webhookEvent));
     }
 
     public void logProcessingEvents(DestinationMapping destinationMapping) {
