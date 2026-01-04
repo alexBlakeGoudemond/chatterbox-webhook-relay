@@ -36,7 +36,7 @@ public class GithubPolledEvent {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_type", nullable = false, columnDefinition = "event_type")
+    @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
     @Column(name = "display_name", nullable = false)
@@ -57,7 +57,7 @@ public class GithubPolledEvent {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_status", nullable = false, columnDefinition = "event_status")
+    @Column(name = "event_status", nullable = false)
     private EventStatus eventStatus;
 
     @Column(name = "error_message")

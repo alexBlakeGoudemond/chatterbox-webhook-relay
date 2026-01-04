@@ -6,6 +6,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLog;
 
@@ -67,11 +68,11 @@ public class WebhookLogger {
         log.info("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
     }
 
-    public void logStoringEvent(WebhookEvent webhook) {
+    public void logStoringEvent(Object webhook) {
         log.debug("[Storage] Storing webhook event: {}", webhook);
     }
 
-    public void logDeliveringEvent(WebhookEventLog webhookEventLog) {
+    public void logDeliveringEvent(Object webhookEventLog) {
         log.debug("[Storage] webhook event delivered: {}]", webhookEventLog);
     }
 

@@ -8,10 +8,10 @@ import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
 import java.util.List;
 
-// TODO BlakeGoudemond 2026/01/04 | WebhookLogger?
 @Component
 @Transactional
 public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
@@ -20,25 +20,14 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     private final GithubPolledEventLogJpaRepository logRepository;
 
+    private final WebhookLogger webhookLogger;
+
     public GithubPolledEventStoreJpaAdapter(GithubPolledEventJpaRepository repository,
-                                            GithubPolledEventLogJpaRepository logRepository) {
+                                            GithubPolledEventLogJpaRepository logRepository,
+                                            WebhookLogger webhookLogger) {
         this.repository = repository;
         this.logRepository = logRepository;
-    }
-
-    @Override
-    public GithubPolledEvent storeEvent(GithubPolledEvent event) {
-        try {
-            return repository.save(event);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
-        }
-    }
-
-    @Override
-    public GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
-        return storeEvent(webhook);
+        this.webhookLogger = webhookLogger;
     }
 
     @Override
@@ -60,7 +49,24 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
+    public GithubPolledEvent storeEvent(GithubPolledEvent event) {
+        webhookLogger.logStoringEvent(event);
+        try {
+            return repository.save(event);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
+        }
+    }
+
+    @Override
+    public GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
+        return storeEvent(webhook);
+    }
+
+    @Override
     public GithubPolledEventLog storeDelivery(GithubPolledEventLog polledEventLog){
+        webhookLogger.logDeliveringEvent(polledEventLog);
         try {
             return logRepository.save(polledEventLog);
         } catch (Exception e) {
