@@ -7,12 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
@@ -53,8 +51,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     }
 
     @Override
-    public void pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
-        pollGithubForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
+    public List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
+        return pollGithubForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
     }
 
     @Override
@@ -71,6 +69,14 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
             updates.addAll(githubPolledEvents);
         }
         return updates;
+    }
+
+    @Override
+    public List<GithubPolledEvent> pollGithubForChanges(String repositoryFullName, LocalDateTime receivedAt) {
+        String[] repositoryDetails = repositoryFullName.split("/");
+        String owner = repositoryDetails[0];
+        String repositoryName = repositoryDetails[1];
+        return pollGithubForChanges(owner, repositoryName, receivedAt);
     }
 
     @SuppressWarnings("SameParameterValue")

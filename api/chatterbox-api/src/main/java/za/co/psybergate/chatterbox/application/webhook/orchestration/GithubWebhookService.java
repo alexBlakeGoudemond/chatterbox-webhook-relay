@@ -13,8 +13,10 @@ public interface GithubWebhookService {
 
     WebhookEvent process(String eventType, String deliveryId, JsonNode rawBody);
 
-    void pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
+    List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
 
     List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+
+    List<GithubPolledEvent> pollGithubForChanges(String repository, LocalDateTime receivedAt);
 
 }

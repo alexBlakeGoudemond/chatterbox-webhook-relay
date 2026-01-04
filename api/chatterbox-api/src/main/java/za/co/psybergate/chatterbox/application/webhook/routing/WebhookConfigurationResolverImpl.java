@@ -7,6 +7,10 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,12 +34,21 @@ public class WebhookConfigurationResolverImpl implements WebhookConfigurationRes
 
     @Override
     public String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException {
-        for (ChatterboxSourceGithubRepositoryProperties.DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
+        for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
             if (destinationMapping.getName().equals(repositoryName)) {
                 return destinationTeamsProperties.getUrl(destinationMapping.getTeamsDestinationChannel());
             }
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
+    }
+
+    @Override
+    public List<String> getAllRepositories() {
+        List<String> repositories = new ArrayList<>();
+        for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
+            repositories.add(destinationMapping.getName());
+        }
+        return repositories;
     }
 
 }

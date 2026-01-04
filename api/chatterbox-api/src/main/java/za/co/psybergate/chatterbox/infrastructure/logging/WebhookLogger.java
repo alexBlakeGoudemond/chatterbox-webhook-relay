@@ -73,7 +73,10 @@ public class WebhookLogger {
     }
 
     public void logProcessingEvents(DestinationMapping destinationMapping) {
-        log.info("[Processing] Processing Received Webhook events for destination: {}", destinationMapping.getName());
+        log.info("[Processing] Processing Received Webhook events for destination: '{}'", destinationMapping.getName());
     }
 
+    public void logRunnerFoundNoPreviousWebhooks(String repositoryFullName) {
+        log.warn("[Runner] No previous webhooks found for the destination '{}', will not Poll", repositoryFullName);
+    }
 }

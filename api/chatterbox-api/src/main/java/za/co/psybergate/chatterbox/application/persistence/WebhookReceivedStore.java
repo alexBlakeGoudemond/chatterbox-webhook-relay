@@ -30,4 +30,6 @@ public interface WebhookReceivedStore {
 
     List<WebhookEventDeliveryLog> getDeliveryLogs(Long id);
 
+    WebhookEvent getMostRecentWebhook(String repositoryName);
+
 }

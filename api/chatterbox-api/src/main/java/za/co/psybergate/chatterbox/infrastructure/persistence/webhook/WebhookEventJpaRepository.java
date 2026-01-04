@@ -11,6 +11,6 @@ public interface WebhookEventJpaRepository extends JpaRepository<WebhookEvent, L
 
     boolean findFirstByRepositoryFullNameAndWebhookIdOrderByIdDesc(String repositoryFullName, String webhookId);
 
-    List<WebhookEvent> findByRepositoryFullNameAndEventStatus(String repositoryFullName, EventStatus status);
+    List<WebhookEvent> findByRepositoryFullNameAndEventStatusOrderByIdDesc(String repositoryFullName, EventStatus status);
 
 }

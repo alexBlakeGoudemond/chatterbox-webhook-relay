@@ -41,7 +41,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public List<WebhookEvent> getLatestWebhooks(String repositoryFullName) {
         try {
-            return repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+            return repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED);
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
         }
@@ -113,6 +113,15 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEventLogs", e);
         }
+    }
+
+    @Override
+    public WebhookEvent getMostRecentWebhook(String repositoryName) {
+        List<WebhookEvent> webhookEvents = getLatestWebhooks(repositoryName);
+        if (webhookEvents.isEmpty()) {
+            throw new ApplicationException("No WebhookEvents found for repository " + repositoryName);
+        }
+        return webhookEvents.getFirst();
     }
 
 }
