@@ -30,7 +30,8 @@ services:
     networks:
       - chatterbox-net
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: chatterbox-postgres:dev

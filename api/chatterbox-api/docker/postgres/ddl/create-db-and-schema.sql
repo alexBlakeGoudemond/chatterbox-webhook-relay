@@ -11,10 +11,10 @@ CREATE TABLE webhook_event
     repository_full_name   TEXT         NOT NULL, -- e.g., <organisation>/<someRepository>
     webhook_id             TEXT         NOT NULL, -- X-GitHub-Delivery
     event_type             EVENT_TYPE   NOT NULL,
-    display_name           String       NOT NULL,
-    sender_name            String       NOT NULL,
-    event_url              String       NOT NULL,
-    event_url_display_text String       NOT NULL,
+    display_name           TEXT         NOT NULL,
+    sender_name            TEXT         NOT NULL,
+    event_url              TEXT         NOT NULL,
+    event_url_display_text TEXT         NOT NULL,
     payload                JSONB        NOT NULL, -- raw JSON payload
     status                 EVENT_STATUS NOT NULL,
     error_message          TEXT,
@@ -30,10 +30,10 @@ CREATE TABLE github_polled_event
     repository_full_name   TEXT         NOT NULL, -- e.g., <organisation>/<someRepository>
     source_id              TEXT         NOT NULL, -- commit sha, pull_request id, issue id etc
     event_type             EVENT_TYPE   NOT NULL,
-    display_name           String       NOT NULL,
-    sender_name            String       NOT NULL,
-    event_url              String       NOT NULL,
-    event_url_display_text String       NOT NULL,
+    display_name           TEXT         NOT NULL,
+    sender_name            TEXT         NOT NULL,
+    event_url              TEXT         NOT NULL,
+    event_url_display_text TEXT         NOT NULL,
     payload                JSONB        NOT NULL, -- raw JSON payload
     status                 EVENT_STATUS NOT NULL,
     error_message          TEXT,
