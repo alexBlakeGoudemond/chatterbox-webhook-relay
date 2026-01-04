@@ -65,19 +65,19 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public GithubPolledEventLog storeDelivery(GithubPolledEventLog polledEventLog){
-        webhookLogger.logDeliveringEvent(polledEventLog);
+    public GithubPolledEventDeliveryLog storeDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
+        webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
         try {
-            return logRepository.save(polledEventLog);
+            return logRepository.save(polledEventDeliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store Delivery information of the event", e);
         }
     }
 
     @Override
-    public GithubPolledEventLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl){
-        GithubPolledEventLog polledEventLog = new GithubPolledEventLog(polledEvent, exampleDestination, exampleDestinationUrl);
-        return storeDelivery(polledEventLog);
+    public GithubPolledEventDeliveryLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl){
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent, exampleDestination, exampleDestinationUrl);
+        return storeDelivery(polledEventDeliveryLog);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public List<GithubPolledEventLog> getDeliveryLogs(Long id) {
+    public List<GithubPolledEventDeliveryLog> getDeliveryLogs(Long id) {
         try {
             return logRepository.findAllByGithubPolledEventId(id);
         } catch (Exception e) {

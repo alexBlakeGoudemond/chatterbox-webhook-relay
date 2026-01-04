@@ -5,20 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "webhook_event_log")
+@Table(name = "webhook_event_delivery_log")
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class WebhookEventLog {
+public class WebhookEventDeliveryLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,21 +35,21 @@ public class WebhookEventLog {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime delivered_at;
 
-    public WebhookEventLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
+    public WebhookEventDeliveryLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
         this.webhookEventId = webhookEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
         this.delivered_at = delivered_at;
     }
 
-    public WebhookEventLog(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
+    public WebhookEventDeliveryLog(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
         this(webhookEvent.getId(), destinationName, destinationUrl, LocalDateTime.now());
     }
 
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
-        WebhookEventLog that = (WebhookEventLog) object;
+        WebhookEventDeliveryLog that = (WebhookEventDeliveryLog) object;
         return Objects.equals(webhookEventId, that.webhookEventId) && Objects.equals(deliveryDestination, that.deliveryDestination) && Objects.equals(deliveryDestinationUrl, that.deliveryDestinationUrl);
     }
 

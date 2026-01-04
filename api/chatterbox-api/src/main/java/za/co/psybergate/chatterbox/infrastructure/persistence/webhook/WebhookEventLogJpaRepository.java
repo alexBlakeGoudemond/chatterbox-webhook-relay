@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WebhookEventLogJpaRepository extends JpaRepository<WebhookEventLog, Long> {
+public interface WebhookEventLogJpaRepository extends JpaRepository<WebhookEventDeliveryLog, Long> {
 
-    List<WebhookEventLog> findAllByWebhookEventId(Long webhookEventId);
+    List<WebhookEventDeliveryLog> findAllByWebhookEventId(Long webhookEventId);
 
 }

@@ -5,7 +5,7 @@ import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventLog;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
 
 import java.util.List;
 
@@ -19,9 +19,9 @@ public interface GithubPolledStore {
 
     List<GithubPolledEvent> getLatestEvents(String repositoryFullName);
 
-    GithubPolledEventLog storeDelivery(GithubPolledEventLog polledEventLog);
+    GithubPolledEventDeliveryLog storeDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
 
-    GithubPolledEventLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrk);
+    GithubPolledEventDeliveryLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrk);
 
     void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus);
 
@@ -29,6 +29,6 @@ public interface GithubPolledStore {
 
     GithubPolledEvent getEvent(Long id);
 
-    List<GithubPolledEventLog> getDeliveryLogs(Long id);
+    List<GithubPolledEventDeliveryLog> getDeliveryLogs(Long id);
 
 }

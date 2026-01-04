@@ -41,8 +41,8 @@ CREATE TABLE github_polled_event
     processed_at           TIMESTAMP
 );
 
-Drop Table if exists webhook_event_log;
-CREATE table webhook_event_log
+Drop Table if exists webhook_event_delivery_log;
+CREATE table webhook_event_delivery_log
 (
     id                       serial PRIMARY KEY,
     webhook_event_id         serial not null, -- ID of the corresponding webhook_event
@@ -51,8 +51,8 @@ CREATE table webhook_event_log
     delivered_at             TIMESTAMP
 );
 
-Drop Table if exists github_polled_event_log;
-CREATE table github_polled_event_log
+Drop Table if exists github_polled_event_delivery_log;
+CREATE table github_polled_event_delivery_log
 (
     id                       serial PRIMARY KEY,
     github_polled_event_id   serial not null, -- ID of the corresponding github_polled_event

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLog;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventDeliveryLog;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public interface WebhookReceivedStore {
 
     WebhookEvent storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    WebhookEventLog storeDelivery(WebhookEventLog webhookEventLog);
+    WebhookEventDeliveryLog storeDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog);
 
-    WebhookEventLog storeDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryLog storeDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus);
 
@@ -28,6 +28,6 @@ public interface WebhookReceivedStore {
 
     WebhookEvent getWebhook(Long id);
 
-    List<WebhookEventLog> getDeliveryLogs(Long id);
+    List<WebhookEventDeliveryLog> getDeliveryLogs(Long id);
 
 }

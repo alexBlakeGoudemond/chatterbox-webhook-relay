@@ -64,19 +64,19 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEventLog storeDelivery(WebhookEventLog webhookEventLog) {
-        webhookLogger.logDeliveringEvent(webhookEventLog);
+    public WebhookEventDeliveryLog storeDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog) {
+        webhookLogger.logDeliveringEvent(webhookEventDeliveryLog);
         try {
-            return logRepository.save(webhookEventLog);
+            return logRepository.save(webhookEventDeliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store the Delivery information of the event", e);
         }
     }
 
     @Override
-    public WebhookEventLog storeDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
-        WebhookEventLog webhookEventLog = new WebhookEventLog(webhookEvent, destinationName, destinationUrl);
-        return storeDelivery(webhookEventLog);
+    public WebhookEventDeliveryLog storeDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEvent, destinationName, destinationUrl);
+        return storeDelivery(webhookEventDeliveryLog);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public List<WebhookEventLog> getDeliveryLogs(Long webhookEventId) {
+    public List<WebhookEventDeliveryLog> getDeliveryLogs(Long webhookEventId) {
         try {
             return logRepository.findAllByWebhookEventId(webhookEventId);
         } catch (Exception e) {

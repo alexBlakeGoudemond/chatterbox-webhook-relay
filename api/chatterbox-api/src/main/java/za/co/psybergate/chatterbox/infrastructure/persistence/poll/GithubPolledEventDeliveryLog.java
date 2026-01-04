@@ -10,14 +10,13 @@ import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDat
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-// TODO BlakeGoudemond 2026/01/04 | rename to include delivery in name
 @Entity
-@Table(name = "github_polled_event_log")
+@Table(name = "github_polled_event_delivery_log")
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class GithubPolledEventLog {
+public class GithubPolledEventDeliveryLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,21 +35,21 @@ public class GithubPolledEventLog {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime delivered_at;
 
-    public GithubPolledEventLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
+    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
         this.githubPolledEventId = githubPolledEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
         this.delivered_at = delivered_at;
     }
 
-    public GithubPolledEventLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl) {
+    public GithubPolledEventDeliveryLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl) {
         this(polledEvent.getId(), exampleDestination, exampleDestinationUrl, LocalDateTime.now());
     }
 
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
-        GithubPolledEventLog that = (GithubPolledEventLog) object;
+        GithubPolledEventDeliveryLog that = (GithubPolledEventDeliveryLog) object;
         return Objects.equals(githubPolledEventId, that.githubPolledEventId) && Objects.equals(deliveryDestination, that.deliveryDestination) && Objects.equals(deliveryDestinationUrl, that.deliveryDestinationUrl);
     }
 

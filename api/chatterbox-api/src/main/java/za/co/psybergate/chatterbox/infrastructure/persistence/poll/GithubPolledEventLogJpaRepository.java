@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GithubPolledEventLogJpaRepository extends JpaRepository<GithubPolledEventLog, Long> {
+public interface GithubPolledEventLogJpaRepository extends JpaRepository<GithubPolledEventDeliveryLog, Long> {
 
-    List<GithubPolledEventLog> findAllByGithubPolledEventId(Long githubPolledEventId);
+    List<GithubPolledEventDeliveryLog> findAllByGithubPolledEventId(Long githubPolledEventId);
 
 }
