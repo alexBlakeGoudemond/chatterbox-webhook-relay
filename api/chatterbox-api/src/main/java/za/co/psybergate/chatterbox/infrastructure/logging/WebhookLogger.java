@@ -79,4 +79,9 @@ public class WebhookLogger {
     public void logRunnerFoundNoPreviousWebhooks(String repositoryFullName) {
         log.warn("[Runner] No previous webhooks found for the destination '{}', will not Poll", repositoryFullName);
     }
+
+    public void logGithubPolledEventsEmpty(String repositoryFullName) {
+        log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
+    }
+
 }

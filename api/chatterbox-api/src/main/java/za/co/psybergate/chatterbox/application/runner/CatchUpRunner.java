@@ -9,6 +9,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
@@ -31,10 +32,14 @@ public class CatchUpRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<String> repositories = configurationResolver.getAllRepositories();
+        boolean webhookEventsFound = false;
         for (String repositoryFullName : repositories) {
             findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName);
+            webhookEventsFound = true;
         }
-        // 4. After each new event saved, publisher.publishEvent(new EventSaved(id));
+//        if (webhookEventsFound) {
+            publisher.publishEvent(new PolledEventsProcessed());
+//        }
     }
 
     private void findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
