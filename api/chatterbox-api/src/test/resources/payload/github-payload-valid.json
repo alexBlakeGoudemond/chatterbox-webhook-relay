@@ -7,9 +7,7 @@
     "sender": {
         "login": "psyAlexBlakeGoudemond"
     },
-    "issue": {
-        "html_url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif"
-    },
+    "compare": "https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif",
     "head_commit": {
         "message": "Test message Is here!"
     }

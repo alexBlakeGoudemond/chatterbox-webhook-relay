@@ -1,8 +1,10 @@
 package za.co.psybergate.chatterbox.application.webhook.routing;
 
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+
+import java.util.List;
 
 /// resolves configuration, handles destination and template mapping
 public interface WebhookConfigurationResolver {
@@ -11,6 +13,8 @@ public interface WebhookConfigurationResolver {
 
     ChatterboxSourceGithubPayloadProperties.EventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException;
 
-    String getDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
+    String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
+
+    List<String> getAllRepositories();
 
 }

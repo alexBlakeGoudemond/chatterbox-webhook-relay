@@ -1,9 +1,13 @@
 package za.co.psybergate.chatterbox.application.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
+
+import java.util.List;
 
 public interface GithubPolledStore {
 
@@ -13,7 +17,18 @@ public interface GithubPolledStore {
 
     boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId);
 
-    GithubPolledEvent getLatestEvent(String repositoryFullName);
+    List<GithubPolledEvent> getLatestEvents(String repositoryFullName);
 
-    void logDelivery(GithubPolledEvent polledEvent);
+    GithubPolledEventDeliveryLog storeDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
+
+    GithubPolledEventDeliveryLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrk);
+
+    void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus);
+
+    void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse);
+
+    GithubPolledEvent getEvent(Long id);
+
+    List<GithubPolledEventDeliveryLog> getDeliveryLogs(Long id);
+
 }

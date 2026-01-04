@@ -21,18 +21,17 @@ import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebho
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.helper.GithubHttpRequestFactory;
-import za.co.psybergate.chatterbox.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -176,7 +175,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Missing signature fails")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenExceptionThrown() {
+    public void whenPostToGithubWebhook_WithJsonAndNoSignature_ThenExceptionThrown() {
         MockHttpServletRequestBuilder httpRequestNoSignature = githubHttpRequestFactory.getHttpRequestNoSignature(jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequestNoSignature);
@@ -189,7 +188,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Invalid signature fails")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenExceptionThrown() {
+    public void whenPostToGithubWebhook_WithJsonAndInvalidSignature_ThenExceptionThrown() {
         MockHttpServletRequestBuilder httpRequestInvalidSignature = githubHttpRequestFactory.getHttpRequestInvalidSignature(jsonFileReader.getGithubPayloadValidAsString());
         try {
             mockMvc.perform(httpRequestInvalidSignature);
@@ -202,7 +201,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Encrypted signature: ACCEPTED")
     @Test
-    void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
+    public void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";
@@ -216,7 +215,7 @@ public class GithubWebhookControllerMockedTeamsIT {
 
     @DisplayName("Signature, No UTF-8: ACCEPTED")
     @Test
-    void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
+    public void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValidNoEncoding(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";

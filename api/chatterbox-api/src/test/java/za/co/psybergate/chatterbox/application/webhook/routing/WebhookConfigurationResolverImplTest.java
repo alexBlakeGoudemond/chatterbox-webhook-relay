@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,7 +46,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Known Teams Destination Channel Name succeeds")
     @Test
     public void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
-        String destinationUrl = resolver.getDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
+        String destinationUrl = resolver.getTeamsDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
         assertNotNull(destinationUrl);
     }
 
@@ -54,7 +54,7 @@ public class WebhookConfigurationResolverImplTest {
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
         Assertions.assertThrows(UnrecognizedRequestException.class,
-                () -> resolver.getDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
+                () -> resolver.getTeamsDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
     }
 
 }

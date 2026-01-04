@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 
 public interface TeamsSenderService {
 
-    HttpResponseDto process(GithubEventDto dto);
+    HttpResponseDto process(GithubEventDto dto, String teamsDestination);
 
     /// Executes an HTTP POST request to a Microsoft Teams webhook (or any HTTP endpoint) using a
     /// configured [CloseableHttpClient].

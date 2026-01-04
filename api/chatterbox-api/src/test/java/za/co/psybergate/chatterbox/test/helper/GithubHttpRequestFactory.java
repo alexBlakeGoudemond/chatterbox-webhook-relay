@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.helper;
+package za.co.psybergate.chatterbox.test.helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
