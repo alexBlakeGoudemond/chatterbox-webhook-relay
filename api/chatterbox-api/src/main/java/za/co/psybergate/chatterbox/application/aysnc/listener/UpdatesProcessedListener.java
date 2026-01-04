@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.listener;
+package za.co.psybergate.chatterbox.application.aysnc.listener;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -8,6 +8,8 @@ import za.co.psybergate.chatterbox.application.processor.EventProcessor;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
 
+// TODO BlakeGoudemond 2026/01/04 | test!
+// TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component
 @RequiredArgsConstructor
 public class UpdatesProcessedListener {

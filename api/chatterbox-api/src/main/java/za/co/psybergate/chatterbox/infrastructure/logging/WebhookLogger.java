@@ -52,8 +52,8 @@ public class WebhookLogger {
         log.info("[Delivery] MS Teams Response: {}", httpResponseDto);
     }
 
-    public void logExceptionDetails(Exception ex) {
-        log.error("[Exception] Exception encountered: {}", ex.getClass().getSimpleName(), ex);
+    public void logExceptionDetails(Exception exception) {
+        log.error("[Exception] Exception encountered: {}", exception.getClass().getSimpleName(), exception);
     }
 
     public void logGithubPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
@@ -65,11 +65,11 @@ public class WebhookLogger {
     }
 
     public void logStoringEvent(Object webhook) {
-        log.debug("[Storage] Storing webhook event: {}", webhook);
+        log.debug("[Storage] Storing webhook event: {}", truncate(webhook));
     }
 
-    public void logDeliveringEvent(Object webhookEventLog) {
-        log.debug("[Storage] webhook event delivered: {}]", webhookEventLog);
+    public void logDeliveringEvent(Object webhookEvent) {
+        log.debug("[Storage] webhook event delivered: {}", truncate(webhookEvent));
     }
 
     public void logProcessingEvents(DestinationMapping destinationMapping) {
@@ -82,6 +82,15 @@ public class WebhookLogger {
 
     public void logGithubPolledEventsEmpty(String repositoryFullName) {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
+    }
+
+    private String truncate(Object object) {
+        return truncate(object.toString(), 100);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private String truncate(String str, int length) {
+        return str.length() > length ? str.substring(0, length - 3) + "..." : str;
     }
 
 }
