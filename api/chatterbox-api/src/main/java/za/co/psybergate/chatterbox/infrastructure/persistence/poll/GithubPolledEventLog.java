@@ -10,6 +10,7 @@ import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDat
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// TODO BlakeGoudemond 2026/01/04 | rename to include delivery in name
 @Entity
 @Table(name = "github_polled_event_log")
 @NoArgsConstructor
