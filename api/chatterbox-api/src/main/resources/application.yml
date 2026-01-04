@@ -61,6 +61,16 @@ packages:
       level: za.co.psybergate.chatterbox
 
 chatterbox:
+  polled-event-executor:
+    thread-count: 1
+    max-pool-size: 1
+    queue-capacity: 10
+    thread-name-prefix: "polled-event-"
+  webhook-event-executor:
+    thread-count: 1
+    max-pool-size: 1
+    queue-capacity: 10
+    thread-name-prefix: "webhook-event-"
   sources:
     github:
       repository:

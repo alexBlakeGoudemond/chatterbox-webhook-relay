@@ -11,6 +11,7 @@ import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebho
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.util.List;
@@ -34,21 +35,24 @@ public class CatchUpRunner implements ApplicationRunner {
         List<String> repositories = configurationResolver.getAllRepositories();
         boolean webhookEventsFound = false;
         for (String repositoryFullName : repositories) {
-            findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName);
-            webhookEventsFound = true;
+            if (findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName)) {
+                webhookEventsFound = true;
+            }
         }
         if (webhookEventsFound) {
             publisher.publishEvent(new PolledEventsProcessed());
         }
     }
 
-    private void findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
+    private boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
+        List<GithubPolledEvent> githubPolledEvents = List.of();
         try {
             WebhookEvent webhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
-            webhookService.pollGithubForChanges(repositoryFullName, webhookEvent.getReceivedAt());
+            githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, webhookEvent.getReceivedAt());
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousWebhooks(repositoryFullName);
         }
+        return !githubPolledEvents.isEmpty();
     }
 
 }

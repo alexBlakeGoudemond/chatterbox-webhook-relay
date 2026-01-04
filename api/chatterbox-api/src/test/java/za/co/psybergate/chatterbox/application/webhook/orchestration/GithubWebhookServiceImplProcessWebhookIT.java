@@ -62,6 +62,8 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     @Autowired
     private JsonFileReader jsonFileReader;
 
+    /// NOTE: The Event Publisher is not enabled by default with TestContainers
+    /// This test should pass WITHOUT the Listener being executed
     @Test
     public void whenProcessWebhook_ThenEventPersisted() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();

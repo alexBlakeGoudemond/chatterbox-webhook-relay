@@ -14,15 +14,15 @@ public class UpdatesProcessedListener {
 
     private final EventProcessor eventProcessor;
 
-    @Async
+    @Async("polledEventExecutor")
     @EventListener
     public void onPolledEventsProcessed(PolledEventsProcessed polledEventsProcessed){
         eventProcessor.processPolledEvents();
     }
 
-    @Async
+    @Async("webhookEventExecutor")
     @EventListener
-    public void onWebhookEventProcessed(WebhookEventProcessed polledEventsProcessed){
+    public void onWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
         eventProcessor.processWebhookEvents();
     }
 
