@@ -1,5 +1,6 @@
 package za.co.psybergate.chatterbox.infrastructure.persistence.poll;
 
+import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
@@ -12,8 +13,6 @@ public interface GithubPolledEventJpaRepository extends JpaRepository<GithubPoll
 
     boolean findFirstByRepositoryFullNameAndEventTypeAndSourceIdOrderByIdDesc(String repositoryFullName, EventType eventType, String sourceId);
 
-    GithubPolledEvent findFirstByRepositoryFullNameOrderByIdDesc(String repositoryFullName);
-
-    List<GithubPolledEvent> findByRepositoryFullNameAndEventStatus(String repositoryFullName, EventStatus status);
+    List<GithubPolledEvent> findByRepositoryFullNameAndEventStatusOrderByIdDesc(String repositoryFullName, EventStatus eventStatus, Limit limit);
 
 }
