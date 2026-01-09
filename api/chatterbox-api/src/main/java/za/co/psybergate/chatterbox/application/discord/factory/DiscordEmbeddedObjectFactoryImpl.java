@@ -11,6 +11,7 @@ import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
 
     private final ChatterboxDeliveryDiscordProperties discordProperties;
 
-    private final TemplateSubstitutorImpl substitutionService;
+    private final TemplateSubstitutor substitutionService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
