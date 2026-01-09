@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
@@ -14,6 +15,7 @@ import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -25,6 +27,8 @@ public class CatchUpRunner implements ApplicationRunner {
     private final WebhookConfigurationResolver configurationResolver;
 
     private final WebhookReceivedStore webhookReceivedStore;
+
+    private final GithubPolledStore githubPolledStore;
 
     private final WebhookLogger webhookLogger;
 
@@ -45,14 +49,36 @@ public class CatchUpRunner implements ApplicationRunner {
     }
 
     private boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
-        List<GithubPolledEvent> githubPolledEvents = List.of();
+        LocalDateTime lastPersistedTime;
         try {
-            WebhookEvent webhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
-            githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, webhookEvent.getReceivedAt());
+            WebhookEvent latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
+            webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
+            lastPersistedTime = latestWebhookEvent.getReceivedAt();
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousWebhooks(repositoryFullName);
+            return false;
         }
-        return !githubPolledEvents.isEmpty();
+        try {
+            GithubPolledEvent latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
+            webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
+            lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.getFetchedAt());
+        } catch (ApplicationException e) {
+            webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
+        }
+        List<GithubPolledEvent> githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, lastPersistedTime);
+        if (githubPolledEvents.isEmpty()) {
+            webhookLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
+            return true;
+        }
+        webhookLogger.logNoPolledEventsFound(repositoryFullName, lastPersistedTime);
+        return false;
+    }
+
+    private LocalDateTime getLastPersistedTime(LocalDateTime persistedTime001, LocalDateTime persistedTime002) {
+        if (persistedTime001.isAfter(persistedTime002)) {
+            return persistedTime001;
+        }
+        return persistedTime002;
     }
 
 }

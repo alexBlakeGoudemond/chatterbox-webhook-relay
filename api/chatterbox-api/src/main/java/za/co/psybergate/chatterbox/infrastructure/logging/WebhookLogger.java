@@ -8,8 +8,11 @@ import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -68,7 +71,7 @@ public class WebhookLogger {
     }
 
     public void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        log.info("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
+        log.debug("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
     }
 
     public void logStoringEvent(Object webhook) {
@@ -95,16 +98,36 @@ public class WebhookLogger {
         log.warn("[Runner] No previous webhooks found for the destination '{}', will not Poll", repositoryFullName);
     }
 
+    public void logRunnerFoundPreviousWebhook(WebhookEvent latestWebhookEvent) {
+        log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
+    }
+
+    public void logRunnerFoundNoPreviousPolledEvents(String repositoryFullName) {
+        log.warn("[Runner] No previous polled events found for the destination '{}', not participating in Poll", repositoryFullName);
+    }
+
+    public void logRunnerFoundPreviousPolledEvent(GithubPolledEvent latestGithubPolledEvent) {
+        log.info("[Runner] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
+    }
+
     public void logGithubPolledEventsEmpty(String repositoryFullName) {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
     }
 
+    public void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime) {
+        log.warn("[Polling] No GithubPolledEvents found for '{}' since '{}'", repositoryFullName, lastPersistedTime);
+    }
+
+    public void logPolledEventsFound(List<GithubPolledEvent> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+        log.info("[Polling] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
+    }
+
     public void logPolledEventProcessed(PolledEventsProcessed polledEventsProcessed) {
-        log.debug("[Listener] PolledEventsProcessed occurred: {}", polledEventsProcessed);
+        log.debug("[Listener] PolledEventsProcessed have occurred: {}", polledEventsProcessed);
     }
 
     public void logWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
-        log.debug("[Listener] WebhookEventProcessed occurred: {}", webhookEventProcessed);
+        log.debug("[Listener] WebhookEventProcessed has occurred: {}", webhookEventProcessed);
     }
 
     private String truncate(Object object) {
