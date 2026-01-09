@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.teams.factory.template;
+package za.co.psybergate.chatterbox.infrastructure.template;
 
 import org.springframework.stereotype.Component;
 
@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class TeamsTemplateSubstitutorImpl implements TeamsTemplateSubstitutor {
+public class TemplateSubstitutorImpl implements TemplateSubstitutor {
 
     private static final Pattern PLACEHOLDER = Pattern.compile("\\$\\{([^}]+)}");
 

@@ -1,0 +1,14 @@
+{
+    "embeds": [
+        {
+            "title": "Test message Is here!",
+            "description": "📢 Push Event for psyAlexBlakeGoudemond/chatterbox",
+            "url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif",
+            "color": 6993,
+            "author": {
+                "name": "psyAlexBlakeGoudemond",
+                "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+            }
+        }
+    ]
+}

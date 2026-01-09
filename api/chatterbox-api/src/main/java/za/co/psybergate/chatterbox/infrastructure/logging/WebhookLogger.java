@@ -33,8 +33,8 @@ public class WebhookLogger {
         log.debug("[Webhook] Completed in {}ms", ms);
     }
 
-    public void logWebhookReceived(GithubEventDto eventDto) {
-        log.debug("[Webhook] received by Github API; DTO: {}", eventDto);
+    public void logEventReceived(GithubEventDto eventDto) {
+        log.debug("[WebhookEvent] received DTO: {}", eventDto);
     }
 
     public void logUnknownEventType(String eventType) {
@@ -47,6 +47,10 @@ public class WebhookLogger {
 
     public void logSendingDtoToTeams(GithubEventDto eventDto, String teamsDestination) {
         log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), teamsDestination);
+    }
+
+    public void logSendingDtoToDiscord(GithubEventDto eventDto, String discordDestination) {
+        log.info("[Delivery] Sending '{}' to Discord destination '{}'", eventDto.displayName(), discordDestination);
     }
 
     public void logTeamsResponse(HttpResponseDto httpResponseDto) {

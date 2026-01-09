@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.teams.delivery;
+package za.co.psybergate.chatterbox.application.discord.delivery;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -11,9 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
@@ -25,6 +24,7 @@ import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
@@ -35,12 +35,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
-        TeamsSenderServiceImpl.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
         WebhookConfigurationResolverImpl.class,
-        TeamsCardFactoryImpl.class,
+        DiscordSenderServiceImpl.class,
+        DiscordEmbeddedObjectFactoryImpl.class,
         TemplateSubstitutorImpl.class,
         ApplicationConfig.class,
         TestConfigurationResolver.class,
@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         HttpResponseHandler.class
 })
 @ActiveProfiles({"live-url"})
-public class TeamsSenderServiceImplIT {
+public class DiscordSenderServiceImplIT {
 
     @MockitoBean
     private WebhookFilter webhookFilter;
@@ -64,29 +64,29 @@ public class TeamsSenderServiceImplIT {
     private GithubEventExtractor eventExtractor;
 
     @Autowired
-    private TeamsSenderService teamsSenderService;
+    private DiscordSenderService discordSenderService;
 
     @Autowired
-    private TeamsCardFactory teamsCardFactory;
+    private DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
 
-    /// Send an actual test to the MS Teams API and assert that the HttpResponse
+    /// Send an actual test to the Discord API and assert that the HttpResponse
     /// information is as-expected.
     ///
     /// This test is annotated with a Tag that `maven-surefire-plugin` is made aware of.
     /// This means that running `mvn clean install` will NOT include this by default
     @Tag("live-integration")
-    @DisplayName("TeamsSenderService can process DTO")
+    @DisplayName("DiscordSenderService can process DTO")
     @Test
-    public void givenGithubEventDto_WhenTeamsSenderServiceProcessesDto_ThenSuccess() {
+    public void givenGithubEventDto_WhenDiscordSenderServiceProcessesDto_ThenSuccess() {
         GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(eventDto);
 
-        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto, teamsDestinationUrl);
+        HttpResponseDto httpResponseDto = discordSenderService.process(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
-        assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
+        assertEquals(HttpStatus.NO_CONTENT.value(), httpResponseDto.httpStatus());
     }
 
     @DisplayName("Bad HttpPost yields 401")
@@ -95,13 +95,18 @@ public class TeamsSenderServiceImplIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        String jsonString = teamsCardFactory.getAsTeamsPayloadString(eventDto);
+        String jsonString = discordEmbeddedObjectFactory.getAsDiscordPayloadString(eventDto);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
-        HttpResponseDto httpResponseDto = teamsSenderService.executeHttpPostRequest(httpPost);
+        HttpResponseDto httpResponseDto = discordSenderService.executeHttpPostRequest(httpPost);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
         assertEquals("DirectApiRequestHasMoreThanOneAuthorization", httpResponseDto.jsonNode().get("error").get("code").asText());
+    }
+
+    private GithubEventDto getGithubEventDto() {
+        JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
+        return eventExtractor.extract(EventType.PUSH, jsonNode);
     }
 
     private HttpPost getHttpPostWithAuthorizationHeaders(String teamsDestination, String jsonString) {
@@ -110,11 +115,6 @@ public class TeamsSenderServiceImplIT {
         httpPost.setHeader("Content-Type", "application/json");
         httpPost.setHeader("Authorization", "Bearer broken-test-token");
         return httpPost;
-    }
-
-    private GithubEventDto getGithubEventDto() {
-        JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.extract(EventType.PUSH, jsonNode);
     }
 
 }

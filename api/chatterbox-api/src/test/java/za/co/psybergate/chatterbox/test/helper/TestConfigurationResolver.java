@@ -17,4 +17,8 @@ public class TestConfigurationResolver {
         return configurationResolver.getTeamsDestinationUrl(eventDto.repositoryName());
     }
 
+    public String getDiscordDestinationUrl(GithubEventDto eventDto) {
+        return configurationResolver.getDiscordDestinationUrl(eventDto.repositoryName());
+    }
+
 }
