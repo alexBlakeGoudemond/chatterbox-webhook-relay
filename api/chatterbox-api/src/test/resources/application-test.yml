@@ -112,7 +112,14 @@ chatterbox:
                   wrap: true
     discord:
       embedded-object-definition:
-
+        embedded-objects:
+          - title: "${urlDisplayText}"
+            description: "📢 ${displayName} for ${repositoryName}"
+            url: "${url}"
+            color: 6993
+            author:
+              name: "${senderName}"
+              icon_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
   security:
     webhook:
       github:
