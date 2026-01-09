@@ -44,6 +44,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+// TODO BlakeGoudemond 2026/01/09 | ensure discord delivery logs present here
 @DataJpaTest
 @Import({
         EventProcessorImpl.class,

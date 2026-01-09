@@ -1,14 +1,13 @@
-package za.co.psybergate.chatterbox.application.teams.delivery;
+package za.co.psybergate.chatterbox.application.discord.delivery;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
+import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -18,31 +17,31 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
-public class TeamsSenderServiceImpl implements TeamsSenderService {
+public class DiscordSenderServiceImpl implements DiscordSenderService {
 
-    private final TeamsCardFactory teamsCardFactory;
+    private final DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
 
     private final WebhookLogger webhookLogger;
 
     @Override
-    public HttpResponseDto process(GithubEventDto dto, String teamsDestination) {
-        webhookLogger.logSendingDtoToTeams(dto, teamsDestination);
-        String jsonString = teamsCardFactory.getAsTeamsPayloadString(dto);
-        HttpPost httpPost = getHttpPost(teamsDestination, jsonString);
+    public HttpResponseDto process(GithubEventDto dto, String discordDestination) {
+        webhookLogger.logSendingDtoToTeams(dto, discordDestination);
+        String jsonString = discordEmbeddedObjectFactory.getAsDiscordPayloadString(dto);
+        HttpPost httpPost = getHttpPost(discordDestination, jsonString);
         return executeHttpPostRequest(httpPost);
     }
 
     @Override
     public HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws ApplicationException {
         try (CloseableHttpClient client = getCloseableHttpClient()) {
-            return client.execute(httpPost, teamsCardFactory::getHttpResponseDto);
+            return client.execute(httpPost, discordEmbeddedObjectFactory::getHttpResponseDto);
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when sending POST Request to Teams", e);
         }
     }
 
-    private HttpPost getHttpPost(String teamsDestination, String jsonString) {
-        HttpPost httpPost = new HttpPost(teamsDestination);
+    private HttpPost getHttpPost(String discordDestination, String jsonString) {
+        HttpPost httpPost = new HttpPost(discordDestination);
         httpPost.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
         httpPost.setHeader("Content-Type", "application/json");
         return httpPost;
