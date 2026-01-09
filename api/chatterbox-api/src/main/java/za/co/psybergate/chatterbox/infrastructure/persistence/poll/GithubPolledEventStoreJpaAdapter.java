@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.infrastructure.persistence.poll;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
@@ -43,7 +44,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     @Override
     public List<GithubPolledEvent> getLatestEvents(String repositoryFullName) {
         try {
-            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatus(repositoryFullName, EventStatus.RECEIVED);
+            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
             }
@@ -124,6 +125,24 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);
         }
+    }
+
+    @Override
+    public List<GithubPolledEvent> getLatestPolledEvents(String repositoryFullName) {
+        try {
+            return repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to retrieve GithubPolledEvent", e);
+        }
+    }
+
+    @Override
+    public GithubPolledEvent getMostRecentPolledEvent(String repositoryFullName) {
+        List<GithubPolledEvent> polledEvents = getLatestPolledEvents(repositoryFullName);
+        if (polledEvents.isEmpty()) {
+            throw new ApplicationException("No polled events found for repository " + repositoryFullName);
+        }
+        return polledEvents.getFirst();
     }
 
 }
