@@ -110,6 +110,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.getEventStatus());
 
         List<WebhookEventDeliveryLog> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
+        assertEquals(1, webhookEventDeliveryLogs.size());
         for (WebhookEventDeliveryLog webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);
             assertEquals(webhookEventDeliveryLog.getWebhookEventId(), retrievedWebhookEvent.getId());
@@ -127,6 +128,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.getEventStatus());
 
         List<GithubPolledEventDeliveryLog> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
+        assertEquals(1, polledEventDeliveryLogs.size());
         for (GithubPolledEventDeliveryLog polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);
             assertEquals(polledEventDeliveryLog.getGithubPolledEventId(), retrievedPolledEvent.getId());
