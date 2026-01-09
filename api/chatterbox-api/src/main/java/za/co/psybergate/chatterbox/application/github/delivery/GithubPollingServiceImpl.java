@@ -12,10 +12,13 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_COMMIT;
 import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_PULL_REQUEST;
@@ -118,15 +121,16 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     private ArrayNode filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
         ArrayNode filtered = mapper.createArrayNode();
-        Instant from = fromDate.toInstant(ZoneOffset.UTC);
-        Instant until = untilDate.toInstant(ZoneOffset.UTC);
+        ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
+        Instant from = fromDate.toInstant(systemOffset);
+        Instant until = untilDate.toInstant(systemOffset);
         for (JsonNode pr : prArray) {
             JsonNode mergedAtNode = pr.get("merged_at");
             if (mergedAtNode == null || mergedAtNode.isNull()) {
                 continue;
             }
             Instant mergedAt = Instant.parse(mergedAtNode.asText());
-            if (!mergedAt.isBefore(from) && !mergedAt.isAfter(until)) {
+            if (mergedAt.isAfter(from) && mergedAt.isBefore(until)) {
                 filtered.add(pr);
             }
         }

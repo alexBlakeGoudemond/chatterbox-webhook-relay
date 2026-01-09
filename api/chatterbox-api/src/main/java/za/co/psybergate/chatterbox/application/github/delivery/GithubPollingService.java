@@ -2,8 +2,10 @@ package za.co.psybergate.chatterbox.application.github.delivery;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface GithubPollingService {
 
