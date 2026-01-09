@@ -6,6 +6,8 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
+import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
+import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
 
 import java.time.LocalDateTime;
 
@@ -95,6 +97,14 @@ public class WebhookLogger {
 
     public void logGithubPolledEventsEmpty(String repositoryFullName) {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
+    }
+
+    public void logPolledEventProcessed(PolledEventsProcessed polledEventsProcessed) {
+        log.debug("[Listener] PolledEventsProcessed occurred: {}", polledEventsProcessed);
+    }
+
+    public void logWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
+        log.debug("[Listener] WebhookEventProcessed occurred: {}", webhookEventProcessed);
     }
 
     private String truncate(Object object) {
