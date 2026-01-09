@@ -77,7 +77,7 @@ public class TeamsCardFactoryImplIT {
     public void givenGithubEventDto_WhenBuildTeamsAdaptiveCard_ThenSuccess() {
         ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition teamsAdaptiveCardDefinition = getTeamsAdaptiveCardTemplateFromJsonString();
         if (teamsAdaptiveCardDefinition == null) {
-            fail("Expected the TeamsCardFactory to be able to build an TeamsAdaptiveCardTemplate");
+            fail("Expected the Factory to be able to build a Template");
         }
 
         assertNotNull(teamsAdaptiveCardDefinition);
