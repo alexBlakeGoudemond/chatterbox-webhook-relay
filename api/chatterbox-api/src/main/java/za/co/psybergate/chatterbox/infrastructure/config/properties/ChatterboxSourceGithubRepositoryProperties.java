@@ -27,6 +27,8 @@ public class ChatterboxSourceGithubRepositoryProperties {
 
         private String teamsDestinationChannel;
 
+        private String discordDestinationChannel;
+
     }
 
 }

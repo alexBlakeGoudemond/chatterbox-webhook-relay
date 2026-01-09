@@ -7,18 +7,18 @@ import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestExce
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "chatterbox.destinations.teams")
-public class ChatterboxDestinationTeamsProperties {
+@ConfigurationProperties(prefix = "chatterbox.destinations.discord")
+public class ChatterboxDestinationDiscordProperties {
 
     private List<AcceptedChannel> acceptedChannel;
 
-    public String getUrl(String teamsChannel) {
+    public String getUrl(String discordChannel) {
         for (AcceptedChannel acceptedChannel : acceptedChannel) {
-            if (acceptedChannel.getChannelName().equalsIgnoreCase(teamsChannel)) {
+            if (acceptedChannel.getChannelName().equalsIgnoreCase(discordChannel)) {
                 return acceptedChannel.getWebhookUrl();
             }
         }
-        throw new UnrecognizedRequestException("Unable to find teamsChannel: '" + teamsChannel + "'");
+        throw new UnrecognizedRequestException("Unable to find discordChannel: '" + discordChannel + "'");
     }
 
     @Data

@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.application.teams.factory.template.TeamsTemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
@@ -23,6 +23,7 @@ import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurat
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
@@ -91,8 +92,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
-        TeamsTemplateSubstitutorImpl.class,
+        TemplateSubstitutorImpl.class,
         GithubHttpRequestFactory.class,
+        HttpResponseHandler.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 public class GithubWebhookControllerMockedTeamsIT {
