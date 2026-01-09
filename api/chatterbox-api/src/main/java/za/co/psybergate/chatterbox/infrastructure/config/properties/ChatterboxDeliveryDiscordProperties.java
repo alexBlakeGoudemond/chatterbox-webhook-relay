@@ -36,8 +36,7 @@ public class ChatterboxDeliveryDiscordProperties {
     private EmbeddedObjectDefinition embeddedObjectDefinition;
 
     @Data
-    private static class EmbeddedObjectDefinition {
-
+    public static class EmbeddedObjectDefinition {
 
         private List<EmbeddedObject> embeddedObjects;
 

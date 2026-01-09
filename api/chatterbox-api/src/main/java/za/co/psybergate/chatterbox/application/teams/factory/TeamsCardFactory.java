@@ -10,8 +10,12 @@ import java.util.Map;
 
 public interface TeamsCardFactory {
 
+    /// From a given [Map] of property values, create and populate the
+    /// [ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition]
     ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition buildCard(Map<String, String> values);
 
+    /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactory#buildCard(Map)]
+    /// to create a [ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition]
     ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto);
 
     String getAsTeamsPayloadString(GithubEventDto eventDto) throws ApplicationException;
