@@ -52,6 +52,7 @@ public class CatchUpRunner implements ApplicationRunner {
         LocalDateTime lastPersistedTime;
         try {
             WebhookEvent latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
+            webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
             lastPersistedTime = latestWebhookEvent.getReceivedAt();
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousWebhooks(repositoryFullName);
@@ -59,6 +60,7 @@ public class CatchUpRunner implements ApplicationRunner {
         }
         try {
             GithubPolledEvent latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
+            webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.getFetchedAt());
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
