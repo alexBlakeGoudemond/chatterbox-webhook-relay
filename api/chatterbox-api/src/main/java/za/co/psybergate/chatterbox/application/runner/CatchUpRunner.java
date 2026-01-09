@@ -66,7 +66,12 @@ public class CatchUpRunner implements ApplicationRunner {
             webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
         }
         List<GithubPolledEvent> githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, lastPersistedTime);
-        return !githubPolledEvents.isEmpty();
+        if (githubPolledEvents.isEmpty()) {
+            webhookLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
+            return true;
+        }
+        webhookLogger.logNoPolledEventsFound(repositoryFullName, lastPersistedTime);
+        return false;
     }
 
     private LocalDateTime getLastPersistedTime(LocalDateTime persistedTime001, LocalDateTime persistedTime002) {

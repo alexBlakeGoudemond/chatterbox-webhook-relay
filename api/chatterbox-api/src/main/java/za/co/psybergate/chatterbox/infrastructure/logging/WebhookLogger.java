@@ -12,6 +12,7 @@ import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledE
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -98,7 +99,7 @@ public class WebhookLogger {
     }
 
     public void logRunnerFoundPreviousWebhook(WebhookEvent latestWebhookEvent) {
-        log.info("[Runner] Previous webhook found '{}', continuing with Poll", latestWebhookEvent);
+        log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
     }
 
     public void logRunnerFoundNoPreviousPolledEvents(String repositoryFullName) {
@@ -106,11 +107,19 @@ public class WebhookLogger {
     }
 
     public void logRunnerFoundPreviousPolledEvent(GithubPolledEvent latestGithubPolledEvent) {
-        log.info("[Runner] Previous polled event found '{}', continuing with Poll", latestGithubPolledEvent);
+        log.info("[Runner] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
     }
 
     public void logGithubPolledEventsEmpty(String repositoryFullName) {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
+    }
+
+    public void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime) {
+        log.warn("[Polling] No GithubPolledEvents found for '{}' since '{}'", repositoryFullName, lastPersistedTime);
+    }
+
+    public void logPolledEventsFound(List<GithubPolledEvent> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+        log.info("[Polling] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
     }
 
     public void logPolledEventProcessed(PolledEventsProcessed polledEventsProcessed) {
