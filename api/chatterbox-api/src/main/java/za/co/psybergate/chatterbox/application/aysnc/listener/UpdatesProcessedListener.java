@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.processor.EventProcessor;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 
-// TODO BlakeGoudemond 2026/01/04 | test!
 // TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component
 @RequiredArgsConstructor
@@ -16,15 +16,19 @@ public class UpdatesProcessedListener {
 
     private final EventProcessor eventProcessor;
 
+    private final WebhookLogger webhookLogger;
+
     @Async("polledEventExecutor")
     @EventListener
     public void onPolledEventsProcessed(PolledEventsProcessed polledEventsProcessed){
+        webhookLogger.logPolledEventProcessed(polledEventsProcessed);
         eventProcessor.processPolledEvents();
     }
 
     @Async("webhookEventExecutor")
     @EventListener
     public void onWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
+        webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
         eventProcessor.processWebhookEvents();
     }
 
