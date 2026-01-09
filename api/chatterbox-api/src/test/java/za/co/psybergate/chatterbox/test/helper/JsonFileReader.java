@@ -54,4 +54,9 @@ public class JsonFileReader {
         return jsonConverter.getAsJson(jsonConverter.readPayload(pathToFile));
     }
 
+    public JsonNode getDiscordPayloadValid() {
+        Path pathToFile = Path.of(BASE_DIRECTORY, "discord-payload-valid.json");
+        return jsonConverter.getAsJson(jsonConverter.readPayload(pathToFile));
+    }
+
 }

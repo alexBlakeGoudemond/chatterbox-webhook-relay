@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -47,7 +49,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
         }
 
         assertNotNull(embeddedObjectDefinition);
-        List<ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition.EmbeddedObject> bodyItems = embeddedObjectDefinition.getEmbeddedObjects();
+        List<ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition.EmbeddedObject> bodyItems = embeddedObjectDefinition.getEmbeds();
         for (var bodyItem : bodyItems) {
             assertFalse(bodyItem.getTitle().contains("${}"));
             assertFalse(bodyItem.getDescription().contains("${}"));
@@ -59,16 +61,26 @@ public class DiscordEmbeddedObjectFactoryImplIT {
     @DisplayName("Template --> JSON")
     @Test
     public void whenCompareTemplate_ToJson_ThenIdentical() {
-        ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition embeddedObjectDefinition = getDiscordEmbeddedObjectTemplateUsingMap();
+        ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition embeddedObjectDefinition = getDiscordEmbeddedObjectTemplateUsingJsonString();
         if (embeddedObjectDefinition == null) {
             fail("Expected the DiscordFactory to be able to build a Template");
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode actualJson = objectMapper.valueToTree(embeddedObjectDefinition);
-        JsonNode expectedJson = jsonFileReader.getTeamsPayloadValid();
+        JsonNode expectedJson = jsonFileReader.getDiscordPayloadValid();
 
         assertEquals(expectedJson, actualJson);
+    }
+
+    private ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingJsonString() {
+        JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
+        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        try {
+            return discordEmbeddedObjectFactory.buildEmbeddedObjectDefinition(eventDto);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingMap() {

@@ -112,7 +112,7 @@ chatterbox:
                   wrap: true
     discord:
       embedded-object-definition:
-        embedded-objects:
+        embeds:
           - title: "${urlDisplayText}"
             description: "📢 ${displayName} for ${repositoryName}"
             url: "${url}"

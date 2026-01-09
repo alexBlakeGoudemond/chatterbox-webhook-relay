@@ -38,7 +38,7 @@ public class ChatterboxDeliveryDiscordProperties {
     @Data
     public static class EmbeddedObjectDefinition {
 
-        private List<EmbeddedObject> embeddedObjects;
+        private List<EmbeddedObject> embeds;
 
         @Data
         public static class EmbeddedObject {
@@ -58,7 +58,7 @@ public class ChatterboxDeliveryDiscordProperties {
 
                 private String name;
 
-                private String iconUrl = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png";
+                private String icon_url = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png";
 
             }
         }

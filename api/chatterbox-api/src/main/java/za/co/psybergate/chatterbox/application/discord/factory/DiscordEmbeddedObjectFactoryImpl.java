@@ -31,7 +31,7 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
     public EmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values) {
         EmbeddedObjectDefinition clone = deepCopy(discordProperties.getEmbeddedObjectDefinition()); // use Jackson
 
-        clone.getEmbeddedObjects().forEach(embeddedObject -> {
+        clone.getEmbeds().forEach(embeddedObject -> {
             embeddedObject.setTitle(
                     substitutionService.apply(embeddedObject.getTitle(), values)
             );
