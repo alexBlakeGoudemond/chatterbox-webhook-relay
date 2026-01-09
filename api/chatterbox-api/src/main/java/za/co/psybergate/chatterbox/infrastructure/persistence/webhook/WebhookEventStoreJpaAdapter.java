@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.infrastructure.persistence.webhook;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
@@ -42,7 +43,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public List<WebhookEvent> getLatestWebhooks(String repositoryFullName) {
         try {
-            return repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED);
+            return repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
         }
