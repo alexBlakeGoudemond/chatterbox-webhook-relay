@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderServiceImpl;
+import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
@@ -44,7 +46,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-// TODO BlakeGoudemond 2026/01/09 | ensure discord delivery logs present here
 @DataJpaTest
 @Import({
         EventProcessorImpl.class,
@@ -56,6 +57,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         WebhookLogger.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
+        DiscordSenderServiceImpl.class,
+        DiscordEmbeddedObjectFactoryImpl.class,
         TemplateSubstitutorImpl.class,
         ApplicationConfig.class,
         WebhookConfigurationResolverImpl.class,
@@ -111,7 +114,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.getEventStatus());
 
         List<WebhookEventDeliveryLog> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
-        assertEquals(1, webhookEventDeliveryLogs.size());
+        assertEquals(2, webhookEventDeliveryLogs.size());
         for (WebhookEventDeliveryLog webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);
             assertEquals(webhookEventDeliveryLog.getWebhookEventId(), retrievedWebhookEvent.getId());
@@ -129,7 +132,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.getEventStatus());
 
         List<GithubPolledEventDeliveryLog> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
-        assertEquals(1, polledEventDeliveryLogs.size());
+        assertEquals(2, polledEventDeliveryLogs.size());
         for (GithubPolledEventDeliveryLog polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);
             assertEquals(polledEventDeliveryLog.getGithubPolledEventId(), retrievedPolledEvent.getId());

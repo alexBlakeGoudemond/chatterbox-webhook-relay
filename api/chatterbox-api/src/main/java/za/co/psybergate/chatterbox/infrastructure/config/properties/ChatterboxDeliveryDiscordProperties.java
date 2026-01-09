@@ -30,7 +30,6 @@ import java.util.List;
 /// ```
 @Data
 @ConfigurationProperties(prefix = "chatterbox.deliveries.discord")
-// TODO BlakeGoudemond 2026/01/09 | test, then bring into main properties file
 public class ChatterboxDeliveryDiscordProperties {
 
     private EmbeddedObjectDefinition embeddedObjectDefinition;

@@ -101,7 +101,7 @@ public class EventProcessorImpl implements EventProcessor {
     private void deliverToDiscord(String discordDestinationChannel, GithubPolledEvent latestEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(latestEvent, destinationUrl);
-        if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
+        if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
             githubPolledStore.storeDelivery(latestEvent, discordDestinationChannel, destinationUrl);
             githubPolledStore.setProcessedStatus(latestEvent, EventStatus.PROCESSED_SUCCESS);
         }else{
@@ -113,7 +113,7 @@ public class EventProcessorImpl implements EventProcessor {
     private void deliverToDiscord(String discordDestinationChannel, WebhookEvent webhookEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(webhookEvent, destinationUrl);
-        if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
+        if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
             webhookReceivedStore.storeDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
             webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
         }else{
