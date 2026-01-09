@@ -49,6 +49,10 @@ public class WebhookLogger {
         log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), teamsDestination);
     }
 
+    public void logSendingDtoToDiscord(GithubEventDto eventDto, String discordDestination) {
+        log.info("[Delivery] Sending '{}' to Discord destination '{}'", eventDto.displayName(), discordDestination);
+    }
+
     public void logTeamsResponse(HttpResponseDto httpResponseDto) {
         log.info("[Delivery] MS Teams Response: {}", httpResponseDto);
     }

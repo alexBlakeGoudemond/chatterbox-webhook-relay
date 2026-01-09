@@ -40,7 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
         WebhookConfigurationResolverImpl.class,
-        TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
         TemplateSubstitutorImpl.class,
         ApplicationConfig.class,

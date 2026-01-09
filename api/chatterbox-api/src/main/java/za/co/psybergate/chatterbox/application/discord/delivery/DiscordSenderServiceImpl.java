@@ -25,7 +25,7 @@ public class DiscordSenderServiceImpl implements DiscordSenderService {
 
     @Override
     public HttpResponseDto process(GithubEventDto dto, String discordDestination) {
-        webhookLogger.logSendingDtoToTeams(dto, discordDestination);
+        webhookLogger.logSendingDtoToDiscord(dto, discordDestination);
         String jsonString = discordEmbeddedObjectFactory.getAsDiscordPayloadString(dto);
         HttpPost httpPost = getHttpPost(discordDestination, jsonString);
         return executeHttpPostRequest(httpPost);

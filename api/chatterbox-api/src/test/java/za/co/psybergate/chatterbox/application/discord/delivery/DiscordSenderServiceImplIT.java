@@ -12,23 +12,44 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-// TODO BlakeGoudemond 2026/01/09 | reduce scope later
-@SpringBootTest
+@SpringBootTest(classes = {
+        JsonFileReader.class,
+        JsonConverterImpl.class,
+        GithubEventExtractorImpl.class,
+        WebhookConfigurationResolverImpl.class,
+        DiscordSenderServiceImpl.class,
+        DiscordEmbeddedObjectFactoryImpl.class,
+        TemplateSubstitutorImpl.class,
+        ApplicationConfig.class,
+        TestConfigurationResolver.class,
+        WebhookConfigurationResolverImpl.class,
+        WebhookLogger.class,
+        HttpResponseHandler.class
+})
 @ActiveProfiles({"live-url"})
-public class DiscordSenderServiceImplTest {
+public class DiscordSenderServiceImplIT {
 
     @MockitoBean
     private WebhookFilter webhookFilter;
@@ -65,7 +86,7 @@ public class DiscordSenderServiceImplTest {
 
         HttpResponseDto httpResponseDto = discordSenderService.process(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
-        assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
+        assertEquals(HttpStatus.NO_CONTENT.value(), httpResponseDto.httpStatus());
     }
 
     @DisplayName("Bad HttpPost yields 401")
