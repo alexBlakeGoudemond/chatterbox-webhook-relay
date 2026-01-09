@@ -16,6 +16,7 @@ import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
         ChatterboxApiProperties.class,
         ChatterboxDeliveryTeamsProperties.class,
         ChatterboxDestinationTeamsProperties.class,
+        ChatterboxDestinationDiscordProperties.class,
         ChatterboxDeliveryDiscordProperties.class,
         ChatterboxSecurityWebhookGithubProperties.class,
         ChatterboxSecurityApiGithubProperties.class,

@@ -74,8 +74,10 @@ chatterbox:
         destination-mapping:
           - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
             teamsDestinationChannel: TestChannel
+            discordDestinationChannel: General
           - name: psyAlexBlakeGoudemond/chatterbox
             teamsDestinationChannel: TestChannel
+            discordDestinationChannel: General
       payload:
         event-mapping:
           push:
@@ -92,6 +94,10 @@ chatterbox:
           webhookUrl: "https://outlook.office.com/webhook/..."
         - channelName: "TestChannel"
           webhookUrl: "https://outlook.office.com/webhook/..."
+    discord:
+      accepted-channel:
+        - channelName: "General"
+          webhookUrl: "https://discord.com/api/webhooks/..."
   deliveries:
     teams:
       adaptive-card-definition:

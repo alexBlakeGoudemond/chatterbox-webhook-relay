@@ -33,8 +33,8 @@ public class WebhookLogger {
         log.debug("[Webhook] Completed in {}ms", ms);
     }
 
-    public void logWebhookReceived(GithubEventDto eventDto) {
-        log.debug("[Webhook] received by Github API; DTO: {}", eventDto);
+    public void logEventReceived(GithubEventDto eventDto) {
+        log.debug("[WebhookEvent] received DTO: {}", eventDto);
     }
 
     public void logUnknownEventType(String eventType) {
