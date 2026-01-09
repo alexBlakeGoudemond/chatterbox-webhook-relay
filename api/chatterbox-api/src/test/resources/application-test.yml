@@ -110,6 +110,9 @@ chatterbox:
                 - type: "TextBlock"
                   text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
                   wrap: true
+    discord:
+      embedded-object-definition:
+
   security:
     webhook:
       github:

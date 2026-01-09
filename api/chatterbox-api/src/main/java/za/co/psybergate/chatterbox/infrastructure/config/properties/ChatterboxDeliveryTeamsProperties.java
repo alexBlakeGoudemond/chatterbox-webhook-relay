@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 
+/// Reference Material:
+/// [Example MS Teams Webhook JSON](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=newteams%2Cdotnet#example)
 @Data
 @ConfigurationProperties(prefix = "chatterbox.deliveries.teams")
 public class ChatterboxDeliveryTeamsProperties {
