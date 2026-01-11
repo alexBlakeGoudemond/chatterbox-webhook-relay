@@ -19,9 +19,11 @@ public interface GithubPolledStore {
 
     List<GithubPolledEvent> getLatestEvents(String repositoryFullName);
 
-    GithubPolledEventDeliveryLog storeDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
+    GithubPolledEventDeliveryLog storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
 
-    GithubPolledEventDeliveryLog storeDelivery(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrk);
+    GithubPolledEventDeliveryLog storeSuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
+
+    GithubPolledEventDeliveryLog storeUnsuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus);
 
@@ -34,4 +36,5 @@ public interface GithubPolledStore {
     List<GithubPolledEvent> getLatestPolledEvents(String repositoryFullName);
 
     GithubPolledEvent getMostRecentPolledEvent(String repositoryFullName);
+
 }

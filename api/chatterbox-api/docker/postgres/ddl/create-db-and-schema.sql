@@ -45,9 +45,10 @@ Drop Table if exists webhook_event_delivery_log;
 CREATE table webhook_event_delivery_log
 (
     id                       serial PRIMARY KEY,
-    webhook_event_id         serial not null, -- ID of the corresponding webhook_event
-    delivery_destination     TEXT   NOT NULL, -- MS Teams, etc.
-    delivery_destination_url TEXT   NOT NULL, -- MS Teams, etc.
+    webhook_event_id         serial       not null, -- ID of the corresponding webhook_event
+    delivery_destination     TEXT         NOT NULL, -- MS Teams, etc.
+    delivery_destination_url TEXT         NOT NULL, -- MS Teams, etc.
+    event_status             EVENT_STATUS NOT NULL,
     delivered_at             TIMESTAMP
 );
 
@@ -55,8 +56,9 @@ Drop Table if exists github_polled_event_delivery_log;
 CREATE table github_polled_event_delivery_log
 (
     id                       serial PRIMARY KEY,
-    github_polled_event_id   serial not null, -- ID of the corresponding github_polled_event
-    delivery_destination     TEXT   NOT NULL, -- MS Teams, etc.
-    delivery_destination_url TEXT   NOT NULL, -- MS Teams, etc.
+    github_polled_event_id   serial       not null, -- ID of the corresponding github_polled_event
+    delivery_destination     TEXT         NOT NULL, -- MS Teams, etc.
+    delivery_destination_url TEXT         NOT NULL, -- MS Teams, etc.
+    event_status             EVENT_STATUS NOT NULL,
     delivered_at             TIMESTAMP
 );

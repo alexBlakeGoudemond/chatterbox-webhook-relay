@@ -18,9 +18,11 @@ public interface WebhookReceivedStore {
 
     WebhookEvent storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    WebhookEventDeliveryLog storeDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog);
+    WebhookEventDeliveryLog storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog);
 
-    WebhookEventDeliveryLog storeDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryLog storeSuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
+
+    WebhookEventDeliveryLog storeUnsuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus);
 

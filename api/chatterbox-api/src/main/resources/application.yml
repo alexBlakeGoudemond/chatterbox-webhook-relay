@@ -83,13 +83,13 @@ chatterbox:
             discordDestinationChannel: General
       payload:
         event-mapping:
-          push:
-            displayName: "Push Event"
-            fields:
-              repositoryName: "repository.full_name"
-              senderName: "sender.login"
-              url: "compare"
-              urlDisplayText: "head_commit.message"
+#          push:
+#            displayName: "Push Event"
+#            fields:
+#              repositoryName: "repository.full_name"
+#              senderName: "sender.login"
+#              url: "compare"
+#              urlDisplayText: "head_commit.message"
           pull_request:
             displayName: "Pull Request Event"
             fields:
