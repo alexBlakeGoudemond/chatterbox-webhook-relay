@@ -62,6 +62,7 @@ public class EventProcessorImpl implements EventProcessor {
         for (WebhookEvent webhookEvent : webhookReceivedStore.getLatestWebhooks(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEvent);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEvent);
+            webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
         }
     }
 
@@ -69,6 +70,7 @@ public class EventProcessorImpl implements EventProcessor {
         for (GithubPolledEvent latestEvent : githubPolledStore.getLatestEvents(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEvent);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEvent);
+            githubPolledStore.setProcessedStatus(latestEvent, EventStatus.PROCESSED_SUCCESS);
         }
     }
 
