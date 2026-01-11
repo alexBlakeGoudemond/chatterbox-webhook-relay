@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -31,19 +34,25 @@ public class GithubPolledEventDeliveryLog {
     @Column(name = "delivery_destination_url", columnDefinition = "text")
     private String deliveryDestinationUrl;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "event_status", nullable = false)
+    private EventStatus eventStatus;
+
     @Column(name = "delivered_at")
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime delivered_at;
 
-    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
+    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime delivered_at) {
         this.githubPolledEventId = githubPolledEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
+        this.eventStatus = eventStatus;
         this.delivered_at = delivered_at;
     }
 
-    public GithubPolledEventDeliveryLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl) {
-        this(polledEvent.getId(), exampleDestination, exampleDestinationUrl, LocalDateTime.now());
+    public GithubPolledEventDeliveryLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl, EventStatus eventStatus) {
+        this(polledEvent.getId(), exampleDestination, exampleDestinationUrl, eventStatus, LocalDateTime.now());
     }
 
     @Override
