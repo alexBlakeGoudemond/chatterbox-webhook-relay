@@ -1,7 +1,6 @@
-# README Github
+# README Github API
 
 In order to make requests towards Github's API, we need an auth token
-
 
 ### How to Get a GitHub Token
 

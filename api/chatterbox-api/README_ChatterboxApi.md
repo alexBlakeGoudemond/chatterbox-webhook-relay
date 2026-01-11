@@ -14,8 +14,8 @@
         GitHub Webhook
                 │
                 ▼
-    https://chatterbox.loca.lt
-        (LocalTunnel)
+      https://<publicFacingURL>
+        (LocalTunnel / NGrok)
                 │
                 ▼
         ┌───────────────┐
