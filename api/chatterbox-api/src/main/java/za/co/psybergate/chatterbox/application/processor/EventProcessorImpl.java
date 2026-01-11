@@ -7,7 +7,6 @@ import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderSer
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService;
-import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
@@ -73,55 +72,47 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
-    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, WebhookEvent webhookEvent) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(webhookEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
-            webhookReceivedStore.storeDelivery(webhookEvent, teamsDestinationChannel, destinationUrl);
-            webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
+            webhookReceivedStore.storeSuccessfulDelivery(webhookEvent, teamsDestinationChannel, destinationUrl);
         }else{
-            webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_FAILURE, httpResponseDto.rawBody());
+            webhookReceivedStore.storeUnsuccessfulDelivery(webhookEvent, teamsDestinationChannel, destinationUrl);
         }
     }
 
-    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, GithubPolledEvent polledEvent) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(polledEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
-            githubPolledStore.storeDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
-            githubPolledStore.setProcessedStatus(polledEvent, EventStatus.PROCESSED_SUCCESS);
+            githubPolledStore.storeSuccessfulDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
         }else{
-            githubPolledStore.setProcessedStatus(polledEvent, EventStatus.PROCESSED_FAILURE, httpResponseDto.rawBody());
+            githubPolledStore.storeUnsuccessfulDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
         }
     }
 
-    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToDiscord(String discordDestinationChannel, GithubPolledEvent latestEvent) {
+    private void deliverToDiscord(String discordDestinationChannel, GithubPolledEvent polledEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
-        HttpResponseDto httpResponseDto = deliverToDiscord(latestEvent, destinationUrl);
+        HttpResponseDto httpResponseDto = deliverToDiscord(polledEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
-            githubPolledStore.storeDelivery(latestEvent, discordDestinationChannel, destinationUrl);
-            githubPolledStore.setProcessedStatus(latestEvent, EventStatus.PROCESSED_SUCCESS);
+            githubPolledStore.storeSuccessfulDelivery(polledEvent, discordDestinationChannel, destinationUrl);
         }else{
-            githubPolledStore.setProcessedStatus(latestEvent, EventStatus.PROCESSED_FAILURE, httpResponseDto.rawBody());
+            githubPolledStore.storeUnsuccessfulDelivery(polledEvent, discordDestinationChannel, destinationUrl);
         }
     }
 
-    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToDiscord(String discordDestinationChannel, WebhookEvent webhookEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(webhookEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
-            webhookReceivedStore.storeDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
-            webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
+            webhookReceivedStore.storeSuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
         }else{
-            webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_FAILURE, httpResponseDto.rawBody());
+            webhookReceivedStore.storeUnsuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
         }
     }
 

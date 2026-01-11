@@ -68,7 +68,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEventDeliveryLog storeDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog) {
+    public WebhookEventDeliveryLog storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog) {
         webhookLogger.logDeliveringEvent(webhookEventDeliveryLog);
         try {
             WebhookEventDeliveryLog save = logRepository.save(webhookEventDeliveryLog);
@@ -80,9 +80,15 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEventDeliveryLog storeDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEvent, destinationName, destinationUrl);
-        return storeDelivery(webhookEventDeliveryLog);
+    public WebhookEventDeliveryLog storeSuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEvent, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
+        return storeSuccessfulDelivery(webhookEventDeliveryLog);
+    }
+
+    @Override
+    public WebhookEventDeliveryLog storeUnsuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEvent, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
+        return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
     @Override

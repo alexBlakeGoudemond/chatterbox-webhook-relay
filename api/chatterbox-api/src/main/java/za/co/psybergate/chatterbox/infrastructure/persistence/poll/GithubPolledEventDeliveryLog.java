@@ -43,15 +43,16 @@ public class GithubPolledEventDeliveryLog {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime delivered_at;
 
-    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
+    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime delivered_at) {
         this.githubPolledEventId = githubPolledEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
+        this.eventStatus = eventStatus;
         this.delivered_at = delivered_at;
     }
 
-    public GithubPolledEventDeliveryLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl) {
-        this(polledEvent.getId(), exampleDestination, exampleDestinationUrl, LocalDateTime.now());
+    public GithubPolledEventDeliveryLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl, EventStatus eventStatus) {
+        this(polledEvent.getId(), exampleDestination, exampleDestinationUrl, eventStatus, LocalDateTime.now());
     }
 
     @Override

@@ -43,15 +43,16 @@ public class WebhookEventDeliveryLog {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime delivered_at;
 
-    public WebhookEventDeliveryLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, LocalDateTime delivered_at) {
+    public WebhookEventDeliveryLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime delivered_at) {
         this.webhookEventId = webhookEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
+        this.eventStatus = eventStatus;
         this.delivered_at = delivered_at;
     }
 
-    public WebhookEventDeliveryLog(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
-        this(webhookEvent.getId(), destinationName, destinationUrl, LocalDateTime.now());
+    public WebhookEventDeliveryLog(WebhookEvent webhookEvent, String destinationName, String destinationUrl, EventStatus eventStatus) {
+        this(webhookEvent.getId(), destinationName, destinationUrl, eventStatus, LocalDateTime.now());
     }
 
     @Override
