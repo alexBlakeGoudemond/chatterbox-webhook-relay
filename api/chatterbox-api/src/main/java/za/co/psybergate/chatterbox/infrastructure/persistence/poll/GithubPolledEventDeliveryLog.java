@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -30,6 +33,11 @@ public class GithubPolledEventDeliveryLog {
 
     @Column(name = "delivery_destination_url", columnDefinition = "text")
     private String deliveryDestinationUrl;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "event_status", nullable = false)
+    private EventStatus eventStatus;
 
     @Column(name = "delivered_at")
     @Convert(converter = LocalDateTimeToInstantConverter.class)

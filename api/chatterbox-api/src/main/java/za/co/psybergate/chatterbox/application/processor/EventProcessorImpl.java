@@ -73,6 +73,7 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
+    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, WebhookEvent webhookEvent) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
@@ -85,6 +86,7 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
+    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, GithubPolledEvent polledEvent) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
@@ -97,6 +99,7 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
+    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToDiscord(String discordDestinationChannel, GithubPolledEvent latestEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
@@ -109,6 +112,7 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
+    // TODO BlakeGoudemond 2026/01/11 | storeSuccessfulDelivery vs storeUnsuccessfulDelivery
     @SuppressWarnings("DuplicatedCode")
     private void deliverToDiscord(String discordDestinationChannel, WebhookEvent webhookEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
