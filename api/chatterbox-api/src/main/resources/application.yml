@@ -114,7 +114,7 @@ chatterbox:
               senderName: "user.login"
               url: "html_url"
               urlDisplayText: "title"
-              extraDetail: "full_name"
+              extraDetail: "state"
   destinations:
     teams:
       accepted-channel:
