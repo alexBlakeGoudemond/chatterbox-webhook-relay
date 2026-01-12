@@ -39,8 +39,11 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
             List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
+                return List.of();
             }
-            return githubPolledEvents;
+            return githubPolledEvents.stream()
+                    .map(GithubPolledEventRecord::new)
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
         }
@@ -53,7 +56,9 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
             }
-            return githubPolledEvents;
+            return githubPolledEvents.stream()
+                    .map(GithubPolledEventRecord::new)
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
         }
@@ -63,9 +68,9 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEventRecord storeEvent(GithubPolledEvent event) {
         webhookLogger.logStoringEvent(event);
         try {
-            GithubPolledEvent save = repository.save(event);
-            webhookLogger.logEventStored(save);
-            return save;
+            GithubPolledEvent polledEvent = repository.save(event);
+            webhookLogger.logEventStored(polledEvent);
+            return new GithubPolledEventRecord(polledEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the GithubPolledEvent", e);
         }
@@ -81,9 +86,9 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
         webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
         try {
-            GithubPolledEventDeliveryLog save = logRepository.save(polledEventDeliveryLog);
-            webhookLogger.logEventDelivered(save);
-            return save;
+            GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
+            webhookLogger.logEventDelivered(deliveryLog);
+            return new GithubPolledEventDeliveryRecord(deliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store Delivery information of the event", e);
         }
@@ -114,14 +119,18 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     @Override
     public GithubPolledEventRecord getEvent(Long id) {
-        return repository.findById(id)
+        GithubPolledEvent polledEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
+        return new GithubPolledEventRecord(polledEvent);
     }
 
     @Override
     public List<GithubPolledEventDeliveryRecord> getDeliveryLogs(Long id) {
         try {
-            return logRepository.findAllByGithubPolledEventId(id);
+            List<GithubPolledEventDeliveryLog> deliveryLogs = logRepository.findAllByGithubPolledEventId(id);
+            return deliveryLogs.stream()
+                    .map(GithubPolledEventDeliveryRecord::new)
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);
         }
@@ -129,7 +138,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     @Override
     public GithubPolledEventRecord getMostRecentPolledEvent(String repositoryFullName) {
-        List<GithubPolledEvent> polledEvents = getLatestProcessedEvents(repositoryFullName);
+        List<GithubPolledEventRecord> polledEvents = getLatestProcessedEvents(repositoryFullName);
         if (polledEvents.isEmpty()) {
             throw new ApplicationException("No polled events found for repository " + repositoryFullName);
         }

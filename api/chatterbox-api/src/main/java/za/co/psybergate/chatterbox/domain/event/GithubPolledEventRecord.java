@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 
 import java.time.LocalDateTime;
 
@@ -38,5 +39,22 @@ public class GithubPolledEventRecord {
     private LocalDateTime fetchedAt;
 
     private LocalDateTime processedAt;
+
+    public GithubPolledEventRecord(GithubPolledEvent polledEvent) {
+        this.id = polledEvent.getId();
+        this.repositoryFullName = polledEvent.getRepositoryFullName();
+        this.sourceId = polledEvent.getSourceId();
+        this.eventType = polledEvent.getEventType();
+        this.displayName = polledEvent.getDisplayName();
+        this.senderName = polledEvent.getSenderName();
+        this.eventUrl = polledEvent.getEventUrl();
+        this.eventUrlDisplayText = polledEvent.getEventUrlDisplayText();
+        this.extraDetail = polledEvent.getExtraDetail();
+        this.payload = polledEvent.getPayload();
+        this.eventStatus = polledEvent.getEventStatus();
+        this.errorMessage = polledEvent.getErrorMessage();
+        this.fetchedAt = polledEvent.getFetchedAt();
+        this.processedAt = polledEvent.getProcessedAt();
+    }
 
 }
