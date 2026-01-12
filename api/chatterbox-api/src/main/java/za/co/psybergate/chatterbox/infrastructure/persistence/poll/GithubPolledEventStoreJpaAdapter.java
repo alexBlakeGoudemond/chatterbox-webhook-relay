@@ -33,15 +33,6 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId) {
-        try {
-            return repository.findFirstByRepositoryFullNameAndEventTypeAndSourceIdOrderByIdDesc(repositoryFullName, eventType, sourceId);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to confirm if GithubPolledEvent exists", e);
-        }
-    }
-
-    @Override
     public List<GithubPolledEvent> getLatestProcessedEvents(String repositoryFullName) {
         try {
             List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
@@ -113,17 +104,6 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus) {
         polledEvent.setEventStatus(eventStatus);
         polledEvent.setProcessedAt(LocalDateTime.now());
-        try {
-            repository.save(polledEvent);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to update the GithubPolledEvent", e);
-        }
-    }
-
-    @Override
-    public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse) {
-        polledEvent.setEventStatus(eventStatus);
-        polledEvent.setErrorMessage(responseDtoErrorResponse);
         try {
             repository.save(polledEvent);
         } catch (Exception e) {

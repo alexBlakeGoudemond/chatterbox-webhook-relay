@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface WebhookReceivedStore {
 
-    boolean hasAlreadyBeenStored(String repositoryFullName, String webhookId);
-
     List<WebhookEvent> getLatestProcessedWebhooks(String repositoryFullName);
 
     List<WebhookEvent> getUnprocessedWebhooks(String repositoryFullName);
@@ -27,8 +25,6 @@ public interface WebhookReceivedStore {
     WebhookEventDeliveryLog storeUnsuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus);
-
-    void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus, String responseDtoErrorResponse);
 
     WebhookEvent getWebhook(Long id);
 

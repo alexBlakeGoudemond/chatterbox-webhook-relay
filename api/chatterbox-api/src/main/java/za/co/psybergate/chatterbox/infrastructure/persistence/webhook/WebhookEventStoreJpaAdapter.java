@@ -32,15 +32,6 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public boolean hasAlreadyBeenStored(String repositoryFullName, String webhookId) {
-        try {
-            return repository.findFirstByRepositoryFullNameAndWebhookIdOrderByIdDesc(repositoryFullName, webhookId);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to confirm if WebhookEvent exists", e);
-        }
-    }
-
-    @Override
     public List<WebhookEvent> getLatestProcessedWebhooks(String repositoryFullName) {
         try {
             List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
@@ -112,17 +103,6 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus) {
         webhookEvent.setEventStatus(eventStatus);
         webhookEvent.setProcessedAt(LocalDateTime.now());
-        try {
-            repository.save(webhookEvent);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to update the WebhookEvent", e);
-        }
-    }
-
-    @Override
-    public void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus, String responseDtoErrorResponse) {
-        webhookEvent.setEventStatus(eventStatus);
-        webhookEvent.setErrorMessage(responseDtoErrorResponse);
         try {
             repository.save(webhookEvent);
         } catch (Exception e) {
