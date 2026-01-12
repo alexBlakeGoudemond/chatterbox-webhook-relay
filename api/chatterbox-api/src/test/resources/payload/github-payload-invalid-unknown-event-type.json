@@ -1,4 +1,5 @@
 {
     "action": "opened",
-    "eventType": "unknownEvent"
+    "eventType": "unknownEvent",
+    "full_name": "chatterbox"
 }

@@ -16,6 +16,10 @@ import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorIm
 
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.EXTRADETAIL;
+import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.URLDISPLAYTEXT;
+
 @Component
 @RequiredArgsConstructor
 public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFactory {
@@ -54,10 +58,11 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
     public EmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto) {
         Map<String, String> values = Map.of(
                 "displayName", dto.displayName(),
-                "repositoryName", dto.repositoryName(),
-                "senderName", dto.senderName(),
-                "url", dto.url(),
-                "urlDisplayText", dto.urlDisplayText()
+                REPOSITORYNAME.getFieldName(), dto.repositoryName(),
+                SENDERNAME.getFieldName(), dto.senderName(),
+                URL.getFieldName(), dto.url(),
+                URLDISPLAYTEXT.getFieldName(), dto.urlDisplayText(),
+                EXTRADETAIL.getFieldName(), dto.extraDetail()
         );
         return buildEmbeddedObjectDefinition(values);
     }

@@ -8,5 +8,6 @@
     "sender": {
         "login": "psyAlexBlakeGoudemond"
     },
-    "compare": "http://localhost:abcd"
+    "compare": "http://localhost:abcd",
+    "full_name": "chatterbox"
 }

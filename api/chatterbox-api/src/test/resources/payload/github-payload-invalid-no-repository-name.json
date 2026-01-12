@@ -12,5 +12,6 @@
     "compare": "http://localhost:abcd",
     "head_commit": {
         "message": "Test message Is here!"
-    }
+    },
+    "full_name": "chatterbox"
 }
