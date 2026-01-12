@@ -46,13 +46,15 @@ public class GithubEventExtractorImpl implements GithubEventExtractor{
         String formattedUrlDisplayText = format(urlDisplayText, displayName);
         String senderName = read(payload, fields.get(SENDERNAME));
         String url = read(payload, fields.get(URL));
+        String extraDetail = read(payload, fields.get(EXTRADETAIL));
         return new GithubEventDto(
                 eventType,
                 displayName,
                 repositoryName,
                 senderName,
                 url,
-                formattedUrlDisplayText
+                formattedUrlDisplayText,
+                extraDetail
         );
     }
 

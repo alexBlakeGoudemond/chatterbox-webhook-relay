@@ -90,6 +90,7 @@ chatterbox:
 #              senderName: "sender.login"
 #              url: "compare"
 #              urlDisplayText: "head_commit.message"
+#              extraDetail: "repository.name"
           pull_request:
             displayName: "Pull Request Event"
             fields:
@@ -97,13 +98,15 @@ chatterbox:
               senderName: "pull_request.user.login"
               url: "pull_request.html_url"
               urlDisplayText: "pull_request.title"
+              extraDetail: "action"
           poll_commit:
             displayName: "Commit Event"
             fields:
               repositoryName: "full_name"
               senderName: "commit.author.name"
               url: "commit.url"
-              urlDisplayText: "commit.message" #
+              urlDisplayText: "commit.message"
+              extraDetail: "full_name"
           poll_pull_request:
             displayName: "Pull Request Event"
             fields:
@@ -111,6 +114,7 @@ chatterbox:
               senderName: "user.login"
               url: "html_url"
               urlDisplayText: "title"
+              extraDetail: "full_name"
   destinations:
     teams:
       accepted-channel:
@@ -135,7 +139,7 @@ chatterbox:
                 width: Full
               body:
                 - type: "TextBlock"
-                  text: "📢 ${displayName} for ${repositoryName}"
+                  text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
                   wrap: true
                 - type: "TextBlock"
                   text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
@@ -144,7 +148,7 @@ chatterbox:
       embedded-object-definition:
         embeds:
           - title: "${urlDisplayText}"
-            description: "📢 ${displayName} for ${repositoryName}"
+            description: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
             url: "${url}"
             color: 6993
             author:

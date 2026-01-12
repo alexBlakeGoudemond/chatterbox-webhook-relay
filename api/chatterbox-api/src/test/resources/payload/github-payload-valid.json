@@ -1,8 +1,10 @@
 {
+    "action": "opened",
     "hello": "world",
     "eventType": "push",
     "repository": {
-        "full_name": "psyAlexBlakeGoudemond/chatterbox"
+        "full_name": "psyAlexBlakeGoudemond/chatterbox",
+        "name": "chatterbox"
     },
     "sender": {
         "login": "psyAlexBlakeGoudemond"
@@ -10,5 +12,6 @@
     "compare": "https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif",
     "head_commit": {
         "message": "Test message Is here!"
-    }
+    },
+    "full_name": "chatterbox"
 }
