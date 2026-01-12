@@ -1,5 +1,4 @@
 {
     "action": "opened",
-    "eventType": "push",
-    "full_name": "chatterbox"
+    "eventType": "push"
 }
