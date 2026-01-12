@@ -139,7 +139,7 @@ chatterbox:
                 width: Full
               body:
                 - type: "TextBlock"
-                  text: "📢 ${displayName} for ${repositoryName}"
+                  text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
                   wrap: true
                 - type: "TextBlock"
                   text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
@@ -148,7 +148,7 @@ chatterbox:
       embedded-object-definition:
         embeds:
           - title: "${urlDisplayText}"
-            description: "📢 ${displayName} for ${repositoryName}"
+            description: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
             url: "${url}"
             color: 6993
             author:
