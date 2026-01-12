@@ -6,14 +6,16 @@ import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
+
+import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor
@@ -49,10 +51,11 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
     public TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto) {
         Map<String, String> values = Map.of(
                 "displayName", dto.displayName(),
-                "repositoryName", dto.repositoryName(),
-                "senderName", dto.senderName(),
-                "url", dto.url(),
-                "urlDisplayText", dto.urlDisplayText()
+                REPOSITORYNAME.getFieldName(), dto.repositoryName(),
+                SENDERNAME.getFieldName(), dto.senderName(),
+                URL.getFieldName(), dto.url(),
+                URLDISPLAYTEXT.getFieldName(), dto.urlDisplayText(),
+                EXTRADETAIL.getFieldName(),
         );
         return buildCard(values);
     }

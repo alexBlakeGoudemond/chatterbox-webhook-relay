@@ -11,7 +11,8 @@ public record GithubEventDto(
         @NotNull String repositoryName,
         @NotNull String senderName,
         @NotNull String url,
-        @NotNull String urlDisplayText) {
+        @NotNull String urlDisplayText,
+        @NotNull String extraDetail) {
 
     public GithubEventDto(WebhookEvent webhookEvent) {
         this(webhookEvent.getEventType(), webhookEvent.getDisplayName(), webhookEvent.getRepositoryFullName(), webhookEvent.getSenderName(), webhookEvent.getEventUrl(), webhookEvent.getEventUrlDisplayText());
