@@ -21,6 +21,7 @@ chatterbox:
               #        senderName: "sender.login"
               url: "compare"
               urlDisplayText: "head_commit.message"
+              extraDetail: "repository.name"
   destinations:
     teams:
       accepted-channel:
@@ -41,7 +42,7 @@ chatterbox:
                 width: Full
               body:
                 - type: "TextBlock"
-                  text: "📢 ${displayName} for ${repositoryName}"
+                  text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
                   wrap: true
                 - type: "TextBlock"
                   text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"

@@ -15,6 +15,7 @@ CREATE TABLE webhook_event
     sender_name            TEXT         NOT NULL,
     event_url              TEXT         NOT NULL,
     event_url_display_text TEXT         NOT NULL,
+    extra_detail           TEXT         NOT NULL,
     payload                JSONB        NOT NULL, -- raw JSON payload
     event_status           EVENT_STATUS NOT NULL,
     error_message          TEXT,
@@ -34,6 +35,7 @@ CREATE TABLE github_polled_event
     sender_name            TEXT         NOT NULL,
     event_url              TEXT         NOT NULL,
     event_url_display_text TEXT         NOT NULL,
+    extra_detail           TEXT         NOT NULL,
     payload                JSONB        NOT NULL, -- raw JSON payload
     event_status           EVENT_STATUS NOT NULL,
     error_message          TEXT,

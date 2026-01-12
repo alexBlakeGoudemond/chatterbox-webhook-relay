@@ -45,7 +45,8 @@ public class ChatterboxSourceGithubPayloadProperties {
             REPOSITORYNAME("repositoryName"),
             SENDERNAME("senderName"),
             URL("url"),
-            URLDISPLAYTEXT("urlDisplayText");
+            URLDISPLAYTEXT("urlDisplayText"),
+            EXTRADETAIL("extraDetail");
 
             GithubIncomingMappingFieldKeys(String fieldName) {
                 this.fieldName = fieldName;

@@ -11,14 +11,15 @@ public record GithubEventDto(
         @NotNull String repositoryName,
         @NotNull String senderName,
         @NotNull String url,
-        @NotNull String urlDisplayText) {
+        @NotNull String urlDisplayText,
+        @NotNull String extraDetail) {
 
     public GithubEventDto(WebhookEvent webhookEvent) {
-        this(webhookEvent.getEventType(), webhookEvent.getDisplayName(), webhookEvent.getRepositoryFullName(), webhookEvent.getSenderName(), webhookEvent.getEventUrl(), webhookEvent.getEventUrlDisplayText());
+        this(webhookEvent.getEventType(), webhookEvent.getDisplayName(), webhookEvent.getRepositoryFullName(), webhookEvent.getSenderName(), webhookEvent.getEventUrl(), webhookEvent.getEventUrlDisplayText(), webhookEvent.getExtraDetail());
     }
 
     public GithubEventDto(GithubPolledEvent polledEvent) {
-        this(polledEvent.getEventType(), polledEvent.getDisplayName(), polledEvent.getRepositoryFullName(), polledEvent.getSenderName(), polledEvent.getEventUrl(), polledEvent.getEventUrlDisplayText());
+        this(polledEvent.getEventType(), polledEvent.getDisplayName(), polledEvent.getRepositoryFullName(), polledEvent.getSenderName(), polledEvent.getEventUrl(), polledEvent.getEventUrlDisplayText(), polledEvent.getExtraDetail());
     }
 
 }
