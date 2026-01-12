@@ -8,6 +8,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -40,7 +41,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
             }
-            return webhookEvents;
+            return webhookEvents.stream()
+                    .map(WebhookEventRecord::new)
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
         }
@@ -53,7 +56,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
             }
-            return webhookEvents;
+            return webhookEvents.stream()
+                    .map(WebhookEventRecord::new)
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
         }
@@ -63,9 +68,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public WebhookEventRecord storeWebhook(WebhookEvent webhook) {
         webhookLogger.logStoringEvent(webhook);
         try {
-            WebhookEvent save = repository.save(webhook);
+            WebhookEvent webhookEvent = repository.save(webhook);
             webhookLogger.logEventStored(webhook);
-            return save;
+            return new WebhookEventRecord(webhookEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store WebhookEvent", e);
         }
@@ -81,9 +86,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog) {
         webhookLogger.logDeliveringEvent(webhookEventDeliveryLog);
         try {
-            WebhookEventDeliveryLog save = logRepository.save(webhookEventDeliveryLog);
-            webhookLogger.logEventDelivered(save);
-            return save;
+            WebhookEventDeliveryLog deliveryLog = logRepository.save(webhookEventDeliveryLog);
+            webhookLogger.logEventDelivered(deliveryLog);
+            return new WebhookEventDeliveryRecord(deliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store the Delivery information of the event", e);
         }
@@ -114,14 +119,18 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     @Override
     public WebhookEventRecord getWebhook(Long id) {
-        return repository.findById(id)
+        WebhookEvent webhookEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
+        return new WebhookEventRecord(webhookEvent);
     }
 
     @Override
     public List<WebhookEventDeliveryRecord> getDeliveryLogs(Long webhookEventId) {
         try {
-            return logRepository.findAllByWebhookEventId(webhookEventId);
+            List<WebhookEventDeliveryLog> deliveryLogs = logRepository.findAllByWebhookEventId(webhookEventId);
+            return deliveryLogs.stream()
+                    .map(WebhookEventDeliveryRecord::new)
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEventLogs", e);
         }
@@ -129,7 +138,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     @Override
     public WebhookEventRecord getMostRecentWebhook(String repositoryName) {
-        List<WebhookEvent> webhookEvents = getLatestProcessedWebhooks(repositoryName);
+        List<WebhookEventRecord> webhookEvents = getLatestProcessedWebhooks(repositoryName);
         if (webhookEvents.isEmpty()) {
             throw new ApplicationException("No WebhookEvents found for repository " + repositoryName);
         }
