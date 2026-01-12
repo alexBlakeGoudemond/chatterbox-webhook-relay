@@ -1,7 +1,9 @@
 {
+    "action": "opened",
     "hello": "world",
     "repository": {
-        "full_name": "psyAlexBlakeGoudemond/chatterbox"
+        "full_name": "psyAlexBlakeGoudemond/chatterbox",
+        "name": "chatterbox"
     },
     "sender": {
         "login": "psyAlexBlakeGoudemond"
