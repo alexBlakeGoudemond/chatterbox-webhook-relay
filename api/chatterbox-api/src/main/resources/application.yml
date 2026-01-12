@@ -106,7 +106,7 @@ chatterbox:
               senderName: "commit.author.name"
               url: "commit.url"
               urlDisplayText: "commit.message"
-              extraDetail: "repository.name"
+              extraDetail: "full_name"
           poll_pull_request:
             displayName: "Pull Request Event"
             fields:
@@ -114,7 +114,7 @@ chatterbox:
               senderName: "user.login"
               url: "html_url"
               urlDisplayText: "title"
-              extraDetail: "action"
+              extraDetail: "full_name"
   destinations:
     teams:
       accepted-channel:
