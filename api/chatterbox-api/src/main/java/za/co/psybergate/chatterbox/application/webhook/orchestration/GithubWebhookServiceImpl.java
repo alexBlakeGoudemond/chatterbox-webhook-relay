@@ -15,9 +15,9 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
@@ -47,39 +47,39 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
 
     @Override
-    public WebhookEvent process(String eventType, String deliveryId, JsonNode rawBody) {
+    public WebhookEventRecord process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        WebhookEvent webhookEvent = webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
+        WebhookEventRecord webhookEvent = webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }
 
     @Override
-    public List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
+    public List<GithubPolledEventRecord> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
         return pollGithubForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
     }
 
     @Override
-    public List<GithubPolledEvent> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public List<GithubPolledEventRecord> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
-        List<GithubPolledEvent> updates = new ArrayList<>();
+        List<GithubPolledEventRecord> updates = new ArrayList<>();
         for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
             EventType eventType = entry.getKey();
             appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
-            List<GithubPolledEvent> githubPolledEvents = storeEvents(eventType, arrayNode);
+            List<GithubPolledEventRecord> githubPolledEvents = storeEvents(eventType, arrayNode);
             updates.addAll(githubPolledEvents);
         }
         return updates;
     }
 
     @Override
-    public List<GithubPolledEvent> pollGithubForChanges(String repositoryFullName, LocalDateTime receivedAt) {
+    public List<GithubPolledEventRecord> pollGithubForChanges(String repositoryFullName, LocalDateTime receivedAt) {
         String[] repositoryDetails = repositoryFullName.split("/");
         String owner = repositoryDetails[0];
         String repositoryName = repositoryDetails[1];
@@ -96,12 +96,12 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         }
     }
 
-    private List<GithubPolledEvent> storeEvents(EventType eventType, ArrayNode arrayNode) {
-        List<GithubPolledEvent> updates = new ArrayList<>();
+    private List<GithubPolledEventRecord> storeEvents(EventType eventType, ArrayNode arrayNode) {
+        List<GithubPolledEventRecord> updates = new ArrayList<>();
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = getUniqueId(eventType, jsonNode);
             GithubEventDto eventDto = getEventDto(eventType.name(), jsonNode);
-            GithubPolledEvent polledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
+            GithubPolledEventRecord polledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
             updates.add(polledEvent);
         }
         return updates;
