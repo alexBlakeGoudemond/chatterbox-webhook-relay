@@ -44,7 +44,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     @Override
     public List<GithubPolledEvent> getLatestEvents(String repositoryFullName) {
         try {
-            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED, Limit.of(5));
+            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
             }
@@ -134,17 +134,8 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public List<GithubPolledEvent> getLatestPolledEvents(String repositoryFullName) {
-        try {
-            return repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to retrieve GithubPolledEvent", e);
-        }
-    }
-
-    @Override
     public GithubPolledEvent getMostRecentPolledEvent(String repositoryFullName) {
-        List<GithubPolledEvent> polledEvents = getLatestPolledEvents(repositoryFullName);
+        List<GithubPolledEvent> polledEvents = getLatestEvents(repositoryFullName);
         if (polledEvents.isEmpty()) {
             throw new ApplicationException("No polled events found for repository " + repositoryFullName);
         }

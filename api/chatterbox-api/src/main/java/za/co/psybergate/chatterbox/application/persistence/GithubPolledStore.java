@@ -33,8 +33,6 @@ public interface GithubPolledStore {
 
     List<GithubPolledEventDeliveryLog> getDeliveryLogs(Long id);
 
-    List<GithubPolledEvent> getLatestPolledEvents(String repositoryFullName);
-
     GithubPolledEvent getMostRecentPolledEvent(String repositoryFullName);
 
 }
