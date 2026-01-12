@@ -2,8 +2,9 @@ package za.co.psybergate.chatterbox.application.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
 
@@ -11,26 +12,26 @@ import java.util.List;
 
 public interface GithubPolledStore {
 
-    List<GithubPolledEvent> getUnprocessedEvents(String repositoryFullName);
+    List<GithubPolledEventRecord> getUnprocessedEvents(String repositoryFullName);
 
-    GithubPolledEvent storeEvent(GithubPolledEvent event);
+    GithubPolledEventRecord storeEvent(GithubPolledEvent event);
 
-    GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    GithubPolledEventRecord storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    List<GithubPolledEvent> getLatestProcessedEvents(String repositoryFullName);
+    List<GithubPolledEventRecord> getLatestProcessedEvents(String repositoryFullName);
 
-    GithubPolledEventDeliveryLog storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
+    GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
 
-    GithubPolledEventDeliveryLog storeSuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
 
-    GithubPolledEventDeliveryLog storeUnsuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus);
 
-    GithubPolledEvent getEvent(Long id);
+    GithubPolledEventRecord getEvent(Long id);
 
-    List<GithubPolledEventDeliveryLog> getDeliveryLogs(Long id);
+    List<GithubPolledEventDeliveryRecord> getDeliveryLogs(Long id);
 
-    GithubPolledEvent getMostRecentPolledEvent(String repositoryFullName);
+    GithubPolledEventRecord getMostRecentPolledEvent(String repositoryFullName);
 
 }
