@@ -83,14 +83,14 @@ chatterbox:
             discordDestinationChannel: General
       payload:
         event-mapping:
-#          push:
-#            displayName: "Push Event"
-#            fields:
-#              repositoryName: "repository.full_name"
-#              senderName: "sender.login"
-#              url: "compare"
-#              urlDisplayText: "head_commit.message"
-#              extraDetail: "repository.name"
+          push:
+            displayName: "Push Event"
+            fields:
+              repositoryName: "repository.full_name"
+              senderName: "sender.login"
+              url: "compare"
+              urlDisplayText: "head_commit.message"
+              extraDetail: "repository.name"
           pull_request:
             displayName: "Pull Request Event"
             fields:
@@ -106,7 +106,7 @@ chatterbox:
               senderName: "commit.author.name"
               url: "commit.url"
               urlDisplayText: "commit.message"
-              extraDetail: "full_name"
+              extraDetail: "repository.name"
           poll_pull_request:
             displayName: "Pull Request Event"
             fields:
@@ -114,7 +114,7 @@ chatterbox:
               senderName: "user.login"
               url: "html_url"
               urlDisplayText: "title"
-              extraDetail: "full_name"
+              extraDetail: "action"
   destinations:
     teams:
       accepted-channel:
@@ -139,7 +139,7 @@ chatterbox:
                 width: Full
               body:
                 - type: "TextBlock"
-                  text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+                  text: "📢 ${displayName} for ${repositoryName}"
                   wrap: true
                 - type: "TextBlock"
                   text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
@@ -148,7 +148,7 @@ chatterbox:
       embedded-object-definition:
         embeds:
           - title: "${urlDisplayText}"
-            description: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+            description: "📢 ${displayName} for ${repositoryName}"
             url: "${url}"
             color: 6993
             author:

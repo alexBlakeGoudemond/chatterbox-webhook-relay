@@ -55,7 +55,7 @@ public class TeamsCardFactoryImpl implements TeamsCardFactory {
                 SENDERNAME.getFieldName(), dto.senderName(),
                 URL.getFieldName(), dto.url(),
                 URLDISPLAYTEXT.getFieldName(), dto.urlDisplayText(),
-                EXTRADETAIL.getFieldName(), dto.extraDetail()
+                EXTRADETAIL.getFieldName(),
         );
         return buildCard(values);
     }
