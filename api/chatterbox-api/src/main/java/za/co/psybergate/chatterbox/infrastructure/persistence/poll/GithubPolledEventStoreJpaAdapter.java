@@ -44,7 +44,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     @Override
     public List<GithubPolledEvent> getLatestEvents(String repositoryFullName) {
         try {
-            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
+            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
             }

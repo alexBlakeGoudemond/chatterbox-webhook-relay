@@ -43,7 +43,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     @Override
     public List<WebhookEvent> getLatestWebhooks(String repositoryFullName) {
         try {
-            List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
+            List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED, Limit.of(5));
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
             }
