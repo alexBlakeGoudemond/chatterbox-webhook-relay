@@ -41,14 +41,14 @@ public class GithubPolledEventDeliveryLog {
 
     @Column(name = "delivered_at")
     @Convert(converter = LocalDateTimeToInstantConverter.class)
-    private LocalDateTime delivered_at;
+    private LocalDateTime deliveredAt;
 
-    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime delivered_at) {
+    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime deliveredAt) {
         this.githubPolledEventId = githubPolledEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
         this.eventStatus = eventStatus;
-        this.delivered_at = delivered_at;
+        this.deliveredAt = deliveredAt;
     }
 
     public GithubPolledEventDeliveryLog(GithubPolledEvent polledEvent, String exampleDestination, String exampleDestinationUrl, EventStatus eventStatus) {

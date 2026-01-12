@@ -41,14 +41,14 @@ public class WebhookEventDeliveryLog {
 
     @Column(name = "delivered_at")
     @Convert(converter = LocalDateTimeToInstantConverter.class)
-    private LocalDateTime delivered_at;
+    private LocalDateTime deliveredAt;
 
-    public WebhookEventDeliveryLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime delivered_at) {
+    public WebhookEventDeliveryLog(Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime deliveredAt) {
         this.webhookEventId = webhookEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
         this.eventStatus = eventStatus;
-        this.delivered_at = delivered_at;
+        this.deliveredAt = deliveredAt;
     }
 
     public WebhookEventDeliveryLog(WebhookEvent webhookEvent, String destinationName, String destinationUrl, EventStatus eventStatus) {
