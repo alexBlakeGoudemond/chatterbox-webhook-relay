@@ -10,6 +10,8 @@ import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
@@ -51,7 +53,7 @@ public class CatchUpRunner implements ApplicationRunner {
     private boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
         LocalDateTime lastPersistedTime;
         try {
-            WebhookEvent latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
+            WebhookEventRecord latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
             lastPersistedTime = latestWebhookEvent.getReceivedAt();
         } catch (ApplicationException e) {
@@ -59,7 +61,7 @@ public class CatchUpRunner implements ApplicationRunner {
             return false;
         }
         try {
-            GithubPolledEvent latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
+            GithubPolledEventRecord latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.getFetchedAt());
         } catch (ApplicationException e) {

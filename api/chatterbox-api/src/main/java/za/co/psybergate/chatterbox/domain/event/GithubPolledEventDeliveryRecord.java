@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.domain.event;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
+@ToString
 public class GithubPolledEventDeliveryRecord {
 
     private Long id;
