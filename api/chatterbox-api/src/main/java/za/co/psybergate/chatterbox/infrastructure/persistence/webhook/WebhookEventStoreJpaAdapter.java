@@ -8,7 +8,6 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -95,19 +94,20 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEvent, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
+    public WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventRecord webhookEventRecord, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
     @Override
-    public WebhookEventDeliveryRecord storeUnsuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEvent, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
+    public WebhookEventDeliveryRecord storeUnsuccessfulDelivery(WebhookEventRecord webhookEventRecord, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
     @Override
-    public void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus) {
+    public void setProcessedStatus(WebhookEventRecord webhookEventRecord, EventStatus eventStatus) {
+        WebhookEvent webhookEvent = new WebhookEvent(webhookEventRecord);
         webhookEvent.setEventStatus(eventStatus);
         webhookEvent.setProcessedAt(LocalDateTime.now());
         try {

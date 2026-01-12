@@ -10,6 +10,8 @@ import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
@@ -59,56 +61,56 @@ public class EventProcessorImpl implements EventProcessor {
     }
 
     private void processWebhookEvents(DestinationMapping destinationMapping) {
-        for (WebhookEvent webhookEvent : webhookReceivedStore.getUnprocessedWebhooks(destinationMapping.getName())) {
-            deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEvent);
-            deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEvent);
-            webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
+        for (WebhookEventRecord webhookEventRecord : webhookReceivedStore.getUnprocessedWebhooks(destinationMapping.getName())) {
+            deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEventRecord);
+            deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEventRecord);
+            webhookReceivedStore.setProcessedStatus(webhookEventRecord, EventStatus.PROCESSED_SUCCESS);
         }
     }
 
     private void processPolledEvents(DestinationMapping destinationMapping) {
-        for (GithubPolledEvent latestEvent : githubPolledStore.getUnprocessedEvents(destinationMapping.getName())) {
-            deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEvent);
-            deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEvent);
-            githubPolledStore.setProcessedStatus(latestEvent, EventStatus.PROCESSED_SUCCESS);
+        for (GithubPolledEventRecord latestEventRecord : githubPolledStore.getUnprocessedEvents(destinationMapping.getName())) {
+            deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEventRecord);
+            deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEventRecord);
+            githubPolledStore.setProcessedStatus(latestEventRecord, EventStatus.PROCESSED_SUCCESS);
         }
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToTeams(String teamsDestinationChannel, WebhookEvent webhookEvent) {
+    private void deliverToTeams(String teamsDestinationChannel, WebhookEventRecord webhookEventRecord) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
-        HttpResponseDto httpResponseDto = deliverToTeams(webhookEvent, destinationUrl);
+        HttpResponseDto httpResponseDto = deliverToTeams(webhookEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
-            webhookReceivedStore.storeSuccessfulDelivery(webhookEvent, teamsDestinationChannel, destinationUrl);
+            webhookReceivedStore.storeSuccessfulDelivery(webhookEventRecord, teamsDestinationChannel, destinationUrl);
         }else{
-            webhookReceivedStore.storeUnsuccessfulDelivery(webhookEvent, teamsDestinationChannel, destinationUrl);
+            webhookReceivedStore.storeUnsuccessfulDelivery(webhookEventRecord, teamsDestinationChannel, destinationUrl);
         }
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToTeams(String teamsDestinationChannel, GithubPolledEvent polledEvent) {
+    private void deliverToTeams(String teamsDestinationChannel, GithubPolledEventRecord polledEventRecord) {
         String destinationUrl = destinationTeamsProperties.getUrl(teamsDestinationChannel);
-        HttpResponseDto httpResponseDto = deliverToTeams(polledEvent, destinationUrl);
+        HttpResponseDto httpResponseDto = deliverToTeams(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
-            githubPolledStore.storeSuccessfulDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
+            githubPolledStore.storeSuccessfulDelivery(polledEventRecord, teamsDestinationChannel, destinationUrl);
         }else{
-            githubPolledStore.storeUnsuccessfulDelivery(polledEvent, teamsDestinationChannel, destinationUrl);
+            githubPolledStore.storeUnsuccessfulDelivery(polledEventRecord, teamsDestinationChannel, destinationUrl);
         }
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToDiscord(String discordDestinationChannel, GithubPolledEvent polledEvent) {
+    private void deliverToDiscord(String discordDestinationChannel, GithubPolledEventRecord polledEventRecord) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
-        HttpResponseDto httpResponseDto = deliverToDiscord(polledEvent, destinationUrl);
+        HttpResponseDto httpResponseDto = deliverToDiscord(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
-            githubPolledStore.storeSuccessfulDelivery(polledEvent, discordDestinationChannel, destinationUrl);
+            githubPolledStore.storeSuccessfulDelivery(polledEventRecord, discordDestinationChannel, destinationUrl);
         }else{
-            githubPolledStore.storeUnsuccessfulDelivery(polledEvent, discordDestinationChannel, destinationUrl);
+            githubPolledStore.storeUnsuccessfulDelivery(polledEventRecord, discordDestinationChannel, destinationUrl);
         }
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToDiscord(String discordDestinationChannel, WebhookEvent webhookEvent) {
+    private void deliverToDiscord(String discordDestinationChannel, WebhookEventRecord webhookEvent) {
         String destinationUrl = destinationDiscordProperties.getUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(webhookEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
@@ -118,23 +120,23 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
-    private HttpResponseDto deliverToDiscord(WebhookEvent webhookEvent, String discordDestinationUrl) {
-        GithubEventDto eventDto = new GithubEventDto(webhookEvent);
+    private HttpResponseDto deliverToDiscord(WebhookEventRecord webhookEventRecord, String discordDestinationUrl) {
+        GithubEventDto eventDto = new GithubEventDto(webhookEventRecord);
         return deliverToDiscord(eventDto, discordDestinationUrl);
     }
 
-    private HttpResponseDto deliverToDiscord(GithubPolledEvent polledEvent, String discordDestinationUrl) {
-        GithubEventDto eventDto = new GithubEventDto(polledEvent);
+    private HttpResponseDto deliverToDiscord(GithubPolledEventRecord polledEventRecord, String discordDestinationUrl) {
+        GithubEventDto eventDto = new GithubEventDto(polledEventRecord);
         return deliverToDiscord(eventDto, discordDestinationUrl);
     }
 
-    private HttpResponseDto deliverToTeams(GithubPolledEvent polledEvent, String teamsDestinationChannel) {
-        GithubEventDto eventDto = new GithubEventDto(polledEvent);
+    private HttpResponseDto deliverToTeams(GithubPolledEventRecord polledEventRecord, String teamsDestinationChannel) {
+        GithubEventDto eventDto = new GithubEventDto(polledEventRecord);
         return deliverToTeams(eventDto, teamsDestinationChannel);
     }
 
-    private HttpResponseDto deliverToTeams(WebhookEvent webhookEvent, String teamsDestinationChannel) {
-        GithubEventDto eventDto = new GithubEventDto(webhookEvent);
+    private HttpResponseDto deliverToTeams(WebhookEventRecord webhookEventRecord, String teamsDestinationChannel) {
+        GithubEventDto eventDto = new GithubEventDto(webhookEventRecord);
         return deliverToTeams(eventDto, teamsDestinationChannel);
     }
 

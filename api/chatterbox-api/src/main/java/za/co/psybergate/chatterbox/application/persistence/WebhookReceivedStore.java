@@ -22,11 +22,11 @@ public interface WebhookReceivedStore {
 
     WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog);
 
-    WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventRecord webhookEvent, String destinationName, String destinationUrl);
 
-    WebhookEventDeliveryRecord storeUnsuccessfulDelivery(WebhookEvent webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryRecord storeUnsuccessfulDelivery(WebhookEventRecord webhookEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(WebhookEvent webhookEvent, EventStatus eventStatus);
+    void setProcessedStatus(WebhookEventRecord webhookEvent, EventStatus eventStatus);
 
     WebhookEventRecord getWebhook(Long id);
 
