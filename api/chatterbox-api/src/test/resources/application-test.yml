@@ -87,6 +87,7 @@ chatterbox:
               senderName: "sender.login"
               url: "compare"
               urlDisplayText: "head_commit.message"
+              extraDetail: "repository.name"
   destinations:
     teams:
       accepted-channel:
