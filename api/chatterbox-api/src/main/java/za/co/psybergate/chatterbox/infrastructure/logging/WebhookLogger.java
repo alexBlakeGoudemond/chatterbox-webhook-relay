@@ -5,11 +5,12 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -98,7 +99,7 @@ public class WebhookLogger {
         log.warn("[Runner] No previous webhooks found for the destination '{}', will not Poll", repositoryFullName);
     }
 
-    public void logRunnerFoundPreviousWebhook(WebhookEvent latestWebhookEvent) {
+    public void logRunnerFoundPreviousWebhook(WebhookEventRecord latestWebhookEvent) {
         log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
     }
 
@@ -106,7 +107,7 @@ public class WebhookLogger {
         log.warn("[Runner] No previous polled events found for the destination '{}', not participating in Poll", repositoryFullName);
     }
 
-    public void logRunnerFoundPreviousPolledEvent(GithubPolledEvent latestGithubPolledEvent) {
+    public void logRunnerFoundPreviousPolledEvent(GithubPolledEventRecord latestGithubPolledEvent) {
         log.info("[Runner] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
     }
 
