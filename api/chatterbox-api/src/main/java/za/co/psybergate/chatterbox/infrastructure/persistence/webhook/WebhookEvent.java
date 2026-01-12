@@ -11,6 +11,7 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -100,6 +101,10 @@ public class WebhookEvent {
 
     public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
+    }
+
+    public WebhookEvent(WebhookEventRecord webhookEventRecord) {
+        this(webhookEventRecord.getWebhookId(), webhookEventRecord.getRepositoryFullName(), webhookEventRecord.getEventType(), webhookEventRecord.getDisplayName(), webhookEventRecord.getSenderName(), webhookEventRecord.getEventUrl(), webhookEventRecord.getEventUrlDisplayText(), webhookEventRecord.getExtraDetail(), webhookEventRecord.getPayload(), webhookEventRecord.getEventStatus(), webhookEventRecord.getReceivedAt());
     }
 
     @Override

@@ -95,19 +95,20 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl){
+    public GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventRecord polledEvent, String destinationName, String destinationUrl){
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
+    public GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEventRecord polledEventRecord, String destinationName, String destinationUrl) {
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus) {
+    public void setProcessedStatus(GithubPolledEventRecord polledEventRecord, EventStatus eventStatus) {
+        GithubPolledEvent polledEvent = new GithubPolledEvent(polledEventRecord);
         polledEvent.setEventStatus(eventStatus);
         polledEvent.setProcessedAt(LocalDateTime.now());
         try {

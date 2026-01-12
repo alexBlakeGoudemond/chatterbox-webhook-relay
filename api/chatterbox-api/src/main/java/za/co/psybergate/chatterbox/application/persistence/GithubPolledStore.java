@@ -22,11 +22,11 @@ public interface GithubPolledStore {
 
     GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
 
-    GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventRecord polledEvent, String destinationName, String destinationUrl);
 
-    GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEventRecord polledEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus);
+    void setProcessedStatus(GithubPolledEventRecord polledEvent, EventStatus eventStatus);
 
     GithubPolledEventRecord getEvent(Long id);
 

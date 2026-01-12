@@ -2,8 +2,8 @@ package za.co.psybergate.chatterbox.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 
 public record GithubEventDto(
         @NotNull EventType eventType,
@@ -14,12 +14,12 @@ public record GithubEventDto(
         @NotNull String urlDisplayText,
         @NotNull String extraDetail) {
 
-    public GithubEventDto(WebhookEvent webhookEvent) {
-        this(webhookEvent.getEventType(), webhookEvent.getDisplayName(), webhookEvent.getRepositoryFullName(), webhookEvent.getSenderName(), webhookEvent.getEventUrl(), webhookEvent.getEventUrlDisplayText(), webhookEvent.getExtraDetail());
+    public GithubEventDto(WebhookEventRecord webhookEventRecord) {
+        this(webhookEventRecord.getEventType(), webhookEventRecord.getDisplayName(), webhookEventRecord.getRepositoryFullName(), webhookEventRecord.getSenderName(), webhookEventRecord.getEventUrl(), webhookEventRecord.getEventUrlDisplayText(), webhookEventRecord.getExtraDetail());
     }
 
-    public GithubEventDto(GithubPolledEvent polledEvent) {
-        this(polledEvent.getEventType(), polledEvent.getDisplayName(), polledEvent.getRepositoryFullName(), polledEvent.getSenderName(), polledEvent.getEventUrl(), polledEvent.getEventUrlDisplayText(), polledEvent.getExtraDetail());
+    public GithubEventDto(GithubPolledEventRecord polledEventRecord) {
+        this(polledEventRecord.getEventType(), polledEventRecord.getDisplayName(), polledEventRecord.getRepositoryFullName(), polledEventRecord.getSenderName(), polledEventRecord.getEventUrl(), polledEventRecord.getEventUrlDisplayText(), polledEventRecord.getExtraDetail());
     }
 
 }
