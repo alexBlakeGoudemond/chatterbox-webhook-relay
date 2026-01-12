@@ -114,6 +114,10 @@ public class WebhookLogger {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
     }
 
+    public void logWebhookEventsEmpty(String repositoryFullName) {
+        log.warn("[Processing] No WebhookEvents found for the destination '{}'", repositoryFullName);
+    }
+
     public void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime) {
         log.warn("[Polling] No GithubPolledEvents found for '{}' since '{}'", repositoryFullName, lastPersistedTime);
     }
