@@ -81,6 +81,7 @@ public class WebhookEvent {
                         String senderName,
                         String eventUrl,
                         String eventUrlDisplayText,
+                        String extraDetail,
                         String payload,
                         EventStatus eventStatus,
                         LocalDateTime receivedAt) {
@@ -91,13 +92,14 @@ public class WebhookEvent {
         this.senderName = senderName;
         this.eventUrl = eventUrl;
         this.eventUrlDisplayText = eventUrlDisplayText;
+        this.extraDetail = extraDetail;
         this.payload = payload;
         this.eventStatus = eventStatus;
         this.receivedAt = receivedAt;
     }
 
     public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
+        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override

@@ -81,6 +81,7 @@ public class GithubPolledEvent {
                              String senderName,
                              String eventUrl,
                              String eventUrlDisplayText,
+                             String extraDetail,
                              String payload,
                              EventStatus status,
                              LocalDateTime fetchedAt) {
@@ -91,13 +92,14 @@ public class GithubPolledEvent {
         this.senderName = senderName;
         this.eventUrl = eventUrl;
         this.eventUrlDisplayText = eventUrlDisplayText;
+        this.extraDetail = extraDetail;
         this.payload = payload;
         this.eventStatus = status;
         this.fetchedAt = fetchedAt;
     }
 
     public GithubPolledEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
+        this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override
