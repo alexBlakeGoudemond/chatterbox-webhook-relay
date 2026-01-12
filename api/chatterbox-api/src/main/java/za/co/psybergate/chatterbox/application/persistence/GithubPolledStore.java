@@ -17,8 +17,6 @@ public interface GithubPolledStore {
 
     GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId);
-
     List<GithubPolledEvent> getLatestProcessedEvents(String repositoryFullName);
 
     GithubPolledEventDeliveryLog storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
@@ -28,8 +26,6 @@ public interface GithubPolledStore {
     GithubPolledEventDeliveryLog storeUnsuccessfulDelivery(GithubPolledEvent polledEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus);
-
-    void setProcessedStatus(GithubPolledEvent polledEvent, EventStatus eventStatus, String responseDtoErrorResponse);
 
     GithubPolledEvent getEvent(Long id);
 
