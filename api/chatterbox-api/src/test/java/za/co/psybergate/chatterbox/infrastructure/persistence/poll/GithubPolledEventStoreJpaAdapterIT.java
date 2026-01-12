@@ -14,6 +14,8 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
@@ -59,7 +61,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
 
-        GithubPolledEvent polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
+        GithubPolledEventRecord polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
         assertNotNull(polledEvent);
     }
 
@@ -70,7 +72,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         GithubPolledEvent polledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
         polledEvent.setId(1L);
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
+        GithubPolledEventDeliveryRecord polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }
 
