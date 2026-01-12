@@ -59,7 +59,7 @@ public class EventProcessorImpl implements EventProcessor {
     }
 
     private void processWebhookEvents(DestinationMapping destinationMapping) {
-        for (WebhookEvent webhookEvent : webhookReceivedStore.getLatestWebhooks(destinationMapping.getName())) {
+        for (WebhookEvent webhookEvent : webhookReceivedStore.getUnprocessedWebhooks(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEvent);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEvent);
             webhookReceivedStore.setProcessedStatus(webhookEvent, EventStatus.PROCESSED_SUCCESS);
@@ -67,7 +67,7 @@ public class EventProcessorImpl implements EventProcessor {
     }
 
     private void processPolledEvents(DestinationMapping destinationMapping) {
-        for (GithubPolledEvent latestEvent : githubPolledStore.getLatestEvents(destinationMapping.getName())) {
+        for (GithubPolledEvent latestEvent : githubPolledStore.getUnprocessedEvents(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEvent);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEvent);
             githubPolledStore.setProcessedStatus(latestEvent, EventStatus.PROCESSED_SUCCESS);

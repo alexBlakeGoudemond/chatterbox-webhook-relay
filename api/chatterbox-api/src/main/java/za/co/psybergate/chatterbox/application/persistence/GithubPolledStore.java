@@ -11,13 +11,15 @@ import java.util.List;
 
 public interface GithubPolledStore {
 
+    List<GithubPolledEvent> getUnprocessedEvents(String repositoryFullName);
+
     GithubPolledEvent storeEvent(GithubPolledEvent event);
 
     GithubPolledEvent storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
     boolean hasAlreadyBeenStored(String repositoryFullName, EventType eventType, String sourceId);
 
-    List<GithubPolledEvent> getLatestEvents(String repositoryFullName);
+    List<GithubPolledEvent> getLatestProcessedEvents(String repositoryFullName);
 
     GithubPolledEventDeliveryLog storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog);
 

@@ -12,7 +12,9 @@ public interface WebhookReceivedStore {
 
     boolean hasAlreadyBeenStored(String repositoryFullName, String webhookId);
 
-    List<WebhookEvent> getLatestWebhooks(String repositoryFullName);
+    List<WebhookEvent> getLatestProcessedWebhooks(String repositoryFullName);
+
+    List<WebhookEvent> getUnprocessedWebhooks(String repositoryFullName);
 
     WebhookEvent storeWebhook(WebhookEvent webhook);
 
