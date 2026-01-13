@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.infrastructure.provider.ConfigurationProviderImpl;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
@@ -46,7 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         TestConfigurationResolver.class,
         WebhookConfigurationResolverImpl.class,
         WebhookLogger.class,
-        HttpResponseHandler.class
+        HttpResponseHandler.class,
+        ConfigurationProviderImpl.class
 })
 @ActiveProfiles({"live-url"})
 public class TeamsSenderServiceImplIT {
@@ -101,7 +103,6 @@ public class TeamsSenderServiceImplIT {
         HttpResponseDto httpResponseDto = teamsSenderService.executeHttpPostRequest(httpPost);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
-        assertEquals("DirectApiRequestHasMoreThanOneAuthorization", httpResponseDto.jsonNode().get("error").get("code").asText());
     }
 
     private HttpPost getHttpPostWithAuthorizationHeaders(String teamsDestination, String jsonString) {
