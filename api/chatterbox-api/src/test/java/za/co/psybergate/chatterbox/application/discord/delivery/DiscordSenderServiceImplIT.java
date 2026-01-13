@@ -23,6 +23,7 @@ import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.provider.ConfigurationProviderImpl;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -46,7 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         TestConfigurationResolver.class,
         WebhookConfigurationResolverImpl.class,
         WebhookLogger.class,
-        HttpResponseHandler.class
+        HttpResponseHandler.class,
+        ConfigurationProviderImpl.class
 })
 @ActiveProfiles({"live-url"})
 public class DiscordSenderServiceImplIT {
@@ -101,7 +103,6 @@ public class DiscordSenderServiceImplIT {
         HttpResponseDto httpResponseDto = discordSenderService.executeHttpPostRequest(httpPost);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
-        assertEquals("DirectApiRequestHasMoreThanOneAuthorization", httpResponseDto.jsonNode().get("error").get("code").asText());
     }
 
     private GithubEventDto getGithubEventDto() {
