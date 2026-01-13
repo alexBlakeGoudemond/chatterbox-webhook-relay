@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.http;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.hc.client5.http.entity.mime.Header;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
@@ -23,7 +24,10 @@ public class HttpResponseHandler {
         JsonNode jsonNode = null;
         if (response.getEntity() != null) {
             rawBody = getAsString(response);
-            jsonNode = getJsonNode(rawBody);
+            String contentType = response.getEntity().getContentType();
+            if (contentType != null && contentType.contains("application/json")) {
+                jsonNode = getJsonNode(rawBody);
+            }
         }
         return new HttpResponseDto(status, rawBody, jsonNode);
     }
