@@ -18,6 +18,10 @@ import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
@@ -90,9 +94,9 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Autowired
     private GithubEventExtractor eventExtractor;
 
-    private WebhookEvent persistedWebhookEvent;
+    private WebhookEventRecord persistedWebhookEvent;
 
-    private GithubPolledEvent persistedGithubPolledEvent;
+    private GithubPolledEventRecord persistedGithubPolledEvent;
 
     @BeforeEach
     public void setup() {
@@ -108,14 +112,14 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessor.processWebhookEvents();
-        WebhookEvent retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.getId());
+        WebhookEventRecord retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.getId());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.getId(), persistedWebhookEvent.getId());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.getEventStatus());
 
-        List<WebhookEventDeliveryLog> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
+        List<WebhookEventDeliveryRecord> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
         assertEquals(2, webhookEventDeliveryLogs.size());
-        for (WebhookEventDeliveryLog webhookEventDeliveryLog : webhookEventDeliveryLogs) {
+        for (WebhookEventDeliveryRecord webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);
             assertEquals(webhookEventDeliveryLog.getWebhookEventId(), retrievedWebhookEvent.getId());
         }
@@ -126,14 +130,14 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists(){
         eventProcessor.processPolledEvents();
-        GithubPolledEvent retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.getId());
+        GithubPolledEventRecord retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.getId());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.getId(), persistedGithubPolledEvent.getId());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.getEventStatus());
 
-        List<GithubPolledEventDeliveryLog> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
+        List<GithubPolledEventDeliveryRecord> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
         assertEquals(2, polledEventDeliveryLogs.size());
-        for (GithubPolledEventDeliveryLog polledEventDeliveryLog : polledEventDeliveryLogs) {
+        for (GithubPolledEventDeliveryRecord polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);
             assertEquals(polledEventDeliveryLog.getGithubPolledEventId(), retrievedPolledEvent.getId());
         }
