@@ -10,7 +10,6 @@ import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -123,7 +122,7 @@ public class WebhookLogger {
         log.warn("[Polling] No GithubPolledEvents found for '{}' since '{}'", repositoryFullName, lastPersistedTime);
     }
 
-    public void logPolledEventsFound(List<GithubPolledEvent> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+    public void logPolledEventsFound(List<GithubPolledEventRecord> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
         log.info("[Polling] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
     }
 

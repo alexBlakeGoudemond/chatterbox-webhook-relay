@@ -67,7 +67,7 @@ public class CatchUpRunner implements ApplicationRunner {
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
         }
-        List<GithubPolledEvent> githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, lastPersistedTime);
+        List<GithubPolledEventRecord> githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, lastPersistedTime);
         if (!githubPolledEvents.isEmpty()) {
             webhookLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
             return true;
