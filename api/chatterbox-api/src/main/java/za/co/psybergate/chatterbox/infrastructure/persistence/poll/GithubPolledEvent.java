@@ -105,18 +105,19 @@ public class GithubPolledEvent {
 
     public GithubPolledEvent(GithubPolledEventRecord polledEventRecord) {
         this(polledEventRecord.getEventType(), polledEventRecord.getSourceId(), polledEventRecord.getRepositoryFullName(), polledEventRecord.getDisplayName(), polledEventRecord.getSenderName(), polledEventRecord.getEventUrl(), polledEventRecord.getEventUrlDisplayText(), polledEventRecord.getExtraDetail(), polledEventRecord.getPayload(), EventStatus.RECEIVED, LocalDateTime.now());
+        this.id = polledEventRecord.getId();
     }
 
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         GithubPolledEvent that = (GithubPolledEvent) object;
-        return Objects.equals(repositoryFullName, that.repositoryFullName) && eventType == that.eventType && Objects.equals(sourceId, that.sourceId) && Objects.equals(payload, that.payload) && eventStatus == that.eventStatus;
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && eventType == that.eventType && Objects.equals(sourceId, that.sourceId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(repositoryFullName, eventType, sourceId, payload, eventStatus);
+        return Objects.hash(repositoryFullName, eventType, sourceId);
     }
 
 }
