@@ -125,7 +125,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         return mapToGithubPolledEventRecord(polledEvent);
     }
 
-    private static GithubPolledEventRecord mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
+    public static GithubPolledEventRecord mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
         return new GithubPolledEventRecord(
                 polledEvent.getId(),
                 polledEvent.getRepositoryFullName(),

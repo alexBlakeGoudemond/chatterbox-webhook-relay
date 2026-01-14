@@ -81,7 +81,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         return storeWebhook(webhook);
     }
 
-    private static WebhookEventRecord mapToWebhookEventRecord(WebhookEvent webhookEvent) {
+    public static WebhookEventRecord mapToWebhookEventRecord(WebhookEvent webhookEvent) {
         return new WebhookEventRecord(webhookEvent.getId(),
                 webhookEvent.getRepositoryFullName(),
                 webhookEvent.getWebhookId(),
