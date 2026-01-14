@@ -42,7 +42,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
                 return List.of();
             }
             return githubPolledEvents.stream()
-                    .map(GithubPolledEventRecord::new)
+                    .map(GithubPolledEventStoreJpaAdapter::mapToGithubPolledEventRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
@@ -57,7 +57,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
             }
             return githubPolledEvents.stream()
-                    .map(GithubPolledEventRecord::new)
+                    .map(GithubPolledEventStoreJpaAdapter::mapToGithubPolledEventRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
@@ -70,7 +70,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         try {
             GithubPolledEvent polledEvent = repository.save(event);
             webhookLogger.logEventStored(polledEvent);
-            return new GithubPolledEventRecord(polledEvent);
+            return mapToGithubPolledEventRecord(polledEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the GithubPolledEvent", e);
         }
@@ -122,7 +122,26 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEventRecord getEvent(Long id) {
         GithubPolledEvent polledEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
-        return new GithubPolledEventRecord(polledEvent);
+        return mapToGithubPolledEventRecord(polledEvent);
+    }
+
+    private static GithubPolledEventRecord mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
+        return new GithubPolledEventRecord(
+                polledEvent.getId(),
+                polledEvent.getRepositoryFullName(),
+                polledEvent.getSourceId(),
+                polledEvent.getEventType(),
+                polledEvent.getDisplayName(),
+                polledEvent.getSenderName(),
+                polledEvent.getEventUrl(),
+                polledEvent.getEventUrlDisplayText(),
+                polledEvent.getExtraDetail(),
+                polledEvent.getPayload(),
+                polledEvent.getEventStatus(),
+                polledEvent.getErrorMessage(),
+                polledEvent.getFetchedAt(),
+                polledEvent.getProcessedAt()
+        );
     }
 
     @Override

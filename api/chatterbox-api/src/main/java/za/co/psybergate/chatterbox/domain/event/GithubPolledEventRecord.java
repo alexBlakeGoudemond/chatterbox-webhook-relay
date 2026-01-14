@@ -1,13 +1,10 @@
 package za.co.psybergate.chatterbox.domain.event;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 
 import java.time.LocalDateTime;
 
@@ -44,21 +41,36 @@ public class GithubPolledEventRecord {
 
     private LocalDateTime processedAt;
 
-    public GithubPolledEventRecord(GithubPolledEvent polledEvent) {
-        this.id = polledEvent.getId();
-        this.repositoryFullName = polledEvent.getRepositoryFullName();
-        this.sourceId = polledEvent.getSourceId();
-        this.eventType = polledEvent.getEventType();
-        this.displayName = polledEvent.getDisplayName();
-        this.senderName = polledEvent.getSenderName();
-        this.eventUrl = polledEvent.getEventUrl();
-        this.eventUrlDisplayText = polledEvent.getEventUrlDisplayText();
-        this.extraDetail = polledEvent.getExtraDetail();
-        this.payload = polledEvent.getPayload();
-        this.eventStatus = polledEvent.getEventStatus();
-        this.errorMessage = polledEvent.getErrorMessage();
-        this.fetchedAt = polledEvent.getFetchedAt();
-        this.processedAt = polledEvent.getProcessedAt();
+    public GithubPolledEventRecord(
+            Long id,
+            String repositoryFullName,
+            String sourceId,
+            EventType eventType,
+            String displayName,
+            String senderName,
+            String eventUrl,
+            String eventUrlDisplayText,
+            String extraDetail,
+            String payload,
+            EventStatus eventStatus,
+            String errorMessage,
+            LocalDateTime fetchedAt,
+            LocalDateTime processedAt
+            ) {
+        this.id = id;
+        this.repositoryFullName = repositoryFullName;
+        this.sourceId = sourceId;
+        this.eventType = eventType;
+        this.displayName = displayName;
+        this.senderName = senderName;
+        this.eventUrl = eventUrl;
+        this.eventUrlDisplayText = eventUrlDisplayText;
+        this.extraDetail = extraDetail;
+        this.payload = payload;
+        this.eventStatus = eventStatus;
+        this.errorMessage = errorMessage;
+        this.fetchedAt = fetchedAt;
+        this.processedAt = processedAt;
     }
 
 }
