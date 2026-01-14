@@ -22,6 +22,7 @@ import za.co.psybergate.chatterbox.domain.event.GithubPolledEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
+import za.co.psybergate.chatterbox.infrastructure.provider.ConfigurationProviderImpl;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
@@ -66,7 +67,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         TemplateSubstitutorImpl.class,
         ApplicationConfig.class,
         WebhookConfigurationResolverImpl.class,
-        HttpResponseHandler.class
+        HttpResponseHandler.class,
+        ConfigurationProviderImpl.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers

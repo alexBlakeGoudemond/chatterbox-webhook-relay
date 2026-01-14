@@ -32,7 +32,7 @@ public class WebhookEvent {
     @Column(name = "repository_full_name", nullable = false)
     private String repositoryFullName;
 
-    @Column(name = "webhook_id", nullable = false, unique = true)
+    @Column(name = "webhook_id", nullable = false)
     private String webhookId;
 
     @Enumerated(EnumType.STRING)
@@ -105,18 +105,19 @@ public class WebhookEvent {
 
     public WebhookEvent(WebhookEventRecord webhookEventRecord) {
         this(webhookEventRecord.getWebhookId(), webhookEventRecord.getRepositoryFullName(), webhookEventRecord.getEventType(), webhookEventRecord.getDisplayName(), webhookEventRecord.getSenderName(), webhookEventRecord.getEventUrl(), webhookEventRecord.getEventUrlDisplayText(), webhookEventRecord.getExtraDetail(), webhookEventRecord.getPayload(), webhookEventRecord.getEventStatus(), webhookEventRecord.getReceivedAt());
+        this.id = webhookEventRecord.getId();
     }
 
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         WebhookEvent that = (WebhookEvent) object;
-        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && eventType == that.eventType && Objects.equals(payload, that.payload) && eventStatus == that.eventStatus;
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && eventType == that.eventType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(repositoryFullName, webhookId, eventType, payload, eventStatus);
+        return Objects.hash(repositoryFullName, webhookId, eventType);
     }
 
 }
