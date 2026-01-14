@@ -41,7 +41,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
             }
             return webhookEvents.stream()
-                    .map(WebhookEventRecord::new)
+                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
@@ -56,7 +56,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
             }
             return webhookEvents.stream()
-                    .map(WebhookEventRecord::new)
+                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
@@ -69,7 +69,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         try {
             WebhookEvent webhookEvent = repository.save(webhook);
             webhookLogger.logEventStored(webhook);
-            return new WebhookEventRecord(webhookEvent);
+            return mapToWebhookEventRecord(webhookEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store WebhookEvent", e);
         }
@@ -79,6 +79,23 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public WebhookEventRecord storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
         return storeWebhook(webhook);
+    }
+
+    private static WebhookEventRecord mapToWebhookEventRecord(WebhookEvent webhookEvent) {
+        return new WebhookEventRecord(webhookEvent.getId(),
+                webhookEvent.getRepositoryFullName(),
+                webhookEvent.getWebhookId(),
+                webhookEvent.getEventType(),
+                webhookEvent.getDisplayName(),
+                webhookEvent.getSenderName(),
+                webhookEvent.getEventUrl(),
+                webhookEvent.getEventUrlDisplayText(),
+                webhookEvent.getExtraDetail(),
+                webhookEvent.getPayload(),
+                webhookEvent.getEventStatus(),
+                webhookEvent.getErrorMessage(),
+                webhookEvent.getReceivedAt(),
+                webhookEvent.getProcessedAt());
     }
 
     @Override
@@ -121,7 +138,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public WebhookEventRecord getWebhook(Long id) {
         WebhookEvent webhookEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
-        return new WebhookEventRecord(webhookEvent);
+        return mapToWebhookEventRecord(webhookEvent);
     }
 
     @Override
