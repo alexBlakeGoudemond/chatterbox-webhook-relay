@@ -16,9 +16,8 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -37,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubEventExtractorImpl.class,
         JsonConverterImpl.class,
         ApplicationConfig.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         WebhookConfigurationResolverImpl.class,
         WebhookEventStoreJpaAdapter.class,
 })

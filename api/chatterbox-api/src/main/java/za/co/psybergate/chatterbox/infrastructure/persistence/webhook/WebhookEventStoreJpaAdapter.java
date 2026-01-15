@@ -5,12 +5,13 @@ import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +28,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     public WebhookEventStoreJpaAdapter(WebhookEventJpaRepository repository,
                                        WebhookEventLogJpaRepository logRepository,
-                                       WebhookLogger webhookLogger) {
+                                       WebhookLoggerImpl webhookLogger) {
         this.repository = repository;
         this.logRepository = logRepository;
         this.webhookLogger = webhookLogger;

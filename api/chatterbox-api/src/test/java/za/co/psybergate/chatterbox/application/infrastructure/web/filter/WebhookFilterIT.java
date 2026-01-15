@@ -22,8 +22,7 @@ import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorIm
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -34,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         WebhookFilter.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         PayloadCryptorImpl.class,
         ApplicationConfig.class,
         WebhookRequestValidatorImpl.class,

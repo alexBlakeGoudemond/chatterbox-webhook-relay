@@ -25,7 +25,7 @@ import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         ApplicationConfig.class,
         TestConfigurationResolver.class,
         WebhookConfigurationResolverImpl.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         HttpResponseHandler.class,
         ConfigurationProviderImpl.class
 })

@@ -24,7 +24,7 @@ import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorIm
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InfrastructureException;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import({
         WebhookFilter.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         PayloadCryptorImpl.class,
         ApplicationConfig.class,
         WebhookRequestValidatorImpl.class,

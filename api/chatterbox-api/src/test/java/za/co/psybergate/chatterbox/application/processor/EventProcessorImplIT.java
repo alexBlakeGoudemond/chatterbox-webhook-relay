@@ -33,7 +33,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
@@ -55,7 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         JsonFileReader.class,
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
         DiscordSenderServiceImpl.class,
