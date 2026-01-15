@@ -5,8 +5,6 @@ import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventDeliveryLog;
 
 import java.util.List;
 
@@ -16,11 +14,7 @@ public interface WebhookReceivedStore {
 
     List<WebhookEventRecord> getUnprocessedWebhooks(String repositoryFullName);
 
-    WebhookEventRecord storeWebhook(WebhookEvent webhook);
-
     WebhookEventRecord storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
-
-    WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog);
 
     WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventRecord webhookEvent, String destinationName, String destinationUrl);
 
