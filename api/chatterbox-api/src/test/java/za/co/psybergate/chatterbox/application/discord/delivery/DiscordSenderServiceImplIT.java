@@ -67,7 +67,7 @@ public class DiscordSenderServiceImplIT {
     private GithubEventExtractor eventExtractor;
 
     @Autowired
-    private DiscordSenderService discordSenderService;
+    private DiscordSenderServiceImpl discordSenderServiceImpl;
 
     @Autowired
     private DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
@@ -87,7 +87,7 @@ public class DiscordSenderServiceImplIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(eventDto);
 
-        HttpResponseDto httpResponseDto = discordSenderService.process(eventDto, teamsDestinationUrl);
+        HttpResponseDto httpResponseDto = discordSenderServiceImpl.process(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.NO_CONTENT.value(), httpResponseDto.httpStatus());
     }
@@ -101,7 +101,7 @@ public class DiscordSenderServiceImplIT {
         String jsonString = discordEmbeddedObjectFactory.getAsDiscordPayloadString(eventDto);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
-        HttpResponseDto httpResponseDto = discordSenderService.executeHttpPostRequest(httpPost);
+        HttpResponseDto httpResponseDto = discordSenderServiceImpl.executeHttpPostRequest(httpPost);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
     }

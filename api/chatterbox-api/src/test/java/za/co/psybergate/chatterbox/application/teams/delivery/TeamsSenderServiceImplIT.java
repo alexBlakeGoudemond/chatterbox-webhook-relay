@@ -67,7 +67,7 @@ public class TeamsSenderServiceImplIT {
     private GithubEventExtractor eventExtractor;
 
     @Autowired
-    private TeamsSenderService teamsSenderService;
+    private TeamsSenderServiceImpl teamsSenderServiceImpl;
 
     @Autowired
     private TeamsCardFactory teamsCardFactory;
@@ -87,7 +87,7 @@ public class TeamsSenderServiceImplIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        HttpResponseDto httpResponseDto = teamsSenderService.process(eventDto, teamsDestinationUrl);
+        HttpResponseDto httpResponseDto = teamsSenderServiceImpl.process(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
     }
@@ -101,7 +101,7 @@ public class TeamsSenderServiceImplIT {
         String jsonString = teamsCardFactory.getAsTeamsPayloadString(eventDto);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
-        HttpResponseDto httpResponseDto = teamsSenderService.executeHttpPostRequest(httpPost);
+        HttpResponseDto httpResponseDto = teamsSenderServiceImpl.executeHttpPostRequest(httpPost);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
     }
