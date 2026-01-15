@@ -8,7 +8,6 @@ import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.processor.EventProcessor;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 
 // TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component
