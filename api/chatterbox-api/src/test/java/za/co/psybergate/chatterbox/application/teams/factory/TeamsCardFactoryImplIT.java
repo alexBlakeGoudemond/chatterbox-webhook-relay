@@ -18,7 +18,7 @@ import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
         WebhookConfigurationResolverImpl.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         HttpResponseHandler.class
 })
 public class TeamsCardFactoryImplIT {
