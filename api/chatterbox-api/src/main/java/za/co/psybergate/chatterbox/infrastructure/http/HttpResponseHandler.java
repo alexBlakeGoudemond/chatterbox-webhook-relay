@@ -3,7 +3,6 @@ package za.co.psybergate.chatterbox.infrastructure.http;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.hc.client5.http.entity.mime.Header;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;

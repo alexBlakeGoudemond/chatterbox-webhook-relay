@@ -12,13 +12,10 @@ import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDe
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutor;
-import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
 
 import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.*;
-import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.EXTRADETAIL;
-import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.URLDISPLAYTEXT;
 
 @Component
 @RequiredArgsConstructor
