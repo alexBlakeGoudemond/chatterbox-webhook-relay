@@ -64,7 +64,12 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEventRecord storeWebhook(WebhookEvent webhook) {
+    public WebhookEventRecord storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+        WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
+        return storeWebhook(webhook);
+    }
+
+    private WebhookEventRecord storeWebhook(WebhookEvent webhook) {
         webhookLogger.logStoringEvent(webhook);
         try {
             WebhookEvent webhookEvent = repository.save(webhook);
@@ -73,12 +78,6 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store WebhookEvent", e);
         }
-    }
-
-    @Override
-    public WebhookEventRecord storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
-        return storeWebhook(webhook);
     }
 
     public static WebhookEventRecord mapToWebhookEventRecord(WebhookEvent webhookEvent) {
@@ -99,18 +98,6 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     }
 
     @Override
-    public WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog) {
-        webhookLogger.logDeliveringEvent(webhookEventDeliveryLog);
-        try {
-            WebhookEventDeliveryLog deliveryLog = logRepository.save(webhookEventDeliveryLog);
-            webhookLogger.logEventDelivered(deliveryLog);
-            return new WebhookEventDeliveryRecord(deliveryLog);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to Store the Delivery information of the event", e);
-        }
-    }
-
-    @Override
     public WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventRecord webhookEventRecord, String destinationName, String destinationUrl) {
         WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
@@ -120,6 +107,17 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
     public WebhookEventDeliveryRecord storeUnsuccessfulDelivery(WebhookEventRecord webhookEventRecord, String destinationName, String destinationUrl) {
         WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
+    }
+
+    private WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventDeliveryLog webhookEventDeliveryLog) {
+        webhookLogger.logDeliveringEvent(webhookEventDeliveryLog);
+        try {
+            WebhookEventDeliveryLog deliveryLog = logRepository.save(webhookEventDeliveryLog);
+            webhookLogger.logEventDelivered(deliveryLog);
+            return new WebhookEventDeliveryRecord(deliveryLog);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to Store the Delivery information of the event", e);
+        }
     }
 
     @Override
