@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.event;
+package za.co.psybergate.chatterbox.application.event;
 
 import lombok.Getter;
 import lombok.ToString;
