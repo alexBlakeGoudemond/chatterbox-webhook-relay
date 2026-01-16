@@ -17,7 +17,6 @@ import za.co.psybergate.chatterbox.infrastructure.web.actuator.WebhookRuntimeMet
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
