@@ -13,7 +13,7 @@ import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.application.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 

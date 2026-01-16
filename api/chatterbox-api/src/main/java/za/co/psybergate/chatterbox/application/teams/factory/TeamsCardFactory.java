@@ -4,7 +4,7 @@ import org.apache.hc.core5.http.ClassicHttpResponse;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.teams.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.application.teams.model.TeamsAdaptiveCardDefinition;
 
 import java.util.Map;
 
