@@ -12,7 +12,6 @@ import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -35,7 +34,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
 
     public GithubPollingServiceImpl(@Qualifier("githubClient") WebClient webClient,
                                     ChatterboxSourceGithubPayloadProperties payloadProperties,
-                                    WebhookLoggerImpl webhookLogger) {
+                                    WebhookLogger webhookLogger) {
         this.githubClient = webClient;
         this.payloadProperties = payloadProperties;
         this.webhookLogger = webhookLogger;

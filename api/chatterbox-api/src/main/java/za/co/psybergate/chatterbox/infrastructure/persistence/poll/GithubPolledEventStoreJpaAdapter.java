@@ -11,7 +11,6 @@ import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventDeliveryRecord;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +27,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     public GithubPolledEventStoreJpaAdapter(GithubPolledEventJpaRepository repository,
                                             GithubPolledEventLogJpaRepository logRepository,
-                                            WebhookLoggerImpl webhookLogger) {
+                                            WebhookLogger webhookLogger) {
         this.repository = repository;
         this.logRepository = logRepository;
         this.webhookLogger = webhookLogger;
