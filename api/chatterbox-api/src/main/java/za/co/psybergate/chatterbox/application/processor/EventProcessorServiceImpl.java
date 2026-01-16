@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderService;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.provider.ConfigurationProvider;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
@@ -34,7 +34,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     private final GithubPolledStore githubPolledStore;
 
-    private final WebhookReceivedStore webhookReceivedStore;
+    private final WebhookEventStore webhookEventStore;
 
     @Override
     public void processWebhookEvents() {
@@ -55,10 +55,10 @@ public class EventProcessorServiceImpl implements EventProcessorService {
     }
 
     private void processWebhookEvents(GithubDestinationMapping destinationMapping) {
-        for (WebhookEventDto webhookEventDto : webhookReceivedStore.getUnprocessedWebhooks(destinationMapping.getName())) {
+        for (WebhookEventDto webhookEventDto : webhookEventStore.getUnprocessedWebhooks(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEventDto);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEventDto);
-            webhookReceivedStore.setProcessedStatus(webhookEventDto, EventStatus.PROCESSED_SUCCESS);
+            webhookEventStore.setProcessedStatus(webhookEventDto, EventStatus.PROCESSED_SUCCESS);
         }
     }
 
@@ -75,9 +75,9 @@ public class EventProcessorServiceImpl implements EventProcessorService {
         String destinationUrl = configurationProvider.getTeamsUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(webhookEventDto, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
-            webhookReceivedStore.storeSuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
+            webhookEventStore.storeSuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
         } else {
-            webhookReceivedStore.storeUnsuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
+            webhookEventStore.storeUnsuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
         }
     }
 
@@ -108,9 +108,9 @@ public class EventProcessorServiceImpl implements EventProcessorService {
         String destinationUrl = configurationProvider.getDiscordUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(webhookEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
-            webhookReceivedStore.storeSuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
+            webhookEventStore.storeSuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
         } else {
-            webhookReceivedStore.storeUnsuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
+            webhookEventStore.storeUnsuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
         }
     }
 

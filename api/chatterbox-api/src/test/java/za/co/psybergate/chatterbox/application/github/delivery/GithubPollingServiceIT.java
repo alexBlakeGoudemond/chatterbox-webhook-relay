@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
@@ -43,7 +43,7 @@ class GithubPollingServiceIT {
     private GithubPollingService pollingService;
 
     @MockitoBean
-    private WebhookReceivedStore webhookReceivedStore;
+    private WebhookEventStore webhookEventStore;
 
     @MockitoBean
     private GithubPolledStore githubPolledStore;

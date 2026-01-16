@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 
 import java.util.List;
 
-public interface WebhookReceivedStore {
+public interface WebhookEventStore {
 
     List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName);
 
