@@ -16,6 +16,7 @@ import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import java.time.LocalDateTime;
