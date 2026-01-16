@@ -69,7 +69,7 @@ public class WebhookFilterIT {
     public void setup() {
         Mockito.when(
                 githubWebhookService.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
-                )).thenReturn(new WebhookEventDto());
+                )).thenReturn(null);
     }
 
     @DisplayName("webhook.payload.successes increments")
