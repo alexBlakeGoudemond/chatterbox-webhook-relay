@@ -5,7 +5,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.processor.EventProcessorService;
+import za.co.psybergate.chatterbox.application.event.processor.EventProcessorService;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
 
