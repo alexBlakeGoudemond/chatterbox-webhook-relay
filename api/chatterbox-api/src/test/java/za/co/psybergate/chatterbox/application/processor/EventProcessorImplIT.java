@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.infrastructure.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.infrastructure.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
