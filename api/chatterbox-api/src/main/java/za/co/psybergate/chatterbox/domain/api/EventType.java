@@ -1,5 +1,6 @@
 package za.co.psybergate.chatterbox.domain.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
 
@@ -33,4 +34,11 @@ public enum EventType {
         throw new DomainException("Unknown event type " + eventMapping);
     }
 
+    public String getUniqueId(JsonNode jsonNode) {
+        return switch (this) {
+            case POLL_COMMIT -> jsonNode.get("sha").asText();
+            case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
+            default -> throw new DomainException("Unable to find UniqueID; Unknown event type " + this);
+        };
+    }
 }
