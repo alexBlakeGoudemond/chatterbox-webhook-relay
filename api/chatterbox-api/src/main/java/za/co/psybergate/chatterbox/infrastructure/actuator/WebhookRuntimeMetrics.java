@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.infrastructure.actuator;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.actuator.WebhookMetrics;
 
 /// Store some additional details in the [MeterRegistry]
 /// The details captured here are stored for the lifetime of the registry.
