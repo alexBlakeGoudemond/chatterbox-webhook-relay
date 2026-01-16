@@ -1,7 +1,6 @@
-package za.co.psybergate.chatterbox.application.web.serialisation;
+package za.co.psybergate.chatterbox.infrastructure.web.serialisation;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 import java.nio.file.Path;
 

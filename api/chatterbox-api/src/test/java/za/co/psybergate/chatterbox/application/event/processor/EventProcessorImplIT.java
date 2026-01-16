@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
@@ -23,6 +23,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEvent
 import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
+import za.co.psybergate.chatterbox.infrastructure.event.processor.EventProcessorServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.discord.delivery.DiscordSenderServiceImpl;
@@ -36,7 +37,7 @@ import za.co.psybergate.chatterbox.infrastructure.teams.delivery.TeamsSenderServ
 import za.co.psybergate.chatterbox.infrastructure.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.infrastructure.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;

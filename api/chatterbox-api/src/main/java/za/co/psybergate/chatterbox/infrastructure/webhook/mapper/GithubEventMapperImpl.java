@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.mapper;
+package za.co.psybergate.chatterbox.infrastructure.webhook.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
@@ -26,7 +26,7 @@ public class GithubEventMapperImpl implements GithubEventMapper {
     private final WebhookConfigurationResolver webhookConfigurationResolver;
 
     @Override
-    public GithubEventDto map(String eventType, JsonNode payload) throws ConstraintViolationException, UnrecognizedRequestException {
+    public GithubEventDto map(String eventType, JsonNode payload) {
         return map(EventType.get(eventType), payload);
     }
 
@@ -36,7 +36,7 @@ public class GithubEventMapperImpl implements GithubEventMapper {
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Override
     @Valid
-    public GithubEventDto map(EventType eventType, JsonNode payload) throws ConstraintViolationException, UnrecognizedRequestException {
+    public GithubEventDto map(EventType eventType, JsonNode payload) {
         var payloadMapping = webhookConfigurationResolver.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
