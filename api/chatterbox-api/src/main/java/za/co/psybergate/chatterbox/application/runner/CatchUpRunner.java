@@ -13,7 +13,7 @@ import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebho
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
-import za.co.psybergate.chatterbox.application.event.PolledEventsProcessed;
+import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 
 import java.time.LocalDateTime;
 import java.util.List;
