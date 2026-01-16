@@ -1,12 +1,12 @@
 package za.co.psybergate.chatterbox.application.provider;
 
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 
 import java.util.List;
 
 public interface ConfigurationProvider {
 
-    List<ChatterboxSourceGithubRepositoryProperties.DestinationMapping> getDestinationMapping();
+    List<GithubDestinationMapping> getDestinationMapping();
 
     String getTeamsUrl(String teamsDestinationChannel);
 

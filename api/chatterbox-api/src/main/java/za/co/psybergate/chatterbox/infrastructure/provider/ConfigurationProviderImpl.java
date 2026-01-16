@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.provider.ConfigurationProvider;
+import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
@@ -20,7 +21,7 @@ public class ConfigurationProviderImpl implements ConfigurationProvider {
     private final ChatterboxDestinationDiscordProperties destinationDiscordProperties;
 
     @Override
-    public List<ChatterboxSourceGithubRepositoryProperties.DestinationMapping> getDestinationMapping() {
+    public List<GithubDestinationMapping> getDestinationMapping() {
         return repositoryProperties.getDestinationMapping();
     }
 
