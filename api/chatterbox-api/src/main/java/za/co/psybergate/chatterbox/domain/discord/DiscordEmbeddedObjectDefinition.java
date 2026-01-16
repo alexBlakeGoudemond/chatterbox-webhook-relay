@@ -1,7 +1,6 @@
 package za.co.psybergate.chatterbox.domain.discord;
 
 import lombok.Data;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
 
 import java.util.List;
 
