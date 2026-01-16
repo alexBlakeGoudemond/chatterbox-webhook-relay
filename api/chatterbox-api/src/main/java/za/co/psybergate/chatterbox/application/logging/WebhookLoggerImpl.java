@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
@@ -119,7 +119,7 @@ public class WebhookLoggerImpl implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousWebhook(WebhookEventRecord latestWebhookEvent) {
+    public void logRunnerFoundPreviousWebhook(WebhookEventDto latestWebhookEvent) {
         log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
     }
 
@@ -129,7 +129,7 @@ public class WebhookLoggerImpl implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousPolledEvent(GithubPolledEventRecord latestGithubPolledEvent) {
+    public void logRunnerFoundPreviousPolledEvent(GithubPolledEventDto latestGithubPolledEvent) {
         log.info("[Runner] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
     }
 
@@ -149,7 +149,7 @@ public class WebhookLoggerImpl implements WebhookLogger {
     }
 
     @Override
-    public void logPolledEventsFound(List<GithubPolledEventRecord> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+    public void logPolledEventsFound(List<GithubPolledEventDto> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
         log.info("[Polling] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
     }
 

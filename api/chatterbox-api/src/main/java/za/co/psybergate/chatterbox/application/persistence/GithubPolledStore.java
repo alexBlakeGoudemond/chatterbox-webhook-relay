@@ -3,29 +3,29 @@ package za.co.psybergate.chatterbox.application.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 
 import java.util.List;
 
 public interface GithubPolledStore {
 
-    List<GithubPolledEventRecord> getUnprocessedEvents(String repositoryFullName);
+    List<GithubPolledEventDto> getUnprocessedEvents(String repositoryFullName);
 
-    GithubPolledEventRecord storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    GithubPolledEventDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    List<GithubPolledEventRecord> getLatestProcessedEvents(String repositoryFullName);
+    List<GithubPolledEventDto> getLatestProcessedEvents(String repositoryFullName);
 
-    GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventRecord polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl);
 
-    GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEventRecord polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(GithubPolledEventRecord polledEvent, EventStatus eventStatus);
+    void setProcessedStatus(GithubPolledEventDto polledEvent, EventStatus eventStatus);
 
-    GithubPolledEventRecord getEvent(Long id);
+    GithubPolledEventDto getEvent(Long id);
 
-    List<GithubPolledEventDeliveryRecord> getDeliveryLogs(Long id);
+    List<GithubPolledEventDeliveryDto> getDeliveryLogs(Long id);
 
-    GithubPolledEventRecord getMostRecentPolledEvent(String repositoryFullName);
+    GithubPolledEventDto getMostRecentPolledEvent(String repositoryFullName);
 
 }

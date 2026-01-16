@@ -8,7 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -52,7 +52,7 @@ public class GithubPolledEventDeliveryLog {
         this.deliveredAt = deliveredAt;
     }
 
-    public GithubPolledEventDeliveryLog(GithubPolledEventRecord polledEventRecord, String exampleDestination, String exampleDestinationUrl, EventStatus eventStatus) {
+    public GithubPolledEventDeliveryLog(GithubPolledEventDto polledEventRecord, String exampleDestination, String exampleDestinationUrl, EventStatus eventStatus) {
         this(polledEventRecord.id(), exampleDestination, exampleDestinationUrl, eventStatus, LocalDateTime.now());
     }
 

@@ -14,8 +14,8 @@ import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEvent
 import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
@@ -61,7 +61,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
 
-        GithubPolledEventRecord polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
+        GithubPolledEventDto polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
         assertNotNull(polledEvent);
     }
 
@@ -71,9 +71,9 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
-        GithubPolledEventRecord polledEvent = GithubPolledEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
+        GithubPolledEventDto polledEvent = GithubPolledEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
         polledEvent.setId(1L);
-        GithubPolledEventDeliveryRecord polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
+        GithubPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }
 

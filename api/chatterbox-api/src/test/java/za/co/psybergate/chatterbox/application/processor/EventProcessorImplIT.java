@@ -22,10 +22,10 @@ import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigu
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.discord.delivery.DiscordSenderServiceImpl;
@@ -92,9 +92,9 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Autowired
     private GithubEventExtractor eventExtractor;
 
-    private WebhookEventRecord persistedWebhookEvent;
+    private WebhookEventDto persistedWebhookEvent;
 
-    private GithubPolledEventRecord persistedGithubPolledEvent;
+    private GithubPolledEventDto persistedGithubPolledEvent;
 
     @BeforeEach
     public void setup() {
@@ -110,14 +110,14 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessor.processWebhookEvents();
-        WebhookEventRecord retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.getId());
+        WebhookEventDto retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.getId());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.getId(), persistedWebhookEvent.getId());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.getEventStatus());
 
-        List<WebhookEventDeliveryRecord> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
+        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
         assertEquals(2, webhookEventDeliveryLogs.size());
-        for (WebhookEventDeliveryRecord webhookEventDeliveryLog : webhookEventDeliveryLogs) {
+        for (WebhookEventDeliveryDto webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);
             assertEquals(webhookEventDeliveryLog.getWebhookEventId(), retrievedWebhookEvent.getId());
         }
@@ -128,14 +128,14 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists(){
         eventProcessor.processPolledEvents();
-        GithubPolledEventRecord retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.getId());
+        GithubPolledEventDto retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.getId());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.getId(), persistedGithubPolledEvent.getId());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.getEventStatus());
 
-        List<GithubPolledEventDeliveryRecord> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
+        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
         assertEquals(2, polledEventDeliveryLogs.size());
-        for (GithubPolledEventDeliveryRecord polledEventDeliveryLog : polledEventDeliveryLogs) {
+        for (GithubPolledEventDeliveryDto polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);
             assertEquals(polledEventDeliveryLog.getGithubPolledEventId(), retrievedPolledEvent.getId());
         }
