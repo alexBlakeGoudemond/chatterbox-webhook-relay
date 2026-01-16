@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
@@ -44,7 +44,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final WebhookEventStore webhookEventStore;
 
-    private final GithubPolledStore githubPolledStore;
+    private final GithubPolledEventStore githubPolledEventStore;
 
     private final ApplicationEventPublisher publisher;
 
@@ -102,7 +102,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
             return false;
         }
         try {
-            GithubPolledEventDto latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
+            GithubPolledEventDto latestGithubPolledEvent = githubPolledEventStore.getMostRecentPolledEvent(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.fetchedAt());
         } catch (ApplicationException e) {
@@ -132,7 +132,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = getUniqueId(eventType, jsonNode);
             GithubEventDto eventDto = getEventDto(eventType.name(), jsonNode);
-            GithubPolledEventDto polledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
+            GithubPolledEventDto polledEvent = githubPolledEventStore.storeEvent(uniqueId, eventDto, jsonNode);
             updates.add(polledEvent);
         }
         return updates;

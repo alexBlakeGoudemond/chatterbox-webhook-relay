@@ -6,7 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
@@ -24,7 +24,7 @@ public class CatchUpRunner implements ApplicationRunner {
 
     private final WebhookEventStore webhookEventStore;
 
-    private final GithubPolledStore githubPolledStore;
+    private final GithubPolledEventStore githubPolledEventStore;
 
     private final WebhookLogger webhookLogger;
 
