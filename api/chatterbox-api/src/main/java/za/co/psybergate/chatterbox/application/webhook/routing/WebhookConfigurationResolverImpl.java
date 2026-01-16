@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.domain.github.GithubEventMapping;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
@@ -26,12 +27,12 @@ public class WebhookConfigurationResolverImpl implements WebhookConfigurationRes
     private final ChatterboxDestinationDiscordProperties destinationDiscordProperties;
 
     @Override
-    public ChatterboxSourceGithubPayloadProperties.EventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
+    public GithubEventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
         return getPayloadMapping(EventType.get(eventType));
     }
 
     @Override
-    public ChatterboxSourceGithubPayloadProperties.EventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException {
+    public GithubEventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException {
         return payloadProperties.getEventMapping(eventType.name());
     }
 
