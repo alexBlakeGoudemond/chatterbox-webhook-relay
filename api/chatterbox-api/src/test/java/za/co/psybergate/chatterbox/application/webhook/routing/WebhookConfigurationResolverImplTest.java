@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.domain.github.GithubEventMapping;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -40,7 +40,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Unknown eventType gives Exception")
     @Test
     public void givenUnrecognizedEventType_WhenGetPayloadMapping_ThenException() {
-        Assertions.assertThrows(ApplicationException.class,
+        Assertions.assertThrows(DomainException.class,
                 () -> resolver.getPayloadMapping("unknownEventType"));
     }
 
