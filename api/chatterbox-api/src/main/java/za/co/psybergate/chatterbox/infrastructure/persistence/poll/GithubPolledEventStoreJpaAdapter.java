@@ -85,6 +85,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
             List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
+                return List.of();
             }
             return githubPolledEvents.stream()
                     .map(GithubPolledEventStoreJpaAdapter::mapToGithubPolledEventRecord)
