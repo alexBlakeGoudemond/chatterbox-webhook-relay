@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
+import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 
 import java.util.List;
 
@@ -36,8 +36,8 @@ public class EventProcessorImpl implements EventProcessor {
 
     @Override
     public void processWebhookEvents() {
-        List<DestinationMapping> destinationMappings = configurationProvider.getDestinationMapping();
-        for (DestinationMapping destinationMapping : destinationMappings) {
+        List<GithubDestinationMapping> destinationMappings = configurationProvider.getDestinationMapping();
+        for (GithubDestinationMapping destinationMapping : destinationMappings) {
             webhookLogger.logProcessingEvents(destinationMapping);
             processWebhookEvents(destinationMapping);
         }
@@ -45,14 +45,14 @@ public class EventProcessorImpl implements EventProcessor {
 
     @Override
     public void processPolledEvents() {
-        List<DestinationMapping> destinationMappings = configurationProvider.getDestinationMapping();
-        for (DestinationMapping destinationMapping : destinationMappings) {
+        List<GithubDestinationMapping> destinationMappings = configurationProvider.getDestinationMapping();
+        for (GithubDestinationMapping destinationMapping : destinationMappings) {
             webhookLogger.logProcessingEvents(destinationMapping);
             processPolledEvents(destinationMapping);
         }
     }
 
-    private void processWebhookEvents(DestinationMapping destinationMapping) {
+    private void processWebhookEvents(GithubDestinationMapping destinationMapping) {
         for (WebhookEventRecord webhookEventRecord : webhookReceivedStore.getUnprocessedWebhooks(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEventRecord);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEventRecord);
@@ -60,7 +60,7 @@ public class EventProcessorImpl implements EventProcessor {
         }
     }
 
-    private void processPolledEvents(DestinationMapping destinationMapping) {
+    private void processPolledEvents(GithubDestinationMapping destinationMapping) {
         for (GithubPolledEventRecord latestEventRecord : githubPolledStore.getUnprocessedEvents(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEventRecord);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEventRecord);

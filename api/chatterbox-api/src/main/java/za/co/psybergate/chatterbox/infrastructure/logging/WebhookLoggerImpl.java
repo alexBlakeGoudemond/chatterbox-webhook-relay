@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties.DestinationMapping;
+import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
 
@@ -110,7 +110,7 @@ public class WebhookLoggerImpl implements WebhookLogger {
     }
 
     @Override
-    public void logProcessingEvents(DestinationMapping destinationMapping) {
+    public void logProcessingEvents(GithubDestinationMapping destinationMapping) {
         log.info("[Processing] Processing Received Webhook events for destination: '{}'", destinationMapping.getName());
     }
 
