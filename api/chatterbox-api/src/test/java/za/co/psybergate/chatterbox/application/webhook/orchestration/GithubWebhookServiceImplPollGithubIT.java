@@ -11,19 +11,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.ingest.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.webhook.ingest.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -64,6 +64,13 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
     @Autowired
     private GithubWebhookService githubWebhookService;
 
+    private static Stream<Arguments> repositoryDetails() {
+        return Stream.of(
+                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
+                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
+        );
+    }
+
     @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
     public void whenPollRecentChanges_ThenSuccess(RepositoryDetail repositoryDetail) {
@@ -78,13 +85,6 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
         for (GithubPolledEventDto polledEvent : githubPolledEvents) {
             assertNotNull(polledEvent.id());
         }
-    }
-
-    private static Stream<Arguments> repositoryDetails() {
-        return Stream.of(
-                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
-                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
-        );
     }
 
 }

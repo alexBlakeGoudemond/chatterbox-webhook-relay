@@ -18,4 +18,5 @@ public interface WebhookConfigurationResolver {
     String getDiscordDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
 
     List<String> getAllRepositories();
+
 }

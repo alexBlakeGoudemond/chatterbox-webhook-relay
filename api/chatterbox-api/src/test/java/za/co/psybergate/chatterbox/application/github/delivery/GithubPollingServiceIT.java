@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
@@ -47,6 +47,13 @@ class GithubPollingServiceIT {
 
     @MockitoBean
     private GithubPolledStore githubPolledStore;
+
+    private static Stream<Arguments> repositoryDetails() {
+        return Stream.of(
+                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
+                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
+        );
+    }
 
     @ParameterizedTest(name = "Commits; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
@@ -81,13 +88,6 @@ class GithubPollingServiceIT {
         assertNotNull(recentUpdates);
         assertNotNull(recentUpdates.getGithubEventTypeDetails());
         assertFalse(recentUpdates.getGithubEventTypeDetails().isEmpty());
-    }
-
-    private static Stream<Arguments> repositoryDetails() {
-        return Stream.of(
-                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
-                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
-        );
     }
 
 }

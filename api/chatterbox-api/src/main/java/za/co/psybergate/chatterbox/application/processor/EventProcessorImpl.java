@@ -12,9 +12,9 @@ import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class EventProcessorImpl implements EventProcessor {
         HttpResponseDto httpResponseDto = deliverToTeams(webhookEventDto, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
             webhookReceivedStore.storeSuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
-        }else{
+        } else {
             webhookReceivedStore.storeUnsuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
         }
     }
@@ -85,7 +85,7 @@ public class EventProcessorImpl implements EventProcessor {
         HttpResponseDto httpResponseDto = deliverToTeams(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
             githubPolledStore.storeSuccessfulDelivery(polledEventRecord, teamsDestinationChannel, destinationUrl);
-        }else{
+        } else {
             githubPolledStore.storeUnsuccessfulDelivery(polledEventRecord, teamsDestinationChannel, destinationUrl);
         }
     }
@@ -96,7 +96,7 @@ public class EventProcessorImpl implements EventProcessor {
         HttpResponseDto httpResponseDto = deliverToDiscord(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
             githubPolledStore.storeSuccessfulDelivery(polledEventRecord, discordDestinationChannel, destinationUrl);
-        }else{
+        } else {
             githubPolledStore.storeUnsuccessfulDelivery(polledEventRecord, discordDestinationChannel, destinationUrl);
         }
     }
@@ -107,7 +107,7 @@ public class EventProcessorImpl implements EventProcessor {
         HttpResponseDto httpResponseDto = deliverToDiscord(webhookEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
             webhookReceivedStore.storeSuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
-        }else{
+        } else {
             webhookReceivedStore.storeUnsuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);
         }
     }

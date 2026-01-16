@@ -117,7 +117,7 @@ public class GithubEventExtractorImplIT {
 
     @DisplayName("Long UrlDisplayText is Truncated")
     @Test
-    public void givenJsonString_WithLongUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsTruncated(){
+    public void givenJsonString_WithLongUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsTruncated() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadLongDisplayText();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
 

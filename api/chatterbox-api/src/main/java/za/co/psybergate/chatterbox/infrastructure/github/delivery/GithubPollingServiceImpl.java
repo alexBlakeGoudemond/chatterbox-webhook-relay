@@ -47,7 +47,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
     }
 
     @Override
-    public @Valid GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate){
+    public @Valid GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
         GithubRepositoryInformationDto informationDto = new GithubRepositoryInformationDto(fromDate, untilDate);
         for (String eventMapping : payloadProperties.getEventMapping().keySet()) {

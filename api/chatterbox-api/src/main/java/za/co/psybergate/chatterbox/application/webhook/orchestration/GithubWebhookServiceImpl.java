@@ -10,15 +10,15 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     private final WebhookRequestValidator webhookRequestValidator;
 
     private final GithubEventExtractor eventExtractor;
-    
+
     private final JsonConverter jsonConverter;
 
     private final GithubPollingService githubPollingService;
@@ -44,7 +44,6 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     private final GithubPolledStore githubPolledStore;
 
     private final ApplicationEventPublisher publisher;
-
 
     @Override
     public WebhookEventDto process(String eventType, String deliveryId, JsonNode rawBody) {

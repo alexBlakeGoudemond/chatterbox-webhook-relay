@@ -20,7 +20,7 @@ public class UpdatesProcessedListener {
 
     @Async("polledEventExecutor")
     @EventListener
-    public void onPolledEventsProcessed(PolledEventsProcessed polledEventsProcessed){
+    public void onPolledEventsProcessed(PolledEventsProcessed polledEventsProcessed) {
         webhookLogger.logPolledEventProcessed(polledEventsProcessed);
         eventProcessor.processPolledEvents();
     }

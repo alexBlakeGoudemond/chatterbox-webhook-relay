@@ -9,10 +9,10 @@ public enum GithubApiJsonKeys {
 
     FULL_NAME("full_name");
 
+    private final String value;
+
     GithubApiJsonKeys(String value) {
         this.value = value;
     }
-
-    private final String value;
 
 }

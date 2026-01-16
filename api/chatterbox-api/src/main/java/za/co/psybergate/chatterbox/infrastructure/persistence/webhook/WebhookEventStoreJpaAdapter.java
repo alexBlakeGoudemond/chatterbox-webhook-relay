@@ -33,6 +33,35 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         this.webhookLogger = webhookLogger;
     }
 
+    public static WebhookEventDto mapToWebhookEventRecord(WebhookEvent webhookEvent) {
+        return new WebhookEventDto(webhookEvent.getId(),
+                webhookEvent.getRepositoryFullName(),
+                webhookEvent.getWebhookId(),
+                webhookEvent.getEventType(),
+                webhookEvent.getDisplayName(),
+                webhookEvent.getSenderName(),
+                webhookEvent.getEventUrl(),
+                webhookEvent.getEventUrlDisplayText(),
+                webhookEvent.getExtraDetail(),
+                webhookEvent.getPayload(),
+                webhookEvent.getEventStatus(),
+                webhookEvent.getErrorMessage(),
+                webhookEvent.getReceivedAt(),
+                webhookEvent.getProcessedAt());
+    }
+
+    // TODO BlakeGoudemond 2026/01/16 | place in mapper class, like MapStruct?
+    private static WebhookEventDeliveryDto mapToWebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
+        return new WebhookEventDeliveryDto(
+                deliveryLog.getId(),
+                deliveryLog.getWebhookEventId(),
+                deliveryLog.getDeliveryDestination(),
+                deliveryLog.getDeliveryDestinationUrl(),
+                deliveryLog.getEventStatus(),
+                deliveryLog.getDeliveredAt()
+        );
+    }
+
     @Override
     public List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName) {
         try {
@@ -78,23 +107,6 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store WebhookEvent", e);
         }
-    }
-
-    public static WebhookEventDto mapToWebhookEventRecord(WebhookEvent webhookEvent) {
-        return new WebhookEventDto(webhookEvent.getId(),
-                webhookEvent.getRepositoryFullName(),
-                webhookEvent.getWebhookId(),
-                webhookEvent.getEventType(),
-                webhookEvent.getDisplayName(),
-                webhookEvent.getSenderName(),
-                webhookEvent.getEventUrl(),
-                webhookEvent.getEventUrlDisplayText(),
-                webhookEvent.getExtraDetail(),
-                webhookEvent.getPayload(),
-                webhookEvent.getEventStatus(),
-                webhookEvent.getErrorMessage(),
-                webhookEvent.getReceivedAt(),
-                webhookEvent.getProcessedAt());
     }
 
     @Override
@@ -149,18 +161,6 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEventLogs", e);
         }
-    }
-
-    // TODO BlakeGoudemond 2026/01/16 | place in mapper class, like MapStruct?
-    private static WebhookEventDeliveryDto mapToWebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
-        return new WebhookEventDeliveryDto(
-                deliveryLog.getId(),
-                deliveryLog.getWebhookEventId(),
-                deliveryLog.getDeliveryDestination(),
-                deliveryLog.getDeliveryDestinationUrl(),
-                deliveryLog.getEventStatus(),
-                deliveryLog.getDeliveredAt()
-        );
     }
 
     @Override
