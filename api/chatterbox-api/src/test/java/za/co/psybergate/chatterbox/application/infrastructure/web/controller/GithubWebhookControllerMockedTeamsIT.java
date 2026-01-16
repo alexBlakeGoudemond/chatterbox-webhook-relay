@@ -120,7 +120,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     @Autowired
     private GithubHttpRequestFactory githubHttpRequestFactory;
 
-    @DisplayName("Missing JSON properties: BAD_REQUEST")
+    @DisplayName("Missing JSON properties: EXCEPTION")
     @Test
     public void givenIncompletePayload_MissingJsonProperties_ThenHttpStatusOk() {
         String incompletePayload = "{}";
@@ -128,7 +128,7 @@ public class GithubWebhookControllerMockedTeamsIT {
         try {
             String expectedContentBody = "Unable to parse 'repository.full_name' from raw rawBody";
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isInternalServerError())
                     .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);

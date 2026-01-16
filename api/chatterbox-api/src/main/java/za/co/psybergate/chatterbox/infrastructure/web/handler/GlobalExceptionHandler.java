@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         webhookLogger.logExceptionDetails(ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Internal Server Error");
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
