@@ -3,11 +3,13 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.github.GithubEventMapping;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/// [EventType] can be defined in the properties files and loaded here, as can [GithubEventMapping]
 @Data
 @ConfigurationProperties(prefix = "chatterbox.sources.github.payload")
 public class ChatterboxSourceGithubPayloadProperties {

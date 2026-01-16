@@ -1,15 +1,12 @@
 package za.co.psybergate.chatterbox.domain.event;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
 
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
 @ToString
 public class GithubPolledEventDeliveryRecord {
 
@@ -25,13 +22,13 @@ public class GithubPolledEventDeliveryRecord {
 
     private LocalDateTime deliveredAt;
 
-    public GithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
-        this.id = deliveryLog.getId();
-        this.githubPolledEventId = deliveryLog.getGithubPolledEventId();
-        this.deliveryDestination = deliveryLog.getDeliveryDestination();
-        this.deliveryDestinationUrl = deliveryLog.getDeliveryDestinationUrl();
-        this.eventStatus = deliveryLog.getEventStatus();
-        this.deliveredAt = deliveryLog.getDeliveredAt();
+    public GithubPolledEventDeliveryRecord(Long id, Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime deliveredAt) {
+        this.id = id;
+        this.githubPolledEventId = githubPolledEventId;
+        this.deliveryDestination = deliveryDestination;
+        this.deliveryDestinationUrl = deliveryDestinationUrl;
+        this.eventStatus = eventStatus;
+        this.deliveredAt = deliveredAt;
     }
 
 }

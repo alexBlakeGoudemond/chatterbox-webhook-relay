@@ -114,7 +114,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         try {
             WebhookEventDeliveryLog deliveryLog = logRepository.save(webhookEventDeliveryLog);
             webhookLogger.logEventDelivered(deliveryLog);
-            return new WebhookEventDeliveryRecord(deliveryLog);
+            return mapToWebhookEventDeliveryRecord(deliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store the Delivery information of the event", e);
         }
@@ -144,11 +144,22 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         try {
             List<WebhookEventDeliveryLog> deliveryLogs = logRepository.findAllByWebhookEventId(webhookEventId);
             return deliveryLogs.stream()
-                    .map(WebhookEventDeliveryRecord::new)
+                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventDeliveryRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEventLogs", e);
         }
+    }
+
+    private static WebhookEventDeliveryRecord mapToWebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
+        return new WebhookEventDeliveryRecord(
+                deliveryLog.getId(),
+                deliveryLog.getWebhookEventId(),
+                deliveryLog.getDeliveryDestination(),
+                deliveryLog.getDeliveryDestinationUrl(),
+                deliveryLog.getEventStatus(),
+                deliveryLog.getDeliveredAt()
+        );
     }
 
     @Override

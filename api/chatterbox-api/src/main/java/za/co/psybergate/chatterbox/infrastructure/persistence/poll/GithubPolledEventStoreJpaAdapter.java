@@ -98,7 +98,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         try {
             GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
             webhookLogger.logEventDelivered(deliveryLog);
-            return new GithubPolledEventDeliveryRecord(deliveryLog);
+            return mapToGithubPolledEventDeliveryRecord(deliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store Delivery information of the event", e);
         }
@@ -142,12 +142,23 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         );
     }
 
+    private static GithubPolledEventDeliveryRecord mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
+        return new GithubPolledEventDeliveryRecord(
+                deliveryLog.getId(),
+                deliveryLog.getGithubPolledEventId(),
+                deliveryLog.getDeliveryDestination(),
+                deliveryLog.getDeliveryDestinationUrl(),
+                deliveryLog.getEventStatus(),
+                deliveryLog.getDeliveredAt()
+        );
+    }
+
     @Override
     public List<GithubPolledEventDeliveryRecord> getDeliveryLogs(Long id) {
         try {
             List<GithubPolledEventDeliveryLog> deliveryLogs = logRepository.findAllByGithubPolledEventId(id);
             return deliveryLogs.stream()
-                    .map(GithubPolledEventDeliveryRecord::new)
+                    .map(GithubPolledEventStoreJpaAdapter::mapToGithubPolledEventDeliveryRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);

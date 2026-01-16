@@ -1,15 +1,12 @@
 package za.co.psybergate.chatterbox.domain.event;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventDeliveryLog;
 
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
 @ToString
 public class WebhookEventDeliveryRecord {
 
@@ -25,13 +22,13 @@ public class WebhookEventDeliveryRecord {
 
     private LocalDateTime deliveredAt;
 
-    public WebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
-        this.id = deliveryLog.getId();
-        this.webhookEventId = deliveryLog.getWebhookEventId();
-        this.deliveryDestination = deliveryLog.getDeliveryDestination();
-        this.deliveryDestinationUrl = deliveryLog.getDeliveryDestinationUrl();
-        this.eventStatus = deliveryLog.getEventStatus();
-        this.deliveredAt = deliveryLog.getDeliveredAt();
+    public WebhookEventDeliveryRecord(Long id, Long webhookEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime deliveredAt) {
+        this.id = id;
+        this.webhookEventId = webhookEventId;
+        this.deliveryDestination = deliveryDestination;
+        this.deliveryDestinationUrl = deliveryDestinationUrl;
+        this.eventStatus = eventStatus;
+        this.deliveredAt = deliveredAt;
     }
 
 }
