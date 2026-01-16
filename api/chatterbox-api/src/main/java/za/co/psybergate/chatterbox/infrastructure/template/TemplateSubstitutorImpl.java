@@ -1,6 +1,7 @@
-package za.co.psybergate.chatterbox.application.template;
+package za.co.psybergate.chatterbox.infrastructure.template;
 
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.template.TemplateSubstitutor;
 
 import java.util.Map;
 import java.util.regex.Matcher;
