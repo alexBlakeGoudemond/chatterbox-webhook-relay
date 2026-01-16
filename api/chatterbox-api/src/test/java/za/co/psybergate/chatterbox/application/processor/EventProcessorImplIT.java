@@ -14,7 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
@@ -81,7 +81,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private EventProcessorService eventProcessorService;
 
     @Autowired
-    private WebhookReceivedStore webhookReceivedStore;
+    private WebhookEventStore webhookEventStore;
 
     @Autowired
     private GithubPolledStore githubPolledStore;
@@ -101,7 +101,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
-        this.persistedWebhookEvent = webhookReceivedStore.storeWebhook(uniqueId, eventDto, jsonNode);
+        this.persistedWebhookEvent = webhookEventStore.storeWebhook(uniqueId, eventDto, jsonNode);
         this.persistedGithubPolledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
     }
 
@@ -110,12 +110,12 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessorService.processWebhookEvents();
-        WebhookEventDto retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.id());
+        WebhookEventDto retrievedWebhookEvent = webhookEventStore.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.eventStatus());
 
-        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.id());
+        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookEventStore.getDeliveryLogs(persistedWebhookEvent.id());
         assertEquals(2, webhookEventDeliveryLogs.size());
         for (WebhookEventDeliveryDto webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);

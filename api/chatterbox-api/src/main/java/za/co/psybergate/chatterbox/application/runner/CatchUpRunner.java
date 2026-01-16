@@ -7,12 +7,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -23,7 +22,7 @@ public class CatchUpRunner implements ApplicationRunner {
 
     private final WebhookConfigurationResolver configurationResolver;
 
-    private final WebhookReceivedStore webhookReceivedStore;
+    private final WebhookEventStore webhookEventStore;
 
     private final GithubPolledStore githubPolledStore;
 

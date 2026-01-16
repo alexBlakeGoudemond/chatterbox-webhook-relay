@@ -11,8 +11,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
-import za.co.psybergate.chatterbox.application.runner.CatchUpRunner;
+import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
@@ -43,7 +42,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final GithubPollingService githubPollingService;
 
-    private final WebhookReceivedStore webhookReceivedStore;
+    private final WebhookEventStore webhookEventStore;
 
     private final GithubPolledStore githubPolledStore;
 
@@ -57,7 +56,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        WebhookEventDto webhookEvent = webhookReceivedStore.storeWebhook(deliveryId, eventDto, rawBody);
+        WebhookEventDto webhookEvent = webhookEventStore.storeWebhook(deliveryId, eventDto, rawBody);
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }
@@ -95,7 +94,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     public boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
         LocalDateTime lastPersistedTime;
         try {
-            WebhookEventDto latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
+            WebhookEventDto latestWebhookEvent = webhookEventStore.getMostRecentWebhook(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
             lastPersistedTime = latestWebhookEvent.receivedAt();
         } catch (ApplicationException e) {

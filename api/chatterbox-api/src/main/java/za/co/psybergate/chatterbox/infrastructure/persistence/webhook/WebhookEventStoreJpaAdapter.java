@@ -3,10 +3,9 @@ package za.co.psybergate.chatterbox.infrastructure.persistence.webhook;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDeliveryDto;
@@ -17,7 +16,7 @@ import java.util.List;
 
 // TODO BlakeGoudemond 2026/01/16 | in time, consider a generic / polymorphic version of this as the code is very similar to GithubPolledEventStoreJpaAdapter
 @Component
-public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
+public class WebhookEventStoreJpaAdapter implements WebhookEventStore {
 
     private final WebhookEventJpaRepository repository;
 
