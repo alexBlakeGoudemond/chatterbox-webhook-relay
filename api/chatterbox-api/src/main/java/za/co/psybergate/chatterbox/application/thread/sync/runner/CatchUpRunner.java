@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.runner;
+package za.co.psybergate.chatterbox.application.thread.sync.runner;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;

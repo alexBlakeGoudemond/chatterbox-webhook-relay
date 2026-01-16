@@ -3,7 +3,6 @@ package za.co.psybergate.chatterbox.application.webhook.orchestration;
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
-import za.co.psybergate.chatterbox.application.runner.CatchUpRunner;
 
 import java.time.LocalDateTime;
 import java.util.List;
