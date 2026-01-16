@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.processing;
+package za.co.psybergate.chatterbox.application.webhook.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /// - `@Valid` on the return type triggers
 /// - `@NotNull` on the GithubEventDto fields is enforced
 @SpringBootTest(classes = {
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         WebhookConfigurationResolverImpl.class,
         ApplicationConfig.class,
         JsonFileReader.class,
@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
         WebhookConfigurationResolverImpl.class,
         TestConfigurationResolver.class,
 })
-public class GithubEventExtractorImplIT {
+public class GithubEventMapperImplIT {
 
     @MockitoBean
     private WebhookFilter webhookFilter;
@@ -55,16 +55,16 @@ public class GithubEventExtractorImplIT {
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventExtractor eventExtractor;
+    private GithubEventMapper eventExtractor;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
 
     @DisplayName("Extractor maps to DTO")
     @Test
-    public void givenJsonString_WhenExtract_ThenSuccess() {
+    public void givenJsonString_WhenMap_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
 
         assertNotNull(eventDto);
         assertEquals(EventType.PUSH, eventDto.eventType());
@@ -77,33 +77,33 @@ public class GithubEventExtractorImplIT {
 
     @DisplayName("Unknown Event: Exception")
     @Test
-    public void givenJsonString_WithUnknownEvent_WhenExtract_ThenException() {
+    public void givenJsonString_WithUnknownEvent_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadUnknownEvent();
         assertThrows(DomainException.class,
-                () -> eventExtractor.extract("unknownEvent", jsonNode));
+                () -> eventExtractor.map("unknownEvent", jsonNode));
     }
 
     @DisplayName("Missing All JSON keys: Exception")
     @Test
-    public void givenIncompleteJsonString_WhenExtract_ThenException() {
+    public void givenIncompleteJsonString_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadMissingProperties();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.extract(EventType.PUSH, jsonNode));
+                () -> eventExtractor.map(EventType.PUSH, jsonNode));
     }
 
     @DisplayName("Missing Most JSON keys: Exception")
     @Test
-    public void givenPartialJsonString_WithRepositoryName_WhenExtract_ThenException() {
+    public void givenPartialJsonString_WithRepositoryName_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadInvalidEventTypeAndRepositoryName();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.extract(EventType.PUSH, jsonNode));
+                () -> eventExtractor.map(EventType.PUSH, jsonNode));
     }
 
     @DisplayName("No UrlDisplayText; then eventType")
     @Test
-    public void givenJsonString_WithNoUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsEventType() {
+    public void givenJsonString_WithNoUrlDisplayText_WhenMap_ThenUrlDisplayTextIsEventType() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadNoDisplayText();
-        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
 
         assertNotNull(eventDto);
         assertEquals(EventType.PUSH, eventDto.eventType());
@@ -116,9 +116,9 @@ public class GithubEventExtractorImplIT {
 
     @DisplayName("Long UrlDisplayText is Truncated")
     @Test
-    public void givenJsonString_WithLongUrlDisplayText_WhenExtract_ThenUrlDisplayTextIsTruncated() {
+    public void givenJsonString_WithLongUrlDisplayText_WhenMap_ThenUrlDisplayTextIsTruncated() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadLongDisplayText();
-        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
 
         assertNotNull(eventDto);
         assertEquals(EventType.PUSH, eventDto.eventType());

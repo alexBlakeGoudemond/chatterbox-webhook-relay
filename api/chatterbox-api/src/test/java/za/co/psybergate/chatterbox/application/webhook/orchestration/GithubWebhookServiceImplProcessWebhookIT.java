@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEve
 import za.co.psybergate.chatterbox.infrastructure.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.webhook.validation.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubWebhookServiceImpl.class,
         JsonFileReader.class,
         WebhookRequestValidatorImpl.class,
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         JsonConverterImpl.class,
         ApplicationConfig.class,
         WebhookLoggerImpl.class,

@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
@@ -36,7 +36,7 @@ import za.co.psybergate.chatterbox.infrastructure.teams.delivery.TeamsSenderServ
 import za.co.psybergate.chatterbox.infrastructure.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
+import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubPolledEventEventStoreJpaAdapter.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         WebhookLoggerImpl.class,
         TeamsSenderServiceImpl.class,
         TeamsCardFactoryImpl.class,
@@ -90,7 +90,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventExtractor eventExtractor;
+    private GithubEventMapper eventExtractor;
 
     private WebhookEventDto persistedWebhookEvent;
 
@@ -99,7 +99,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @BeforeEach
     public void setup() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
         this.persistedWebhookEvent = webhookEventStore.storeWebhook(uniqueId, eventDto, jsonNode);
         this.persistedGithubPolledEvent = githubPolledEventStore.storeEvent(uniqueId, eventDto, jsonNode);

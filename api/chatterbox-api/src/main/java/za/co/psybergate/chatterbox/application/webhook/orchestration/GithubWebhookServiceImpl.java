@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEvent
 import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.application.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.webhook.validation.WebhookRequestValidator;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
@@ -36,7 +36,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final WebhookRequestValidator webhookRequestValidator;
 
-    private final GithubEventExtractor eventExtractor;
+    private final GithubEventMapper eventExtractor;
 
     private final JsonConverter jsonConverter;
 
@@ -139,7 +139,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     }
 
     private GithubEventDto getEventDto(String eventType, JsonNode rawBody) {
-        return eventExtractor.extract(eventType, rawBody);
+        return eventExtractor.map(eventType, rawBody);
     }
 
     private LocalDateTime getLastPersistedTime(LocalDateTime persistedTime001, LocalDateTime persistedTime002) {
