@@ -6,7 +6,7 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.web.filter.CachedBodyHttpServletRequest;
-import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
+import za.co.psybergate.chatterbox.application.web.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;

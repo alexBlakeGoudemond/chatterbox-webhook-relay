@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.security;
+package za.co.psybergate.chatterbox.application.web.security;
 
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;

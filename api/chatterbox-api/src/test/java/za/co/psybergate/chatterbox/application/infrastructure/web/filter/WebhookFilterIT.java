@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.application.web.security.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.web.serialisation.JsonConverterImpl;
