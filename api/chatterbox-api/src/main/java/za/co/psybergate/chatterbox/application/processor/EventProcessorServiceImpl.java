@@ -2,7 +2,8 @@ package za.co.psybergate.chatterbox.application.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderService;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
@@ -18,9 +19,10 @@ import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
-public class EventProcessorImpl implements EventProcessor {
+@Transactional
+public class EventProcessorServiceImpl implements EventProcessorService {
 
     private final WebhookLogger webhookLogger;
 

@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-@Transactional
 public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     private final WebhookEventJpaRepository repository;
