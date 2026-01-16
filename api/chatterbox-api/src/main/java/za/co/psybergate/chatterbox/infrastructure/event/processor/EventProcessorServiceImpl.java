@@ -1,10 +1,11 @@
-package za.co.psybergate.chatterbox.application.event.processor;
+package za.co.psybergate.chatterbox.infrastructure.event.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderService;
+import za.co.psybergate.chatterbox.application.event.processor.EventProcessorService;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;

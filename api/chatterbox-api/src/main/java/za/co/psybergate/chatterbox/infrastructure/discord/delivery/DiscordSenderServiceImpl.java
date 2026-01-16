@@ -12,6 +12,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,8 @@ public class DiscordSenderServiceImpl implements DiscordSenderService {
     private final DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
 
     private final WebhookLogger webhookLogger;
+
+    private final HttpResponseHandler httpResponseHandler;
 
     @Override
     public HttpResponseDto process(GithubEventDto dto, String discordDestination) {
@@ -52,7 +55,7 @@ public class DiscordSenderServiceImpl implements DiscordSenderService {
     /// @throws ApplicationException if an I/O or network-related issue occurs during execution
     public HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws ApplicationException {
         try (CloseableHttpClient client = getCloseableHttpClient()) {
-            return client.execute(httpPost, discordEmbeddedObjectFactory::getHttpResponseDto);
+            return client.execute(httpPost, httpResponseHandler::getHttpResponseDto);
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when sending POST Request to Teams", e);
         }

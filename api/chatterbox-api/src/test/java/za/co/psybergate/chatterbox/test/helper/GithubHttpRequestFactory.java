@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.test.helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.web.security.PayloadCryptor;
+import za.co.psybergate.chatterbox.infrastructure.web.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 

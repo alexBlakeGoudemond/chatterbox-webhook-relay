@@ -1,10 +1,8 @@
 package za.co.psybergate.chatterbox.application.discord.factory;
 
-import org.apache.hc.core5.http.ClassicHttpResponse;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 
 import java.util.Map;
 
@@ -19,7 +17,5 @@ public interface DiscordEmbeddedObjectFactory {
     DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto);
 
     String getAsDiscordPayloadString(GithubEventDto eventDto) throws ApplicationException;
-
-    HttpResponseDto getHttpResponseDto(ClassicHttpResponse response);
 
 }

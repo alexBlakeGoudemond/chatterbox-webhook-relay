@@ -12,6 +12,7 @@ import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,8 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
     private final TeamsCardFactory teamsCardFactory;
 
     private final WebhookLogger webhookLogger;
+
+    private final HttpResponseHandler httpResponseHandler;
 
     @Override
     public HttpResponseDto process(GithubEventDto dto, String teamsDestination) {
@@ -52,7 +55,7 @@ public class TeamsSenderServiceImpl implements TeamsSenderService {
     /// @throws ApplicationException if an I/O or network-related issue occurs during execution
     public HttpResponseDto executeHttpPostRequest(HttpPost httpPost) throws ApplicationException {
         try (CloseableHttpClient client = getCloseableHttpClient()) {
-            return client.execute(httpPost, teamsCardFactory::getHttpResponseDto);
+            return client.execute(httpPost, httpResponseHandler::getHttpResponseDto);
         } catch (IOException e) {
             throw new ApplicationException("Unexpected issue when sending POST Request to Teams", e);
         }
