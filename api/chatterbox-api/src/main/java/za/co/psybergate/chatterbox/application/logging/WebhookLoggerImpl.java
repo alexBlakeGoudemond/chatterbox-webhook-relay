@@ -14,6 +14,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// TODO BlakeGoudemond 2026/01/16 | consider breaking this impl up into pieces, maybe even look for sensitive data and tidy up before logging
 @Component
 @Slf4j
 public class WebhookLoggerImpl implements WebhookLogger {

@@ -74,6 +74,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
         return getCommitsSince(owner, repositoryName, fromDate, LocalDateTime.now());
     }
 
+    // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
     @Override
     public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logGithubPollEventType("commits", owner, repositoryName, fromDate, untilDate);
@@ -97,6 +98,7 @@ public class GithubPollingServiceImpl implements GithubPollingService {
         return getPullRequestsSince(owner, repositoryName, fromDate, LocalDateTime.now());
     }
 
+    // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
     @Override
     public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logGithubPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
