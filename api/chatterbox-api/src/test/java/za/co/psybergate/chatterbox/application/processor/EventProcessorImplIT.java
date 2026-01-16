@@ -110,16 +110,16 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessor.processWebhookEvents();
-        WebhookEventDto retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.getId());
+        WebhookEventDto retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
-        assertEquals(retrievedWebhookEvent.getId(), persistedWebhookEvent.getId());
-        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.getEventStatus());
+        assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
+        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.eventStatus());
 
-        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.getId());
+        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookReceivedStore.getDeliveryLogs(persistedWebhookEvent.id());
         assertEquals(2, webhookEventDeliveryLogs.size());
         for (WebhookEventDeliveryDto webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);
-            assertEquals(webhookEventDeliveryLog.getWebhookEventId(), retrievedWebhookEvent.getId());
+            assertEquals(webhookEventDeliveryLog.webhookEventId(), retrievedWebhookEvent.id());
         }
     }
 
@@ -128,16 +128,16 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists(){
         eventProcessor.processPolledEvents();
-        GithubPolledEventDto retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.getId());
+        GithubPolledEventDto retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.id());
         assertNotNull(retrievedPolledEvent);
-        assertEquals(retrievedPolledEvent.getId(), persistedGithubPolledEvent.getId());
-        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.getEventStatus());
+        assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());
+        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.eventStatus());
 
-        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.getId());
+        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.id());
         assertEquals(2, polledEventDeliveryLogs.size());
         for (GithubPolledEventDeliveryDto polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);
-            assertEquals(polledEventDeliveryLog.getGithubPolledEventId(), retrievedPolledEvent.getId());
+            assertEquals(polledEventDeliveryLog.githubPolledEventId(), retrievedPolledEvent.id());
         }
     }
 

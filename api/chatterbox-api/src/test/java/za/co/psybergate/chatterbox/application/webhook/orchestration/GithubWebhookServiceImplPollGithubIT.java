@@ -77,7 +77,7 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
         assertNotNull(githubPolledEvents);
         assertFalse(githubPolledEvents.isEmpty());
         for (GithubPolledEventDto polledEvent : githubPolledEvents) {
-            assertNotNull(polledEvent.getId());
+            assertNotNull(polledEvent.id());
         }
     }
 
