@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
+import za.co.psybergate.chatterbox.domain.discord.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
@@ -57,13 +57,13 @@ public class DiscordEmbeddedObjectFactoryImplIT {
     @DisplayName("Factory(DTO) can build template")
     @Test
     public void givenGithubEventDto_WhenBuildDiscordEmbeddedObjectFactory_ThenSuccess() {
-        ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition embeddedObjectDefinition = getDiscordEmbeddedObjectTemplateUsingMap();
+        DiscordEmbeddedObjectDefinition embeddedObjectDefinition = getDiscordEmbeddedObjectTemplateUsingMap();
         if (embeddedObjectDefinition == null) {
             fail("Expected the DiscordFactory to be able to build a Template");
         }
 
         assertNotNull(embeddedObjectDefinition);
-        List<ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition.EmbeddedObject> bodyItems = embeddedObjectDefinition.getEmbeds();
+        List<DiscordEmbeddedObjectDefinition.EmbeddedObject> bodyItems = embeddedObjectDefinition.getEmbeds();
         for (var bodyItem : bodyItems) {
             assertFalse(bodyItem.getTitle().contains("${}"));
             assertFalse(bodyItem.getDescription().contains("${}"));
@@ -75,7 +75,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
     @DisplayName("Template --> JSON")
     @Test
     public void whenCompareTemplate_ToJson_ThenIdentical() {
-        ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition embeddedObjectDefinition = getDiscordEmbeddedObjectTemplateUsingJsonString();
+        DiscordEmbeddedObjectDefinition embeddedObjectDefinition = getDiscordEmbeddedObjectTemplateUsingJsonString();
         if (embeddedObjectDefinition == null) {
             fail("Expected the DiscordFactory to be able to build a Template");
         }
@@ -87,7 +87,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
         assertEquals(expectedJson, actualJson);
     }
 
-    private ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingJsonString() {
+    private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         try {
@@ -97,7 +97,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
         }
     }
 
-    private ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingMap() {
+    private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
             return discordEmbeddedObjectFactory.buildEmbeddedObjectDefinition(propertiesToUse);

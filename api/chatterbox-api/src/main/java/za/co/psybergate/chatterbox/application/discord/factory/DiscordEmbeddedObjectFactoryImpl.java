@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties.EmbeddedObjectDefinition;
+import za.co.psybergate.chatterbox.domain.discord.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutor;
 
@@ -30,8 +30,8 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
     private final HttpResponseHandler httpResponseHandler;
 
     @Override
-    public EmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values) {
-        EmbeddedObjectDefinition clone = deepCopy(discordProperties.getEmbeddedObjectDefinition()); // use Jackson
+    public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values) {
+        DiscordEmbeddedObjectDefinition clone = deepCopy(discordProperties.getEmbeddedObjectDefinition()); // use Jackson
 
         clone.getEmbeds().forEach(embeddedObject -> {
             embeddedObject.setTitle(
@@ -52,7 +52,7 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
     }
 
     @Override
-    public EmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto) {
+    public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto) {
         Map<String, String> values = Map.of(
                 "displayName", dto.displayName(),
                 REPOSITORYNAME.getFieldName(), dto.repositoryName(),
@@ -66,7 +66,7 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
 
     @Override
     public String getAsDiscordPayloadString(GithubEventDto eventDto) throws ApplicationException {
-        EmbeddedObjectDefinition embeddedObjectDefinition = buildEmbeddedObjectDefinition(eventDto);
+        DiscordEmbeddedObjectDefinition embeddedObjectDefinition = buildEmbeddedObjectDefinition(eventDto);
         String teamsPayload;
         try {
             teamsPayload = objectMapper.writeValueAsString(embeddedObjectDefinition);
@@ -81,8 +81,8 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
         return httpResponseHandler.getHttpResponseDto(response);
     }
 
-    private EmbeddedObjectDefinition deepCopy(EmbeddedObjectDefinition src) {
-        return objectMapper.convertValue(src, EmbeddedObjectDefinition.class);
+    private DiscordEmbeddedObjectDefinition deepCopy(DiscordEmbeddedObjectDefinition src) {
+        return objectMapper.convertValue(src, DiscordEmbeddedObjectDefinition.class);
     }
 
 }
