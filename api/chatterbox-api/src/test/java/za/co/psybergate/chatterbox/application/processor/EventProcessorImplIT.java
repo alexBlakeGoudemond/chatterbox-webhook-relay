@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
@@ -28,7 +28,7 @@ import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.discord.delivery.DiscordSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.provider.ConfigurationProviderImpl;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Import({
         EventProcessorServiceImpl.class,
         WebhookEventStoreJpaAdapter.class,
-        GithubPolledEventStoreJpaAdapter.class,
+        GithubPolledEventEventStoreJpaAdapter.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
@@ -84,7 +84,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private WebhookEventStore webhookEventStore;
 
     @Autowired
-    private GithubPolledStore githubPolledStore;
+    private GithubPolledEventStore githubPolledEventStore;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -102,7 +102,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
         this.persistedWebhookEvent = webhookEventStore.storeWebhook(uniqueId, eventDto, jsonNode);
-        this.persistedGithubPolledEvent = githubPolledStore.storeEvent(uniqueId, eventDto, jsonNode);
+        this.persistedGithubPolledEvent = githubPolledEventStore.storeEvent(uniqueId, eventDto, jsonNode);
     }
 
     @DisplayName("Processing Webhook Events creates Delivery Logs")
@@ -128,12 +128,12 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessorService.processPolledEvents();
-        GithubPolledEventDto retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.id());
+        GithubPolledEventDto retrievedPolledEvent = githubPolledEventStore.getEvent(persistedGithubPolledEvent.id());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.eventStatus());
 
-        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledStore.getDeliveryLogs(persistedGithubPolledEvent.id());
+        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledEventStore.getDeliveryLogs(persistedGithubPolledEvent.id());
         assertEquals(2, polledEventDeliveryLogs.size());
         for (GithubPolledEventDeliveryDto polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);

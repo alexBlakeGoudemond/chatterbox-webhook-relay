@@ -11,7 +11,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
+import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
@@ -106,7 +106,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     private WebhookEventStore webhookEventStore;
 
     @MockitoBean
-    private GithubPolledStore githubPolledStore;
+    private GithubPolledEventStore githubPolledEventStore;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it

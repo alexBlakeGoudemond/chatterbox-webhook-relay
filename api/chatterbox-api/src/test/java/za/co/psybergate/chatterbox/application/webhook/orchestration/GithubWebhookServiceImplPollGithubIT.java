@@ -17,7 +17,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEvent
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         WebhookLoggerImpl.class,
         GithubPollingServiceImpl.class,
         WebhookConfigurationResolverImpl.class,
-        GithubPolledEventStoreJpaAdapter.class
+        GithubPolledEventEventStoreJpaAdapter.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        GithubPolledEventStoreJpaAdapter.class,
+        GithubPolledEventEventStoreJpaAdapter.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
         GithubEventExtractorImpl.class,
@@ -47,7 +47,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
-    private GithubPolledEventStoreJpaAdapter adapter;
+    private GithubPolledEventEventStoreJpaAdapter adapter;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -71,7 +71,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
-        GithubPolledEventDto polledEvent = GithubPolledEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
+        GithubPolledEventDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
         GithubPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }

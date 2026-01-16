@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEvent
 
 import java.util.List;
 
-public interface GithubPolledStore {
+public interface GithubPolledEventStore {
 
     List<GithubPolledEventDto> getUnprocessedEvents(String repositoryFullName);
 

@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
@@ -54,7 +54,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     private WebhookFilter webhookFilter;
 
     @MockitoBean
-    private GithubPolledEventStoreJpaAdapter githubPolledStore;
+    private GithubPolledEventEventStoreJpaAdapter githubPolledStore;
 
     @Autowired
     private GithubWebhookService githubWebhookService;
