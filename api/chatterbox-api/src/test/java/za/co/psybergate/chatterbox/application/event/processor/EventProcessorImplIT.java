@@ -35,7 +35,7 @@ import za.co.psybergate.chatterbox.infrastructure.config.provider.ConfigurationP
 import za.co.psybergate.chatterbox.infrastructure.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.teams.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.application.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;

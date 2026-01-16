@@ -24,7 +24,7 @@ import za.co.psybergate.chatterbox.infrastructure.discord.factory.DiscordEmbedde
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.config.provider.ConfigurationProviderImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.application.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
