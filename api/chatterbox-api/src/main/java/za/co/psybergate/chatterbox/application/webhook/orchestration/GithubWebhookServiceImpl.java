@@ -12,6 +12,8 @@ import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServ
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
@@ -19,8 +21,6 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     private List<GithubPolledEventDto> storeEvents(EventType eventType, ArrayNode arrayNode) {
         List<GithubPolledEventDto> updates = new ArrayList<>();
         for (JsonNode jsonNode : arrayNode) {
-            String uniqueId = getUniqueId(eventType, jsonNode);
+            String uniqueId = eventType.getUniqueId(jsonNode);
             GithubEventDto eventDto = getEventDto(eventType.name(), jsonNode);
             GithubPolledEventDto polledEvent = githubPolledEventStore.storeEvent(uniqueId, eventDto, jsonNode);
             updates.add(polledEvent);
@@ -140,14 +140,6 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private GithubEventDto getEventDto(String eventType, JsonNode rawBody) {
         return eventExtractor.extract(eventType, rawBody);
-    }
-
-    private String getUniqueId(EventType eventType, JsonNode jsonNode) {
-        return switch (eventType) {
-            case POLL_COMMIT -> jsonNode.get("sha").asText();
-            case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
-            default -> throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
-        };
     }
 
     private LocalDateTime getLastPersistedTime(LocalDateTime persistedTime001, LocalDateTime persistedTime002) {
