@@ -15,6 +15,7 @@ import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// TODO BlakeGoudemond 2026/01/16 | in time, consider a generic / polymorphic version of this as the code is very similar to GithubPolledEventStoreJpaAdapter
 @Component
 public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
@@ -66,6 +67,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
             List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
+                return List.of();
             }
             return webhookEvents.stream()
                     .map(WebhookEventStoreJpaAdapter::mapToWebhookEventRecord)
@@ -81,6 +83,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
             List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, EventStatus.RECEIVED, Limit.of(5));
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
+                return List.of();
             }
             return webhookEvents.stream()
                     .map(WebhookEventStoreJpaAdapter::mapToWebhookEventRecord)
