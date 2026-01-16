@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.domain.api;
 
 import lombok.Getter;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.domain.exception.DomainException;
 
 /// The EventTypes defined here are available via the
 /// Github API:
@@ -30,8 +30,7 @@ public enum EventType {
             if (eventType.name().equalsIgnoreCase(eventMapping))
                 return eventType;
         }
-        // TODO BlakeGoudemond 2026/01/16 | throw DomainException, dont depend on application layer
-        throw new ApplicationException("Unknown event type " + eventMapping);
+        throw new DomainException("Unknown event type " + eventMapping);
     }
 
 }

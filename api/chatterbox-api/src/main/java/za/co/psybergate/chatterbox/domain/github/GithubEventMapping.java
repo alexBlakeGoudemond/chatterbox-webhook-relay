@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.domain.github;
 
 import lombok.Data;
 import lombok.Getter;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.util.Map;
 

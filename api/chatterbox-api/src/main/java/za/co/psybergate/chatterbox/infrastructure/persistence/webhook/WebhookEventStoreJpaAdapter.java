@@ -151,6 +151,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
         }
     }
 
+    // TODO BlakeGoudemond 2026/01/16 | place in mapper class, like MapStruct?
     private static WebhookEventDeliveryRecord mapToWebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
         return new WebhookEventDeliveryRecord(
                 deliveryLog.getId(),
