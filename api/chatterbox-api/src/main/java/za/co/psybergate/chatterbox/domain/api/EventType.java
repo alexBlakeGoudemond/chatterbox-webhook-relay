@@ -30,6 +30,7 @@ public enum EventType {
             if (eventType.name().equalsIgnoreCase(eventMapping))
                 return eventType;
         }
+        // TODO BlakeGoudemond 2026/01/16 | throw DomainException, dont depend on application layer
         throw new ApplicationException("Unknown event type " + eventMapping);
     }
 
