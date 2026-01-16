@@ -9,8 +9,8 @@ import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.record.WebhookEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.record.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
 
 import java.time.LocalDateTime;
 import java.util.List;

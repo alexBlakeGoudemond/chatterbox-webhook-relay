@@ -9,8 +9,8 @@ import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.record.GithubPolledEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.record.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
 
 import java.time.LocalDateTime;
 import java.util.List;

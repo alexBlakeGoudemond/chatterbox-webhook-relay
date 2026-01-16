@@ -11,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.record.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -52,7 +52,7 @@ public class GithubPolledEvent {
     @Column(name = "event_url_display_text", nullable = false)
     private String eventUrlDisplayText;
 
-    @Column(name = "extra_detail", nullable = false)
+    @Column(name = "extra_detai", nullable = false)
     private String extraDetail;
 
     @JdbcTypeCode(SqlTypes.JSON)
@@ -104,8 +104,8 @@ public class GithubPolledEvent {
     }
 
     public GithubPolledEvent(GithubPolledEventRecord polledEventRecord) {
-        this(polledEventRecord.getEventType(), polledEventRecord.getSourceId(), polledEventRecord.getRepositoryFullName(), polledEventRecord.getDisplayName(), polledEventRecord.getSenderName(), polledEventRecord.getEventUrl(), polledEventRecord.getEventUrlDisplayText(), polledEventRecord.getExtraDetail(), polledEventRecord.getPayload(), EventStatus.RECEIVED, LocalDateTime.now());
-        this.id = polledEventRecord.getId();
+        this(polledEventRecord.eventType(), polledEventRecord.sourceId(), polledEventRecord.repositoryFullName(), polledEventRecord.displayName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail(), polledEventRecord.payload(), EventStatus.RECEIVED, LocalDateTime.now());
+        this.id = polledEventRecord.id();
     }
 
     @Override
