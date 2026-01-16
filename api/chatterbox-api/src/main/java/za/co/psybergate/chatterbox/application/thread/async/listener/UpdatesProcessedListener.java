@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.async.listener;
+package za.co.psybergate.chatterbox.application.thread.async.listener;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
