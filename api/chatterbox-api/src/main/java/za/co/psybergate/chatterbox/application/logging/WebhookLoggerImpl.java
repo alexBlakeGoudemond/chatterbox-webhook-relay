@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

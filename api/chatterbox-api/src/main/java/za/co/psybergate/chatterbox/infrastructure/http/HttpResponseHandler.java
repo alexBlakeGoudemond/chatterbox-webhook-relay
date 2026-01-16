@@ -46,4 +46,5 @@ public class HttpResponseHandler {
             throw new ApplicationException("Unable to parse the Response Body into a String", e);
         }
     }
+
 }

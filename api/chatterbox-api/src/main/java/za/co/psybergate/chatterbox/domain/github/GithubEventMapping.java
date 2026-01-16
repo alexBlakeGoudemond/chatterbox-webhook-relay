@@ -20,11 +20,11 @@ public class GithubEventMapping {
         URLDISPLAYTEXT("urlDisplayText"),
         EXTRADETAIL("extraDetail");
 
+        private final String fieldName;
+
         GithubIncomingMappingFieldKeys(String fieldName) {
             this.fieldName = fieldName;
         }
-
-        private final String fieldName;
     }
 
 }

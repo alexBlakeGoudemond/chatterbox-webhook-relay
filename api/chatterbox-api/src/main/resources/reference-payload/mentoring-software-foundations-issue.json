@@ -33,13 +33,11 @@
             "site_admin": false
         },
         "labels": [
-
         ],
         "state": "open",
         "locked": false,
         "assignee": null,
         "assignees": [
-
         ],
         "milestone": null,
         "comments": 1,
@@ -217,7 +215,6 @@
         "is_template": false,
         "web_commit_signoff_required": false,
         "topics": [
-
         ],
         "visibility": "private",
         "forks": 0,
@@ -225,7 +222,6 @@
         "watchers": 0,
         "default_branch": "develop",
         "custom_properties": {
-
         }
     },
     "organization": {

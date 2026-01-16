@@ -83,14 +83,14 @@ chatterbox:
             discordDestinationChannel: General
       payload:
         event-mapping:
-#          push:
-#            displayName: "Push Event"
-#            fields:
-#              repositoryName: "repository.full_name"
-#              senderName: "sender.login"
-#              url: "compare"
-#              urlDisplayText: "head_commit.message"
-#              extraDetail: "repository.name"
+          #          push:
+          #            displayName: "Push Event"
+          #            fields:
+          #              repositoryName: "repository.full_name"
+          #              senderName: "sender.login"
+          #              url: "compare"
+          #              urlDisplayText: "head_commit.message"
+          #              extraDetail: "repository.name"
           pull_request:
             displayName: "Pull Request Event"
             fields:
@@ -99,14 +99,14 @@ chatterbox:
               url: "pull_request.html_url"
               urlDisplayText: "pull_request.title"
               extraDetail: "action"
-#          poll_commit:
-#            displayName: "Commit Event"
-#            fields:
-#              repositoryName: "full_name"
-#              senderName: "commit.author.name"
-#              url: "commit.url"
-#              urlDisplayText: "commit.message"
-#              extraDetail: "full_name"
+          #          poll_commit:
+          #            displayName: "Commit Event"
+          #            fields:
+          #              repositoryName: "full_name"
+          #              senderName: "commit.author.name"
+          #              url: "commit.url"
+          #              urlDisplayText: "commit.message"
+          #              extraDetail: "full_name"
           poll_pull_request:
             displayName: "Pull Request Event"
             fields:

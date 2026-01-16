@@ -99,7 +99,6 @@
         "is_template": false,
         "web_commit_signoff_required": false,
         "topics": [
-
         ],
         "visibility": "private",
         "forks": 0,
@@ -140,7 +139,6 @@
     "base_ref": null,
     "compare": "https://github.com/psyAlexBlakeGoudemond/chatterbox/compare/24150caa5c11...000000000000",
     "commits": [
-
     ],
     "head_commit": null
 }

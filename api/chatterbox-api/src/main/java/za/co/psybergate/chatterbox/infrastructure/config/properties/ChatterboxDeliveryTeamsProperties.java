@@ -35,6 +35,7 @@ import za.co.psybergate.chatterbox.domain.teams.TeamsAdaptiveCardDefinition;
 ///         "$schema": "http://adaptivecards.io/schemas/adaptiveson"
 ///    }
 //     }
+
 ///   ]
 /// }
 /// ```

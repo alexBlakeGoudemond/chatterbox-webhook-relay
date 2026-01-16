@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.domain.teams;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 
 import java.util.List;
 

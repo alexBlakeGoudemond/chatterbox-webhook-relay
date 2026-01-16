@@ -33,6 +33,36 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         this.webhookLogger = webhookLogger;
     }
 
+    public static GithubPolledEventDto mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
+        return new GithubPolledEventDto(
+                polledEvent.getId(),
+                polledEvent.getRepositoryFullName(),
+                polledEvent.getSourceId(),
+                polledEvent.getEventType(),
+                polledEvent.getDisplayName(),
+                polledEvent.getSenderName(),
+                polledEvent.getEventUrl(),
+                polledEvent.getEventUrlDisplayText(),
+                polledEvent.getExtraDetail(),
+                polledEvent.getPayload(),
+                polledEvent.getEventStatus(),
+                polledEvent.getErrorMessage(),
+                polledEvent.getFetchedAt(),
+                polledEvent.getProcessedAt()
+        );
+    }
+
+    private static GithubPolledEventDeliveryDto mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
+        return new GithubPolledEventDeliveryDto(
+                deliveryLog.getId(),
+                deliveryLog.getGithubPolledEventId(),
+                deliveryLog.getDeliveryDestination(),
+                deliveryLog.getDeliveryDestinationUrl(),
+                deliveryLog.getEventStatus(),
+                deliveryLog.getDeliveredAt()
+        );
+    }
+
     @Override
     public List<GithubPolledEventDto> getLatestProcessedEvents(String repositoryFullName) {
         try {
@@ -82,7 +112,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl){
+    public GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl) {
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
@@ -93,7 +123,7 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
-    private GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
+    private GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog) {
         webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
         try {
             GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
@@ -121,36 +151,6 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
         GithubPolledEvent polledEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
         return mapToGithubPolledEventRecord(polledEvent);
-    }
-
-    public static GithubPolledEventDto mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
-        return new GithubPolledEventDto(
-                polledEvent.getId(),
-                polledEvent.getRepositoryFullName(),
-                polledEvent.getSourceId(),
-                polledEvent.getEventType(),
-                polledEvent.getDisplayName(),
-                polledEvent.getSenderName(),
-                polledEvent.getEventUrl(),
-                polledEvent.getEventUrlDisplayText(),
-                polledEvent.getExtraDetail(),
-                polledEvent.getPayload(),
-                polledEvent.getEventStatus(),
-                polledEvent.getErrorMessage(),
-                polledEvent.getFetchedAt(),
-                polledEvent.getProcessedAt()
-        );
-    }
-
-    private static GithubPolledEventDeliveryDto mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
-        return new GithubPolledEventDeliveryDto(
-                deliveryLog.getId(),
-                deliveryLog.getGithubPolledEventId(),
-                deliveryLog.getDeliveryDestination(),
-                deliveryLog.getDeliveryDestinationUrl(),
-                deliveryLog.getEventStatus(),
-                deliveryLog.getDeliveredAt()
-        );
     }
 
     @Override
