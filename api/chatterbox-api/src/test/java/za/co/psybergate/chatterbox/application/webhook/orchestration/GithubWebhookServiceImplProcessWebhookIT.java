@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.infrastructure.webhook.orchestration.GithubWe
 import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
@@ -69,7 +69,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     public void whenProcessWebhook_ThenEventPersisted() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         String uniqueId = UUID.randomUUID().toString();
-        WebhookEventRecord webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
+        WebhookEventDto webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
         assertNotNull(webhookEvent);
         assertNotNull(webhookEvent.getId());
     }

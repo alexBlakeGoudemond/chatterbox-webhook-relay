@@ -11,8 +11,8 @@ import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 
 import java.time.LocalDateTime;
@@ -51,7 +51,7 @@ public class CatchUpRunner implements ApplicationRunner {
     private boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
         LocalDateTime lastPersistedTime;
         try {
-            WebhookEventRecord latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
+            WebhookEventDto latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
             lastPersistedTime = latestWebhookEvent.receivedAt();
         } catch (ApplicationException e) {
@@ -59,13 +59,13 @@ public class CatchUpRunner implements ApplicationRunner {
             return false;
         }
         try {
-            GithubPolledEventRecord latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
+            GithubPolledEventDto latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.fetchedAt());
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
         }
-        List<GithubPolledEventRecord> githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, lastPersistedTime);
+        List<GithubPolledEventDto> githubPolledEvents = webhookService.pollGithubForChanges(repositoryFullName, lastPersistedTime);
         if (!githubPolledEvents.isEmpty()) {
             webhookLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
             return true;

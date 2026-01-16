@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.infrastructure.webhook.ingest.WebhookRequestV
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
@@ -69,7 +69,7 @@ public class WebhookFilterIT {
     public void setup() {
         Mockito.when(
                 githubWebhookService.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
-                )).thenReturn(new WebhookEventRecord());
+                )).thenReturn(new WebhookEventDto());
     }
 
     @DisplayName("webhook.payload.successes increments")

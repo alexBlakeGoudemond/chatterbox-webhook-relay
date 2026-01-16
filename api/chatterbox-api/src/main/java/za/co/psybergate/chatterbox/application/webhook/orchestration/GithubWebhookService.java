@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,12 +11,12 @@ import java.util.List;
 /// `ingest → process → route → send downstream`
 public interface GithubWebhookService {
 
-    WebhookEventRecord process(String eventType, String deliveryId, JsonNode rawBody);
+    WebhookEventDto process(String eventType, String deliveryId, JsonNode rawBody);
 
-    List<GithubPolledEventRecord> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
+    List<GithubPolledEventDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
 
-    List<GithubPolledEventRecord> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    List<GithubPolledEventDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    List<GithubPolledEventRecord> pollGithubForChanges(String repository, LocalDateTime receivedAt);
+    List<GithubPolledEventDto> pollGithubForChanges(String repository, LocalDateTime receivedAt);
 
 }

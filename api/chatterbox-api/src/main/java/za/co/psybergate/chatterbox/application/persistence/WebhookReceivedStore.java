@@ -3,29 +3,29 @@ package za.co.psybergate.chatterbox.application.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 
 import java.util.List;
 
 public interface WebhookReceivedStore {
 
-    List<WebhookEventRecord> getLatestProcessedWebhooks(String repositoryFullName);
+    List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName);
 
-    List<WebhookEventRecord> getUnprocessedWebhooks(String repositoryFullName);
+    List<WebhookEventDto> getUnprocessedWebhooks(String repositoryFullName);
 
-    WebhookEventRecord storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    WebhookEventDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    WebhookEventDeliveryRecord storeSuccessfulDelivery(WebhookEventRecord webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventDto webhookEvent, String destinationName, String destinationUrl);
 
-    WebhookEventDeliveryRecord storeUnsuccessfulDelivery(WebhookEventRecord webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventDto webhookEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(WebhookEventRecord webhookEvent, EventStatus eventStatus);
+    void setProcessedStatus(WebhookEventDto webhookEvent, EventStatus eventStatus);
 
-    WebhookEventRecord getWebhook(Long id);
+    WebhookEventDto getWebhook(Long id);
 
-    List<WebhookEventDeliveryRecord> getDeliveryLogs(Long id);
+    List<WebhookEventDeliveryDto> getDeliveryLogs(Long id);
 
-    WebhookEventRecord getMostRecentWebhook(String repositoryName);
+    WebhookEventDto getMostRecentWebhook(String repositoryName);
 
 }

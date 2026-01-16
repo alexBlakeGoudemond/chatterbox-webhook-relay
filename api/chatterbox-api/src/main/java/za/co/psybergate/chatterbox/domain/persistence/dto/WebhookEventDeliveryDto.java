@@ -4,9 +4,9 @@ import za.co.psybergate.chatterbox.domain.api.EventStatus;
 
 import java.time.LocalDateTime;
 
-public record GithubPolledEventDeliveryRecord(
+public record WebhookEventDeliveryDto(
         Long id,
-        Long githubPolledEventId,
+        Long webhookEventId,
         String deliveryDestination,
         String deliveryDestinationUrl,
         EventStatus eventStatus,

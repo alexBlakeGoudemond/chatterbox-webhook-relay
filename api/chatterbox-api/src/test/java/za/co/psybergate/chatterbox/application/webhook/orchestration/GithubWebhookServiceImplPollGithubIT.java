@@ -17,7 +17,7 @@ import za.co.psybergate.chatterbox.infrastructure.webhook.orchestration.GithubWe
 import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
-import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.application.logging.WebhookLoggerImpl;
@@ -73,10 +73,10 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
         LocalDateTime fromDate = repositoryDetail.fromDate();
         LocalDateTime untilDate = repositoryDetail.toDate();
 
-        List<GithubPolledEventRecord> githubPolledEvents = githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
+        List<GithubPolledEventDto> githubPolledEvents = githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
         assertNotNull(githubPolledEvents);
         assertFalse(githubPolledEvents.isEmpty());
-        for (GithubPolledEventRecord polledEvent : githubPolledEvents) {
+        for (GithubPolledEventDto polledEvent : githubPolledEvents) {
             assertNotNull(polledEvent.getId());
         }
     }
