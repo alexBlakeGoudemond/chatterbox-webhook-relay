@@ -11,7 +11,6 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -103,10 +102,6 @@ public class WebhookEvent {
         this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
     }
 
-    public WebhookEvent(WebhookEventDto webhookEventDto) {
-        this(webhookEventDto.webhookId(), webhookEventDto.repositoryFullName(), webhookEventDto.eventType(), webhookEventDto.displayName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail(), webhookEventDto.payload(), webhookEventDto.eventStatus(), webhookEventDto.receivedAt());
-        this.id = webhookEventDto.id();
-    }
 
     @Override
     public boolean equals(Object object) {

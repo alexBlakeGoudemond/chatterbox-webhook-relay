@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -50,10 +49,6 @@ public class WebhookEventDeliveryLog {
         this.deliveryDestinationUrl = deliveryDestinationUrl;
         this.eventStatus = eventStatus;
         this.deliveredAt = deliveredAt;
-    }
-
-    public WebhookEventDeliveryLog(WebhookEventDto webhookEventDto, String destinationName, String destinationUrl, EventStatus eventStatus) {
-        this(webhookEventDto.id(), destinationName, destinationUrl, eventStatus, LocalDateTime.now());
     }
 
     @Override

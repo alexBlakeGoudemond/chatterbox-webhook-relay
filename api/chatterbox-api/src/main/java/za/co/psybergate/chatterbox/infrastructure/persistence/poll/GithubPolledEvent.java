@@ -11,7 +11,6 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -101,11 +100,6 @@ public class GithubPolledEvent {
 
     public GithubPolledEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         this(eventDto.eventType(), uniqueId, eventDto.repositoryName(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
-    }
-
-    public GithubPolledEvent(GithubPolledEventDto polledEventRecord) {
-        this(polledEventRecord.eventType(), polledEventRecord.sourceId(), polledEventRecord.repositoryFullName(), polledEventRecord.displayName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail(), polledEventRecord.payload(), EventStatus.RECEIVED, LocalDateTime.now());
-        this.id = polledEventRecord.id();
     }
 
     @Override
