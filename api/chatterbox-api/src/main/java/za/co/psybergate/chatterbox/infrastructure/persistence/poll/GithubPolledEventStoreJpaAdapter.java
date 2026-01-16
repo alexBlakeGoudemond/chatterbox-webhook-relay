@@ -113,13 +113,13 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     @Override
     public GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(GithubPolledEventDto polledEventRecord, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
+    public GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl) {
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
@@ -136,7 +136,8 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
 
     @Override
     public void setProcessedStatus(GithubPolledEventDto polledEventRecord, EventStatus eventStatus) {
-        GithubPolledEvent polledEvent = new GithubPolledEvent(polledEventRecord);
+        GithubPolledEvent polledEvent = new GithubPolledEvent(polledEventRecord.eventType(), polledEventRecord.sourceId(), polledEventRecord.repositoryFullName(), polledEventRecord.displayName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail(), polledEventRecord.payload(), EventStatus.RECEIVED, LocalDateTime.now());
+        polledEvent.setId(polledEventRecord.id());
         polledEvent.setEventStatus(eventStatus);
         polledEvent.setProcessedAt(LocalDateTime.now());
         try {

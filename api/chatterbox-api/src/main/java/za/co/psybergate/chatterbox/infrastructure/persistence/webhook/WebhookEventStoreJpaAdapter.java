@@ -110,13 +110,13 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     @Override
     public WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventDto webhookEventDto, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventDto, destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS);
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventDto.id(), destinationName, destinationUrl, EventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
     @Override
     public WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventDto webhookEventDto, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventDto, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventDto.id(), destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
@@ -133,7 +133,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookReceivedStore {
 
     @Override
     public void setProcessedStatus(WebhookEventDto webhookEventDto, EventStatus eventStatus) {
-        WebhookEvent webhookEvent = new WebhookEvent(webhookEventDto);
+        WebhookEvent webhookEvent = new WebhookEvent(webhookEventDto.webhookId(), webhookEventDto.repositoryFullName(), webhookEventDto.eventType(), webhookEventDto.displayName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail(), webhookEventDto.payload(), webhookEventDto.eventStatus(), webhookEventDto.receivedAt());
+        webhookEvent.setId(webhookEventDto.id());
         webhookEvent.setEventStatus(eventStatus);
         webhookEvent.setProcessedAt(LocalDateTime.now());
         try {

@@ -52,10 +52,6 @@ public class GithubPolledEventDeliveryLog {
         this.deliveredAt = deliveredAt;
     }
 
-    public GithubPolledEventDeliveryLog(GithubPolledEventDto polledEventRecord, String exampleDestination, String exampleDestinationUrl, EventStatus eventStatus) {
-        this(polledEventRecord.id(), exampleDestination, exampleDestinationUrl, eventStatus, LocalDateTime.now());
-    }
-
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
