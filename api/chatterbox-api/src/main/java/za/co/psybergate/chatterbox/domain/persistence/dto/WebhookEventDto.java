@@ -21,9 +21,4 @@ public record WebhookEventDto(
         LocalDateTime receivedAt,
         LocalDateTime processedAt) {
 
-    // TODO BlakeGoudemond 2026/01/16 | can I remove this?
-    public WebhookEventDto() {
-        this(null, null, null, EventType.PUSH, null, null, null, null, null, null, EventStatus.RECEIVED, null, LocalDateTime.now(), LocalDateTime.now());
-    }
-
 }
