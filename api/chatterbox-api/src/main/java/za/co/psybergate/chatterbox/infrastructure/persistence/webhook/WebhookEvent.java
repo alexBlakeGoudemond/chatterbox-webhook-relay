@@ -11,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.record.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
 import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -104,8 +104,8 @@ public class WebhookEvent {
     }
 
     public WebhookEvent(WebhookEventRecord webhookEventRecord) {
-        this(webhookEventRecord.getWebhookId(), webhookEventRecord.getRepositoryFullName(), webhookEventRecord.getEventType(), webhookEventRecord.getDisplayName(), webhookEventRecord.getSenderName(), webhookEventRecord.getEventUrl(), webhookEventRecord.getEventUrlDisplayText(), webhookEventRecord.getExtraDetail(), webhookEventRecord.getPayload(), webhookEventRecord.getEventStatus(), webhookEventRecord.getReceivedAt());
-        this.id = webhookEventRecord.getId();
+        this(webhookEventRecord.webhookId(), webhookEventRecord.repositoryFullName(), webhookEventRecord.eventType(), webhookEventRecord.displayName(), webhookEventRecord.senderName(), webhookEventRecord.eventUrl(), webhookEventRecord.eventUrlDisplayText(), webhookEventRecord.extraDetail(), webhookEventRecord.payload(), webhookEventRecord.eventStatus(), webhookEventRecord.receivedAt());
+        this.id = webhookEventRecord.id();
     }
 
     @Override

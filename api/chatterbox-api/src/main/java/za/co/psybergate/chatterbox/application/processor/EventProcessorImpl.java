@@ -12,8 +12,8 @@ import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.record.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.domain.record.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventRecord;
 import za.co.psybergate.chatterbox.domain.github.GithubDestinationMapping;
 
 import java.util.List;

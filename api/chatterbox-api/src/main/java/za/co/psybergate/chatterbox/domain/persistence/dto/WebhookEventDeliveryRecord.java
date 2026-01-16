@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.domain.record;
+package za.co.psybergate.chatterbox.domain.persistence.dto;
 
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 
