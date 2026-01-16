@@ -12,11 +12,11 @@ import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExt
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys;
+import za.co.psybergate.chatterbox.domain.github.GithubEventMapping.GithubIncomingMappingFieldKeys;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.domain.github.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor

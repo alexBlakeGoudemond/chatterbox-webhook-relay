@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties.EventMapping;
+import za.co.psybergate.chatterbox.domain.github.GithubEventMapping;
 import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +32,7 @@ public class WebhookConfigurationResolverImplTest {
     @DisplayName("Known eventType succeeds")
     @Test
     public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
-        EventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH);
+        GithubEventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH);
         assertNotNull(payloadMapping);
     }
 
