@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.orchestration;
+package za.co.psybergate.chatterbox.infrastructure.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,6 +11,7 @@ import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServ
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
+import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
