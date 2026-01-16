@@ -4,19 +4,19 @@ import org.apache.hc.core5.http.ClassicHttpResponse;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
+import za.co.psybergate.chatterbox.domain.teams.TeamsAdaptiveCardDefinition;
 
 import java.util.Map;
 
 public interface TeamsCardFactory {
 
     /// From a given [Map] of property values, create and populate the
-    /// [ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition]
-    ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition buildCard(Map<String, String> values);
+    /// [TeamsAdaptiveCardDefinition]
+    TeamsAdaptiveCardDefinition buildCard(Map<String, String> values);
 
     /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactory#buildCard(Map)]
-    /// to create a [ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition]
-    ChatterboxDeliveryTeamsProperties.TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto);
+    /// to create a [TeamsAdaptiveCardDefinition]
+    TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto);
 
     String getAsTeamsPayloadString(GithubEventDto eventDto) throws ApplicationException;
 
