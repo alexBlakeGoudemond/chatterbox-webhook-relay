@@ -9,14 +9,14 @@ import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.teams.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.application.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.application.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.domain.github.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.application.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor

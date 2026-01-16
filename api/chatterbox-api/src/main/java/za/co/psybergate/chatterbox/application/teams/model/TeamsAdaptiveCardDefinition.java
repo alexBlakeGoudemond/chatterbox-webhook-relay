@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.domain.teams;
+package za.co.psybergate.chatterbox.application.teams.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

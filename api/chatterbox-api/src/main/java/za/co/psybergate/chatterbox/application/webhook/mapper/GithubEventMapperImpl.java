@@ -11,11 +11,11 @@ import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestExce
 import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.github.GithubEventMapping.GithubIncomingMappingFieldKeys;
+import za.co.psybergate.chatterbox.application.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.domain.github.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.application.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor
