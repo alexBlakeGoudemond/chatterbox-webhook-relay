@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.processor.EventProcessor;
-import za.co.psybergate.chatterbox.infrastructure.event.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.application.event.PolledEventsProcessed;
+import za.co.psybergate.chatterbox.application.event.WebhookEventProcessed;
 
 // TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component

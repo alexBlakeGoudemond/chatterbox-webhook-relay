@@ -17,7 +17,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
-import za.co.psybergate.chatterbox.infrastructure.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.application.event.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
