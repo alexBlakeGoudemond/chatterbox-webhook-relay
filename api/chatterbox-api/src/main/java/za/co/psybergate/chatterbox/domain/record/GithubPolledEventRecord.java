@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.domain.event;
+package za.co.psybergate.chatterbox.domain.record;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,8 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 
 import java.time.LocalDateTime;
 
+// TODO BlakeGoudemond 2026/01/16 | convert to record
 @Data
-@RequiredArgsConstructor
 @ToString
 public class GithubPolledEventRecord {
 

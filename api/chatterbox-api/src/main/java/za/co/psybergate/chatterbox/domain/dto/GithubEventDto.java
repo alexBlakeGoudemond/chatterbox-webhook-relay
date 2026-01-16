@@ -2,8 +2,8 @@ package za.co.psybergate.chatterbox.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
-import za.co.psybergate.chatterbox.domain.event.WebhookEventRecord;
+import za.co.psybergate.chatterbox.domain.record.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.record.WebhookEventRecord;
 
 public record GithubEventDto(
         @NotNull EventType eventType,

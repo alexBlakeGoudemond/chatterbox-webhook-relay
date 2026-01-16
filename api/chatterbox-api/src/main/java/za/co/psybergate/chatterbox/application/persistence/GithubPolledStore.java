@@ -3,8 +3,8 @@ package za.co.psybergate.chatterbox.application.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.GithubPolledEventDeliveryRecord;
-import za.co.psybergate.chatterbox.domain.event.GithubPolledEventRecord;
+import za.co.psybergate.chatterbox.domain.record.GithubPolledEventDeliveryRecord;
+import za.co.psybergate.chatterbox.domain.record.GithubPolledEventRecord;
 
 import java.util.List;
 
