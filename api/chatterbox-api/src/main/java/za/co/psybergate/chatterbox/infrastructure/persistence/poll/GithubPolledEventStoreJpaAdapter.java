@@ -65,7 +65,12 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     }
 
     @Override
-    public GithubPolledEventRecord storeEvent(GithubPolledEvent event) {
+    public GithubPolledEventRecord storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
+        return storeEvent(webhook);
+    }
+
+    private GithubPolledEventRecord storeEvent(GithubPolledEvent event) {
         webhookLogger.logStoringEvent(event);
         try {
             GithubPolledEvent polledEvent = repository.save(event);
@@ -73,24 +78,6 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
             return mapToGithubPolledEventRecord(polledEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the GithubPolledEvent", e);
-        }
-    }
-
-    @Override
-    public GithubPolledEventRecord storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
-        return storeEvent(webhook);
-    }
-
-    @Override
-    public GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
-        webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
-        try {
-            GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
-            webhookLogger.logEventDelivered(deliveryLog);
-            return new GithubPolledEventDeliveryRecord(deliveryLog);
-        } catch (Exception e) {
-            throw new ApplicationException("Unable to Store Delivery information of the event", e);
         }
     }
 
@@ -104,6 +91,17 @@ public class GithubPolledEventStoreJpaAdapter implements GithubPolledStore {
     public GithubPolledEventDeliveryRecord storeUnsuccessfulDelivery(GithubPolledEventRecord polledEventRecord, String destinationName, String destinationUrl) {
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEventRecord, destinationName, destinationUrl, EventStatus.PROCESSED_FAILURE);
         return storeSuccessfulDelivery(polledEventDeliveryLog);
+    }
+
+    private GithubPolledEventDeliveryRecord storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog){
+        webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
+        try {
+            GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
+            webhookLogger.logEventDelivered(deliveryLog);
+            return new GithubPolledEventDeliveryRecord(deliveryLog);
+        } catch (Exception e) {
+            throw new ApplicationException("Unable to Store Delivery information of the event", e);
+        }
     }
 
     @Override
