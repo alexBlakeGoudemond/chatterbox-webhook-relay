@@ -8,7 +8,6 @@ import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptor;
 import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.web.exception.InvalidSignatureException;
 
@@ -30,7 +29,7 @@ public class WebhookFilter implements Filter {
 
     private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    public WebhookFilter(WebhookLoggerImpl webhookLogger,
+    public WebhookFilter(WebhookLogger webhookLogger,
                          PayloadCryptor payloadCryptor,
                          WebhookRuntimeMetrics webhookRuntimeMetrics,
                          ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties) {
