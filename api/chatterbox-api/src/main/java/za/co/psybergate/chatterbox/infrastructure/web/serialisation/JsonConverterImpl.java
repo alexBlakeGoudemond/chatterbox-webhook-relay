@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.web.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.infrastructure.exception.InfrastructureException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,20 +18,20 @@ public class JsonConverterImpl implements JsonConverter {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public JsonNode getAsJson(String jsonString) throws ApplicationException {
+    public JsonNode getAsJson(String jsonString) {
         try {
             return objectMapper.readTree(jsonString);
         } catch (JsonProcessingException e) {
-            throw new ApplicationException("Unable to convert String into JSON", e);
+            throw new InfrastructureException("Unable to convert String into JSON", e);
         }
     }
 
     @Override
-    public String readPayload(String pathToFile) throws ApplicationException {
+    public String readPayload(String pathToFile) {
         try {
             return Files.readString(Paths.get(pathToFile));
         } catch (IOException e) {
-            throw new ApplicationException("Could not read github payload file", e);
+            throw new InfrastructureException("Could not read github payload file", e);
         }
     }
 
@@ -41,10 +41,10 @@ public class JsonConverterImpl implements JsonConverter {
     }
 
     @Override
-    public String getRepositoryName(JsonNode rawBody) throws ApplicationException {
+    public String getRepositoryName(JsonNode rawBody) {
         String repositoryName = rawBody.path("repository").path("full_name").asText(null);
         if (repositoryName == null) {
-            throw new ApplicationException("Unable to parse 'repository.full_name' from raw rawBody");
+            throw new InfrastructureException("Unable to parse 'repository.full_name' from raw rawBody");
         }
         return repositoryName;
     }

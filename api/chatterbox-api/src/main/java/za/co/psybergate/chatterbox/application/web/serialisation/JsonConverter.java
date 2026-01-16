@@ -7,12 +7,12 @@ import java.nio.file.Path;
 
 public interface JsonConverter {
 
-    JsonNode getAsJson(String jsonString) throws ApplicationException;
+    JsonNode getAsJson(String jsonString);
 
-    String readPayload(String pathToFile) throws ApplicationException;
+    String readPayload(String pathToFile);
 
     String readPayload(Path pathToFile);
 
-    String getRepositoryName(JsonNode rawBody) throws ApplicationException;
+    String getRepositoryName(JsonNode rawBody);
 
 }
