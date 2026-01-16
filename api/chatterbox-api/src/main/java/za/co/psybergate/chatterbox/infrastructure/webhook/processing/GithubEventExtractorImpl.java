@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.processing;
+package za.co.psybergate.chatterbox.infrastructure.webhook.processing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
@@ -21,7 +22,7 @@ import static za.co.psybergate.chatterbox.infrastructure.config.properties.Chatt
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class GithubEventExtractorImpl implements GithubEventExtractor{
+public class GithubEventExtractorImpl implements GithubEventExtractor {
 
     private final WebhookConfigurationResolver webhookConfigurationResolver;
 
