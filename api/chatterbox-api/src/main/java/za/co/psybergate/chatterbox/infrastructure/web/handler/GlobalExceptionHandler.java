@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.web.exception.InfrastructureException;
+import za.co.psybergate.chatterbox.infrastructure.exception.InfrastructureException;
 
 @ControllerAdvice
 @RequiredArgsConstructor

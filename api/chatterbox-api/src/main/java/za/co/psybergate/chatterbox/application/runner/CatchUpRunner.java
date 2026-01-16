@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 
 import java.util.List;

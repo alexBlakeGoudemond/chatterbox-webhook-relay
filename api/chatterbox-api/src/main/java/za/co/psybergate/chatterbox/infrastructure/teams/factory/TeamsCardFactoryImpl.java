@@ -12,7 +12,7 @@ import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.teams.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
 
