@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.infrastructure.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.ingest.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.processing.GithubEventExtractorImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.routing.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;

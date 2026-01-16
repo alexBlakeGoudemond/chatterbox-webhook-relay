@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.webhook.orchestration;
+package za.co.psybergate.chatterbox.application.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,7 +11,6 @@ import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServ
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
-import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
@@ -19,7 +18,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.persistence.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import java.util.Map;
 
 import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME;
 
-// TODO BlakeGoudemond 2026/01/16 | move to application layer
 @Service
 @RequiredArgsConstructor
 public class GithubWebhookServiceImpl implements GithubWebhookService {
