@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        EventProcessorImpl.class,
+        EventProcessorServiceImpl.class,
         WebhookEventStoreJpaAdapter.class,
         GithubPolledEventStoreJpaAdapter.class,
         JsonFileReader.class,
@@ -78,7 +78,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
-    private EventProcessor eventProcessor;
+    private EventProcessorService eventProcessorService;
 
     @Autowired
     private WebhookReceivedStore webhookReceivedStore;
@@ -109,7 +109,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Tag("live-integration")
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
-        eventProcessor.processWebhookEvents();
+        eventProcessorService.processWebhookEvents();
         WebhookEventDto retrievedWebhookEvent = webhookReceivedStore.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
@@ -127,7 +127,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Tag("live-integration")
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
-        eventProcessor.processPolledEvents();
+        eventProcessorService.processPolledEvents();
         GithubPolledEventDto retrievedPolledEvent = githubPolledStore.getEvent(persistedGithubPolledEvent.id());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());

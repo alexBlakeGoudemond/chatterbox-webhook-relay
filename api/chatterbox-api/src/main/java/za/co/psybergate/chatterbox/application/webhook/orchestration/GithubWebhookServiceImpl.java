@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingService;
+import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
+import za.co.psybergate.chatterbox.application.runner.CatchUpRunner;
 import za.co.psybergate.chatterbox.application.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
@@ -29,6 +32,7 @@ import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final WebhookRequestValidator webhookRequestValidator;
@@ -44,6 +48,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     private final GithubPolledStore githubPolledStore;
 
     private final ApplicationEventPublisher publisher;
+
+    private final WebhookLogger webhookLogger;
 
     @Override
     public WebhookEventDto process(String eventType, String deliveryId, JsonNode rawBody) {
@@ -85,6 +91,33 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         return pollGithubForChanges(owner, repositoryName, receivedAt);
     }
 
+    @Override
+    public boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
+        LocalDateTime lastPersistedTime;
+        try {
+            WebhookEventDto latestWebhookEvent = webhookReceivedStore.getMostRecentWebhook(repositoryFullName);
+            webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
+            lastPersistedTime = latestWebhookEvent.receivedAt();
+        } catch (ApplicationException e) {
+            webhookLogger.logRunnerFoundNoPreviousWebhooks(repositoryFullName);
+            return false;
+        }
+        try {
+            GithubPolledEventDto latestGithubPolledEvent = githubPolledStore.getMostRecentPolledEvent(repositoryFullName);
+            webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
+            lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.fetchedAt());
+        } catch (ApplicationException e) {
+            webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
+        }
+        List<GithubPolledEventDto> githubPolledEvents = pollGithubForChanges(repositoryFullName, lastPersistedTime);
+        if (!githubPolledEvents.isEmpty()) {
+            webhookLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
+            return true;
+        }
+        webhookLogger.logNoPolledEventsFound(repositoryFullName, lastPersistedTime);
+        return false;
+    }
+
     @SuppressWarnings("SameParameterValue")
     private void appendToArrayNode(ArrayNode arrayNode, String jsonKey, String jsonValue) {
         for (JsonNode node : arrayNode) {
@@ -116,6 +149,13 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
             case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
             default -> throw new ApplicationException("Unable to find UniqueID; Unknown event type " + eventType);
         };
+    }
+
+    private LocalDateTime getLastPersistedTime(LocalDateTime persistedTime001, LocalDateTime persistedTime002) {
+        if (persistedTime001.isAfter(persistedTime002)) {
+            return persistedTime001;
+        }
+        return persistedTime002;
     }
 
 }
