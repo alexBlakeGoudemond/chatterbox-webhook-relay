@@ -72,7 +72,6 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
         GithubPolledEventDto polledEvent = GithubPolledEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
-        polledEvent.setId(1L);
         GithubPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }

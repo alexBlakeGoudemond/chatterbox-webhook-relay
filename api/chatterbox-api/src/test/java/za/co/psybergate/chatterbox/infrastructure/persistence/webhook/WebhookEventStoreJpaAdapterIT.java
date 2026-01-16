@@ -72,7 +72,6 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
         GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
         WebhookEvent webhookEvent = new WebhookEvent("abc123", eventDto, jsonNode);
         WebhookEventDto webhookEventDto = WebhookEventStoreJpaAdapter.mapToWebhookEventRecord(webhookEvent);
-        webhookEventDto.setId(1L);
         WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(webhookEventDto, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(webhookEventDeliveryLog);
     }

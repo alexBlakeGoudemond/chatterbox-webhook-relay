@@ -71,7 +71,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
         String uniqueId = UUID.randomUUID().toString();
         WebhookEventDto webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
         assertNotNull(webhookEvent);
-        assertNotNull(webhookEvent.getId());
+        assertNotNull(webhookEvent.id());
     }
 
 }
