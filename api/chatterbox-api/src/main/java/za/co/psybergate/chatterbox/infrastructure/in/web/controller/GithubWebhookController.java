@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.web.controller;
+package za.co.psybergate.chatterbox.infrastructure.in.web.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.web.handler;
+package za.co.psybergate.chatterbox.infrastructure.in.web.handler;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;

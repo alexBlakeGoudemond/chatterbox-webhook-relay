@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.web.serialisation;
+package za.co.psybergate.chatterbox.infrastructure.in.web.serialisation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

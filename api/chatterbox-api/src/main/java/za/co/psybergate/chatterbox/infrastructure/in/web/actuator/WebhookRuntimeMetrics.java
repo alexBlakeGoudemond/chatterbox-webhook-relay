@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.web.actuator;
+package za.co.psybergate.chatterbox.infrastructure.in.web.actuator;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;
