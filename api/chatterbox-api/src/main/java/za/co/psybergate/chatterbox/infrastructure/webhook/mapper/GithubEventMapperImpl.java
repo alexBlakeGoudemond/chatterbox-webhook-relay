@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import za.co.psybergate.chatterbox.application.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys;
 import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.application.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys;
 
 import java.util.Map;
 
