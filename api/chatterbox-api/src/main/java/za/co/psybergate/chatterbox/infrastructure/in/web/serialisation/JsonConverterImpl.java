@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.port.out.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.infrastructure.exception.InfrastructureException;
 
 import java.io.IOException;

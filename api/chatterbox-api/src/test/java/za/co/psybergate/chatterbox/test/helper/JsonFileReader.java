@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.test.helper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverter;
+import za.co.psybergate.chatterbox.application.port.out.web.serialisation.JsonConverter;
 
 import java.nio.file.Path;
 
