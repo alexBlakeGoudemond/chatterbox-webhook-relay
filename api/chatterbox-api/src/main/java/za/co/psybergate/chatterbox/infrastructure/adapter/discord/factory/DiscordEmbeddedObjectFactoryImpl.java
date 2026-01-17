@@ -1,14 +1,14 @@
-package za.co.psybergate.chatterbox.infrastructure.discord.factory;
+package za.co.psybergate.chatterbox.infrastructure.adapter.discord.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactory;
-import za.co.psybergate.chatterbox.application.discord.model.DiscordEmbeddedObjectDefinition;
+import za.co.psybergate.chatterbox.application.usecase.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.usecase.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.template.TemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;

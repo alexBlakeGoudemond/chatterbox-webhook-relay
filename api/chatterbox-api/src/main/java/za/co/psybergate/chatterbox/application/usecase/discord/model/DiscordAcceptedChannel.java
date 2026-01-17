@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.discord.model;
+package za.co.psybergate.chatterbox.application.usecase.discord.model;
 
 import lombok.Data;
 
