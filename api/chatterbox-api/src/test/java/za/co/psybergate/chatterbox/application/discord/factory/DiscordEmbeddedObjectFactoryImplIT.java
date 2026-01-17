@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.usecase.discord.factory.DiscordEmbeddedObjectFactory;
-import za.co.psybergate.chatterbox.application.usecase.discord.model.DiscordEmbeddedObjectDefinition;
+import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;

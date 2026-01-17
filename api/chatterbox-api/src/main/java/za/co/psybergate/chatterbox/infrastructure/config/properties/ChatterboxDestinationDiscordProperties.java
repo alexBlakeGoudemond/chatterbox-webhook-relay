@@ -2,7 +2,7 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.psybergate.chatterbox.application.usecase.discord.model.DiscordAcceptedChannel;
+import za.co.psybergate.chatterbox.domain.discord.model.DiscordAcceptedChannel;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 
 import java.util.List;
