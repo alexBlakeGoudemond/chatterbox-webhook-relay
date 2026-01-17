@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
+import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 
