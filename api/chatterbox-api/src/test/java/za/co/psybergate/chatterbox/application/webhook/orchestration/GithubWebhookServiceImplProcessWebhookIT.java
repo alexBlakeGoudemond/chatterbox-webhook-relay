@@ -12,13 +12,13 @@ import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.Git
 import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.persistence.GithubPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.resolution.WebhookConfigurationResolverImpl;

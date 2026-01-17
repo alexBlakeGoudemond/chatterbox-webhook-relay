@@ -1,11 +1,10 @@
-package za.co.psybergate.chatterbox.infrastructure.in.web.serialisation;
+package za.co.psybergate.chatterbox.application.usecase.web.serialisation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.port.out.web.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.infrastructure.exception.InfrastructureException;
+import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +21,7 @@ public class JsonConverterImpl implements JsonConverter {
         try {
             return objectMapper.readTree(jsonString);
         } catch (JsonProcessingException e) {
-            throw new InfrastructureException("Unable to convert String into JSON", e);
+            throw new ApplicationException("Unable to convert String into JSON", e);
         }
     }
 
@@ -31,7 +30,7 @@ public class JsonConverterImpl implements JsonConverter {
         try {
             return Files.readString(Paths.get(pathToFile));
         } catch (IOException e) {
-            throw new InfrastructureException("Could not read github payload file", e);
+            throw new ApplicationException("Could not read github payload file", e);
         }
     }
 
@@ -44,7 +43,7 @@ public class JsonConverterImpl implements JsonConverter {
     public String getRepositoryName(JsonNode rawBody) {
         String repositoryName = rawBody.path("repository").path("full_name").asText(null);
         if (repositoryName == null) {
-            throw new InfrastructureException("Unable to parse 'repository.full_name' from raw rawBody");
+            throw new ApplicationException("Unable to parse 'repository.full_name' from raw rawBody");
         }
         return repositoryName;
     }

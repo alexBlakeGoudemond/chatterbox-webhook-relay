@@ -13,9 +13,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
@@ -23,7 +23,7 @@ import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntime
 import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.resolution.WebhookConfigurationResolverImpl;

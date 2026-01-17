@@ -1,11 +1,10 @@
-package za.co.psybergate.chatterbox.infrastructure.thread.sync.runner;
+package za.co.psybergate.chatterbox.application.usecase.thread.sync.runner;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.thread.sync.runner.CatchUpRunner;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.usecase.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
