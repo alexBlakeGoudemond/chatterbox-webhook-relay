@@ -77,10 +77,6 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
         return teamsPayload;
     }
 
-    public HttpResponseDto getHttpResponseDto(ClassicHttpResponse response) {
-        return httpResponseHandler.getHttpResponseDto(response);
-    }
-
     private DiscordEmbeddedObjectDefinition deepCopy(DiscordEmbeddedObjectDefinition src) {
         return objectMapper.convertValue(src, DiscordEmbeddedObjectDefinition.class);
     }
