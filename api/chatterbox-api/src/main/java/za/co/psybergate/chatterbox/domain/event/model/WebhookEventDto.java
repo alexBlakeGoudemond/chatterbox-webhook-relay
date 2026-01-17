@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.domain.event.dto;
+package za.co.psybergate.chatterbox.domain.event.model;
 
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;

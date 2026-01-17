@@ -9,8 +9,8 @@ import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedOb
 import za.co.psybergate.chatterbox.application.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.template.TemplateSubstitutor;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 

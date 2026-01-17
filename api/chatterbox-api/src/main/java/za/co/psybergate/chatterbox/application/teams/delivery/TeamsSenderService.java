@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.application.teams.delivery;
 
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 
 public interface TeamsSenderService {
 

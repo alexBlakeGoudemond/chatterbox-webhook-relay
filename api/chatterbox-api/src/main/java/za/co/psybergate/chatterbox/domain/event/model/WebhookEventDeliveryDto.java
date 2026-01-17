@@ -1,12 +1,12 @@
-package za.co.psybergate.chatterbox.domain.event.dto;
+package za.co.psybergate.chatterbox.domain.event.model;
 
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 
 import java.time.LocalDateTime;
 
-public record GithubPolledEventDeliveryDto(
+public record WebhookEventDeliveryDto(
         Long id,
-        Long githubPolledEventId,
+        Long webhookEventId,
         String deliveryDestination,
         String deliveryDestinationUrl,
         EventStatus eventStatus,

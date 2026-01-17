@@ -1,10 +1,10 @@
 package za.co.psybergate.chatterbox.application.usecase.logging;
 
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
-import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
 

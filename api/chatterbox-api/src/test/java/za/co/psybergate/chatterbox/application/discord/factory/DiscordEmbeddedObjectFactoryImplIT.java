@@ -10,7 +10,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;

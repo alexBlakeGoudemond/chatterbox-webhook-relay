@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.domain.dto;
+package za.co.psybergate.chatterbox.domain.event.model;
 
 import jakarta.validation.constraints.NotNull;
 import za.co.psybergate.chatterbox.domain.api.EventType;
