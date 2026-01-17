@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPo
 import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;

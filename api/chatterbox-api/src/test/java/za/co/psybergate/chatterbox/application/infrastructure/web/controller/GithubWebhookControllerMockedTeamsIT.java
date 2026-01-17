@@ -13,10 +13,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.teams.delivery.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
