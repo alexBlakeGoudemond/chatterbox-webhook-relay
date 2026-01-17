@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
@@ -24,10 +24,10 @@ import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhoo
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.validation.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 

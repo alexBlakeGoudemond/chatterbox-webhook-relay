@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.resolution;
+package za.co.psybergate.chatterbox.application.usecase.webhook.resolution;
 
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;

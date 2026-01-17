@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.test.helper;
 
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.usecase.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 
 @Component

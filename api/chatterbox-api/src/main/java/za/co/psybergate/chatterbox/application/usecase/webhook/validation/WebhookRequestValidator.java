@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.validation;
+package za.co.psybergate.chatterbox.application.usecase.webhook.validation;
 
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 

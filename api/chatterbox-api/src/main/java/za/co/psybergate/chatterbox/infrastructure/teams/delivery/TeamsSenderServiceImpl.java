@@ -7,7 +7,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService;
 import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.logging;
+package za.co.psybergate.chatterbox.application.usecase.logging;
 
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;

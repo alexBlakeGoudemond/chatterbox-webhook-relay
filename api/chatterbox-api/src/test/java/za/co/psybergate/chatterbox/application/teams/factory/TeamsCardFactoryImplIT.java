@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.application.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
-import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
@@ -20,8 +20,8 @@ import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorIm
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.mapper.GithubEventMapperImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import java.util.HashMap;

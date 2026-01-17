@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.logging;
+package za.co.psybergate.chatterbox.application.usecase.logging;
 
 public enum MDC_KEYS {
 
