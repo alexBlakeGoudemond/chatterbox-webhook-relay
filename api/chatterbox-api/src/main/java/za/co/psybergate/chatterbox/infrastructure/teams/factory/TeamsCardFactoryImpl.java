@@ -14,6 +14,8 @@ import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorIm
 
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+
 @Component
 @RequiredArgsConstructor
 public class TeamsCardFactoryImpl implements TeamsCardFactory {

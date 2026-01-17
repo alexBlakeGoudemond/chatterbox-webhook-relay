@@ -14,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDeliveryDto;
@@ -64,7 +65,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         ApplicationConfig.class,
         WebhookConfigurationResolverImpl.class,
         HttpResponseHandler.class,
-        ConfigurationProviderImpl.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers

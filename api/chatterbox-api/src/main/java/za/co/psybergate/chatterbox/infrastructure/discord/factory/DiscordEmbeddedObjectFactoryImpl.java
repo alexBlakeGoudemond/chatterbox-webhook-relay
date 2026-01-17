@@ -16,6 +16,8 @@ import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
 
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+
 @Component
 @RequiredArgsConstructor
 public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFactory {
