@@ -29,3 +29,13 @@ Common options:
 
 - Application defines inbound use-case interfaces
 - Domain defines repository ports
+
+## Diagram
+
+![example-java-infrastructure-types.png](example-java-infrastructure-types.png)
+
+![example-java-application-types.png](example-java-application-types.png)
+
+![example-java-domain-types.png](example-java-domain-types.png)
+
+![example-hexagonal-architecture-and-connections.svg](example-hexagonal-architecture-and-connections.svg)
