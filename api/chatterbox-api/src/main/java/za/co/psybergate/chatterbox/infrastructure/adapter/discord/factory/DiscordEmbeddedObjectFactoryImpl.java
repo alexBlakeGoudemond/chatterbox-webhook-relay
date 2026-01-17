@@ -12,7 +12,7 @@ import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitu
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
-import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 
 import java.util.Map;
 

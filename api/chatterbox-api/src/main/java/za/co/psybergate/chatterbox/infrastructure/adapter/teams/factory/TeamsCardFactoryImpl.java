@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.usecase.teams.factory.TeamsCardFa
 import za.co.psybergate.chatterbox.application.usecase.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
-import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
