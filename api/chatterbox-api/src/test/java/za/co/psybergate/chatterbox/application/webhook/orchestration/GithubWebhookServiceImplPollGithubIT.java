@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
@@ -22,7 +23,7 @@ import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntime
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.mapper.GithubEventMapperImpl;
-import za.co.psybergate.chatterbox.infrastructure.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.infrastructure.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;

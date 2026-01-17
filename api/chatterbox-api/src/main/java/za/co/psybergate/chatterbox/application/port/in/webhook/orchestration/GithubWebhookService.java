@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.webhook.orchestration;
+package za.co.psybergate.chatterbox.application.port.in.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
