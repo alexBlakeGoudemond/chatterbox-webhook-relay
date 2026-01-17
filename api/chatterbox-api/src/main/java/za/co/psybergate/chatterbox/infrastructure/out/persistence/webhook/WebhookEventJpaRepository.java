@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.persistence.webhook;
+package za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook;
 
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,8 +9,6 @@ import java.util.List;
 
 @Repository
 public interface WebhookEventJpaRepository extends JpaRepository<WebhookEvent, Long> {
-
-    boolean findFirstByRepositoryFullNameAndWebhookIdOrderByIdDesc(String repositoryFullName, String webhookId);
 
     List<WebhookEvent> findByRepositoryFullNameAndEventStatusOrderByIdDesc(String repositoryFullName, EventStatus eventStatus, Limit limit);
 
