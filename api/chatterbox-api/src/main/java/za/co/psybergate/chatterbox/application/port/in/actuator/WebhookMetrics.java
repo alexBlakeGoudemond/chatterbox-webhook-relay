@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.actuator;
+package za.co.psybergate.chatterbox.application.port.in.actuator;
 
 /// Used alongside SpringActuator to track simple usage statistics
 public interface WebhookMetrics {

@@ -12,8 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
+import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
@@ -68,18 +68,18 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(
-                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
-                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
+                Arguments.of(Named.of("Chatterbox", new RepositoryDetailDto("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
+                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetailDto("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
         );
     }
 
     @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void whenPollRecentChanges_ThenSuccess(RepositoryDetail repositoryDetail) {
-        String owner = repositoryDetail.repositoryOwner();
-        String repositoryFullName = repositoryDetail.repositoryName();
-        LocalDateTime fromDate = repositoryDetail.fromDate();
-        LocalDateTime untilDate = repositoryDetail.toDate();
+    public void whenPollRecentChanges_ThenSuccess(RepositoryDetailDto repositoryDetailDto) {
+        String owner = repositoryDetailDto.repositoryOwner();
+        String repositoryFullName = repositoryDetailDto.repositoryName();
+        LocalDateTime fromDate = repositoryDetailDto.fromDate();
+        LocalDateTime untilDate = repositoryDetailDto.toDate();
 
         List<GithubPolledEventDto> githubPolledEvents = githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
         assertNotNull(githubPolledEvents);

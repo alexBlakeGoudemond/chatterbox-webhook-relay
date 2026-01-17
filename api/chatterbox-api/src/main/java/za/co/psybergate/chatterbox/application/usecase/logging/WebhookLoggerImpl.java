@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
-import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
 

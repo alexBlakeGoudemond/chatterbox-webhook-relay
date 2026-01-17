@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.domain.dto;
+package za.co.psybergate.chatterbox.domain.github.model;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.validation.constraints.NotNull;
