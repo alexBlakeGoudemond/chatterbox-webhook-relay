@@ -1,15 +1,19 @@
-package za.co.psybergate.chatterbox.infrastructure.persistence.webhook;
+package za.co.psybergate.chatterbox.infrastructure.adapter.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventDeliveryLog;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLogJpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

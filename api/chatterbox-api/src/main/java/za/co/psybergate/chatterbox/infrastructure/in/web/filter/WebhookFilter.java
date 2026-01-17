@@ -4,7 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.InvalidSignatureException;
@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static za.co.psybergate.chatterbox.application.logging.MDC_KEYS.THREAD_EXECUTION_ID;
+import static za.co.psybergate.chatterbox.application.usecase.logging.MDC_KEYS.THREAD_EXECUTION_ID;
 
 @Component
 public class WebhookFilter implements Filter {

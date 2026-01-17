@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.persistence;
+package za.co.psybergate.chatterbox.application.port.out.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDeliveryDto;

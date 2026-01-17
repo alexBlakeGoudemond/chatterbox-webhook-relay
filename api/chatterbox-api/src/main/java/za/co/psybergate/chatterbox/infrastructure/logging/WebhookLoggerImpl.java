@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
-import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;

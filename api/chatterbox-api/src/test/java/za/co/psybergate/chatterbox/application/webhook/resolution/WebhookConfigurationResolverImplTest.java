@@ -8,12 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.usecase.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.resolution.WebhookConfigurationResolverImpl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.thread.sync.runner.CatchUpRunner;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.usecase.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 
 import java.util.List;
