@@ -48,7 +48,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         WebhookConfigurationResolverImpl.class,
         WebhookLoggerImpl.class,
         HttpResponseHandler.class,
-        ConfigurationProviderImpl.class
 })
 @ActiveProfiles({"live-url"})
 public class TeamsSenderServiceImplIT {
