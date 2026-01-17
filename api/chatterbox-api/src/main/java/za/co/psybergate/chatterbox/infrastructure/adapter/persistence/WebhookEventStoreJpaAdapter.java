@@ -10,10 +10,10 @@ import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventDeliveryLog;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventJpaRepository;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventLogJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventDeliveryLog;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventLogJpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

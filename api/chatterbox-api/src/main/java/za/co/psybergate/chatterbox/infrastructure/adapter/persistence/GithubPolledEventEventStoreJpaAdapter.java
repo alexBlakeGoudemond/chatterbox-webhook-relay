@@ -10,10 +10,10 @@ import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventJpaRepository;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventLogJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEventDeliveryLog;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEventJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEventLogJpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

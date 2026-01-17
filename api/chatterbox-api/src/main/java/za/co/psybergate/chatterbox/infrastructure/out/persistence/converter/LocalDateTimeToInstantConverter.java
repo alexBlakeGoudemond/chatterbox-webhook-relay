@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.persistence.converter;
+package za.co.psybergate.chatterbox.infrastructure.out.persistence.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.persistence.poll;
+package za.co.psybergate.chatterbox.infrastructure.out.persistence.poll;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.persistence.converter.LocalDateTimeToInstantConverter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
