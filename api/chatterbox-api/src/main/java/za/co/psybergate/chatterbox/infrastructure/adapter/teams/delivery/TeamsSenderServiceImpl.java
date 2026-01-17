@@ -12,7 +12,7 @@ import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSend
 import za.co.psybergate.chatterbox.application.usecase.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

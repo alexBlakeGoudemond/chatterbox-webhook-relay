@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.http;
+package za.co.psybergate.chatterbox.infrastructure.out.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

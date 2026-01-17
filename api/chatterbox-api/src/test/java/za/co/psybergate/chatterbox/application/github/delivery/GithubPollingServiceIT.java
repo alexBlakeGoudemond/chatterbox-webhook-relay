@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
-import za.co.psybergate.chatterbox.application.port.in.github.delivery.GithubPollingService;
+import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingService;
 import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
