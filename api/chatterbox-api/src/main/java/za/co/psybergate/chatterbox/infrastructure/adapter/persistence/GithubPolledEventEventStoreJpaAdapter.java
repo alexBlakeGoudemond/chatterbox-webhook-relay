@@ -3,14 +3,13 @@ package za.co.psybergate.chatterbox.infrastructure.adapter.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventDeliveryLog;
 import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventJpaRepository;
@@ -20,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-@Transactional
 public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventStore {
 
     private final GithubPolledEventJpaRepository repository;

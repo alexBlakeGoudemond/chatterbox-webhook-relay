@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.thread.sync.runner;
+package za.co.psybergate.chatterbox.application.usecase.thread.sync.runner;
 
 import java.util.List;
 

@@ -18,11 +18,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
 import za.co.psybergate.chatterbox.infrastructure.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.in.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
