@@ -29,8 +29,8 @@ import za.co.psybergate.chatterbox.infrastructure.adapter.discord.factory.Discor
 import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.persistence.GithubPolledEventEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.out.teams.delivery.TeamsSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;

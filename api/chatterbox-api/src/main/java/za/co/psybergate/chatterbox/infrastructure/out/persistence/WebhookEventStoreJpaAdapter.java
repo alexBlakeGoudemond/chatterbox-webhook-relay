@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.adapter.persistence;
+package za.co.psybergate.chatterbox.infrastructure.out.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
