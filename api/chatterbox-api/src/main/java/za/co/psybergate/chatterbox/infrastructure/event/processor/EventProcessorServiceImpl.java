@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import za.co.psybergate.chatterbox.application.config.provider.ConfigurationProvider;
 import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderService;
 import za.co.psybergate.chatterbox.application.event.processor.EventProcessorService;
+import za.co.psybergate.chatterbox.application.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
@@ -31,7 +31,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     private final DiscordSenderService discordSenderService;
 
-    private final ConfigurationProvider configurationProvider;
+    private final WebhookConfigurationResolver webhookConfigurationResolver;
 
     private final GithubPolledEventStore githubPolledEventStore;
 
@@ -39,7 +39,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     @Override
     public void processWebhookEvents() {
-        List<GithubDestinationMapping> destinationMappings = configurationProvider.getDestinationMapping();
+        List<GithubDestinationMapping> destinationMappings = webhookConfigurationResolver.getDestinationMapping();
         for (GithubDestinationMapping destinationMapping : destinationMappings) {
             webhookLogger.logProcessingEvents(destinationMapping);
             processWebhookEvents(destinationMapping);
@@ -48,7 +48,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     @Override
     public void processPolledEvents() {
-        List<GithubDestinationMapping> destinationMappings = configurationProvider.getDestinationMapping();
+        List<GithubDestinationMapping> destinationMappings = webhookConfigurationResolver.getDestinationMapping();
         for (GithubDestinationMapping destinationMapping : destinationMappings) {
             webhookLogger.logProcessingEvents(destinationMapping);
             processPolledEvents(destinationMapping);
@@ -73,7 +73,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, WebhookEventDto webhookEventDto) {
-        String destinationUrl = configurationProvider.getTeamsUrl(teamsDestinationChannel);
+        String destinationUrl = webhookConfigurationResolver.getTeamsUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(webhookEventDto, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
             webhookEventStore.storeSuccessfulDelivery(webhookEventDto, teamsDestinationChannel, destinationUrl);
@@ -84,7 +84,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     @SuppressWarnings("DuplicatedCode")
     private void deliverToTeams(String teamsDestinationChannel, GithubPolledEventDto polledEventRecord) {
-        String destinationUrl = configurationProvider.getTeamsUrl(teamsDestinationChannel);
+        String destinationUrl = webhookConfigurationResolver.getTeamsUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
             githubPolledEventStore.storeSuccessfulDelivery(polledEventRecord, teamsDestinationChannel, destinationUrl);
@@ -95,7 +95,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     @SuppressWarnings("DuplicatedCode")
     private void deliverToDiscord(String discordDestinationChannel, GithubPolledEventDto polledEventRecord) {
-        String destinationUrl = configurationProvider.getDiscordUrl(discordDestinationChannel);
+        String destinationUrl = webhookConfigurationResolver.getDiscordUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
             githubPolledEventStore.storeSuccessfulDelivery(polledEventRecord, discordDestinationChannel, destinationUrl);
@@ -106,7 +106,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
 
     @SuppressWarnings("DuplicatedCode")
     private void deliverToDiscord(String discordDestinationChannel, WebhookEventDto webhookEvent) {
-        String destinationUrl = configurationProvider.getDiscordUrl(discordDestinationChannel);
+        String destinationUrl = webhookConfigurationResolver.getDiscordUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(webhookEvent, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
             webhookEventStore.storeSuccessfulDelivery(webhookEvent, discordDestinationChannel, destinationUrl);

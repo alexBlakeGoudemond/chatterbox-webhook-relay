@@ -17,7 +17,6 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.config.provider.ConfigurationProviderImpl;
 import za.co.psybergate.chatterbox.infrastructure.discord.delivery.DiscordSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;

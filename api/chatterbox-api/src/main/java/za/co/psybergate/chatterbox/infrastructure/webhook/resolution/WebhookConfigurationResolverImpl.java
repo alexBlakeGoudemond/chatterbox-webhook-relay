@@ -66,4 +66,19 @@ public class WebhookConfigurationResolverImpl implements WebhookConfigurationRes
         return repositories;
     }
 
+    @Override
+    public List<GithubDestinationMapping> getDestinationMapping() {
+        return repositoryProperties.getDestinationMapping();
+    }
+
+    @Override
+    public String getTeamsUrl(String teamsDestinationChannel) {
+        return destinationTeamsProperties.getUrl(teamsDestinationChannel);
+    }
+
+    @Override
+    public String getDiscordUrl(String discordDestinationChannel) {
+        return destinationDiscordProperties.getUrl(discordDestinationChannel);
+    }
+
 }
