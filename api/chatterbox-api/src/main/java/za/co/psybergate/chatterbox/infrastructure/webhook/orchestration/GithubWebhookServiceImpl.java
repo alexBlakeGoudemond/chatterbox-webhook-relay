@@ -12,15 +12,15 @@ import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServ
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
 import za.co.psybergate.chatterbox.application.persistence.WebhookEventStore;
-import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
+import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.event.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.application.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.webhook.validation.WebhookRequestValidator;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
-import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.infrastructure.web.serialisation.JsonConverter;
 
 import java.time.LocalDateTime;

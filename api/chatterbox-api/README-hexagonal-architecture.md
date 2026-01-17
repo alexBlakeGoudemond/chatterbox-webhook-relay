@@ -6,6 +6,7 @@
 - Domain must not have any type imported from application
 - Application must not have any type imported from infrastructure
 - Infrastructure may access types in Application or Domain
+  - Infrastructure may also reference Domain directly (if port is in domain)
 - Can make decisions: 
   - Application must not have any Spring or Jakarta references
   - May allow @Service or @Transactional in Application only

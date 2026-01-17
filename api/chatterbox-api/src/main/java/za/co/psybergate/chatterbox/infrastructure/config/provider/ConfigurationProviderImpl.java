@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.config.provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.config.provider.ConfigurationProvider;
-import za.co.psybergate.chatterbox.application.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;

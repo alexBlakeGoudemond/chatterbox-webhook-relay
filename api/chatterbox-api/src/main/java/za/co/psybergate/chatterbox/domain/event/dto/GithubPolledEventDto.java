@@ -1,14 +1,14 @@
-package za.co.psybergate.chatterbox.application.persistence.dto;
+package za.co.psybergate.chatterbox.domain.event.dto;
 
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 
 import java.time.LocalDateTime;
 
-public record WebhookEventDto(
+public record GithubPolledEventDto(
         Long id,
         String repositoryFullName,
-        String webhookId,
+        String sourceId,
         EventType eventType,
         String displayName,
         String senderName,
@@ -18,7 +18,7 @@ public record WebhookEventDto(
         String payload,
         EventStatus eventStatus,
         String errorMessage,
-        LocalDateTime receivedAt,
+        LocalDateTime fetchedAt,
         LocalDateTime processedAt) {
 
 }

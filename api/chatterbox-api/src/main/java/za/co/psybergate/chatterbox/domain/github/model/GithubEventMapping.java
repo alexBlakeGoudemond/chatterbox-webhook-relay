@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.github.model;
+package za.co.psybergate.chatterbox.domain.github.model;
 
 import lombok.Data;
 import lombok.Getter;

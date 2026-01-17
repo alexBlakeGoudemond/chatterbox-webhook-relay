@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.event.dto.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 

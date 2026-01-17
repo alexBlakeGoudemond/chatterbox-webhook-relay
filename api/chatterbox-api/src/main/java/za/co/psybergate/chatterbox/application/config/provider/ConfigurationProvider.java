@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.application.config.provider;
 
-import za.co.psybergate.chatterbox.application.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 
 import java.util.List;
 
