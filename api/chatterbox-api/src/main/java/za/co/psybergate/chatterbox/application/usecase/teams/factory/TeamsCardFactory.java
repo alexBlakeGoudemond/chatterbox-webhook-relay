@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.application.usecase.teams.factory;
 
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.usecase.teams.model.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 
 import java.util.Map;
