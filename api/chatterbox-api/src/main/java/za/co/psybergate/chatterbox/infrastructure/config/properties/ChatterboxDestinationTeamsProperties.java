@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.teams.model.TeamsAcceptedChannel;
+import za.co.psybergate.chatterbox.application.usecase.teams.model.TeamsAcceptedChannel;
 
 import java.util.List;
 

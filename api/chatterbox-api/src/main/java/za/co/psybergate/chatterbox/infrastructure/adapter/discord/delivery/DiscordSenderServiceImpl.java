@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.discord.delivery;
+package za.co.psybergate.chatterbox.infrastructure.adapter.discord.delivery;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -6,8 +6,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
-import za.co.psybergate.chatterbox.application.discord.delivery.DiscordSenderService;
-import za.co.psybergate.chatterbox.application.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.delivery.DiscordSenderService;
+import za.co.psybergate.chatterbox.application.usecase.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;

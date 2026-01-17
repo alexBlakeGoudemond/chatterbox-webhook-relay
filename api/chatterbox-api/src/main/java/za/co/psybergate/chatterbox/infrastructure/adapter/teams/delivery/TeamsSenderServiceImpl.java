@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.teams.delivery;
+package za.co.psybergate.chatterbox.infrastructure.adapter.teams.delivery;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -8,8 +8,8 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderService;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderService;
+import za.co.psybergate.chatterbox.application.usecase.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;

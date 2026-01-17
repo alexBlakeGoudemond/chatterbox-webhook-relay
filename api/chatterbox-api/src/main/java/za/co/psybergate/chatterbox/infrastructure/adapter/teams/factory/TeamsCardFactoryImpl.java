@@ -1,16 +1,16 @@
-package za.co.psybergate.chatterbox.infrastructure.teams.factory;
+package za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactory;
-import za.co.psybergate.chatterbox.application.teams.model.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.application.usecase.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.usecase.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 
 import java.util.Map;
 

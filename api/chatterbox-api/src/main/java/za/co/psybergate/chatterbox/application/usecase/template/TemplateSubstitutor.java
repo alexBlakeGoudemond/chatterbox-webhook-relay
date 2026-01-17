@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.template;
+package za.co.psybergate.chatterbox.application.usecase.template;
 
 import java.util.Map;
 
