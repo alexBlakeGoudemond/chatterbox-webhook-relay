@@ -5,6 +5,7 @@ import za.co.psybergate.chatterbox.domain.dto.GithubRepositoryInformationDto;
 
 import java.time.LocalDateTime;
 
+// TODO BlakeGoudemond 2026/01/17 | test this class?
 public interface GithubPollingService {
 
     GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate);

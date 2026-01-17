@@ -3,8 +3,8 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.application.github.model.GithubEventMapping;
+import za.co.psybergate.chatterbox.domain.api.EventType;
 
 import java.util.HashMap;
 import java.util.Map;

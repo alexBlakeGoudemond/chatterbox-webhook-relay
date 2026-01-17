@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.domain.api.EventStatus;
+import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

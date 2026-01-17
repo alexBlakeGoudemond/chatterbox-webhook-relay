@@ -1,12 +1,12 @@
 package za.co.psybergate.chatterbox.application.logging;
 
+import za.co.psybergate.chatterbox.application.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.dto.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.github.model.GithubDestinationMapping;
-import za.co.psybergate.chatterbox.application.persistence.dto.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.application.persistence.dto.WebhookEventDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
