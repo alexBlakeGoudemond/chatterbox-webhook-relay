@@ -37,6 +37,13 @@ public class WebhookConfigurationResolverImplTest {
         assertNotNull(payloadMapping);
     }
 
+    @DisplayName("Known eventType String succeeds")
+    @Test
+    public void givenRecognizedEventTypeString_WhenGetPayloadMapping_ThenSuccess() {
+        GithubEventMapping payloadMapping = resolver.getPayloadMapping("push");
+        assertNotNull(payloadMapping);
+    }
+
     @DisplayName("Unknown eventType gives Exception")
     @Test
     public void givenUnrecognizedEventType_WhenGetPayloadMapping_ThenException() {
