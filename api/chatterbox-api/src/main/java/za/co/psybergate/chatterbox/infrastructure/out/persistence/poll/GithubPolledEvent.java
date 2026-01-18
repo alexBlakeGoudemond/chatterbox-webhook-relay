@@ -51,7 +51,7 @@ public class GithubPolledEvent {
     @Column(name = "event_url_display_text", nullable = false)
     private String eventUrlDisplayText;
 
-    @Column(name = "extra_detai", nullable = false)
+    @Column(name = "extra_detail", nullable = false)
     private String extraDetail;
 
     @JdbcTypeCode(SqlTypes.JSON)

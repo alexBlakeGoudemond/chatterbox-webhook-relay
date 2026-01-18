@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@Converter(autoApply = false)
+@Converter
 public class LocalDateTimeToInstantConverter implements AttributeConverter<LocalDateTime, Instant> {
 
     @Override
