@@ -128,7 +128,7 @@ public class GithubWebhookControllerMockedTeamsIT {
         try {
             String expectedContentBody = "Unable to parse 'repository.full_name' from raw rawBody";
             mockMvc.perform(httpRequest)
-                    .andExpect(status().isInternalServerError())
+                    .andExpect(status().isBadRequest())
                     .andExpect(content().string(expectedContentBody));
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);
