@@ -9,6 +9,6 @@ public enum EventStatus {
     RECEIVED,
     PROCESSING,
     PROCESSED_SUCCESS,
-    PROCESSED_FAILURE;
+    PROCESSED_FAILURE
 
 }

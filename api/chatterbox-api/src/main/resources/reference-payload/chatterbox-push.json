@@ -99,7 +99,6 @@
         "is_template": false,
         "web_commit_signoff_required": false,
         "topics": [
-
         ],
         "visibility": "private",
         "forks": 0,
@@ -160,10 +159,8 @@
                 "username": "psyAlexBlakeGoudemond"
             },
             "added": [
-
             ],
             "removed": [
-
             ],
             "modified": [
                 "api/chatterbox-api/src/main/java/za/co/psybergate/chatterbox/infrastructure/web/controller/GithubWebhookController.java"
@@ -190,10 +187,8 @@
             "username": "psyAlexBlakeGoudemond"
         },
         "added": [
-
         ],
         "removed": [
-
         ],
         "modified": [
             "api/chatterbox-api/src/main/java/za/co/psybergate/chatterbox/infrastructure/web/controller/GithubWebhookController.java"

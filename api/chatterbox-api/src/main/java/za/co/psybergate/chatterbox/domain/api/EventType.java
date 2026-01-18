@@ -1,15 +1,12 @@
 package za.co.psybergate.chatterbox.domain.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.domain.exception.DomainException;
 
 /// The EventTypes defined here are available via the
 /// Github API:
 /// [Github Event Types](https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28)
-///
-/// These Event Types can be defined in the properties files and loaded
-/// through [ChatterboxSourceGithubPayloadProperties].
 ///
 /// These properties may also be expected by Services and thus must
 /// be defined in the properties file
@@ -34,7 +31,14 @@ public enum EventType {
             if (eventType.name().equalsIgnoreCase(eventMapping))
                 return eventType;
         }
-        throw new ApplicationException("Unknown event type " + eventMapping);
+        throw new DomainException("Unknown event type " + eventMapping);
     }
 
+    public String getUniqueId(JsonNode jsonNode) {
+        return switch (this) {
+            case POLL_COMMIT -> jsonNode.get("sha").asText();
+            case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
+            default -> throw new DomainException("Unable to find UniqueID; Unknown event type " + this);
+        };
+    }
 }

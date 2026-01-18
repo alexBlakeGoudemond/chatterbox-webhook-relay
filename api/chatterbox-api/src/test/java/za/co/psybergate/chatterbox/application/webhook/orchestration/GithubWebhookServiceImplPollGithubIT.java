@@ -11,19 +11,21 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.domain.dto.RepositoryDetail;
-import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -39,13 +41,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubWebhookServiceImpl.class,
         JsonFileReader.class,
         WebhookRequestValidatorImpl.class,
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         JsonConverterImpl.class,
         ApplicationConfig.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         GithubPollingServiceImpl.class,
         WebhookConfigurationResolverImpl.class,
-        GithubPolledEventStoreJpaAdapter.class
+        GithubPolledEventEventStoreJpaAdapter.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -64,27 +66,27 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
     @Autowired
     private GithubWebhookService githubWebhookService;
 
-    @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
-    @MethodSource("repositoryDetails")
-    public void whenPollRecentChanges_ThenSuccess(RepositoryDetail repositoryDetail) {
-        String owner = repositoryDetail.repositoryOwner();
-        String repositoryFullName = repositoryDetail.repositoryName();
-        LocalDateTime fromDate = repositoryDetail.fromDate();
-        LocalDateTime untilDate = repositoryDetail.toDate();
-
-        List<GithubPolledEvent> githubPolledEvents = githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
-        assertNotNull(githubPolledEvents);
-        assertFalse(githubPolledEvents.isEmpty());
-        for (GithubPolledEvent polledEvent : githubPolledEvents) {
-            assertNotNull(polledEvent.getId());
-        }
-    }
-
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(
-                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
-                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
+                Arguments.of(Named.of("Chatterbox", new RepositoryDetailDto("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
+                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetailDto("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
         );
+    }
+
+    @ParameterizedTest(name = "RecentChanges; {index}: repo:{0}")
+    @MethodSource("repositoryDetails")
+    public void whenPollRecentChanges_ThenSuccess(RepositoryDetailDto repositoryDetailDto) {
+        String owner = repositoryDetailDto.repositoryOwner();
+        String repositoryFullName = repositoryDetailDto.repositoryName();
+        LocalDateTime fromDate = repositoryDetailDto.fromDate();
+        LocalDateTime untilDate = repositoryDetailDto.toDate();
+
+        List<GithubPolledEventDto> githubPolledEvents = githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
+        assertNotNull(githubPolledEvents);
+        assertFalse(githubPolledEvents.isEmpty());
+        for (GithubPolledEventDto polledEvent : githubPolledEvents) {
+            assertNotNull(polledEvent.id());
+        }
     }
 
 }

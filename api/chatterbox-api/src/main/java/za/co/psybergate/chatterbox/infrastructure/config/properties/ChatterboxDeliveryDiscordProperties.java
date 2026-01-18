@@ -2,8 +2,7 @@ package za.co.psybergate.chatterbox.infrastructure.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.List;
+import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 
 /// Reference Material:
 /// [Executing Discord Webhook](https://discord.com/developers/docs/resources/webhook#execute-webhook)
@@ -32,34 +31,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "chatterbox.deliveries.discord")
 public class ChatterboxDeliveryDiscordProperties {
 
-    private EmbeddedObjectDefinition embeddedObjectDefinition;
+    private DiscordEmbeddedObjectDefinition embeddedObjectDefinition;
 
-    @Data
-    public static class EmbeddedObjectDefinition {
-
-        private List<EmbeddedObject> embeds;
-
-        @Data
-        public static class EmbeddedObject {
-
-            private String title;
-
-            private String description;
-
-            private String url;
-
-            private Integer color = 6993;
-
-            private Author author;
-
-            @Data
-            public static class Author {
-
-                private String name;
-
-                private String icon_url = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png";
-
-            }
-        }
-    }
 }
