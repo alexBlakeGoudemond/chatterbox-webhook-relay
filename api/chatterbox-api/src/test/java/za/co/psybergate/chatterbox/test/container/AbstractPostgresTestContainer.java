@@ -9,7 +9,7 @@ public abstract class AbstractPostgresTestContainer {
 
     @SuppressWarnings("resource")
     @Container
-    static PostgreSQLContainer<?> postgres =
+    static final PostgreSQLContainer<?> postgres =
             new PostgreSQLContainer<>("postgres:16")
                     .withDatabaseName("chatterbox")
                     .withUsername("user")
