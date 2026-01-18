@@ -10,24 +10,24 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.application.persistence.GithubPolledStore;
-import za.co.psybergate.chatterbox.application.persistence.WebhookReceivedStore;
-import za.co.psybergate.chatterbox.application.teams.delivery.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.application.teams.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.template.TemplateSubstitutorImpl;
-import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.application.webhook.orchestration.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
-import za.co.psybergate.chatterbox.application.webhook.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.web.controller.GithubWebhookController;
-import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhookController;
+import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.out.teams.delivery.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -81,13 +81,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /// ```
 @Import({
         WebhookFilter.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         PayloadCryptorImpl.class,
         ApplicationConfig.class,
         GithubWebhookServiceImpl.class,
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
         TeamsSenderServiceImpl.class,
@@ -103,10 +103,10 @@ public class GithubWebhookControllerMockedTeamsIT {
     private GithubPollingServiceImpl githubPollingService;
 
     @MockitoBean
-    private WebhookReceivedStore webhookReceivedStore;
+    private WebhookEventStore webhookEventStore;
 
     @MockitoBean
-    private GithubPolledStore githubPolledStore;
+    private GithubPolledEventStore githubPolledEventStore;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it
@@ -120,7 +120,7 @@ public class GithubWebhookControllerMockedTeamsIT {
     @Autowired
     private GithubHttpRequestFactory githubHttpRequestFactory;
 
-    @DisplayName("Missing JSON properties: BAD_REQUEST")
+    @DisplayName("Missing JSON properties: EXCEPTION")
     @Test
     public void givenIncompletePayload_MissingJsonProperties_ThenHttpStatusOk() {
         String incompletePayload = "{}";

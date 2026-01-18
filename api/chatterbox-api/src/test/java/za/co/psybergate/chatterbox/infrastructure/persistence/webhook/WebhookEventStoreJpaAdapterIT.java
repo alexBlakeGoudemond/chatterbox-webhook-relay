@@ -9,16 +9,20 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractor;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.dto.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -29,10 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         WebhookEventStoreJpaAdapter.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         WebhookConfigurationResolverImpl.class,
         ApplicationConfig.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -51,15 +55,15 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventExtractor eventExtractor;
+    private GithubEventMapper eventExtractor;
 
     @DisplayName("Can save WebhookEvent")
     @Test
     public void givenPayloadAndEventDto_WhenStoreWebhook_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
 
-        WebhookEvent webhookEvent = adapter.storeWebhook("abc123", eventDto, jsonNode);
+        WebhookEventDto webhookEvent = adapter.storeWebhook("abc123", eventDto, jsonNode);
         assertNotNull(webhookEvent);
     }
 
@@ -67,10 +71,10 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
     @Test
     public void givenWebhookEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.extract(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
         WebhookEvent webhookEvent = new WebhookEvent("abc123", eventDto, jsonNode);
-        webhookEvent.setId(1L);
-        WebhookEventDeliveryLog webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(webhookEvent, "exampleDestination", "exampleDestinationUrl");
+        WebhookEventDto webhookEventDto = WebhookEventStoreJpaAdapter.mapToWebhookEventRecord(webhookEvent);
+        WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(webhookEventDto, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(webhookEventDeliveryLog);
     }
 

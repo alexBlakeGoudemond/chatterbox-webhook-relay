@@ -8,19 +8,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.application.webhook.ingest.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.application.webhook.processing.GithubEventExtractorImpl;
-import za.co.psybergate.chatterbox.application.webhook.routing.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.infrastructure.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.persistence.poll.GithubPolledEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.infrastructure.persistence.webhook.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -33,10 +35,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubWebhookServiceImpl.class,
         JsonFileReader.class,
         WebhookRequestValidatorImpl.class,
-        GithubEventExtractorImpl.class,
+        GithubEventMapperImpl.class,
         JsonConverterImpl.class,
         ApplicationConfig.class,
-        WebhookLogger.class,
+        WebhookLoggerImpl.class,
         WebhookConfigurationResolverImpl.class,
         WebhookEventStoreJpaAdapter.class,
 })
@@ -54,7 +56,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     private WebhookFilter webhookFilter;
 
     @MockitoBean
-    private GithubPolledEventStoreJpaAdapter githubPolledStore;
+    private GithubPolledEventEventStoreJpaAdapter githubPolledStore;
 
     @Autowired
     private GithubWebhookService githubWebhookService;
@@ -68,9 +70,9 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     public void whenProcessWebhook_ThenEventPersisted() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         String uniqueId = UUID.randomUUID().toString();
-        WebhookEvent webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
+        WebhookEventDto webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
         assertNotNull(webhookEvent);
-        assertNotNull(webhookEvent.getId());
+        assertNotNull(webhookEvent.id());
     }
 
 }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.infrastructure.config.properties.*;
-import za.co.psybergate.chatterbox.infrastructure.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 
 @Configuration
 @EnableConfigurationProperties({
