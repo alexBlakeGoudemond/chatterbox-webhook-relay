@@ -69,12 +69,23 @@
         </dependency>
 
         <!--
-            Psybergate Managed Dependency
+            Psybergate Managed Dependency: contains rule definitions
         -->
         <dependency>
             <groupId>za.co.psybergate</groupId>
             <artifactId>architecture-rules</artifactId>
             <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!--
+            Psybergate Managed Dependency: contains abstract test definitions
+        -->
+        <dependency>
+            <groupId>za.co.psybergate</groupId>
+            <artifactId>architecture-rules</artifactId>
+            <version>1.0.0</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
