@@ -16,4 +16,9 @@ public class ArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
         return List.of("com.fasterxml.jackson..", "lombok..", "jakarta.validation..");
     }
 
+    @Override
+    protected List<String> applicationAllowedPackages() {
+        return List.of("org.springframework..", "com.fasterxml.jackson..", "lombok..", "jakarta.validation..", "org.slf4j..");
+    }
+
 }
