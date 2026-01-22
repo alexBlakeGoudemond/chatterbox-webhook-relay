@@ -46,6 +46,8 @@ public class ArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
         allowedPackages.addAll(asyncReactivePackages());
         allowedPackages.addAll(jakartaServletPackages());
         allowedPackages.addAll(micrometerMetricPackages());
+        allowedPackages.addAll(slf4jPackages());
+        allowedPackages.addAll(javaCryptorPackages());
         return allowedPackages;
     }
 
