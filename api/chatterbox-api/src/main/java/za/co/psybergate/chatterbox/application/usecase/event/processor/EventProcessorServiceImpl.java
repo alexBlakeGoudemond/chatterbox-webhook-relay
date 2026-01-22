@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolled
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
 import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderService;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;

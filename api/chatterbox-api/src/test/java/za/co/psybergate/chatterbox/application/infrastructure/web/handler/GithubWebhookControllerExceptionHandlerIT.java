@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
@@ -20,8 +20,8 @@ import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonCon
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
-import za.co.psybergate.chatterbox.infrastructure.exception.InfrastructureException;
+import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.infrastructure.common.exception.InfrastructureException;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookFilter.class,
         WebhookLoggerImpl.class,
         PayloadCryptorImpl.class,
-        ApplicationConfig.class,
+        InfrastructurePropertiesConfig.class,
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         GithubEventMapperImpl.class,

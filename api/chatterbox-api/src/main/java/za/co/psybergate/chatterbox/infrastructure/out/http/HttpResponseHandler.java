@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 
 import java.io.IOException;

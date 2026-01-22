@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.exception.InfrastructureException;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.infrastructure.common.exception.InfrastructureException;
 
 @ControllerAdvice
 @RequiredArgsConstructor

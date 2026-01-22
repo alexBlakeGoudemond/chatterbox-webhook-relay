@@ -11,7 +11,7 @@ spring:
   datasource:
     username: user
     password: password
-    url: jdbc:postgresql://localhost:54321/chatterbox
+    url: jdbc:postgresql://localhost:55432/chatterbox
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
