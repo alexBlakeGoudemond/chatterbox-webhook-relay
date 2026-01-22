@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.usecase.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;

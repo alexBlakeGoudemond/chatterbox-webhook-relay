@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.usecase.logging;
+package za.co.psybergate.chatterbox.application.common.logging;
 
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;

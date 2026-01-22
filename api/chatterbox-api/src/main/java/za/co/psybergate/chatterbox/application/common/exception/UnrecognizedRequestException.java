@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.exception;
+package za.co.psybergate.chatterbox.application.common.exception;
 
 public class UnrecognizedRequestException extends ApplicationException {
 

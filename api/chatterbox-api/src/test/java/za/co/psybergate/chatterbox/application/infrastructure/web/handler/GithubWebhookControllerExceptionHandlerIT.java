@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;

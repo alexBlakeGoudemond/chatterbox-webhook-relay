@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.usecase.discord.factory;
+package za.co.psybergate.chatterbox.application.port.out.discord.factory;
 
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 

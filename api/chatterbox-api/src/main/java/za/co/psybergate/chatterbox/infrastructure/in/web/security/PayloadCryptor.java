@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.infrastructure.in.web.security;
 
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 
 public interface PayloadCryptor {
 

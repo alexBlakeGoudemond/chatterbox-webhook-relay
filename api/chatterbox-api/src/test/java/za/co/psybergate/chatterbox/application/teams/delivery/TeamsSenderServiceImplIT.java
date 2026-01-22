@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.usecase.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
