@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.usecase.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.adapter.discord.factory.DiscordEmbeddedObjectFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         DiscordEmbeddedObjectFactoryImpl.class,
-        ApplicationConfig.class,
+        InfrastructurePropertiesConfig.class,
         TemplateSubstitutorImpl.class,
         HttpResponseHandler.class,
         JsonFileReader.class,

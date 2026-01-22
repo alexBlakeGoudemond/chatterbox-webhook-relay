@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
 
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
         WebhookConfigurationResolverImpl.class,
-        ApplicationConfig.class
+        InfrastructurePropertiesConfig.class
 })
 @ActiveProfiles({"test", "bad-properties"})
 public class WebhookConfigurationResolverImplTest {

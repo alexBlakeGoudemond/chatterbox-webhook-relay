@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.Git
 import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         WebhookRequestValidatorImpl.class,
         GithubEventMapperImpl.class,
         JsonConverterImpl.class,
-        ApplicationConfig.class,
+        InfrastructurePropertiesConfig.class,
         WebhookLoggerImpl.class,
         GithubPollingServiceImpl.class,
         WebhookConfigurationResolverImpl.class,
