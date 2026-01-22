@@ -2,15 +2,15 @@ package za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationDiscordProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDestinationDiscordProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDestinationTeamsProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.usecase.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactory;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryTeamsProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 
 import java.util.Map;
