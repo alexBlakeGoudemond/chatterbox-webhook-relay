@@ -2,7 +2,10 @@ package za.co.psybergate.chatterbox;
 
 import za.co.psybergate.architecture_rules.hexagon.HexagonalArchitectureAbstractTest;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static za.co.psybergate.architecture_rules.definition.KnownPackagesHelper.*;
 
 public class ArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
 
@@ -13,17 +16,35 @@ public class ArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
 
     @Override
     protected List<String> domainAllowedPackages() {
-        return List.of("com.fasterxml.jackson..", "lombok..", "jakarta.validation..");
+        List<String> allowedPackages = new ArrayList<>();
+        allowedPackages.addAll(jacksonPackages());
+        allowedPackages.addAll(lombokPackages());
+        allowedPackages.addAll(jakartaValidationPackages());
+        return allowedPackages;
     }
 
     @Override
     protected List<String> applicationAllowedPackages() {
-        return List.of("org.springframework..", "com.fasterxml.jackson..", "lombok..", "jakarta.validation..", "org.slf4j..");
+        List<String> allowedPackages = new ArrayList<>();
+        allowedPackages.addAll(springPackages());
+        allowedPackages.addAll(jacksonPackages());
+        allowedPackages.addAll(lombokPackages());
+        allowedPackages.addAll(jakartaValidationPackages());
+        allowedPackages.addAll(slf4jPackages());
+        return allowedPackages;
     }
 
     @Override
     protected List<String> infrastructureAllowedPackages() {
-        return List.of("org.springframework..", "com.fasterxml.jackson..", "lombok..", "jakarta.persistence..", "org.hibernate..", "org.apache..", "reactor.core.publisher..", "jakarta.validation..");
+        List<String> allowedPackages = new ArrayList<>();
+        allowedPackages.addAll(springPackages());
+        allowedPackages.addAll(jacksonPackages());
+        allowedPackages.addAll(lombokPackages());
+        allowedPackages.addAll(jakartaValidationPackages());
+        allowedPackages.addAll(persistencePackages());
+        allowedPackages.addAll(apacheHttpPackages());
+        allowedPackages.addAll(asyncReactivePackages());
+        return allowedPackages;
     }
 
 }
