@@ -1,14 +1,12 @@
 package za.co.psybergate.chatterbox.infrastructure.out.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.config.properties.*;
 
 @Configuration
@@ -23,26 +21,10 @@ import za.co.psybergate.chatterbox.infrastructure.out.config.properties.*;
         ChatterboxSourceGithubPayloadProperties.class,
         ChatterboxSourceGithubRepositoryProperties.class,
 })
-public class ApplicationPropertiesConfig {
-
-    private final ChatterboxApiProperties chatterboxApiProperties;
+@RequiredArgsConstructor
+public class InfrastructurePropertiesConfig {
 
     private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
-
-    public ApplicationPropertiesConfig(ChatterboxApiProperties chatterboxApiProperties, ChatterboxSecurityApiGithubProperties apiGithubProperties) {
-        this.chatterboxApiProperties = chatterboxApiProperties;
-        this.apiGithubProperties = apiGithubProperties;
-    }
-
-    @Bean
-    public FilterRegistrationBean<WebhookFilter> applicationWebhookFilter(WebhookFilter webhookFilter) {
-        FilterRegistrationBean<WebhookFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(webhookFilter);
-        String url = chatterboxApiProperties.getPrefix() + "/webhook/*";
-        registration.addUrlPatterns(url); // only intercept webhook endpoints
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return registration;
-    }
 
     @Bean
     public WebClient githubClient() {

@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.Git
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.config.ApplicationPropertiesConfig;
+import za.co.psybergate.chatterbox.infrastructure.out.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
         WebhookFilter.class,
         WebhookLoggerImpl.class,
         PayloadCryptorImpl.class,
-        ApplicationPropertiesConfig.class,
+        InfrastructurePropertiesConfig.class,
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,
         JsonFileReader.class,

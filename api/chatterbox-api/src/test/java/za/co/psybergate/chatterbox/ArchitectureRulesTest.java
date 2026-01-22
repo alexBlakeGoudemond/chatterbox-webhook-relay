@@ -23,7 +23,7 @@ public class ArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
 
     @Override
     protected List<String> infrastructureAllowedPackages() {
-        return List.of("org.springframework..", "jakarta.persistence", "lombok..");
+        return List.of("org.springframework..", "com.fasterxml.jackson..", "lombok..", "jakarta.persistence..", "org.hibernate..");
     }
 
 }

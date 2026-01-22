@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEven
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.config.ApplicationPropertiesConfig;
+import za.co.psybergate.chatterbox.infrastructure.out.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
@@ -83,7 +83,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         WebhookFilter.class,
         WebhookLoggerImpl.class,
         PayloadCryptorImpl.class,
-        ApplicationPropertiesConfig.class,
+        InfrastructurePropertiesConfig.class,
         GithubWebhookServiceImpl.class,
         WebhookRequestValidatorImpl.class,
         WebhookConfigurationResolverImpl.class,

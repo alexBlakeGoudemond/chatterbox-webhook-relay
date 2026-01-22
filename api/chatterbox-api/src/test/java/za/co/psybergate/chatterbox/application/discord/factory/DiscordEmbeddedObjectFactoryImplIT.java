@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.adapter.discord.factory.DiscordEmbeddedObjectFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.config.ApplicationPropertiesConfig;
+import za.co.psybergate.chatterbox.infrastructure.out.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         DiscordEmbeddedObjectFactoryImpl.class,
-        ApplicationPropertiesConfig.class,
+        InfrastructurePropertiesConfig.class,
         TemplateSubstitutorImpl.class,
         HttpResponseHandler.class,
         JsonFileReader.class,
