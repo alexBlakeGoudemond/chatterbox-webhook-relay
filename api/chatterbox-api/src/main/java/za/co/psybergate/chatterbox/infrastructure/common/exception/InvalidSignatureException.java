@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.exception;
+package za.co.psybergate.chatterbox.infrastructure.common.exception;
 
 public class InvalidSignatureException extends InfrastructureException {
 

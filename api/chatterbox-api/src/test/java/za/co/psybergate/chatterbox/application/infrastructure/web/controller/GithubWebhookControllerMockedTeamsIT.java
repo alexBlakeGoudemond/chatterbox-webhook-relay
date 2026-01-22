@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEven
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;

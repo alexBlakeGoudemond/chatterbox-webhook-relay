@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.out.config.properties;
+package za.co.psybergate.chatterbox.infrastructure.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

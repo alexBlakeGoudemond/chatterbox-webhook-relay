@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.out.config.properties.concurrency;
+package za.co.psybergate.chatterbox.infrastructure.common.config.properties.concurrency;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

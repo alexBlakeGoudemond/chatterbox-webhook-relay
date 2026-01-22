@@ -12,7 +12,7 @@ import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPo
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
-import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

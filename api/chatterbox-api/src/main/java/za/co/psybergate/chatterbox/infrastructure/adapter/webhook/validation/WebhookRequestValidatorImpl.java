@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.usecase.webhook.validation.WebhookRequestValidator;
-import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
 
 @Component
 @RequiredArgsConstructor
