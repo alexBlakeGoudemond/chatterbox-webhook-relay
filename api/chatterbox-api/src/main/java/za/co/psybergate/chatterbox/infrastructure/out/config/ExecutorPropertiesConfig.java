@@ -1,9 +1,9 @@
-package za.co.psybergate.chatterbox.infrastructure.config;
+package za.co.psybergate.chatterbox.infrastructure.out.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.concurrency.ExecutorProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.concurrency.ExecutorProperties;
 
 @Configuration
 public class ExecutorPropertiesConfig {

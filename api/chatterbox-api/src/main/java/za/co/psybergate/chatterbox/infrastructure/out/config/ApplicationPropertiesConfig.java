@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.config;
+package za.co.psybergate.chatterbox.infrastructure.out.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -8,8 +8,8 @@ import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.*;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.*;
 
 @Configuration
 @EnableConfigurationProperties({
@@ -23,13 +23,13 @@ import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
         ChatterboxSourceGithubPayloadProperties.class,
         ChatterboxSourceGithubRepositoryProperties.class,
 })
-public class ApplicationConfig {
+public class ApplicationPropertiesConfig {
 
     private final ChatterboxApiProperties chatterboxApiProperties;
 
     private final ChatterboxSecurityApiGithubProperties apiGithubProperties;
 
-    public ApplicationConfig(ChatterboxApiProperties chatterboxApiProperties, ChatterboxSecurityApiGithubProperties apiGithubProperties) {
+    public ApplicationPropertiesConfig(ChatterboxApiProperties chatterboxApiProperties, ChatterboxSecurityApiGithubProperties apiGithubProperties) {
         this.chatterboxApiProperties = chatterboxApiProperties;
         this.apiGithubProperties = apiGithubProperties;
     }

@@ -7,10 +7,10 @@ import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.Webho
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationDiscordProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDestinationTeamsProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxDestinationDiscordProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxDestinationTeamsProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxSourceGithubRepositoryProperties;
 
 import java.util.ArrayList;
 import java.util.List;

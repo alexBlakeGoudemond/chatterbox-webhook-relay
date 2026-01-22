@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxSecurityWebhookGithubProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;

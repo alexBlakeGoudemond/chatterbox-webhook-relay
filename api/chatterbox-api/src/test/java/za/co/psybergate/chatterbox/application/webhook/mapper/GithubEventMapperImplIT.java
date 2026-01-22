@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEven
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.out.config.ApplicationPropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {
         GithubEventMapperImpl.class,
         WebhookConfigurationResolverImpl.class,
-        ApplicationConfig.class,
+        ApplicationPropertiesConfig.class,
         JsonFileReader.class,
         JsonConverterImpl.class,
         WebhookLoggerImpl.class,

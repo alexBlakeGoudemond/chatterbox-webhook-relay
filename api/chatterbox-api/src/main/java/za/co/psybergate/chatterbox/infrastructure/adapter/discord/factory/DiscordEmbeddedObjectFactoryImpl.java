@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.usecase.discord.factory.DiscordEm
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.ChatterboxDeliveryDiscordProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.ChatterboxDeliveryDiscordProperties;
 import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
 
 import java.util.Map;

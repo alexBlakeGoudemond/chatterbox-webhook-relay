@@ -12,7 +12,7 @@ import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.Webho
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.infrastructure.config.ApplicationConfig;
+import za.co.psybergate.chatterbox.infrastructure.out.config.ApplicationPropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
 
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
         WebhookConfigurationResolverImpl.class,
-        ApplicationConfig.class
+        ApplicationPropertiesConfig.class
 })
 @ActiveProfiles({"test", "bad-properties"})
 public class WebhookConfigurationResolverImplTest {

@@ -1,10 +1,10 @@
-package za.co.psybergate.chatterbox.infrastructure.config;
+package za.co.psybergate.chatterbox.infrastructure.out.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import za.co.psybergate.chatterbox.infrastructure.config.properties.concurrency.ExecutorProperties;
+import za.co.psybergate.chatterbox.infrastructure.out.config.properties.concurrency.ExecutorProperties;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
