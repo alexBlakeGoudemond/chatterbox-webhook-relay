@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static za.co.psybergate.chatterbox.application.usecase.logging.MDC_KEYS.THREAD_EXECUTION_ID;
+import static za.co.psybergate.chatterbox.application.common.logging.MDC_KEYS.THREAD_EXECUTION_ID;
 
 @Component
 public class WebhookFilter implements Filter {
