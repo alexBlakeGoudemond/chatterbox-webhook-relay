@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox;
+package za.co.psybergate.architecture_rules.hexagon;
 
 import za.co.psybergate.architecture_rules.hexagon.HexagonalArchitectureAbstractTest;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 import static za.co.psybergate.architecture_rules.definition.KnownPackagesHelper.*;
 
-public class ArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
+public class HexagonalArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
 
     @Override
     protected String basePackage() {
