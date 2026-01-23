@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
@@ -51,7 +51,7 @@ public class TeamsCardFactoryImplIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private TeamsCardFactory teamsCardFactory;
+    private TeamsCardFactoryPort teamsCardFactoryPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -108,7 +108,7 @@ public class TeamsCardFactoryImplIT {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
         try {
-            return teamsCardFactory.buildCard(eventDto);
+            return teamsCardFactoryPort.buildCard(eventDto);
         } catch (Exception e) {
             return null;
         }
@@ -117,7 +117,7 @@ public class TeamsCardFactoryImplIT {
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return teamsCardFactory.buildCard(propertiesToUse);
+            return teamsCardFactoryPort.buildCard(propertiesToUse);
         } catch (Exception e) {
             return null;
         }

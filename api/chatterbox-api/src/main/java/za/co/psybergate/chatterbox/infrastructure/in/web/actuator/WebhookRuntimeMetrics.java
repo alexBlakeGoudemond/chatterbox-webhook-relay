@@ -2,7 +2,7 @@ package za.co.psybergate.chatterbox.infrastructure.in.web.actuator;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.port.in.actuator.WebhookMetrics;
+import za.co.psybergate.chatterbox.application.port.in.actuator.WebhookMetricsPort;
 
 /// Store some additional details in the [MeterRegistry]
 /// The details captured here are stored for the lifetime of the registry.
@@ -10,7 +10,7 @@ import za.co.psybergate.chatterbox.application.port.in.actuator.WebhookMetrics;
 ///
 /// **I.e. turning the application off deletes the Stats**
 @Component
-public class WebhookRuntimeMetrics implements WebhookMetrics {
+public class WebhookRuntimeMetrics implements WebhookMetricsPort {
 
     private final MeterRegistry registry;
 

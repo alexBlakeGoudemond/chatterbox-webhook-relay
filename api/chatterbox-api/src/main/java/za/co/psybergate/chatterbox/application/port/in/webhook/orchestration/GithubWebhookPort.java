@@ -9,7 +9,7 @@ import java.util.List;
 
 /// Orchestrates flow end-to-end:
 /// `ingest → process → route → send downstream`
-public interface GithubWebhookService {
+public interface GithubWebhookPort {
 
     WebhookEventDto process(String eventType, String deliveryId, JsonNode rawBody);
 

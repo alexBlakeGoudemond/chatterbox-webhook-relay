@@ -1,7 +1,8 @@
-package za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook;
+package za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventDeliveryLog;
 
 import java.util.List;
 

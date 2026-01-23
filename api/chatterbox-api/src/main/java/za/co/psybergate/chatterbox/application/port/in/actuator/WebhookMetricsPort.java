@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.application.port.in.actuator;
 
 /// Used alongside SpringActuator to track simple usage statistics
-public interface WebhookMetrics {
+public interface WebhookMetricsPort {
 
     /// Record Signature Failure for a specific eventType.
     /// EventTypes are bounded fields and do not change over millions of requests sent

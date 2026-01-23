@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
 import java.util.List;
 
 /// resolves configuration, handles destination and template mapping
-public interface WebhookConfigurationResolver {
+public interface WebhookConfigurationResolverPort {
 
     GithubEventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException;
 

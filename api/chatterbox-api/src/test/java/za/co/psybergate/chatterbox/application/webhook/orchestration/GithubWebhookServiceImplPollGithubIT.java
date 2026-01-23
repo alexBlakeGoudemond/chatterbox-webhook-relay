@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
@@ -64,7 +64,7 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
     private WebhookEventStoreJpaAdapter webhookReceivedStore;
 
     @Autowired
-    private GithubWebhookService githubWebhookService;
+    private GithubWebhookPort githubWebhookPort;
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(
@@ -81,7 +81,7 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
         LocalDateTime fromDate = repositoryDetailDto.fromDate();
         LocalDateTime untilDate = repositoryDetailDto.toDate();
 
-        List<GithubPolledEventDto> githubPolledEvents = githubWebhookService.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
+        List<GithubPolledEventDto> githubPolledEvents = githubWebhookPort.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
         assertNotNull(githubPolledEvents);
         assertFalse(githubPolledEvents.isEmpty());
         for (GithubPolledEventDto polledEvent : githubPolledEvents) {

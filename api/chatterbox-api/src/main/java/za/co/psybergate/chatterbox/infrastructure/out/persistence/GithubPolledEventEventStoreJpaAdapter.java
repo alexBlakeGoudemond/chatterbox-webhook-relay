@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
@@ -12,14 +12,14 @@ import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDeliveryD
 import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEventDeliveryLog;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEventJpaRepository;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEventLogJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.repository.GithubPolledEventJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.repository.GithubPolledEventLogJpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventStore {
+public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventStorePort {
 
     private final GithubPolledEventJpaRepository repository;
 

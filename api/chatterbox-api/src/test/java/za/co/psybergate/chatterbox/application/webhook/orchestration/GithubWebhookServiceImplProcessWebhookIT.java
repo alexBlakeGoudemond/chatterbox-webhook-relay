@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
@@ -59,7 +59,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     private GithubPolledEventEventStoreJpaAdapter githubPolledStore;
 
     @Autowired
-    private GithubWebhookService githubWebhookService;
+    private GithubWebhookPort githubWebhookPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -70,7 +70,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     public void whenProcessWebhook_ThenEventPersisted() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         String uniqueId = UUID.randomUUID().toString();
-        WebhookEventDto webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
+        WebhookEventDto webhookEvent = githubWebhookPort.process(EventType.PUSH.name(), uniqueId, jsonNode);
         assertNotNull(webhookEvent);
         assertNotNull(webhookEvent.id());
     }

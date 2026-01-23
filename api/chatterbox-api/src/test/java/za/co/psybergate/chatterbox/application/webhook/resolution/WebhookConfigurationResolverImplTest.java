@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
@@ -29,7 +29,7 @@ public class WebhookConfigurationResolverImplTest {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private WebhookConfigurationResolver resolver;
+    private WebhookConfigurationResolverPort resolver;
 
     @DisplayName("Known eventType succeeds")
     @Test

@@ -7,8 +7,8 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.discord.delivery.DiscordSenderService;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.delivery.DiscordSenderPort;
+import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
@@ -19,9 +19,9 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
-public class DiscordSenderServiceImpl implements DiscordSenderService {
+public class DiscordSenderServiceImpl implements DiscordSenderPort {
 
-    private final DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
+    private final DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
 
     private final WebhookLogger webhookLogger;
 
@@ -30,7 +30,7 @@ public class DiscordSenderServiceImpl implements DiscordSenderService {
     @Override
     public HttpResponseDto process(GithubEventDto dto, String discordDestination) {
         webhookLogger.logSendingDtoToDiscord(dto, discordDestination);
-        String jsonString = discordEmbeddedObjectFactory.getAsDiscordPayloadString(dto);
+        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(dto);
         HttpPost httpPost = getHttpPost(discordDestination, jsonString);
         return executeHttpPostRequest(httpPost);
     }

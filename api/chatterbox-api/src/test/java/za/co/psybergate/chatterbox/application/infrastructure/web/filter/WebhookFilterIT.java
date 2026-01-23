@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
@@ -56,7 +56,7 @@ public class WebhookFilterIT {
 
     @MockitoBean
     @Qualifier("githubWebhookServiceImpl")
-    private GithubWebhookService githubWebhookService;
+    private GithubWebhookPort githubWebhookPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -67,7 +67,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.when(
-                githubWebhookService.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                githubWebhookPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
                 )).thenReturn(null);
     }
 

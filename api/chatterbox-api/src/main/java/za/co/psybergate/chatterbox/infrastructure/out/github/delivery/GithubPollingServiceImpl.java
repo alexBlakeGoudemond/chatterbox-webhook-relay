@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingService;
+import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
@@ -23,7 +23,7 @@ import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_COMMIT;
 import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_PULL_REQUEST;
 
 @Service
-public class GithubPollingServiceImpl implements GithubPollingService {
+public class GithubPollingServiceImpl implements GithubPollingPort {
 
     private final WebClient githubClient;
 

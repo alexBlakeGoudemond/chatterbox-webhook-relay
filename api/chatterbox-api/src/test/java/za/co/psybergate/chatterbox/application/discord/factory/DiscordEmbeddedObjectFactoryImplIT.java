@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
@@ -48,7 +48,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
+    private DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -93,7 +93,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
         try {
-            return discordEmbeddedObjectFactory.buildEmbeddedObjectDefinition(eventDto);
+            return discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(eventDto);
         } catch (Exception e) {
             return null;
         }
@@ -102,7 +102,7 @@ public class DiscordEmbeddedObjectFactoryImplIT {
     private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return discordEmbeddedObjectFactory.buildEmbeddedObjectDefinition(propertiesToUse);
+            return discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(propertiesToUse);
         } catch (Exception e) {
             return null;
         }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition;
@@ -18,7 +18,7 @@ import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping
 
 @Component
 @RequiredArgsConstructor
-public class TeamsCardFactoryImpl implements TeamsCardFactory {
+public class TeamsCardFactoryImpl implements TeamsCardFactoryPort {
 
     private final ChatterboxDeliveryTeamsProperties teamsProperties;
 

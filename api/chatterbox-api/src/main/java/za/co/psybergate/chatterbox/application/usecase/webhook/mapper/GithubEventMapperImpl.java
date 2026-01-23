@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys;
@@ -22,7 +22,7 @@ import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping
 @Validated
 public class GithubEventMapperImpl implements GithubEventMapper {
 
-    private final WebhookConfigurationResolver webhookConfigurationResolver;
+    private final WebhookConfigurationResolverPort webhookConfigurationResolverPort;
 
     @Override
     public GithubEventDto map(String eventType, JsonNode payload) {
@@ -36,7 +36,7 @@ public class GithubEventMapperImpl implements GithubEventMapper {
     @Override
     @Valid
     public GithubEventDto map(EventType eventType, JsonNode payload) {
-        var payloadMapping = webhookConfigurationResolver.getPayloadMapping(eventType);
+        var payloadMapping = webhookConfigurationResolverPort.getPayloadMapping(eventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
         String repositoryName = read(payload, fields.get(REPOSITORYNAME));

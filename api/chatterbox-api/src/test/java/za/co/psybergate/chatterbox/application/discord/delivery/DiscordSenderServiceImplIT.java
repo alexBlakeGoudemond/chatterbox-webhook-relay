@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
@@ -68,7 +68,7 @@ public class DiscordSenderServiceImplIT {
     private DiscordSenderServiceImpl discordSenderServiceImpl;
 
     @Autowired
-    private DiscordEmbeddedObjectFactory discordEmbeddedObjectFactory;
+    private DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
@@ -96,7 +96,7 @@ public class DiscordSenderServiceImplIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        String jsonString = discordEmbeddedObjectFactory.getAsDiscordPayloadString(eventDto);
+        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(eventDto);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = discordSenderServiceImpl.executeHttpPostRequest(httpPost);

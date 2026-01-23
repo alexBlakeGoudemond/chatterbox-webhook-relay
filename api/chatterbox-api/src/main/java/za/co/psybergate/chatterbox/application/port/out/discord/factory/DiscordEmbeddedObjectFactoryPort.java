@@ -6,13 +6,13 @@ import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 
 import java.util.Map;
 
-public interface DiscordEmbeddedObjectFactory {
+public interface DiscordEmbeddedObjectFactoryPort {
 
     /// From a given [Map] of property values, create and populate the
     /// [DiscordEmbeddedObjectDefinition]
     DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values);
 
-    /// From a given [GithubEventDto] create a [Map] and leverage [DiscordEmbeddedObjectFactory#buildEmbeddedObjectDefinition(Map))]
+    /// From a given [GithubEventDto] create a [Map] and leverage [DiscordEmbeddedObjectFactoryPort#buildEmbeddedObjectDefinition(Map))]
     /// to create a [DiscordEmbeddedObjectDefinition]
     DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto);
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
@@ -18,7 +18,7 @@ import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping
 
 @Component
 @RequiredArgsConstructor
-public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFactory {
+public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFactoryPort {
 
     private final ChatterboxDeliveryDiscordProperties discordProperties;
 

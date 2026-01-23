@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
 
 import java.util.List;
 
-public interface WebhookEventStore {
+public interface WebhookEventStorePort {
 
     List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName);
 

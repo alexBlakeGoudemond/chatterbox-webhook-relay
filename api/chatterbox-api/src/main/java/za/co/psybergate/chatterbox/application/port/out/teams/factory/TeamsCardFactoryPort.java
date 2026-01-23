@@ -6,13 +6,13 @@ import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinitio
 
 import java.util.Map;
 
-public interface TeamsCardFactory {
+public interface TeamsCardFactoryPort {
 
     /// From a given [Map] of property values, create and populate the
     /// [TeamsAdaptiveCardDefinition]
     TeamsAdaptiveCardDefinition buildCard(Map<String, String> values);
 
-    /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactory#buildCard(Map)]
+    /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactoryPort#buildCard(Map)]
     /// to create a [TeamsAdaptiveCardDefinition]
     TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto);
 

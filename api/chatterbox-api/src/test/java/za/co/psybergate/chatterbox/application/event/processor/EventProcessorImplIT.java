@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorService;
 import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorServiceImpl;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
@@ -77,10 +77,10 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private EventProcessorService eventProcessorService;
 
     @Autowired
-    private WebhookEventStore webhookEventStore;
+    private WebhookEventStorePort webhookEventStorePort;
 
     @Autowired
-    private GithubPolledEventStore githubPolledEventStore;
+    private GithubPolledEventStorePort githubPolledEventStorePort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -97,8 +97,8 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
-        this.persistedWebhookEvent = webhookEventStore.storeWebhook(uniqueId, eventDto, jsonNode);
-        this.persistedGithubPolledEvent = githubPolledEventStore.storeEvent(uniqueId, eventDto, jsonNode);
+        this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, eventDto, jsonNode);
+        this.persistedGithubPolledEvent = githubPolledEventStorePort.storeEvent(uniqueId, eventDto, jsonNode);
     }
 
     @DisplayName("Processing Webhook Events creates Delivery Logs")
@@ -106,12 +106,12 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessorService.processWebhookEvents();
-        WebhookEventDto retrievedWebhookEvent = webhookEventStore.getWebhook(persistedWebhookEvent.id());
+        WebhookEventDto retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.eventStatus());
 
-        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookEventStore.getDeliveryLogs(persistedWebhookEvent.id());
+        List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookEventStorePort.getDeliveryLogs(persistedWebhookEvent.id());
         assertEquals(2, webhookEventDeliveryLogs.size());
         for (WebhookEventDeliveryDto webhookEventDeliveryLog : webhookEventDeliveryLogs) {
             assertNotNull(webhookEventDeliveryLog);
@@ -124,12 +124,12 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessorService.processPolledEvents();
-        GithubPolledEventDto retrievedPolledEvent = githubPolledEventStore.getEvent(persistedGithubPolledEvent.id());
+        GithubPolledEventDto retrievedPolledEvent = githubPolledEventStorePort.getEvent(persistedGithubPolledEvent.id());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());
         assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.eventStatus());
 
-        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledEventStore.getDeliveryLogs(persistedGithubPolledEvent.id());
+        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledEventStorePort.getDeliveryLogs(persistedGithubPolledEvent.id());
         assertEquals(2, polledEventDeliveryLogs.size());
         for (GithubPolledEventDeliveryDto polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);

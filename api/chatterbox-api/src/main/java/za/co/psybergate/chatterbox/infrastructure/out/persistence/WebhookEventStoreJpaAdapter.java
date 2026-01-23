@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
@@ -12,15 +12,15 @@ import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventDeliveryLog;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventJpaRepository;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEventLogJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.repository.WebhookEventJpaRepository;
+import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.repository.WebhookEventLogJpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 // TODO BlakeGoudemond 2026/01/16 | in time, consider a generic / polymorphic version of this as the code is very similar to GithubPolledEventStoreJpaAdapter
 @Component
-public class WebhookEventStoreJpaAdapter implements WebhookEventStore {
+public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
 
     private final WebhookEventJpaRepository repository;
 

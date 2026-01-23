@@ -5,8 +5,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CatchUpRunnerImpl implements CatchUpRunner, ApplicationRunner {
 
-    private final GithubWebhookService webhookService;
+    private final GithubWebhookPort webhookService;
 
-    private final WebhookConfigurationResolver configurationResolver;
+    private final WebhookConfigurationResolverPort configurationResolver;
 
     private final ApplicationEventPublisher publisher;
 

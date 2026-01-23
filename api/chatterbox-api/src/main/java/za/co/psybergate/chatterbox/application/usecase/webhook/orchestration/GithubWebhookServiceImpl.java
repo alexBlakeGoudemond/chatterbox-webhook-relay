@@ -8,10 +8,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingService;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
@@ -33,7 +33,7 @@ import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class GithubWebhookServiceImpl implements GithubWebhookService {
+public class GithubWebhookServiceImpl implements GithubWebhookPort {
 
     private final WebhookRequestValidator webhookRequestValidator;
 
@@ -41,11 +41,11 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
 
     private final JsonConverter jsonConverter;
 
-    private final GithubPollingService githubPollingService;
+    private final GithubPollingPort githubPollingPort;
 
-    private final WebhookEventStore webhookEventStore;
+    private final WebhookEventStorePort webhookEventStorePort;
 
-    private final GithubPolledEventStore githubPolledEventStore;
+    private final GithubPolledEventStorePort githubPolledEventStorePort;
 
     private final ApplicationEventPublisher publisher;
 
@@ -57,7 +57,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         webhookRequestValidator.assertAcceptedRepository(repositoryName);
         webhookRequestValidator.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        WebhookEventDto webhookEvent = webhookEventStore.storeWebhook(deliveryId, eventDto, rawBody);
+        WebhookEventDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, eventDto, rawBody);
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }
@@ -70,7 +70,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     @Override
     public List<GithubPolledEventDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
-        GithubRepositoryInformationDto recentUpdates = githubPollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        GithubRepositoryInformationDto recentUpdates = githubPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         List<GithubPolledEventDto> updates = new ArrayList<>();
         for (Map.Entry<EventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
@@ -95,7 +95,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
     public boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
         LocalDateTime lastPersistedTime;
         try {
-            WebhookEventDto latestWebhookEvent = webhookEventStore.getMostRecentWebhook(repositoryFullName);
+            WebhookEventDto latestWebhookEvent = webhookEventStorePort.getMostRecentWebhook(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
             lastPersistedTime = latestWebhookEvent.receivedAt();
         } catch (ApplicationException e) {
@@ -103,7 +103,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
             return false;
         }
         try {
-            GithubPolledEventDto latestGithubPolledEvent = githubPolledEventStore.getMostRecentPolledEvent(repositoryFullName);
+            GithubPolledEventDto latestGithubPolledEvent = githubPolledEventStorePort.getMostRecentPolledEvent(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.fetchedAt());
         } catch (ApplicationException e) {
@@ -133,7 +133,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookService {
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = eventType.getUniqueId(jsonNode);
             GithubEventDto eventDto = getEventDto(eventType.name(), jsonNode);
-            GithubPolledEventDto polledEvent = githubPolledEventStore.storeEvent(uniqueId, eventDto, jsonNode);
+            GithubPolledEventDto polledEvent = githubPolledEventStorePort.storeEvent(uniqueId, eventDto, jsonNode);
             updates.add(polledEvent);
         }
         return updates;

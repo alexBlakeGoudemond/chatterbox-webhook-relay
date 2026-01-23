@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactory;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
@@ -68,7 +68,7 @@ public class TeamsSenderServiceImplIT {
     private TeamsSenderServiceImpl teamsSenderServiceImpl;
 
     @Autowired
-    private TeamsCardFactory teamsCardFactory;
+    private TeamsCardFactoryPort teamsCardFactoryPort;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
@@ -96,7 +96,7 @@ public class TeamsSenderServiceImplIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        String jsonString = teamsCardFactory.getAsTeamsPayloadString(eventDto);
+        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(eventDto);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = teamsSenderServiceImpl.executeHttpPostRequest(httpPost);

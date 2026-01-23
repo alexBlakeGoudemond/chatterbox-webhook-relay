@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class WebhookConfigurationResolverImpl implements WebhookConfigurationResolver {
+public class WebhookConfigurationResolverImpl implements WebhookConfigurationResolverPort {
 
     private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 
