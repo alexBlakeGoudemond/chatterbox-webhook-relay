@@ -1,6 +1,6 @@
 package za.co.psybergate.architecture_rules.injection;
 
-public class InjectionRulesTest extends InjectionAbstractTest {
+public class InjectionRulesTest extends InjectionRulesAbstractTest {
 
     @Override
     protected String basePackage() {

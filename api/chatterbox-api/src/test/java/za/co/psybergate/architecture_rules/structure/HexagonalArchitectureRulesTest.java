@@ -5,7 +5,7 @@ import java.util.List;
 
 import static za.co.psybergate.architecture_rules.definition.KnownPackagesHelper.*;
 
-public class HexagonalArchitectureRulesTest extends HexagonalArchitectureAbstractTest {
+public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAbstractTest {
 
     @Override
     protected String basePackage() {
