@@ -1,6 +1,4 @@
-package za.co.psybergate.architecture_rules.hexagon;
-
-import za.co.psybergate.architecture_rules.hexagon.HexagonalArchitectureAbstractTest;
+package za.co.psybergate.architecture_rules.structure;
 
 import java.util.ArrayList;
 import java.util.List;
