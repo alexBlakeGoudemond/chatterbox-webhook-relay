@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorService;
+import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessor;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcess
 @RequiredArgsConstructor
 public class UpdatesProcessedListenerImpl implements UpdatesProcessedListener {
 
-    private final EventProcessorService eventProcessorService;
+    private final EventProcessor eventProcessor;
 
     private final WebhookLogger webhookLogger;
 
@@ -23,7 +23,7 @@ public class UpdatesProcessedListenerImpl implements UpdatesProcessedListener {
     @Override
     public void onPolledEventsProcessed(PolledEventsProcessed polledEventsProcessed) {
         webhookLogger.logPolledEventProcessed(polledEventsProcessed);
-        eventProcessorService.processPolledEvents();
+        eventProcessor.processPolledEvents();
     }
 
     @Async("webhookEventExecutor")
@@ -31,7 +31,7 @@ public class UpdatesProcessedListenerImpl implements UpdatesProcessedListener {
     @Override
     public void onWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
         webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
-        eventProcessorService.processWebhookEvents();
+        eventProcessor.processWebhookEvents();
     }
 
 }

@@ -14,8 +14,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorService;
-import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorServiceImpl;
+import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessor;
+import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessorImpl;
 import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
 import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        EventProcessorServiceImpl.class,
+        EventProcessorImpl.class,
         WebhookEventStoreJpaAdapter.class,
         GithubPolledEventEventStoreJpaAdapter.class,
         JsonFileReader.class,
@@ -74,7 +74,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
-    private EventProcessorService eventProcessorService;
+    private EventProcessor eventProcessor;
 
     @Autowired
     private WebhookEventStorePort webhookEventStorePort;
@@ -105,7 +105,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Tag("live-integration")
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
-        eventProcessorService.processWebhookEvents();
+        eventProcessor.processWebhookEvents();
         WebhookEventDto retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
@@ -123,7 +123,7 @@ public class EventProcessorImplIT extends AbstractPostgresTestContainer {
     @Tag("live-integration")
     @Test
     public void whenProcessGithubPolledEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
-        eventProcessorService.processPolledEvents();
+        eventProcessor.processPolledEvents();
         GithubPolledEventDto retrievedPolledEvent = githubPolledEventStorePort.getEvent(persistedGithubPolledEvent.id());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());

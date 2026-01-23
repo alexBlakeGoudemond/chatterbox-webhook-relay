@@ -7,4 +7,9 @@ public class PlacementRulesTest extends PlacementRulesAbstractTest {
         return "za.co.psybergate.chatterbox";
     }
 
+    @Override
+    protected boolean passIfNoClassesApplyToRule() {
+        return true;
+    }
+
 }

@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class EventProcessorServiceImpl implements EventProcessorService {
+public class EventProcessorImpl implements EventProcessor {
 
     private final WebhookLogger webhookLogger;
 
