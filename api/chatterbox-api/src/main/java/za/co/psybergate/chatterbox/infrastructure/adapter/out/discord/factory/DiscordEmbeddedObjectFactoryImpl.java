@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
-import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDeliveryDiscordProperties;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
 
 import java.util.Map;
 
@@ -25,8 +24,6 @@ public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFa
     private final TemplateSubstitutor substitutionService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private final HttpResponseHandler httpResponseHandler;
 
     @Override
     public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values) {

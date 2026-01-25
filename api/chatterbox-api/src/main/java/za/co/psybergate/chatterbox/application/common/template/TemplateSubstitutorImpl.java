@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.usecase.template;
+package za.co.psybergate.chatterbox.application.common.template;
 
 import org.springframework.stereotype.Component;
 

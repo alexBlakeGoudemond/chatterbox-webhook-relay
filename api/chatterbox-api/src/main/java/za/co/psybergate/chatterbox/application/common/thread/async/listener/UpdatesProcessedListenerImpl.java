@@ -1,10 +1,10 @@
-package za.co.psybergate.chatterbox.application.usecase.thread.async.listener;
+package za.co.psybergate.chatterbox.application.common.thread.async.listener;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.usecase.event.processor.EventProcessor;
+import za.co.psybergate.chatterbox.application.common.event.processor.EventProcessor;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;

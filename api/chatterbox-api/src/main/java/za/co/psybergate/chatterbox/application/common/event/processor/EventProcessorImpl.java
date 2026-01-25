@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.usecase.event.processor;
+package za.co.psybergate.chatterbox.application.common.event.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

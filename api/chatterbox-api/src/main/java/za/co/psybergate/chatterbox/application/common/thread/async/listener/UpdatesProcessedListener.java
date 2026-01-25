@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.usecase.thread.async.listener;
+package za.co.psybergate.chatterbox.application.common.thread.async.listener;
 
 import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
