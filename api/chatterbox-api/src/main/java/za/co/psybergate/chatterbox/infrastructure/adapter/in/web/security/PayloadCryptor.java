@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.in.web.security;
+package za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security;
 
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.in.web.security;
+package za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security;
 
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;

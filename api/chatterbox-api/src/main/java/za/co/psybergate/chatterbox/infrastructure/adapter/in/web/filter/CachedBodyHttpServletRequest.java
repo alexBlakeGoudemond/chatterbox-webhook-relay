@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.in.web.filter;
+package za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;

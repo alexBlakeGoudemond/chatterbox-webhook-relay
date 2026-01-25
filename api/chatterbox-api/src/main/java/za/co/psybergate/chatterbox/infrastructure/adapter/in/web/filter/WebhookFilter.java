@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.in.web.filter;
+package za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,8 +8,8 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptor;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security.PayloadCryptor;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
