@@ -24,7 +24,7 @@ import za.co.psybergate.chatterbox.infrastructure.common.exception.InvalidSignat
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 

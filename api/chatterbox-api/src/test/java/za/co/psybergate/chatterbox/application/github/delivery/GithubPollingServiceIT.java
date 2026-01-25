@@ -18,7 +18,7 @@ import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformati
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubPollingServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.stream.Stream;

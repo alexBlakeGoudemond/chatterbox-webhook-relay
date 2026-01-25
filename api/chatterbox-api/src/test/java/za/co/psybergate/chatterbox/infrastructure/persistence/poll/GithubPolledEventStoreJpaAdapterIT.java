@@ -20,9 +20,9 @@ import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.GithubPolledEventEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 

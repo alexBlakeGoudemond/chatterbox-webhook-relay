@@ -17,17 +17,17 @@ import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitu
 import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.out.teams.delivery.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsSenderServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 

@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
