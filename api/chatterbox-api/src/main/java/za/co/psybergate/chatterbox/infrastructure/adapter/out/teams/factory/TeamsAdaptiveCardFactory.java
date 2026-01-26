@@ -7,14 +7,12 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
 
 import java.util.Map;
-
-import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor

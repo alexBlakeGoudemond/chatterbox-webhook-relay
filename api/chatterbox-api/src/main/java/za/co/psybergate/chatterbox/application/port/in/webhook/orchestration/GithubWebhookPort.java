@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.port.in.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

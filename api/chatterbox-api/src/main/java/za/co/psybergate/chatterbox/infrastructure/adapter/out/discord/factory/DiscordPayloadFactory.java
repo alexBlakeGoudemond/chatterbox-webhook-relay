@@ -7,13 +7,11 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
-import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.discord.model.DiscordEmbeddedObjectDefinition;
+import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDeliveryDiscordProperties;
 
 import java.util.Map;
-
-import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor

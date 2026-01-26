@@ -10,8 +10,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.github.model.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.time.Instant;
@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_COMMIT;
-import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_PULL_REQUEST;
+import static za.co.psybergate.chatterbox.application.domain.api.EventType.POLL_COMMIT;
+import static za.co.psybergate.chatterbox.application.domain.api.EventType.POLL_PULL_REQUEST;
 
 @Service
 public class GithubRestPollingClient implements GithubPollingPort {

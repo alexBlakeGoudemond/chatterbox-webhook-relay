@@ -16,8 +16,8 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookOrchestrator;
-import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.model.RepositoryDetailDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;

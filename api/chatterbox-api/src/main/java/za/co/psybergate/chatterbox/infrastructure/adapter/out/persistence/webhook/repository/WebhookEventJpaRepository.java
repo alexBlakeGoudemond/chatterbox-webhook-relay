@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.webho
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import za.co.psybergate.chatterbox.domain.api.EventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.webhook.WebhookEvent;
 
 import java.util.List;

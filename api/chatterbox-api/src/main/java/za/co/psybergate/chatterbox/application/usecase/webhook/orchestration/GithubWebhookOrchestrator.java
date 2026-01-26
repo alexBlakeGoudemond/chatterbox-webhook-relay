@@ -16,19 +16,19 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.application.domain.github.model.GithubRepositoryInformationDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME;
+import static za.co.psybergate.chatterbox.application.domain.api.GithubApiJsonKeys.FULL_NAME;
 
 @Service
 @RequiredArgsConstructor
