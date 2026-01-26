@@ -14,6 +14,8 @@ import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+
 @Component
 @RequiredArgsConstructor
 public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {

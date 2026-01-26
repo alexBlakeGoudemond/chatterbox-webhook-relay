@@ -14,6 +14,8 @@ import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMa
 
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j

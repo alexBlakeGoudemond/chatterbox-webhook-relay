@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.common.config.properties.*;
-import za.co.psybergate.chatterbox.infrastructure.common.config.properties.*;
 
 @Configuration
 @EnableConfigurationProperties({
