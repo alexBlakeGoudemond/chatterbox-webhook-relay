@@ -23,7 +23,7 @@ import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePr
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.infrastructure.common.security.PayloadCryptorImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubPollingServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsSenderServiceImpl;
