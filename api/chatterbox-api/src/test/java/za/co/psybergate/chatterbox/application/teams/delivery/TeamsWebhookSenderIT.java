@@ -20,13 +20,13 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebho
 import za.co.psybergate.chatterbox.application.domain.api.EventType;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsWebhookSender;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 

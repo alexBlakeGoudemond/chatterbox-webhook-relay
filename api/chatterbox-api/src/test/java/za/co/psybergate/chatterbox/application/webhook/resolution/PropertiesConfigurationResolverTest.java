@@ -12,9 +12,9 @@ import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.Webho
 import za.co.psybergate.chatterbox.application.domain.api.EventType;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
