@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InternalServerException;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security.PayloadCryptor;
 
 import java.io.IOException;

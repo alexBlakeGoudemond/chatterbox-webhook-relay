@@ -19,10 +19,10 @@ import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitut
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverterImpl;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapperImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.WebhookRequestValidatorImpl;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InfrastructureException;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.security.PayloadCryptorImpl;

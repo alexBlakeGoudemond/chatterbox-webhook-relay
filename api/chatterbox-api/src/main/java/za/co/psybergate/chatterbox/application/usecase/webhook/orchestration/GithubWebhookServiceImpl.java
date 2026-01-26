@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEvent
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.usecase.webhook.validation.WebhookRequestValidator;
+import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
@@ -35,7 +35,7 @@ import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME
 @Transactional
 public class GithubWebhookServiceImpl implements GithubWebhookPort {
 
-    private final WebhookRequestValidator webhookRequestValidator;
+    private final WebhookRequestValidatorPort webhookRequestValidatorPort;
 
     private final GithubEventMapper eventExtractor;
 
@@ -54,8 +54,8 @@ public class GithubWebhookServiceImpl implements GithubWebhookPort {
     @Override
     public WebhookEventDto process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
-        webhookRequestValidator.assertAcceptedRepository(repositoryName);
-        webhookRequestValidator.assertAcceptedEvent(eventType);
+        webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
+        webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
         WebhookEventDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, eventDto, rawBody);
         publisher.publishEvent(new WebhookEventProcessed());
@@ -69,7 +69,7 @@ public class GithubWebhookServiceImpl implements GithubWebhookPort {
 
     @Override
     public List<GithubPolledEventDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        webhookRequestValidator.assertAcceptedRepository(owner, repositoryName);
+        webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);
         GithubRepositoryInformationDto recentUpdates = githubPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         List<GithubPolledEventDto> updates = new ArrayList<>();

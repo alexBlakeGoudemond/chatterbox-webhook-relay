@@ -27,7 +27,7 @@ import za.co.psybergate.chatterbox.domain.event.model.*;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.factory.DiscordEmbeddedObjectFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsCardFactoryImpl;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.delivery.DiscordSenderServiceImpl;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;

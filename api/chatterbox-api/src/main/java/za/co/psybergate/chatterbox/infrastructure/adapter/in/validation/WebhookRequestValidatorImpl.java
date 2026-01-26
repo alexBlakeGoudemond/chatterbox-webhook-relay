@@ -1,16 +1,16 @@
-package za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation;
+package za.co.psybergate.chatterbox.infrastructure.adapter.in.validation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.usecase.webhook.validation.WebhookRequestValidator;
+import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
 
 @Component
 @RequiredArgsConstructor
-public class WebhookRequestValidatorImpl implements WebhookRequestValidator {
+public class WebhookRequestValidatorImpl implements WebhookRequestValidatorPort {
 
     private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 

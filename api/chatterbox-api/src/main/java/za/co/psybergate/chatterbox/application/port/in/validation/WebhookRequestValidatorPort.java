@@ -1,9 +1,9 @@
-package za.co.psybergate.chatterbox.application.usecase.webhook.validation;
+package za.co.psybergate.chatterbox.application.port.in.validation;
 
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 
 /// Entry point, validates and normalizes input
-public interface WebhookRequestValidator {
+public interface WebhookRequestValidatorPort {
 
     void assertAcceptedEvent(String eventType) throws UnrecognizedRequestException;
 
