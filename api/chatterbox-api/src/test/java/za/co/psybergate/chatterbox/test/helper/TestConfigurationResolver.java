@@ -1,15 +1,15 @@
 package za.co.psybergate.chatterbox.test.helper;
 
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 
 @Component
 public class TestConfigurationResolver {
 
-    private final WebhookConfigurationResolver configurationResolver;
+    private final WebhookConfigurationResolverPort configurationResolver;
 
-    public TestConfigurationResolver(WebhookConfigurationResolver configurationResolver) {
+    public TestConfigurationResolver(WebhookConfigurationResolverPort configurationResolver) {
         this.configurationResolver = configurationResolver;
     }
 

@@ -10,24 +10,24 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.usecase.template.TemplateSubstitutorImpl;
-import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
-import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.teams.factory.TeamsCardFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookOrchestrator;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.in.web.controller.GithubWebhookController;
-import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.out.teams.delivery.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.controller.GithubWebhookController;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.common.security.HmacSha256Cryptor;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubRestPollingClient;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsWebhookSender;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -81,18 +81,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /// ```
 @Import({
         WebhookFilter.class,
-        WebhookLoggerImpl.class,
-        PayloadCryptorImpl.class,
+        Slf4jWebhookLogger.class,
+        HmacSha256Cryptor.class,
         InfrastructurePropertiesConfig.class,
-        GithubWebhookServiceImpl.class,
-        WebhookRequestValidatorImpl.class,
-        WebhookConfigurationResolverImpl.class,
-        GithubEventMapperImpl.class,
+        GithubWebhookOrchestrator.class,
+        GithubWebhookValidator.class,
+        PropertiesConfigurationResolver.class,
+        GithubWebhookEventMapper.class,
         JsonFileReader.class,
-        JsonConverterImpl.class,
-        TeamsSenderServiceImpl.class,
-        TeamsCardFactoryImpl.class,
-        TemplateSubstitutorImpl.class,
+        JacksonJsonConverter.class,
+        TeamsWebhookSender.class,
+        TeamsAdaptiveCardFactory.class,
+        RegexTemplateSubstitutor.class,
         GithubHttpRequestFactory.class,
         HttpResponseHandler.class,
 })
@@ -100,13 +100,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GithubWebhookControllerMockedTeamsIT {
 
     @MockitoBean
-    private GithubPollingServiceImpl githubPollingService;
+    private GithubRestPollingClient githubPollingService;
 
     @MockitoBean
-    private WebhookEventStore webhookEventStore;
+    private WebhookEventStorePort webhookEventStorePort;
 
     @MockitoBean
-    private GithubPolledEventStore githubPolledEventStore;
+    private GithubPolledEventStorePort githubPolledEventStorePort;
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;  // Mocked so Spring can inject it

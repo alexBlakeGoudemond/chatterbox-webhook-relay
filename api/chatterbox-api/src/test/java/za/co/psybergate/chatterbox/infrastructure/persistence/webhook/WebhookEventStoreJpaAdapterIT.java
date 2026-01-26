@@ -9,20 +9,20 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -32,11 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Import({
         WebhookEventStoreJpaAdapter.class,
         JsonFileReader.class,
-        JsonConverterImpl.class,
-        GithubEventMapperImpl.class,
-        WebhookConfigurationResolverImpl.class,
+        JacksonJsonConverter.class,
+        GithubWebhookEventMapper.class,
+        PropertiesConfigurationResolver.class,
         InfrastructurePropertiesConfig.class,
-        WebhookLoggerImpl.class,
+        Slf4jWebhookLogger.class,
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
