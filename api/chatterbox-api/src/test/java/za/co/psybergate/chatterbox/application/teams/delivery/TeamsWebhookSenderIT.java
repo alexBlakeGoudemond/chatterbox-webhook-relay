@@ -1,0 +1,120 @@
+package za.co.psybergate.chatterbox.application.teams.delivery;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
+import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.domain.api.EventType;
+import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsWebhookSender;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
+
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringBootTest(classes = {
+        TeamsWebhookSender.class,
+        JsonFileReader.class,
+        JacksonJsonConverter.class,
+        GithubWebhookEventMapper.class,
+        PropertiesConfigurationResolver.class,
+        TeamsAdaptiveCardFactory.class,
+        RegexTemplateSubstitutor.class,
+        InfrastructurePropertiesConfig.class,
+        TestConfigurationResolver.class,
+        PropertiesConfigurationResolver.class,
+        Slf4jWebhookLogger.class,
+        HttpResponseHandler.class,
+})
+@ActiveProfiles({"live-url"})
+public class TeamsWebhookSenderIT {
+
+    @MockitoBean
+    private WebhookFilter webhookFilter;
+
+    @MockitoBean
+    private WebhookRuntimeMetrics webhookRuntimeMetrics;
+
+    @Autowired
+    private JsonFileReader jsonFileReader;
+
+    @Autowired
+    private GithubEventMapper eventExtractor;
+
+    @Autowired
+    private TeamsWebhookSender teamsWebhookSender;
+
+    @Autowired
+    private TeamsCardFactoryPort teamsCardFactoryPort;
+
+    @Autowired
+    private TestConfigurationResolver configurationResolver;
+
+    /// Send an actual test to the MS Teams API and assert that the HttpResponse
+    /// information is as-expected.
+    ///
+    /// This test is annotated with a Tag that `maven-surefire-plugin` is made aware of.
+    /// This means that running `mvn clean install` will NOT include this by default
+    @Tag("live-integration")
+    @DisplayName("TeamsSenderService can process DTO")
+    @Test
+    public void givenGithubEventDto_WhenTeamsSenderServiceProcessesDto_ThenSuccess() {
+        GithubEventDto eventDto = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+
+        HttpResponseDto httpResponseDto = teamsWebhookSender.process(eventDto, teamsDestinationUrl);
+        assertNotNull(httpResponseDto);
+        assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
+    }
+
+    @DisplayName("Bad HttpPost yields 401")
+    @Test
+    public void givenGithubEventDto_AndBadHttpPost_WhenExecuteHttp_ThenUnauthorised() {
+        GithubEventDto eventDto = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+
+        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(eventDto);
+        HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
+
+        HttpResponseDto httpResponseDto = teamsWebhookSender.executeHttpPostRequest(httpPost);
+        assertNotNull(httpResponseDto);
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
+    }
+
+    private HttpPost getHttpPostWithAuthorizationHeaders(String teamsDestination, String jsonString) {
+        HttpPost httpPost = new HttpPost(teamsDestination);
+        httpPost.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
+        httpPost.setHeader("Content-Type", "application/json");
+        httpPost.setHeader("Authorization", "Bearer broken-test-token");
+        return httpPost;
+    }
+
+    private GithubEventDto getGithubEventDto() {
+        JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
+        return eventExtractor.map(EventType.PUSH, jsonNode);
+    }
+
+}
