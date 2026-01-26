@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingService;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStore;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStore;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
+import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
 import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubRestPollingClient;
 
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
@@ -27,9 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
-        GithubPollingServiceImpl.class,
+        GithubRestPollingClient.class,
         InfrastructurePropertiesConfig.class,
-        WebhookLoggerImpl.class,
+        Slf4jWebhookLogger.class,
 })
 @ActiveProfiles({"test", "live-url"})
 class GithubPollingServiceIT {
@@ -41,13 +41,13 @@ class GithubPollingServiceIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private GithubPollingService pollingService;
+    private GithubPollingPort pollingService;
 
     @MockitoBean
-    private WebhookEventStore webhookEventStore;
+    private WebhookEventStorePort webhookEventStorePort;
 
     @MockitoBean
-    private GithubPolledEventStore githubPolledEventStore;
+    private GithubPolledEventStorePort githubPolledEventStorePort;
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(

@@ -8,21 +8,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.application.usecase.webhook.mapper.GithubEventMapperImpl;
-import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookServiceImpl;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookOrchestrator;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
-import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.out.github.delivery.GithubPollingServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.GithubPolledEventEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.out.persistence.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubRestPollingClient;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -32,14 +32,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        GithubWebhookServiceImpl.class,
+        GithubWebhookOrchestrator.class,
         JsonFileReader.class,
-        WebhookRequestValidatorImpl.class,
-        GithubEventMapperImpl.class,
-        JsonConverterImpl.class,
+        GithubWebhookValidator.class,
+        GithubWebhookEventMapper.class,
+        JacksonJsonConverter.class,
         InfrastructurePropertiesConfig.class,
-        WebhookLoggerImpl.class,
-        WebhookConfigurationResolverImpl.class,
+        Slf4jWebhookLogger.class,
+        PropertiesConfigurationResolver.class,
         WebhookEventStoreJpaAdapter.class,
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTestContainer {
 
     @MockitoBean
-    private GithubPollingServiceImpl githubPollingService;
+    private GithubRestPollingClient githubPollingService;
 
     @MockitoBean
     private WebhookRuntimeMetrics runtimeMetrics;
@@ -59,7 +59,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     private GithubPolledEventEventStoreJpaAdapter githubPolledStore;
 
     @Autowired
-    private GithubWebhookService githubWebhookService;
+    private GithubWebhookPort githubWebhookPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -70,7 +70,7 @@ public class GithubWebhookServiceImplProcessWebhookIT extends AbstractPostgresTe
     public void whenProcessWebhook_ThenEventPersisted() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         String uniqueId = UUID.randomUUID().toString();
-        WebhookEventDto webhookEvent = githubWebhookService.process(EventType.PUSH.name(), uniqueId, jsonNode);
+        WebhookEventDto webhookEvent = githubWebhookPort.process(EventType.PUSH.name(), uniqueId, jsonNode);
         assertNotNull(webhookEvent);
         assertNotNull(webhookEvent.id());
     }

@@ -15,16 +15,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookService;
-import za.co.psybergate.chatterbox.application.usecase.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.usecase.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.webhook.validation.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.infrastructure.in.web.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.in.web.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.infrastructure.common.security.HmacSha256Cryptor;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -32,13 +32,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         WebhookFilter.class,
-        WebhookLoggerImpl.class,
-        PayloadCryptorImpl.class,
+        Slf4jWebhookLogger.class,
+        HmacSha256Cryptor.class,
         InfrastructurePropertiesConfig.class,
-        WebhookRequestValidatorImpl.class,
-        WebhookConfigurationResolverImpl.class,
+        GithubWebhookValidator.class,
+        PropertiesConfigurationResolver.class,
         JsonFileReader.class,
-        JsonConverterImpl.class,
+        JacksonJsonConverter.class,
         WebhookRuntimeMetrics.class,
         SimpleMeterRegistry.class,
         GithubHttpRequestFactory.class,
@@ -55,8 +55,8 @@ public class WebhookFilterIT {
     private MockMvc mockMvc;
 
     @MockitoBean
-    @Qualifier("githubWebhookServiceImpl")
-    private GithubWebhookService githubWebhookService;
+    @Qualifier("githubWebhookOrchestrator")
+    private GithubWebhookPort githubWebhookPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -67,7 +67,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.when(
-                githubWebhookService.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                githubWebhookPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
                 )).thenReturn(null);
     }
 
