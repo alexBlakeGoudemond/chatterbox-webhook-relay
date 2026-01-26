@@ -16,15 +16,15 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverterImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.WebhookRequestValidatorImpl;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.common.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.common.security.PayloadCryptorImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.common.security.HmacSha256Cryptor;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -32,13 +32,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         WebhookFilter.class,
-        WebhookLoggerImpl.class,
-        PayloadCryptorImpl.class,
+        Slf4jWebhookLogger.class,
+        HmacSha256Cryptor.class,
         InfrastructurePropertiesConfig.class,
-        WebhookRequestValidatorImpl.class,
-        WebhookConfigurationResolverImpl.class,
+        GithubWebhookValidator.class,
+        PropertiesConfigurationResolver.class,
         JsonFileReader.class,
-        JsonConverterImpl.class,
+        JacksonJsonConverter.class,
         WebhookRuntimeMetrics.class,
         SimpleMeterRegistry.class,
         GithubHttpRequestFactory.class,
@@ -55,7 +55,7 @@ public class WebhookFilterIT {
     private MockMvc mockMvc;
 
     @MockitoBean
-    @Qualifier("githubWebhookServiceImpl")
+    @Qualifier("githubWebhookOrchestrator")
     private GithubWebhookPort githubWebhookPort;
 
     @Autowired

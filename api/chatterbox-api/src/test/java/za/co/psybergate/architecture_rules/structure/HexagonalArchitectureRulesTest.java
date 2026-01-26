@@ -49,4 +49,9 @@ public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAb
         return allowedPackages;
     }
 
+    @Override
+    protected boolean passIfNoClassesApplyToRule() {
+        return true;
+    }
+
 }

@@ -33,7 +33,7 @@ import static za.co.psybergate.chatterbox.domain.api.GithubApiJsonKeys.FULL_NAME
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class GithubWebhookServiceImpl implements GithubWebhookPort {
+public class GithubWebhookOrchestrator implements GithubWebhookPort {
 
     private final WebhookRequestValidatorPort webhookRequestValidatorPort;
 

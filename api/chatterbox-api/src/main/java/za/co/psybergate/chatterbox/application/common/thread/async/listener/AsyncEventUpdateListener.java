@@ -12,7 +12,7 @@ import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcess
 // TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component
 @RequiredArgsConstructor
-public class UpdatesProcessedListenerImpl implements UpdatesProcessedListener {
+public class AsyncEventUpdateListener implements UpdatesProcessedListener {
 
     private final EventProcessor eventProcessor;
 

@@ -14,16 +14,16 @@ import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
-        WebhookConfigurationResolverImpl.class,
+        PropertiesConfigurationResolver.class,
         InfrastructurePropertiesConfig.class
 })
 @ActiveProfiles({"test", "bad-properties"})
-public class WebhookConfigurationResolverImplTest {
+public class PropertiesConfigurationResolverTest {
 
     @MockitoBean
     private WebhookFilter webhookFilter;

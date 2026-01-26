@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.delivery;
+package za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -7,9 +7,9 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.discord.delivery.DiscordSenderPort;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
+import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
@@ -19,19 +19,19 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
-public class DiscordSenderServiceImpl implements DiscordSenderPort {
+public class TeamsWebhookSender implements TeamsSenderPort {
 
-    private final DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
+    private final TeamsCardFactoryPort teamsCardFactoryPort;
 
     private final WebhookLogger webhookLogger;
 
     private final HttpResponseHandler httpResponseHandler;
 
     @Override
-    public HttpResponseDto process(GithubEventDto dto, String discordDestination) {
-        webhookLogger.logSendingDtoToDiscord(dto, discordDestination);
-        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(dto);
-        HttpPost httpPost = getHttpPost(discordDestination, jsonString);
+    public HttpResponseDto process(GithubEventDto dto, String teamsDestination) {
+        webhookLogger.logSendingDtoToTeams(dto, teamsDestination);
+        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(dto);
+        HttpPost httpPost = getHttpPost(teamsDestination, jsonString);
         return executeHttpPostRequest(httpPost);
     }
 
@@ -61,8 +61,8 @@ public class DiscordSenderServiceImpl implements DiscordSenderPort {
         }
     }
 
-    private HttpPost getHttpPost(String discordDestination, String jsonString) {
-        HttpPost httpPost = new HttpPost(discordDestination);
+    private HttpPost getHttpPost(String teamsDestination, String jsonString) {
+        HttpPost httpPost = new HttpPost(teamsDestination);
         httpPost.setEntity(new StringEntity(jsonString, StandardCharsets.UTF_8));
         httpPost.setHeader("Content-Type", "application/json");
         return httpPost;

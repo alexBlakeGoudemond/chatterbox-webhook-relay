@@ -10,7 +10,7 @@ import za.co.psybergate.chatterbox.infrastructure.common.config.properties.Chatt
 
 @Component
 @RequiredArgsConstructor
-public class WebhookRequestValidatorImpl implements WebhookRequestValidatorPort {
+public class GithubWebhookValidator implements WebhookRequestValidatorPort {
 
     private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 

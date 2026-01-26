@@ -9,17 +9,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 
@@ -34,15 +34,15 @@ import static org.junit.jupiter.api.Assertions.*;
 /// - `@Valid` on the return type triggers
 /// - `@NotNull` on the GithubEventDto fields is enforced
 @SpringBootTest(classes = {
-        GithubEventMapperImpl.class,
-        WebhookConfigurationResolverImpl.class,
+        GithubWebhookEventMapper.class,
+        PropertiesConfigurationResolver.class,
         InfrastructurePropertiesConfig.class,
         JsonFileReader.class,
-        JsonConverterImpl.class,
-        WebhookLoggerImpl.class,
+        JacksonJsonConverter.class,
+        Slf4jWebhookLogger.class,
         MethodValidationPostProcessor.class,
         LocalValidatorFactoryBean.class,
-        WebhookConfigurationResolverImpl.class,
+        PropertiesConfigurationResolver.class,
         TestConfigurationResolver.class,
 })
 public class GithubEventMapperImplIT {

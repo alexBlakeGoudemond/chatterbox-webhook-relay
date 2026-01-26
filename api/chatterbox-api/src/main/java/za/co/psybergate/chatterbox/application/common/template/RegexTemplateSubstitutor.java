@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class TemplateSubstitutorImpl implements TemplateSubstitutor {
+public class RegexTemplateSubstitutor implements TemplateSubstitutor {
 
     private static final Pattern PLACEHOLDER = Pattern.compile("\\$\\{([^}]+)}");
 

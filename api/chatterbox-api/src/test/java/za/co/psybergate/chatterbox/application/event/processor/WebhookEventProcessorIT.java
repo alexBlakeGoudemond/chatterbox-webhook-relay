@@ -15,26 +15,26 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.event.processor.EventProcessor;
-import za.co.psybergate.chatterbox.application.common.event.processor.EventProcessorImpl;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLoggerImpl;
-import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutorImpl;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.common.event.processor.WebhookEventProcessor;
+import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventStatus;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.event.model.*;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.factory.DiscordEmbeddedObjectFactoryImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsCardFactoryImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.factory.DiscordPayloadFactory;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.delivery.DiscordSenderServiceImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.delivery.DiscordWebhookSender;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsSenderServiceImpl;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsWebhookSender;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -46,26 +46,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        EventProcessorImpl.class,
+        WebhookEventProcessor.class,
         WebhookEventStoreJpaAdapter.class,
         GithubPolledEventEventStoreJpaAdapter.class,
         JsonFileReader.class,
-        JsonConverterImpl.class,
-        GithubEventMapperImpl.class,
-        WebhookLoggerImpl.class,
-        TeamsSenderServiceImpl.class,
-        TeamsCardFactoryImpl.class,
-        DiscordSenderServiceImpl.class,
-        DiscordEmbeddedObjectFactoryImpl.class,
-        TemplateSubstitutorImpl.class,
+        JacksonJsonConverter.class,
+        GithubWebhookEventMapper.class,
+        Slf4jWebhookLogger.class,
+        TeamsWebhookSender.class,
+        TeamsAdaptiveCardFactory.class,
+        DiscordWebhookSender.class,
+        DiscordPayloadFactory.class,
+        RegexTemplateSubstitutor.class,
         InfrastructurePropertiesConfig.class,
-        WebhookConfigurationResolverImpl.class,
+        PropertiesConfigurationResolver.class,
         HttpResponseHandler.class,
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @ActiveProfiles({"test", "live-url"})
-public class EventProcessorImplIT extends AbstractPostgresTestContainer {
+public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
 
     @MockitoBean
     private WebhookFilter webhookFilter;

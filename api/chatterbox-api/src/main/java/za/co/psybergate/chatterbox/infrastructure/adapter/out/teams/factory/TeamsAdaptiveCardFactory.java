@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
-import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutorImpl;
+import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxDeliveryTeamsProperties;
@@ -18,11 +18,11 @@ import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping
 
 @Component
 @RequiredArgsConstructor
-public class TeamsCardFactoryImpl implements TeamsCardFactoryPort {
+public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {
 
     private final ChatterboxDeliveryTeamsProperties teamsProperties;
 
-    private final TemplateSubstitutorImpl substitutionService;
+    private final RegexTemplateSubstitutor substitutionService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

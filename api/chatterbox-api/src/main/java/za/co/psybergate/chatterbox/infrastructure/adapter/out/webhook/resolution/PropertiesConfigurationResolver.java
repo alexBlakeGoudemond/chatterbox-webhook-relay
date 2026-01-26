@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class WebhookConfigurationResolverImpl implements WebhookConfigurationResolverPort {
+public class PropertiesConfigurationResolver implements WebhookConfigurationResolverPort {
 
     private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 

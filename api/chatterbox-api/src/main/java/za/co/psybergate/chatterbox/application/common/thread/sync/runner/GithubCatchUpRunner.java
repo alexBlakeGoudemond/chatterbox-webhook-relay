@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class CatchUpRunnerImpl implements CatchUpRunner, ApplicationRunner {
+public class GithubCatchUpRunner implements CatchUpRunner, ApplicationRunner {
 
     private final GithubWebhookPort webhookService;
 

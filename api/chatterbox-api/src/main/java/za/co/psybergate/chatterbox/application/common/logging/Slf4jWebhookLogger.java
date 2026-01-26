@@ -17,7 +17,7 @@ import java.util.List;
 // TODO BlakeGoudemond 2026/01/16 | consider breaking this impl up into pieces, maybe even look for sensitive data and tidy up before logging
 @Component
 @Slf4j
-public class WebhookLoggerImpl implements WebhookLogger {
+public class Slf4jWebhookLogger implements WebhookLogger {
 
     @Override
     public void logMissingSignature() {

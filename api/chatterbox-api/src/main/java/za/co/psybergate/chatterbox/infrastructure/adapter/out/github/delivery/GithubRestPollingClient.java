@@ -23,7 +23,7 @@ import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_COMMIT;
 import static za.co.psybergate.chatterbox.domain.api.EventType.POLL_PULL_REQUEST;
 
 @Service
-public class GithubPollingServiceImpl implements GithubPollingPort {
+public class GithubRestPollingClient implements GithubPollingPort {
 
     private final WebClient githubClient;
 
@@ -33,9 +33,9 @@ public class GithubPollingServiceImpl implements GithubPollingPort {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public GithubPollingServiceImpl(@Qualifier("githubClient") WebClient webClient,
-                                    ChatterboxSourceGithubPayloadProperties payloadProperties,
-                                    WebhookLogger webhookLogger) {
+    public GithubRestPollingClient(@Qualifier("githubClient") WebClient webClient,
+                                   ChatterboxSourceGithubPayloadProperties payloadProperties,
+                                   WebhookLogger webhookLogger) {
         this.githubClient = webClient;
         this.payloadProperties = payloadProperties;
         this.webhookLogger = webhookLogger;

@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
-import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutorImpl;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverterImpl;
+import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapperImpl;
+import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.domain.api.EventType;
 import za.co.psybergate.chatterbox.domain.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.factory.DiscordEmbeddedObjectFactoryImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.factory.DiscordPayloadFactory;
 import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.WebhookConfigurationResolverImpl;
+import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import java.util.HashMap;
@@ -30,16 +30,16 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
-        DiscordEmbeddedObjectFactoryImpl.class,
+        DiscordPayloadFactory.class,
         InfrastructurePropertiesConfig.class,
-        TemplateSubstitutorImpl.class,
+        RegexTemplateSubstitutor.class,
         HttpResponseHandler.class,
         JsonFileReader.class,
-        GithubEventMapperImpl.class,
-        WebhookConfigurationResolverImpl.class,
-        JsonConverterImpl.class,
+        GithubWebhookEventMapper.class,
+        PropertiesConfigurationResolver.class,
+        JacksonJsonConverter.class,
 })
-public class DiscordEmbeddedObjectFactoryImplIT {
+public class DiscordPayloadFactoryIT {
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;

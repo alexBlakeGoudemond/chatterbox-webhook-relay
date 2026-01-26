@@ -17,7 +17,7 @@ import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping
 
 @Component
 @RequiredArgsConstructor
-public class DiscordEmbeddedObjectFactoryImpl implements DiscordEmbeddedObjectFactoryPort {
+public class DiscordPayloadFactory implements DiscordEmbeddedObjectFactoryPort {
 
     private final ChatterboxDeliveryDiscordProperties discordProperties;
 

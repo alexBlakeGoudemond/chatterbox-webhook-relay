@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.infrastructure.common.security.PayloadCryptor;
-import za.co.psybergate.chatterbox.infrastructure.common.security.PayloadCryptorImpl;
+import za.co.psybergate.chatterbox.infrastructure.common.security.HmacSha256Cryptor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = PayloadCryptorImpl.class)
+@SpringBootTest(classes = HmacSha256Cryptor.class)
 public class PayloadCryptorTest {
 
     @Autowired

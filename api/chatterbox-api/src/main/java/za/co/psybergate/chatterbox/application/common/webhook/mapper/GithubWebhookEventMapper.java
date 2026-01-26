@@ -20,7 +20,7 @@ import static za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class GithubEventMapperImpl implements GithubEventMapper {
+public class GithubWebhookEventMapper implements GithubEventMapper {
 
     private final WebhookConfigurationResolverPort webhookConfigurationResolverPort;
 
