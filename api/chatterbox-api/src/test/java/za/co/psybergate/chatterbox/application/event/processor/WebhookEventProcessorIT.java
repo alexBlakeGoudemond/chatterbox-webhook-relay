@@ -22,8 +22,8 @@ import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubs
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -95,7 +95,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @BeforeEach
     public void setup() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
         this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, eventDto, jsonNode);
         this.persistedGithubPolledEvent = githubPolledEventStorePort.storeEvent(uniqueId, eventDto, jsonNode);
@@ -109,7 +109,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
         WebhookEventDto retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
-        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.eventStatus());
+        assertEquals(WebhookEventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.webhookEventStatus());
 
         List<WebhookEventDeliveryDto> webhookEventDeliveryLogs = webhookEventStorePort.getDeliveryLogs(persistedWebhookEvent.id());
         assertEquals(2, webhookEventDeliveryLogs.size());
@@ -127,7 +127,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
         GithubPolledEventDto retrievedPolledEvent = githubPolledEventStorePort.getEvent(persistedGithubPolledEvent.id());
         assertNotNull(retrievedPolledEvent);
         assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());
-        assertEquals(EventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.eventStatus());
+        assertEquals(WebhookEventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.webhookEventStatus());
 
         List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledEventStorePort.getDeliveryLogs(persistedGithubPolledEvent.id());
         assertEquals(2, polledEventDeliveryLogs.size());

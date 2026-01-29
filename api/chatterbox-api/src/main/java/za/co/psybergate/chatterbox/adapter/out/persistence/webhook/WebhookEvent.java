@@ -8,8 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
 
@@ -37,7 +37,7 @@ public class WebhookEvent {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "event_type", nullable = false)
-    private EventType eventType;
+    private WebhookEventType webhookEventType;
 
     @Column(name = "display_name", nullable = false)
     private String displayName;
@@ -61,7 +61,7 @@ public class WebhookEvent {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "event_status", nullable = false)
-    private EventStatus eventStatus;
+    private WebhookEventStatus webhookEventStatus;
 
     @Column(name = "error_message")
     private String errorMessage;
@@ -76,42 +76,42 @@ public class WebhookEvent {
 
     public WebhookEvent(String webhookId,
                         String repositoryFullName,
-                        EventType eventType,
+                        WebhookEventType webhookEventType,
                         String displayName,
                         String senderName,
                         String eventUrl,
                         String eventUrlDisplayText,
                         String extraDetail,
                         String payload,
-                        EventStatus eventStatus,
+                        WebhookEventStatus webhookEventStatus,
                         LocalDateTime receivedAt) {
         this.webhookId = webhookId;
         this.repositoryFullName = repositoryFullName;
-        this.eventType = eventType;
+        this.webhookEventType = webhookEventType;
         this.displayName = displayName;
         this.senderName = senderName;
         this.eventUrl = eventUrl;
         this.eventUrlDisplayText = eventUrlDisplayText;
         this.extraDetail = extraDetail;
         this.payload = payload;
-        this.eventStatus = eventStatus;
+        this.webhookEventStatus = webhookEventStatus;
         this.receivedAt = receivedAt;
     }
 
     public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(uniqueId, eventDto.repositoryName(), eventDto.eventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), EventStatus.RECEIVED, LocalDateTime.now());
+        this(uniqueId, eventDto.repositoryName(), eventDto.webhookEventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), WebhookEventStatus.RECEIVED, LocalDateTime.now());
     }
 
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         WebhookEvent that = (WebhookEvent) object;
-        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && eventType == that.eventType;
+        return Objects.equals(repositoryFullName, that.repositoryFullName) && Objects.equals(webhookId, that.webhookId) && webhookEventType == that.webhookEventType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(repositoryFullName, webhookId, eventType);
+        return Objects.hash(repositoryFullName, webhookId, webhookEventType);
     }
 
 }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class GithubRepositoryInformationDto {
 
     private final @NotNull LocalDateTime untilDate;
 
-    private final @NotNull Map<EventType, ArrayNode> githubEventTypeDetails;
+    private final @NotNull Map<WebhookEventType, ArrayNode> githubEventTypeDetails;
 
     public GithubRepositoryInformationDto(
             @NotNull LocalDateTime fromDate,
@@ -31,8 +31,8 @@ public class GithubRepositoryInformationDto {
         this.githubEventTypeDetails = new HashMap<>();
     }
 
-    public void add(EventType eventType, ArrayNode arrayNode) {
-        githubEventTypeDetails.put(eventType, arrayNode);
+    public void add(WebhookEventType webhookEventType, ArrayNode arrayNode) {
+        githubEventTypeDetails.put(webhookEventType, arrayNode);
     }
 
 }

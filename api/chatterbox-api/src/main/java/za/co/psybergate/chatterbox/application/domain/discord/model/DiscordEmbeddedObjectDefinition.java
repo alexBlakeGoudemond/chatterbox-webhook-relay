@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 
+// TODO BlakeGoudemond 2026/01/27 | should be in infra - if no longer support this, it would be deleter
 @Data
 public class DiscordEmbeddedObjectDefinition {
 

@@ -13,7 +13,7 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
@@ -61,7 +61,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenPayloadAndPolledEvent_WhenStoreEvent_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
         GithubPolledEventDto polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
         assertNotNull(polledEvent);
@@ -71,7 +71,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenGithubEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
         GithubPolledEventDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
         GithubPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");

@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -34,7 +34,7 @@ public class PropertiesConfigurationResolverTest {
     @DisplayName("Known eventType succeeds")
     @Test
     public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
-        GithubEventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH);
+        GithubEventMapping payloadMapping = resolver.getPayloadMapping(WebhookEventType.PUSH);
         assertNotNull(payloadMapping);
     }
 

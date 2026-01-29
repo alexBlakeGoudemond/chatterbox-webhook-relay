@@ -3,13 +3,13 @@ package za.co.psybergate.chatterbox.common.config.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/// [EventType] can be defined in the properties files and loaded here, as can [GithubEventMapping]
+/// [WebhookEventType] can be defined in the properties files and loaded here, as can [GithubEventMapping]
 @Data
 @ConfigurationProperties(prefix = "chatterbox.sources.github.payload")
 public class ChatterboxSourceGithubPayloadProperties {

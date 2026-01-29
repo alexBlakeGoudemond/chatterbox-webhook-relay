@@ -4,14 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 
-/// The EventTypes defined here are available via the
-/// Github API:
-/// [Github Event Types](https://docs.github.com/en/rest/using-the-rest-api/github-event-types?apiVersion=2022-11-28)
-///
 /// These properties may also be expected by Services and thus must
 /// be defined in the properties file
 @Getter
-public enum EventType {
+public enum WebhookEventType {
 
     PUSH,
     PULL_REQUEST,
@@ -19,17 +15,17 @@ public enum EventType {
     POLL_PULL_REQUEST;
 
     public static boolean contains(String eventMapping) {
-        for (EventType eventType : values()) {
-            if (eventType.name().equals(eventMapping))
+        for (WebhookEventType webhookEventType : values()) {
+            if (webhookEventType.name().equals(eventMapping))
                 return true;
         }
         return false;
     }
 
-    public static EventType get(String eventMapping) {
-        for (EventType eventType : values()) {
-            if (eventType.name().equalsIgnoreCase(eventMapping))
-                return eventType;
+    public static WebhookEventType get(String eventMapping) {
+        for (WebhookEventType webhookEventType : values()) {
+            if (webhookEventType.name().equalsIgnoreCase(eventMapping))
+                return webhookEventType;
         }
         throw new DomainException("Unknown event type " + eventMapping);
     }

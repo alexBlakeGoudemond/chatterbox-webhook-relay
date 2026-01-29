@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.application.port.out.webhook.resolution;
 
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping;
 
@@ -12,7 +12,7 @@ public interface WebhookConfigurationResolverPort {
 
     GithubEventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException;
 
-    GithubEventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException;
+    GithubEventMapping getPayloadMapping(WebhookEventType webhookEventType) throws UnrecognizedRequestException;
 
     String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
 

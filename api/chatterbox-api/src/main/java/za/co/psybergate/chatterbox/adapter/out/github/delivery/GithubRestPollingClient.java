@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubRepositoryInformationDto;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import static za.co.psybergate.chatterbox.application.domain.api.EventType.POLL_COMMIT;
-import static za.co.psybergate.chatterbox.application.domain.api.EventType.POLL_PULL_REQUEST;
+import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_COMMIT;
+import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_PULL_REQUEST;
 
 @Service
 public class GithubRestPollingClient implements GithubPollingPort {
@@ -51,12 +51,12 @@ public class GithubRestPollingClient implements GithubPollingPort {
         webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
         GithubRepositoryInformationDto informationDto = new GithubRepositoryInformationDto(fromDate, untilDate);
         for (String eventMapping : payloadProperties.getEventMapping().keySet()) {
-            boolean eventExists = EventType.contains(eventMapping);
+            boolean eventExists = WebhookEventType.contains(eventMapping);
             if (!eventExists) {
                 continue;
             }
-            EventType eventType = EventType.get(eventMapping);
-            switch (eventType) {
+            WebhookEventType webhookEventType = WebhookEventType.get(eventMapping);
+            switch (webhookEventType) {
                 case POLL_COMMIT:
                     informationDto.add(POLL_COMMIT, getCommitsSince(owner, repositoryName, fromDate, untilDate));
                     break;

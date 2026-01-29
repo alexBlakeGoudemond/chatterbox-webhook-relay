@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.application.domain.event.model;
 
-import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 
 import java.time.LocalDateTime;
 
@@ -9,14 +9,14 @@ public record GithubPolledEventDto(
         Long id,
         String repositoryFullName,
         String sourceId,
-        EventType eventType,
+        WebhookEventType webhookEventType,
         String displayName,
         String senderName,
         String eventUrl,
         String eventUrlDisplayText,
         String extraDetail,
         String payload,
-        EventStatus eventStatus,
+        WebhookEventStatus webhookEventStatus,
         String errorMessage,
         LocalDateTime fetchedAt,
         LocalDateTime processedAt) {

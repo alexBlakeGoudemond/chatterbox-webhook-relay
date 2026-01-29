@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
 
 import java.time.LocalDateTime;
@@ -37,17 +37,17 @@ public class GithubPolledEventDeliveryLog {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "event_status", nullable = false)
-    private EventStatus eventStatus;
+    private WebhookEventStatus webhookEventStatus;
 
     @Column(name = "delivered_at")
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime deliveredAt;
 
-    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, EventStatus eventStatus, LocalDateTime deliveredAt) {
+    public GithubPolledEventDeliveryLog(Long githubPolledEventId, String deliveryDestination, String deliveryDestinationUrl, WebhookEventStatus webhookEventStatus, LocalDateTime deliveredAt) {
         this.githubPolledEventId = githubPolledEventId;
         this.deliveryDestination = deliveryDestination;
         this.deliveryDestinationUrl = deliveryDestinationUrl;
-        this.eventStatus = eventStatus;
+        this.webhookEventStatus = webhookEventStatus;
         this.deliveredAt = deliveredAt;
     }
 

@@ -10,7 +10,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEvent
 import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
@@ -58,7 +58,7 @@ public class WebhookEventProcessor implements EventProcessor {
         for (WebhookEventDto webhookEventDto : webhookEventStorePort.getUnprocessedWebhooks(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), webhookEventDto);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), webhookEventDto);
-            webhookEventStorePort.setProcessedStatus(webhookEventDto, EventStatus.PROCESSED_SUCCESS);
+            webhookEventStorePort.setProcessedStatus(webhookEventDto, WebhookEventStatus.PROCESSED_SUCCESS);
         }
     }
 
@@ -66,7 +66,7 @@ public class WebhookEventProcessor implements EventProcessor {
         for (GithubPolledEventDto latestEventRecord : githubPolledEventStorePort.getUnprocessedEvents(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEventRecord);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEventRecord);
-            githubPolledEventStorePort.setProcessedStatus(latestEventRecord, EventStatus.PROCESSED_SUCCESS);
+            githubPolledEventStorePort.setProcessedStatus(latestEventRecord, WebhookEventStatus.PROCESSED_SUCCESS);
         }
     }
 
@@ -115,22 +115,22 @@ public class WebhookEventProcessor implements EventProcessor {
     }
 
     private HttpResponseDto deliverToDiscord(WebhookEventDto webhookEventDto, String discordDestinationUrl) {
-        GithubEventDto eventDto = new GithubEventDto(webhookEventDto.eventType(), webhookEventDto.displayName(), webhookEventDto.repositoryFullName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail());
+        GithubEventDto eventDto = new GithubEventDto(webhookEventDto.webhookEventType(), webhookEventDto.displayName(), webhookEventDto.repositoryFullName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail());
         return deliverToDiscord(eventDto, discordDestinationUrl);
     }
 
     private HttpResponseDto deliverToDiscord(GithubPolledEventDto polledEventRecord, String discordDestinationUrl) {
-        GithubEventDto eventDto = new GithubEventDto(polledEventRecord.eventType(), polledEventRecord.displayName(), polledEventRecord.repositoryFullName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail());
+        GithubEventDto eventDto = new GithubEventDto(polledEventRecord.webhookEventType(), polledEventRecord.displayName(), polledEventRecord.repositoryFullName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail());
         return deliverToDiscord(eventDto, discordDestinationUrl);
     }
 
     private HttpResponseDto deliverToTeams(GithubPolledEventDto polledEventRecord, String teamsDestinationChannel) {
-        GithubEventDto eventDto = new GithubEventDto(polledEventRecord.eventType(), polledEventRecord.displayName(), polledEventRecord.repositoryFullName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail());
+        GithubEventDto eventDto = new GithubEventDto(polledEventRecord.webhookEventType(), polledEventRecord.displayName(), polledEventRecord.repositoryFullName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail());
         return deliverToTeams(eventDto, teamsDestinationChannel);
     }
 
     private HttpResponseDto deliverToTeams(WebhookEventDto webhookEventDto, String teamsDestinationChannel) {
-        GithubEventDto eventDto = new GithubEventDto(webhookEventDto.eventType(), webhookEventDto.displayName(), webhookEventDto.repositoryFullName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail());
+        GithubEventDto eventDto = new GithubEventDto(webhookEventDto.webhookEventType(), webhookEventDto.displayName(), webhookEventDto.repositoryFullName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail());
         return deliverToTeams(eventDto, teamsDestinationChannel);
     }
 

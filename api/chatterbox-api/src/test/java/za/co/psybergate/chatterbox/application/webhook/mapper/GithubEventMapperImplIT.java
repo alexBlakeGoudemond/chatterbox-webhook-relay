@@ -13,7 +13,7 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -66,10 +66,10 @@ public class GithubEventMapperImplIT {
     @Test
     public void givenJsonString_WhenMap_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
         assertNotNull(eventDto);
-        assertEquals(EventType.PUSH, eventDto.eventType());
+        assertEquals(WebhookEventType.PUSH, eventDto.webhookEventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
@@ -90,7 +90,7 @@ public class GithubEventMapperImplIT {
     public void givenIncompleteJsonString_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadMissingProperties();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.map(EventType.PUSH, jsonNode));
+                () -> eventExtractor.map(WebhookEventType.PUSH, jsonNode));
     }
 
     @DisplayName("Missing Most JSON keys: Exception")
@@ -98,17 +98,17 @@ public class GithubEventMapperImplIT {
     public void givenPartialJsonString_WithRepositoryName_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadInvalidEventTypeAndRepositoryName();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.map(EventType.PUSH, jsonNode));
+                () -> eventExtractor.map(WebhookEventType.PUSH, jsonNode));
     }
 
     @DisplayName("No UrlDisplayText; then eventType")
     @Test
     public void givenJsonString_WithNoUrlDisplayText_WhenMap_ThenUrlDisplayTextIsEventType() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadNoDisplayText();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
         assertNotNull(eventDto);
-        assertEquals(EventType.PUSH, eventDto.eventType());
+        assertEquals(WebhookEventType.PUSH, eventDto.webhookEventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("http://localhost:abcd", eventDto.url());
@@ -120,10 +120,10 @@ public class GithubEventMapperImplIT {
     @Test
     public void givenJsonString_WithLongUrlDisplayText_WhenMap_ThenUrlDisplayTextIsTruncated() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadLongDisplayText();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
         assertNotNull(eventDto);
-        assertEquals(EventType.PUSH, eventDto.eventType());
+        assertEquals(WebhookEventType.PUSH, eventDto.webhookEventType());
         assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
         assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
         assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());

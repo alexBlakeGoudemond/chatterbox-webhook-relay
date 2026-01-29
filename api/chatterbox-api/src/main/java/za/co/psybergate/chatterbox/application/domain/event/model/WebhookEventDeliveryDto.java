@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.application.domain.event.model;
 
-import za.co.psybergate.chatterbox.application.domain.api.EventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +9,7 @@ public record WebhookEventDeliveryDto(
         Long webhookEventId,
         String deliveryDestination,
         String deliveryDestinationUrl,
-        EventStatus eventStatus,
+        WebhookEventStatus webhookEventStatus,
         LocalDateTime deliveredAt) {
 
 }

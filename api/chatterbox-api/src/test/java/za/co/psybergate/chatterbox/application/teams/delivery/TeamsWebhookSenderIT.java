@@ -17,7 +17,7 @@ import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubs
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
@@ -114,7 +114,7 @@ public class TeamsWebhookSenderIT {
 
     private GithubEventDto getGithubEventDto() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.map(EventType.PUSH, jsonNode);
+        return eventExtractor.map(WebhookEventType.PUSH, jsonNode);
     }
 
 }

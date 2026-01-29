@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.application.domain.api.EventType;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys;
 
@@ -26,7 +26,7 @@ public class GithubWebhookEventMapper implements GithubEventMapper {
 
     @Override
     public GithubEventDto map(String eventType, JsonNode payload) {
-        return map(EventType.get(eventType), payload);
+        return map(WebhookEventType.get(eventType), payload);
     }
 
     /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
@@ -35,8 +35,8 @@ public class GithubWebhookEventMapper implements GithubEventMapper {
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Override
     @Valid
-    public GithubEventDto map(EventType eventType, JsonNode payload) {
-        var payloadMapping = webhookConfigurationResolverPort.getPayloadMapping(eventType);
+    public GithubEventDto map(WebhookEventType webhookEventType, JsonNode payload) {
+        var payloadMapping = webhookConfigurationResolverPort.getPayloadMapping(webhookEventType);
         Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
         String repositoryName = read(payload, fields.get(REPOSITORYNAME));
@@ -47,7 +47,7 @@ public class GithubWebhookEventMapper implements GithubEventMapper {
         String url = read(payload, fields.get(URL));
         String extraDetail = read(payload, fields.get(EXTRADETAIL));
         return new GithubEventDto(
-                eventType,
+                webhookEventType,
                 displayName,
                 repositoryName,
                 senderName,
