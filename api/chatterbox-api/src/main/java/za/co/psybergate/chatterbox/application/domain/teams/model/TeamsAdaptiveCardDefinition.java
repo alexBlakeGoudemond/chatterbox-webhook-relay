@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
+// TODO BlakeGoudemond 2026/01/30 | should be in infra
 @Data
 public class TeamsAdaptiveCardDefinition {
 

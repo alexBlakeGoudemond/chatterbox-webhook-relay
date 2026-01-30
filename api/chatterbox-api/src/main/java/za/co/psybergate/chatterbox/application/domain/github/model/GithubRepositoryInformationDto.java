@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO BlakeGoudemond 2026/01/30 | should this be in infra? github could we swapped for gitlab
 @Getter
 @ToString
 @EqualsAndHashCode
