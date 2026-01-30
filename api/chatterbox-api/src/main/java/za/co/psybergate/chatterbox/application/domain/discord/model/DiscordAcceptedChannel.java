@@ -1,13 +1,7 @@
 package za.co.psybergate.chatterbox.application.domain.discord.model;
 
-import lombok.Data;
+import za.co.psybergate.chatterbox.application.domain.delivery.model.DeliveryChannelDetails;
 
-// TODO BlakeGoudemond 2026/01/27 | impl of super class: AcceptedChannel
-@Data
-public class DiscordAcceptedChannel {
-
-    private String channelName;
-
-    private String webhookUrl;
+public class DiscordAcceptedChannel extends DeliveryChannelDetails {
 
 }
