@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.DeliveryChannelDetails;
-import za.co.psybergate.chatterbox.application.domain.discord.model.DiscordAcceptedChannel;
+import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordAcceptedChannel;
 
 import java.util.List;
 
