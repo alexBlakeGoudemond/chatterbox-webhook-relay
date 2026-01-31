@@ -4,28 +4,28 @@ import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 
 import java.util.List;
 
 public interface GithubPolledEventStorePort {
 
-    List<GithubPolledEventDto> getUnprocessedEvents(String repositoryFullName);
+    List<WebhookPolledEventReceivedDto> getUnprocessedEvents(String repositoryFullName);
 
-    GithubPolledEventDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    WebhookPolledEventReceivedDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    List<GithubPolledEventDto> getLatestProcessedEvents(String repositoryFullName);
+    List<WebhookPolledEventReceivedDto> getLatestProcessedEvents(String repositoryFullName);
 
-    GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl);
 
-    GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl);
+    GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(GithubPolledEventDto polledEvent, WebhookEventStatus webhookEventStatus);
+    void setProcessedStatus(WebhookPolledEventReceivedDto polledEvent, WebhookEventStatus webhookEventStatus);
 
-    GithubPolledEventDto getEvent(Long id);
+    WebhookPolledEventReceivedDto getEvent(Long id);
 
     List<GithubPolledEventDeliveryDto> getDeliveryLogs(Long id);
 
-    GithubPolledEventDto getMostRecentPolledEvent(String repositoryFullName);
+    WebhookPolledEventReceivedDto getMostRecentPolledEvent(String repositoryFullName);
 
 }

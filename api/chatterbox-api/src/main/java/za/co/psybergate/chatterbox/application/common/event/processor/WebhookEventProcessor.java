@@ -13,7 +13,7 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
 
@@ -63,7 +63,7 @@ public class WebhookEventProcessor implements EventProcessor {
     }
 
     private void processPolledEvents(GithubDestinationMapping destinationMapping) {
-        for (GithubPolledEventDto latestEventRecord : githubPolledEventStorePort.getUnprocessedEvents(destinationMapping.getName())) {
+        for (WebhookPolledEventReceivedDto latestEventRecord : githubPolledEventStorePort.getUnprocessedEvents(destinationMapping.getName())) {
             deliverToTeams(destinationMapping.getTeamsDestinationChannel(), latestEventRecord);
             deliverToDiscord(destinationMapping.getDiscordDestinationChannel(), latestEventRecord);
             githubPolledEventStorePort.setProcessedStatus(latestEventRecord, WebhookEventStatus.PROCESSED_SUCCESS);
@@ -82,7 +82,7 @@ public class WebhookEventProcessor implements EventProcessor {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToTeams(String teamsDestinationChannel, GithubPolledEventDto polledEventRecord) {
+    private void deliverToTeams(String teamsDestinationChannel, WebhookPolledEventReceivedDto polledEventRecord) {
         String destinationUrl = webhookConfigurationResolverPort.getTeamsUrl(teamsDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToTeams(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.ACCEPTED.value()) {
@@ -93,7 +93,7 @@ public class WebhookEventProcessor implements EventProcessor {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void deliverToDiscord(String discordDestinationChannel, GithubPolledEventDto polledEventRecord) {
+    private void deliverToDiscord(String discordDestinationChannel, WebhookPolledEventReceivedDto polledEventRecord) {
         String destinationUrl = webhookConfigurationResolverPort.getDiscordUrl(discordDestinationChannel);
         HttpResponseDto httpResponseDto = deliverToDiscord(polledEventRecord, destinationUrl);
         if (httpResponseDto.httpStatus() == HttpStatus.NO_CONTENT.value()) {
@@ -119,12 +119,12 @@ public class WebhookEventProcessor implements EventProcessor {
         return deliverToDiscord(eventDto, discordDestinationUrl);
     }
 
-    private HttpResponseDto deliverToDiscord(GithubPolledEventDto polledEventRecord, String discordDestinationUrl) {
+    private HttpResponseDto deliverToDiscord(WebhookPolledEventReceivedDto polledEventRecord, String discordDestinationUrl) {
         GithubEventDto eventDto = new GithubEventDto(polledEventRecord.webhookEventType(), polledEventRecord.displayName(), polledEventRecord.repositoryFullName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail());
         return deliverToDiscord(eventDto, discordDestinationUrl);
     }
 
-    private HttpResponseDto deliverToTeams(GithubPolledEventDto polledEventRecord, String teamsDestinationChannel) {
+    private HttpResponseDto deliverToTeams(WebhookPolledEventReceivedDto polledEventRecord, String teamsDestinationChannel) {
         GithubEventDto eventDto = new GithubEventDto(polledEventRecord.webhookEventType(), polledEventRecord.displayName(), polledEventRecord.repositoryFullName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail());
         return deliverToTeams(eventDto, teamsDestinationChannel);
     }

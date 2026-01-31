@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebho
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
@@ -63,7 +63,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
-        GithubPolledEventDto polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
+        WebhookPolledEventReceivedDto polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
         assertNotNull(polledEvent);
     }
 
@@ -73,7 +73,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
-        GithubPolledEventDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
+        WebhookPolledEventReceivedDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
         GithubPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }

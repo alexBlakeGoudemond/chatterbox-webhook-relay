@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventJpaRepository;
@@ -35,8 +35,8 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
         this.webhookLogger = webhookLogger;
     }
 
-    public static GithubPolledEventDto mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
-        return new GithubPolledEventDto(
+    public static WebhookPolledEventReceivedDto mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
+        return new WebhookPolledEventReceivedDto(
                 polledEvent.getId(),
                 polledEvent.getRepositoryFullName(),
                 polledEvent.getSourceId(),
@@ -66,7 +66,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public List<GithubPolledEventDto> getLatestProcessedEvents(String repositoryFullName) {
+    public List<WebhookPolledEventReceivedDto> getLatestProcessedEvents(String repositoryFullName) {
         try {
             List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
@@ -82,7 +82,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public List<GithubPolledEventDto> getUnprocessedEvents(String repositoryFullName) {
+    public List<WebhookPolledEventReceivedDto> getUnprocessedEvents(String repositoryFullName) {
         try {
             List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.RECEIVED, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
@@ -98,12 +98,12 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public GithubPolledEventDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+    public WebhookPolledEventReceivedDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
         return storeEvent(webhook);
     }
 
-    private GithubPolledEventDto storeEvent(GithubPolledEvent event) {
+    private WebhookPolledEventReceivedDto storeEvent(GithubPolledEvent event) {
         webhookLogger.logStoringEvent(event);
         try {
             GithubPolledEvent polledEvent = repository.save(event);
@@ -115,13 +115,13 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl) {
+    public GithubPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(GithubPolledEventDto polledEvent, String destinationName, String destinationUrl) {
+    public GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
@@ -138,7 +138,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public void setProcessedStatus(GithubPolledEventDto polledEventRecord, WebhookEventStatus webhookEventStatus) {
+    public void setProcessedStatus(WebhookPolledEventReceivedDto polledEventRecord, WebhookEventStatus webhookEventStatus) {
         GithubPolledEvent polledEvent = new GithubPolledEvent(polledEventRecord.webhookEventType(), polledEventRecord.sourceId(), polledEventRecord.repositoryFullName(), polledEventRecord.displayName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail(), polledEventRecord.payload(), WebhookEventStatus.RECEIVED, LocalDateTime.now());
         polledEvent.setId(polledEventRecord.id());
         polledEvent.setWebhookEventStatus(webhookEventStatus);
@@ -151,7 +151,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public GithubPolledEventDto getEvent(Long id) {
+    public WebhookPolledEventReceivedDto getEvent(Long id) {
         GithubPolledEvent polledEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
         return mapToGithubPolledEventRecord(polledEvent);
@@ -170,8 +170,8 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public GithubPolledEventDto getMostRecentPolledEvent(String repositoryFullName) {
-        List<GithubPolledEventDto> polledEvents = getLatestProcessedEvents(repositoryFullName);
+    public WebhookPolledEventReceivedDto getMostRecentPolledEvent(String repositoryFullName) {
+        List<WebhookPolledEventReceivedDto> polledEvents = getLatestProcessedEvents(repositoryFullName);
         if (polledEvents.isEmpty()) {
             throw new ApplicationException("No polled events found for repository " + repositoryFullName);
         }
