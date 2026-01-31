@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.application.domain.api.GithubApiJsonKeys.FULL_NAME;
+import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubApiJsonKeys.FULL_NAME;
 
 @Service
 @RequiredArgsConstructor
