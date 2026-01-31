@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolled
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
@@ -54,8 +54,8 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
         );
     }
 
-    private static GithubPolledEventDeliveryDto mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
-        return new GithubPolledEventDeliveryDto(
+    private static WebhookPolledEventDeliveryDto mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
+        return new WebhookPolledEventDeliveryDto(
                 deliveryLog.getId(),
                 deliveryLog.getGithubPolledEventId(),
                 deliveryLog.getDeliveryDestination(),
@@ -115,18 +115,18 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public GithubPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
+    public WebhookPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
+    public WebhookPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
         GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
-    private GithubPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog) {
+    private WebhookPolledEventDeliveryDto storeSuccessfulDelivery(GithubPolledEventDeliveryLog polledEventDeliveryLog) {
         webhookLogger.logDeliveringEvent(polledEventDeliveryLog);
         try {
             GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
@@ -158,7 +158,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public List<GithubPolledEventDeliveryDto> getDeliveryLogs(Long id) {
+    public List<WebhookPolledEventDeliveryDto> getDeliveryLogs(Long id) {
         try {
             List<GithubPolledEventDeliveryLog> deliveryLogs = logRepository.findAllByGithubPolledEventId(id);
             return deliveryLogs.stream()

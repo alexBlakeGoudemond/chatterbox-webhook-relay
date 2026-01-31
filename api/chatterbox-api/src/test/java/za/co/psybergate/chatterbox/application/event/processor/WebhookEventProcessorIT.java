@@ -129,9 +129,9 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
         assertEquals(retrievedPolledEvent.id(), persistedGithubPolledEvent.id());
         assertEquals(WebhookEventStatus.PROCESSED_SUCCESS, retrievedPolledEvent.webhookEventStatus());
 
-        List<GithubPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledEventStorePort.getDeliveryLogs(persistedGithubPolledEvent.id());
+        List<WebhookPolledEventDeliveryDto> polledEventDeliveryLogs = githubPolledEventStorePort.getDeliveryLogs(persistedGithubPolledEvent.id());
         assertEquals(2, polledEventDeliveryLogs.size());
-        for (GithubPolledEventDeliveryDto polledEventDeliveryLog : polledEventDeliveryLogs) {
+        for (WebhookPolledEventDeliveryDto polledEventDeliveryLog : polledEventDeliveryLogs) {
             assertNotNull(polledEventDeliveryLog);
             assertEquals(polledEventDeliveryLog.githubPolledEventId(), retrievedPolledEvent.id());
         }

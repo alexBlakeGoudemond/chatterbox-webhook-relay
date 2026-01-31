@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.application.port.out.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 
 import java.util.List;
@@ -16,15 +16,15 @@ public interface GithubPolledEventStorePort {
 
     List<WebhookPolledEventReceivedDto> getLatestProcessedEvents(String repositoryFullName);
 
-    GithubPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl);
+    WebhookPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl);
 
-    GithubPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl);
+    WebhookPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl);
 
     void setProcessedStatus(WebhookPolledEventReceivedDto polledEvent, WebhookEventStatus webhookEventStatus);
 
     WebhookPolledEventReceivedDto getEvent(Long id);
 
-    List<GithubPolledEventDeliveryDto> getDeliveryLogs(Long id);
+    List<WebhookPolledEventDeliveryDto> getDeliveryLogs(Long id);
 
     WebhookPolledEventReceivedDto getMostRecentPolledEvent(String repositoryFullName);
 
