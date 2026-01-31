@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.application.common.logging;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
@@ -53,7 +53,7 @@ public interface WebhookLogger {
 
     void logRunnerFoundNoPreviousWebhooks(String repositoryFullName);
 
-    void logRunnerFoundPreviousWebhook(WebhookEventDto latestWebhookEvent);
+    void logRunnerFoundPreviousWebhook(WebhookEventReceivedDto latestWebhookEvent);
 
     void logRunnerFoundNoPreviousPolledEvents(String repositoryFullName);
 

@@ -4,28 +4,28 @@ import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 
 import java.util.List;
 
 public interface WebhookEventStorePort {
 
-    List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName);
+    List<WebhookEventReceivedDto> getLatestProcessedWebhooks(String repositoryFullName);
 
-    List<WebhookEventDto> getUnprocessedWebhooks(String repositoryFullName);
+    List<WebhookEventReceivedDto> getUnprocessedWebhooks(String repositoryFullName);
 
-    WebhookEventDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    WebhookEventReceivedDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
 
-    WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventDto webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventReceivedDto webhookEvent, String destinationName, String destinationUrl);
 
-    WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventDto webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventReceivedDto webhookEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(WebhookEventDto webhookEvent, WebhookEventStatus webhookEventStatus);
+    void setProcessedStatus(WebhookEventReceivedDto webhookEvent, WebhookEventStatus webhookEventStatus);
 
-    WebhookEventDto getWebhook(Long id);
+    WebhookEventReceivedDto getWebhook(Long id);
 
     List<WebhookEventDeliveryDto> getDeliveryLogs(Long id);
 
-    WebhookEventDto getMostRecentWebhook(String repositoryName);
+    WebhookEventReceivedDto getMostRecentWebhook(String repositoryName);
 
 }

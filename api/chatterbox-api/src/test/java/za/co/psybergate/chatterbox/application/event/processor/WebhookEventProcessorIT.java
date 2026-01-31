@@ -88,7 +88,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @Autowired
     private GithubEventMapper eventExtractor;
 
-    private WebhookEventDto persistedWebhookEvent;
+    private WebhookEventReceivedDto persistedWebhookEvent;
 
     private GithubPolledEventDto persistedGithubPolledEvent;
 
@@ -106,7 +106,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
         eventProcessor.processWebhookEvents();
-        WebhookEventDto retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
+        WebhookEventReceivedDto retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());
         assertEquals(WebhookEventStatus.PROCESSED_SUCCESS, retrievedWebhookEvent.webhookEventStatus());

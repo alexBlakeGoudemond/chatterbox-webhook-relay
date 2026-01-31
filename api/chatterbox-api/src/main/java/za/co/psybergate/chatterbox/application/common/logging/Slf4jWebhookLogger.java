@@ -6,7 +6,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
@@ -120,7 +120,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousWebhook(WebhookEventDto latestWebhookEvent) {
+    public void logRunnerFoundPreviousWebhook(WebhookEventReceivedDto latestWebhookEvent) {
         log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
     }
 

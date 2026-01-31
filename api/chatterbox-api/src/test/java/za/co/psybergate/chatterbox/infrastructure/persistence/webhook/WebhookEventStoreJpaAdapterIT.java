@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebho
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
@@ -63,7 +63,7 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
-        WebhookEventDto webhookEvent = adapter.storeWebhook("abc123", eventDto, jsonNode);
+        WebhookEventReceivedDto webhookEvent = adapter.storeWebhook("abc123", eventDto, jsonNode);
         assertNotNull(webhookEvent);
     }
 
@@ -73,8 +73,8 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         WebhookEvent webhookEvent = new WebhookEvent("abc123", eventDto, jsonNode);
-        WebhookEventDto webhookEventDto = WebhookEventStoreJpaAdapter.mapToWebhookEventRecord(webhookEvent);
-        WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(webhookEventDto, "exampleDestination", "exampleDestinationUrl");
+        WebhookEventReceivedDto webhookEventReceivedDto = WebhookEventStoreJpaAdapter.mapToWebhookEventRecord(webhookEvent);
+        WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(webhookEventReceivedDto, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(webhookEventDeliveryLog);
     }
 

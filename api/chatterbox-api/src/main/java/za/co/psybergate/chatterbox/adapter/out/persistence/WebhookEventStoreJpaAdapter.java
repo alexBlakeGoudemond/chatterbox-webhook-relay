@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventJpaRepository;
@@ -36,8 +36,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
         this.webhookLogger = webhookLogger;
     }
 
-    public static WebhookEventDto mapToWebhookEventRecord(WebhookEvent webhookEvent) {
-        return new WebhookEventDto(webhookEvent.getId(),
+    public static WebhookEventReceivedDto mapToWebhookEventRecord(WebhookEvent webhookEvent) {
+        return new WebhookEventReceivedDto(webhookEvent.getId(),
                 webhookEvent.getRepositoryFullName(),
                 webhookEvent.getWebhookId(),
                 webhookEvent.getWebhookEventType(),
@@ -65,7 +65,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName) {
+    public List<WebhookEventReceivedDto> getLatestProcessedWebhooks(String repositoryFullName) {
         try {
             List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (webhookEvents.isEmpty()) {
@@ -81,7 +81,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public List<WebhookEventDto> getUnprocessedWebhooks(String repositoryFullName) {
+    public List<WebhookEventReceivedDto> getUnprocessedWebhooks(String repositoryFullName) {
         try {
             List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.RECEIVED, Limit.of(5));
             if (webhookEvents.isEmpty()) {
@@ -97,12 +97,12 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
+    public WebhookEventReceivedDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
         WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
         return storeWebhook(webhook);
     }
 
-    private WebhookEventDto storeWebhook(WebhookEvent webhook) {
+    private WebhookEventReceivedDto storeWebhook(WebhookEvent webhook) {
         webhookLogger.logStoringEvent(webhook);
         try {
             WebhookEvent webhookEvent = repository.save(webhook);
@@ -114,14 +114,14 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventDto webhookEventDto, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventDto.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
+    public WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventReceivedDto webhookEventReceivedDto, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventReceivedDto.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
     @Override
-    public WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventDto webhookEventDto, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventDto.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
+    public WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventReceivedDto webhookEventReceivedDto, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventReceivedDto.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
@@ -137,9 +137,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public void setProcessedStatus(WebhookEventDto webhookEventDto, WebhookEventStatus webhookEventStatus) {
-        WebhookEvent webhookEvent = new WebhookEvent(webhookEventDto.webhookId(), webhookEventDto.repositoryFullName(), webhookEventDto.webhookEventType(), webhookEventDto.displayName(), webhookEventDto.senderName(), webhookEventDto.eventUrl(), webhookEventDto.eventUrlDisplayText(), webhookEventDto.extraDetail(), webhookEventDto.payload(), webhookEventDto.webhookEventStatus(), webhookEventDto.receivedAt());
-        webhookEvent.setId(webhookEventDto.id());
+    public void setProcessedStatus(WebhookEventReceivedDto webhookEventReceivedDto, WebhookEventStatus webhookEventStatus) {
+        WebhookEvent webhookEvent = new WebhookEvent(webhookEventReceivedDto.webhookId(), webhookEventReceivedDto.repositoryFullName(), webhookEventReceivedDto.webhookEventType(), webhookEventReceivedDto.displayName(), webhookEventReceivedDto.senderName(), webhookEventReceivedDto.eventUrl(), webhookEventReceivedDto.eventUrlDisplayText(), webhookEventReceivedDto.extraDetail(), webhookEventReceivedDto.payload(), webhookEventReceivedDto.webhookEventStatus(), webhookEventReceivedDto.receivedAt());
+        webhookEvent.setId(webhookEventReceivedDto.id());
         webhookEvent.setWebhookEventStatus(webhookEventStatus);
         webhookEvent.setProcessedAt(LocalDateTime.now());
         try {
@@ -150,7 +150,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventDto getWebhook(Long id) {
+    public WebhookEventReceivedDto getWebhook(Long id) {
         WebhookEvent webhookEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
         return mapToWebhookEventRecord(webhookEvent);
@@ -169,8 +169,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventDto getMostRecentWebhook(String repositoryName) {
-        List<WebhookEventDto> webhookEvents = getLatestProcessedWebhooks(repositoryName);
+    public WebhookEventReceivedDto getMostRecentWebhook(String repositoryName) {
+        List<WebhookEventReceivedDto> webhookEvents = getLatestProcessedWebhooks(repositoryName);
         if (webhookEvents.isEmpty()) {
             throw new ApplicationException("No WebhookEvents found for repository " + repositoryName);
         }
