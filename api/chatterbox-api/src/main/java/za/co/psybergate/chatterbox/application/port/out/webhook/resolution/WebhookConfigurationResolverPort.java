@@ -2,8 +2,8 @@ package za.co.psybergate.chatterbox.application.port.out.webhook.resolution;
 
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubDestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 
 import java.util.List;
 

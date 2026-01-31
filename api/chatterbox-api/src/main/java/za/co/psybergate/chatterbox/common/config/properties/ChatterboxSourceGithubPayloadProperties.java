@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 
 import java.util.HashMap;
 import java.util.Map;

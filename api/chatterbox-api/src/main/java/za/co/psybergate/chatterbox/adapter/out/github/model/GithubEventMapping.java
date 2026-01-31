@@ -1,11 +1,10 @@
-package za.co.psybergate.chatterbox.application.domain.github.model;
+package za.co.psybergate.chatterbox.adapter.out.github.model;
 
 import lombok.Data;
 import lombok.Getter;
 
 import java.util.Map;
 
-// TODO BlakeGoudemond 2026/01/30 | should this be in infra? github could we swapped for gitlab
 @Data
 public class GithubEventMapping {
 

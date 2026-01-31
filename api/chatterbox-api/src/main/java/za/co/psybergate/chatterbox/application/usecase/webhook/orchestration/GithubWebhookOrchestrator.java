@@ -21,7 +21,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubRepositoryInformationDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

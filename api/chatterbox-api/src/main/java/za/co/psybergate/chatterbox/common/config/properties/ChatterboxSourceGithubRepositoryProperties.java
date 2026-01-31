@@ -2,7 +2,7 @@ package za.co.psybergate.chatterbox.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
 
 import java.util.List;
 

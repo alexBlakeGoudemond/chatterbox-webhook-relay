@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpRespons
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.GithubPolledEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDto;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
 
 import java.util.List;
 

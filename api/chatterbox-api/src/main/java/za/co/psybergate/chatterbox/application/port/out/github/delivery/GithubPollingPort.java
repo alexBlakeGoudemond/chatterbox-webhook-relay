@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.application.port.out.github.delivery;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import za.co.psybergate.chatterbox.application.domain.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubRepositoryInformationDto;
 
 import java.time.LocalDateTime;
 

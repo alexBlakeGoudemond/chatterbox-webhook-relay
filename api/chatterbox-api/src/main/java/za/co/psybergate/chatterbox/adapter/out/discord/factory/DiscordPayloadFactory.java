@@ -13,7 +13,7 @@ import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryDi
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor

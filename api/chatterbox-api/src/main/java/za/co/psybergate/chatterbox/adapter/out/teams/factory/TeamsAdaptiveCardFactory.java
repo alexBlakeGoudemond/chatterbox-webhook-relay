@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.application.domain.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor
