@@ -7,7 +7,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
@@ -68,7 +68,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     @Override
     public List<WebhookPolledEventReceivedDto> getLatestProcessedEvents(String repositoryFullName) {
         try {
-            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS, Limit.of(5));
+            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndWebhookEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
                 return List.of();
@@ -84,7 +84,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     @Override
     public List<WebhookPolledEventReceivedDto> getUnprocessedEvents(String repositoryFullName) {
         try {
-            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.RECEIVED, Limit.of(5));
+            List<GithubPolledEvent> githubPolledEvents = repository.findByRepositoryFullNameAndWebhookEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.RECEIVED, Limit.of(5));
             if (githubPolledEvents.isEmpty()) {
                 webhookLogger.logGithubPolledEventsEmpty(repositoryFullName);
                 return List.of();

@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEvent
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;

@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface WebhookEventJpaRepository extends JpaRepository<WebhookEvent, Long> {
 
-    List<WebhookEvent> findByRepositoryFullNameAndEventStatusOrderByIdDesc(String repositoryFullName, WebhookEventStatus webhookEventStatus, Limit limit);
+    List<WebhookEvent> findByRepositoryFullNameAndWebhookEventStatusOrderByIdDesc(String repositoryFullName, WebhookEventStatus webhookEventStatus, Limit limit);
 
 }

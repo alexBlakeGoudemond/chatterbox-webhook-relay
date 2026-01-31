@@ -8,7 +8,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryDiscordProperties;
 
 import java.util.Map;

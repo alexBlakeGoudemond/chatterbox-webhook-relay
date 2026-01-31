@@ -7,7 +7,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
@@ -67,7 +67,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     @Override
     public List<WebhookEventReceivedDto> getLatestProcessedWebhooks(String repositoryFullName) {
         try {
-            List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS, Limit.of(5));
+            List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndWebhookEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS, Limit.of(5));
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
                 return List.of();
@@ -83,7 +83,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     @Override
     public List<WebhookEventReceivedDto> getUnprocessedWebhooks(String repositoryFullName) {
         try {
-            List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.RECEIVED, Limit.of(5));
+            List<WebhookEvent> webhookEvents = repository.findByRepositoryFullNameAndWebhookEventStatusOrderByIdDesc(repositoryFullName, WebhookEventStatus.RECEIVED, Limit.of(5));
             if (webhookEvents.isEmpty()) {
                 webhookLogger.logWebhookEventsEmpty(repositoryFullName);
                 return List.of();

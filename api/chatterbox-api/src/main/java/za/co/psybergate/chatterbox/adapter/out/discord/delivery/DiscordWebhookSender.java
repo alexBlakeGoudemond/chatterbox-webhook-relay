@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.application.port.out.discord.delivery.Discord
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
 import java.io.IOException;

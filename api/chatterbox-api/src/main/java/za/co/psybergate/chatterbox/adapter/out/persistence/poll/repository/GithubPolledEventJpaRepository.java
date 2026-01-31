@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface GithubPolledEventJpaRepository extends JpaRepository<GithubPolledEvent, Long> {
 
-    List<GithubPolledEvent> findByRepositoryFullNameAndEventStatusOrderByIdDesc(String repositoryFullName, WebhookEventStatus webhookEventStatus, Limit limit);
+    List<GithubPolledEvent> findByRepositoryFullNameAndWebhookEventStatusOrderByIdDesc(String repositoryFullName, WebhookEventStatus webhookEventStatus, Limit limit);
 
 }

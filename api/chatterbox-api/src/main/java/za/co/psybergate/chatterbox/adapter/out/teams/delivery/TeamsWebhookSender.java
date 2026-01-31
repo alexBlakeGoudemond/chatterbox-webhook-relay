@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSend
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
 import java.io.IOException;
