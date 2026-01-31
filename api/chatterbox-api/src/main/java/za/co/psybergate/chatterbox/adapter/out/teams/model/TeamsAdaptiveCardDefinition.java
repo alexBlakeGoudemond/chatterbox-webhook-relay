@@ -1,11 +1,10 @@
-package za.co.psybergate.chatterbox.application.domain.teams.model;
+package za.co.psybergate.chatterbox.adapter.out.teams.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
 
-// TODO BlakeGoudemond 2026/01/30 | should be in infra
 @Data
 public class TeamsAdaptiveCardDefinition {
 

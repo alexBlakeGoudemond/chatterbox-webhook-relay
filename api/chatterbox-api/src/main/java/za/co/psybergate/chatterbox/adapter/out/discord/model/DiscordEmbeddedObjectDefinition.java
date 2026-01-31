@@ -1,10 +1,9 @@
-package za.co.psybergate.chatterbox.application.domain.discord.model;
+package za.co.psybergate.chatterbox.adapter.out.discord.model;
 
 import lombok.Data;
 
 import java.util.List;
 
-// TODO BlakeGoudemond 2026/01/27 | should be in infra - if no longer support this, it would be deleted
 @Data
 public class DiscordEmbeddedObjectDefinition {
 
