@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.event.processor;
+package za.co.psybergate.chatterbox.application.port.in.event.processor;
 
 public interface EventProcessor {
 
