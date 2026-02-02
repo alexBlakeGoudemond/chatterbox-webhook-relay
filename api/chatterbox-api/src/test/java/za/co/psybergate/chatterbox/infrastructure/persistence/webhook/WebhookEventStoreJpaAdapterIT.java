@@ -15,6 +15,7 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEvent
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -74,8 +75,24 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         WebhookEvent webhookEvent = new WebhookEvent("abc123", eventDto, jsonNode);
         WebhookEventReceivedDto webhookEventReceivedDto = WebhookEventStoreJpaAdapter.mapToWebhookEventRecord(webhookEvent);
-        WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(webhookEventReceivedDto, "exampleDestination", "exampleDestinationUrl");
+        OutboundEvent outboundEvent = mapToOutboundEvent(webhookEventReceivedDto, jsonNode);
+        WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(webhookEventDeliveryLog);
+    }
+
+    private OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto webhookEventReceivedDto, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                "0123456789abcde",
+                WebhookEventType.PUSH.name(),
+                webhookEventReceivedDto.displayName(),
+                webhookEventReceivedDto.repositoryFullName(),
+                webhookEventReceivedDto.senderName(),
+                webhookEventReceivedDto.eventUrl(),
+                webhookEventReceivedDto.eventUrlDisplayText(),
+                webhookEventReceivedDto.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
 }

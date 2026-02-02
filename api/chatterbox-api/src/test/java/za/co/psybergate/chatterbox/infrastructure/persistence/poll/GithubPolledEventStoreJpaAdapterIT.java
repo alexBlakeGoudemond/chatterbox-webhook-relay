@@ -15,6 +15,8 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEvent
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -74,8 +76,24 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
         WebhookPolledEventReceivedDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
-        WebhookPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
+        OutboundEvent outboundEvent = mapToOutboundEvent(polledEvent, jsonNode);
+        WebhookPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
+    }
+
+    private OutboundEvent mapToOutboundEvent(WebhookPolledEventReceivedDto webhookPolledEventReceivedDto, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                "0123456789abcde",
+                WebhookEventType.PUSH.name(),
+                webhookPolledEventReceivedDto.displayName(),
+                webhookPolledEventReceivedDto.repositoryFullName(),
+                webhookPolledEventReceivedDto.senderName(),
+                webhookPolledEventReceivedDto.eventUrl(),
+                webhookPolledEventReceivedDto.eventUrlDisplayText(),
+                webhookPolledEventReceivedDto.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
 }

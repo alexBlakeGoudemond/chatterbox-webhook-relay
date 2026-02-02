@@ -13,6 +13,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
@@ -82,21 +84,20 @@ public class TeamsWebhookSenderIT {
     @DisplayName("TeamsSenderService can process DTO")
     @Test
     public void givenGithubEventDto_WhenTeamsSenderServiceProcessesDto_ThenSuccess() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getOutboundEvent();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        HttpResponseDto httpResponseDto = teamsWebhookSender.deliver(eventDto, teamsDestinationUrl);
-        assertNotNull(httpResponseDto);
-        assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
+        DeliveryResult deliveryResult = teamsWebhookSender.deliver(outboundEvent, teamsDestinationUrl);
+        assertEquals(DeliveryResult.SUCCESS, deliveryResult);
     }
 
     @DisplayName("Bad HttpPost yields 401")
     @Test
     public void givenGithubEventDto_AndBadHttpPost_WhenExecuteHttp_ThenUnauthorised() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getOutboundEvent();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(eventDto);
+        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(outboundEvent);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = teamsWebhookSender.executeHttpPostRequest(httpPost);
@@ -112,9 +113,25 @@ public class TeamsWebhookSenderIT {
         return httpPost;
     }
 
-    private GithubEventDto getGithubEventDto() {
+    private OutboundEvent getOutboundEvent() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        GithubEventDto githubEventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        return mapToOutboundEvent(githubEventDto, jsonNode);
+    }
+
+    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                "0123456789abcde",
+                event.webhookEventType().name(),
+                event.displayName(),
+                event.repositoryName(),
+                event.senderName(),
+                event.url(),
+                event.urlDisplayText(),
+                event.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
 }

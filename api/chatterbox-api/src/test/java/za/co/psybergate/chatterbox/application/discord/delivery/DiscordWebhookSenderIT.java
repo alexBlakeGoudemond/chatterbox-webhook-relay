@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
@@ -82,21 +84,20 @@ public class DiscordWebhookSenderIT {
     @DisplayName("DiscordSenderService can process DTO")
     @Test
     public void givenGithubEventDto_WhenDiscordSenderServiceProcessesDto_ThenSuccess() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(outboundEvent);
 
-        HttpResponseDto httpResponseDto = discordWebhookSender.deliver(eventDto, teamsDestinationUrl);
-        assertNotNull(httpResponseDto);
-        assertEquals(HttpStatus.NO_CONTENT.value(), httpResponseDto.httpStatus());
+        DeliveryResult httpResponseDto = discordWebhookSender.deliver(outboundEvent, teamsDestinationUrl);
+        assertEquals(DeliveryResult.SUCCESS, httpResponseDto);
     }
 
     @DisplayName("Bad HttpPost yields 401")
     @Test
     public void givenGithubEventDto_AndBadHttpPost_WhenExecuteHttp_ThenUnauthorised() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(eventDto);
+        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(outboundEvent);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = discordWebhookSender.executeHttpPostRequest(httpPost);
@@ -104,9 +105,25 @@ public class DiscordWebhookSenderIT {
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
     }
 
-    private GithubEventDto getGithubEventDto() {
+    private OutboundEvent getGithubEventDto() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        GithubEventDto githubEventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        return mapToOutboundEvent(githubEventDto, jsonNode);
+    }
+
+    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                "0123456789abcde",
+                event.webhookEventType().name(),
+                event.displayName(),
+                event.repositoryName(),
+                event.senderName(),
+                event.url(),
+                event.urlDisplayText(),
+                event.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
     private HttpPost getHttpPostWithAuthorizationHeaders(String teamsDestination, String jsonString) {

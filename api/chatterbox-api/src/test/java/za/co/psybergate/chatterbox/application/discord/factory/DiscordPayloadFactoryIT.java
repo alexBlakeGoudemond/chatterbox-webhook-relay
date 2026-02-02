@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
@@ -92,8 +93,9 @@ public class DiscordPayloadFactoryIT {
     private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = mapToOutboundEvent(eventDto, jsonNode);
         try {
-            return discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(eventDto);
+            return discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(outboundEvent);
         } catch (Exception e) {
             return null;
         }
@@ -116,6 +118,21 @@ public class DiscordPayloadFactoryIT {
         propertiesToUse.put("urlDisplayText", "Test message Is here!");
         propertiesToUse.put("displayName", "Pull Request Event");
         return propertiesToUse;
+    }
+
+    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                "0123456789abcde",
+                event.webhookEventType().name(),
+                event.displayName(),
+                event.repositoryName(),
+                event.senderName(),
+                event.url(),
+                event.urlDisplayText(),
+                event.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
 }
