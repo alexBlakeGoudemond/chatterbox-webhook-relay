@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryDiscordProperties;
 
 import java.util.Map;
@@ -48,20 +48,20 @@ public class DiscordPayloadFactory implements DiscordEmbeddedObjectFactoryPort {
     }
 
     @Override
-    public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto) {
+    public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(OutboundEvent outboundEvent) {
         Map<String, String> values = Map.of(
-                "displayName", dto.displayName(),
-                REPOSITORYNAME.getFieldName(), dto.repositoryName(),
-                SENDERNAME.getFieldName(), dto.senderName(),
-                URL.getFieldName(), dto.url(),
-                URLDISPLAYTEXT.getFieldName(), dto.urlDisplayText(),
-                EXTRADETAIL.getFieldName(), dto.extraDetail()
+                "displayName", outboundEvent.displayText(),
+                REPOSITORYNAME.getFieldName(), outboundEvent.repository(),
+                SENDERNAME.getFieldName(), outboundEvent.actor(),
+                URL.getFieldName(), outboundEvent.url(),
+                URLDISPLAYTEXT.getFieldName(), outboundEvent.displayText(),
+                EXTRADETAIL.getFieldName(), outboundEvent.extra()
         );
         return buildEmbeddedObjectDefinition(values);
     }
 
     @Override
-    public String getAsDiscordPayloadString(GithubEventDto eventDto) throws ApplicationException {
+    public String getAsDiscordPayloadString(OutboundEvent eventDto) throws ApplicationException {
         DiscordEmbeddedObjectDefinition embeddedObjectDefinition = buildEmbeddedObjectDefinition(eventDto);
         String teamsPayload;
         try {

@@ -2,6 +2,7 @@ package za.co.psybergate.chatterbox.adapter.out.webhook.resolution;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.adapter.out.delivery.model.DeliveryMapping;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
@@ -43,8 +44,7 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
             if (!destinationMapping.source().equals(repositoryName)) {
                 continue;
             }
-            // TODO BlakeGoudemond 2026/02/02 | go through map and find teams key, then use value
-            return destinationTeamsProperties.getUrl(destinationMapping.getTeamsDestinationChannel());
+            return destinationTeamsProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.MS_TEAMS));
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
@@ -55,8 +55,7 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
             if (!destinationMapping.source().equalsIgnoreCase(repositoryName)) {
                 continue;
             }
-            // TODO BlakeGoudemond 2026/02/02 | go through map and find discord key, then use value
-            return destinationDiscordProperties.getUrl(destinationMapping.getDiscordDestinationChannel());
+            return destinationDiscordProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.DISCORD));
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }

@@ -6,6 +6,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
@@ -60,13 +61,13 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logSendingDtoToTeams(GithubEventDto eventDto, String teamsDestination) {
-        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), teamsDestination);
+    public void logSendingDtoToTeams(OutboundEvent outboundEvent, String teamsDestination) {
+        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", outboundEvent.displayText(), teamsDestination);
     }
 
     @Override
-    public void logSendingDtoToDiscord(GithubEventDto eventDto, String discordDestination) {
-        log.info("[Delivery] Sending '{}' to Discord destination '{}'", eventDto.displayName(), discordDestination);
+    public void logSendingDtoToDiscord(OutboundEvent outboundEvent, String discordDestination) {
+        log.info("[Delivery] Sending '{}' to Discord destination '{}'", outboundEvent.displayText(), discordDestination);
     }
 
     @Override

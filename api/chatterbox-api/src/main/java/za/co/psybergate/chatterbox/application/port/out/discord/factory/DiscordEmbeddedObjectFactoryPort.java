@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.application.port.out.discord.factory;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
 import java.util.Map;
 
@@ -12,10 +13,10 @@ public interface DiscordEmbeddedObjectFactoryPort {
     /// [DiscordEmbeddedObjectDefinition]
     DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values);
 
-    /// From a given [GithubEventDto] create a [Map] and leverage [DiscordEmbeddedObjectFactoryPort#buildEmbeddedObjectDefinition(Map))]
+    /// From a given [OutboundEvent] create a [Map] and leverage [DiscordEmbeddedObjectFactoryPort#buildEmbeddedObjectDefinition(Map))]
     /// to create a [DiscordEmbeddedObjectDefinition]
-    DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(GithubEventDto dto);
+    DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(OutboundEvent outboundEvent);
 
-    String getAsDiscordPayloadString(GithubEventDto eventDto) throws ApplicationException;
+    String getAsDiscordPayloadString(OutboundEvent eventDto) throws ApplicationException;
 
 }

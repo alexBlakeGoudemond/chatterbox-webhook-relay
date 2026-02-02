@@ -33,7 +33,11 @@ public class DiscordWebhookSender implements DiscordSenderPort {
         webhookLogger.logSendingDtoToDiscord(dto, discordDestination);
         String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(dto);
         HttpPost httpPost = getHttpPost(discordDestination, jsonString);
-        return executeHttpPostRequest(httpPost);
+        HttpResponseDto httpResponseDto = executeHttpPostRequest(httpPost);
+        if (httpResponseDto.httpStatus() >= 200) {
+            return DeliveryResult.SUCCESS;
+        }
+        return DeliveryResult.FAILURE;
     }
 
     /// Executes an HTTP POST request to a Microsoft Teams webhook (or any HTTP endpoint) using a

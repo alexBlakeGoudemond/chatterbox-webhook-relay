@@ -33,7 +33,11 @@ public class TeamsWebhookSender implements TeamsSenderPort {
         webhookLogger.logSendingDtoToTeams(dto, teamsDestination);
         String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(dto);
         HttpPost httpPost = getHttpPost(teamsDestination, jsonString);
-        return executeHttpPostRequest(httpPost);
+        HttpResponseDto httpResponseDto = executeHttpPostRequest(httpPost);
+        if (httpResponseDto.httpStatus() >= 200) {
+            return DeliveryResult.SUCCESS;
+        }
+        return DeliveryResult.FAILURE;
     }
 
     /// Executes an HTTP POST request to a Microsoft Teams webhook (or any HTTP endpoint) using a

@@ -3,6 +3,7 @@ package za.co.psybergate.chatterbox.application.port.out.teams.factory;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
 import java.util.Map;
 
@@ -14,8 +15,8 @@ public interface TeamsCardFactoryPort {
 
     /// From a given [GithubEventDto] create a [Map] and leverage [TeamsCardFactoryPort#buildCard(Map)]
     /// to create a [TeamsAdaptiveCardDefinition]
-    TeamsAdaptiveCardDefinition buildCard(GithubEventDto dto);
+    TeamsAdaptiveCardDefinition buildCard(OutboundEvent outboundEvent);
 
-    String getAsTeamsPayloadString(GithubEventDto eventDto) throws ApplicationException;
+    String getAsTeamsPayloadString(OutboundEvent outboundEvent) throws ApplicationException;
 
 }
