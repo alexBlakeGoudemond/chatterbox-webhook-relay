@@ -3,17 +3,18 @@ package za.co.psybergate.chatterbox.adapter.out.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventJpaRepository;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventLogJpaRepository;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -114,14 +115,14 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventReceivedDto webhookEventReceivedDto, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventReceivedDto.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
+    public WebhookEventDeliveryDto storeSuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = mapToWebhookEventDeliveryLog(outboundEvent, destinationName, destinationUrl);
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
     @Override
-    public WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventReceivedDto webhookEventReceivedDto, String destinationName, String destinationUrl) {
-        WebhookEventDeliveryLog webhookEventDeliveryLog = new WebhookEventDeliveryLog(webhookEventReceivedDto.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
+    public WebhookEventDeliveryDto storeUnsuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
+        WebhookEventDeliveryLog webhookEventDeliveryLog = mapToWebhookEventDeliveryLog(outboundEvent, destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE);
         return storeSuccessfulDelivery(webhookEventDeliveryLog);
     }
 
@@ -137,9 +138,9 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public void setProcessedStatus(WebhookEventReceivedDto webhookEventReceivedDto, WebhookEventStatus webhookEventStatus) {
-        WebhookEvent webhookEvent = new WebhookEvent(webhookEventReceivedDto.webhookId(), webhookEventReceivedDto.repositoryFullName(), webhookEventReceivedDto.webhookEventType(), webhookEventReceivedDto.displayName(), webhookEventReceivedDto.senderName(), webhookEventReceivedDto.eventUrl(), webhookEventReceivedDto.eventUrlDisplayText(), webhookEventReceivedDto.extraDetail(), webhookEventReceivedDto.payload(), webhookEventReceivedDto.webhookEventStatus(), webhookEventReceivedDto.receivedAt());
-        webhookEvent.setId(webhookEventReceivedDto.id());
+    public void markProcessed(OutboundEvent outboundEvent, WebhookEventStatus webhookEventStatus) {
+        WebhookEvent webhookEvent = mapToWebhookEvent(outboundEvent);
+        webhookEvent.setId(outboundEvent.technicalId());
         webhookEvent.setWebhookEventStatus(webhookEventStatus);
         webhookEvent.setProcessedAt(LocalDateTime.now());
         try {
@@ -147,6 +148,36 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the WebhookEvent", e);
         }
+    }
+
+    private WebhookEventDeliveryLog mapToWebhookEventDeliveryLog(OutboundEvent outboundEvent, String destinationName, String destinationUrl, WebhookEventStatus processedStatus) {
+        return new WebhookEventDeliveryLog(outboundEvent.technicalId(),
+                destinationName,
+                destinationUrl,
+                processedStatus,
+                LocalDateTime.now());
+    }
+
+    private WebhookEventDeliveryLog mapToWebhookEventDeliveryLog(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
+        return mapToWebhookEventDeliveryLog(outboundEvent,
+                destinationName,
+                destinationUrl,
+                WebhookEventStatus.PROCESSED_SUCCESS);
+    }
+
+    private WebhookEvent mapToWebhookEvent(OutboundEvent outboundEvent) {
+        return new WebhookEvent(
+                outboundEvent.uniqueId(),
+                outboundEvent.repository(),
+                outboundEvent.type(),
+                outboundEvent.title(),
+                outboundEvent.actor(),
+                outboundEvent.url(),
+                outboundEvent.displayText(),
+                outboundEvent.extra(),
+                outboundEvent.payload(),
+                WebhookEventStatus.RECEIVED,
+                LocalDateTime.now());
     }
 
     @Override

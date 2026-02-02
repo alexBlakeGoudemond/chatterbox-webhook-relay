@@ -3,9 +3,9 @@ package za.co.psybergate.chatterbox.adapter.out.webhook.resolution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationTeamsProperties;
@@ -38,21 +38,25 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
     }
 
     @Override
-    public String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException {
-        for (GithubDestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
-            if (destinationMapping.getName().equals(repositoryName)) {
-                return destinationTeamsProperties.getUrl(destinationMapping.getTeamsDestinationChannel());
+    public String resolveTeamsUrl(String repositoryName) throws UnrecognizedRequestException {
+        for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
+            if (!destinationMapping.source().equals(repositoryName)) {
+                continue;
             }
+            // TODO BlakeGoudemond 2026/02/02 | go through map and find teams key, then use value
+            return destinationTeamsProperties.getUrl(destinationMapping.getTeamsDestinationChannel());
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
 
     @Override
-    public String getDiscordDestinationUrl(String repositoryName) throws UnrecognizedRequestException {
-        for (GithubDestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
-            if (destinationMapping.getName().equals(repositoryName)) {
-                return destinationDiscordProperties.getUrl(destinationMapping.getDiscordDestinationChannel());
+    public String resolveDiscordUrl(String repositoryName) throws UnrecognizedRequestException {
+        for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
+            if (!destinationMapping.source().equalsIgnoreCase(repositoryName)) {
+                continue;
             }
+            // TODO BlakeGoudemond 2026/02/02 | go through map and find discord key, then use value
+            return destinationDiscordProperties.getUrl(destinationMapping.getDiscordDestinationChannel());
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
@@ -60,14 +64,14 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
     @Override
     public List<String> getAllRepositories() {
         List<String> repositories = new ArrayList<>();
-        for (GithubDestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
-            repositories.add(destinationMapping.getName());
+        for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
+            repositories.add(destinationMapping.source());
         }
         return repositories;
     }
 
     @Override
-    public List<GithubDestinationMapping> getDestinationMapping() {
+    public List<DestinationMapping> getDestinationMapping() {
         return repositoryProperties.getDestinationMapping();
     }
 

@@ -14,11 +14,11 @@ public class TestConfigurationResolver {
     }
 
     public String getTeamsDestinationUrl(GithubEventDto eventDto) {
-        return configurationResolver.getTeamsDestinationUrl(eventDto.repositoryName());
+        return configurationResolver.resolveTeamsUrl(eventDto.repositoryName());
     }
 
     public String getDiscordDestinationUrl(GithubEventDto eventDto) {
-        return configurationResolver.getDiscordDestinationUrl(eventDto.repositoryName());
+        return configurationResolver.resolveDiscordUrl(eventDto.repositoryName());
     }
 
 }

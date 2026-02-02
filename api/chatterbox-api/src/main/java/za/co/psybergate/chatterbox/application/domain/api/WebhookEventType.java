@@ -37,4 +37,5 @@ public enum WebhookEventType {
             default -> throw new DomainException("Unable to find UniqueID; Unknown event type " + this);
         };
     }
+
 }

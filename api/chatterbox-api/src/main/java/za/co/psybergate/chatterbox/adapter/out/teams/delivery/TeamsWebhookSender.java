@@ -8,10 +8,11 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Service;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class TeamsWebhookSender implements TeamsSenderPort {
     private final HttpResponseHandler httpResponseHandler;
 
     @Override
-    public HttpResponseDto process(GithubEventDto dto, String teamsDestination) {
+    public DeliveryResult deliver(OutboundEvent dto, String teamsDestination) {
         webhookLogger.logSendingDtoToTeams(dto, teamsDestination);
         String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(dto);
         HttpPost httpPost = getHttpPost(teamsDestination, jsonString);

@@ -55,7 +55,7 @@ public class PropertiesConfigurationResolverTest {
     @DisplayName("Known Teams Destination Channel Name succeeds")
     @Test
     public void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
-        String destinationUrl = resolver.getTeamsDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
+        String destinationUrl = resolver.resolveTeamsUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
         assertNotNull(destinationUrl);
     }
 
@@ -63,7 +63,7 @@ public class PropertiesConfigurationResolverTest {
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
         Assertions.assertThrows(UnrecognizedRequestException.class,
-                () -> resolver.getTeamsDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
+                () -> resolver.resolveTeamsUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
     }
 
 }

@@ -3,17 +3,18 @@ package za.co.psybergate.chatterbox.adapter.out.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventJpaRepository;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventLogJpaRepository;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -115,14 +116,14 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public WebhookPolledEventDeliveryDto storeSuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
+    public WebhookPolledEventDeliveryDto storeSuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(outboundEvent.technicalId(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
-    public WebhookPolledEventDeliveryDto storeUnsuccessfulDelivery(WebhookPolledEventReceivedDto polledEvent, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(polledEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
+    public WebhookPolledEventDeliveryDto storeUnsuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(outboundEvent.technicalId(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
@@ -138,9 +139,9 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public void setProcessedStatus(WebhookPolledEventReceivedDto polledEventRecord, WebhookEventStatus webhookEventStatus) {
-        GithubPolledEvent polledEvent = new GithubPolledEvent(polledEventRecord.webhookEventType(), polledEventRecord.sourceId(), polledEventRecord.repositoryFullName(), polledEventRecord.displayName(), polledEventRecord.senderName(), polledEventRecord.eventUrl(), polledEventRecord.eventUrlDisplayText(), polledEventRecord.extraDetail(), polledEventRecord.payload(), WebhookEventStatus.RECEIVED, LocalDateTime.now());
-        polledEvent.setId(polledEventRecord.id());
+    public void markProcessed(OutboundEvent outboundEvent, WebhookEventStatus webhookEventStatus) {
+        GithubPolledEvent polledEvent = mapToGithubPolledEvent(outboundEvent);
+        polledEvent.setId(polledEvent.getId());
         polledEvent.setWebhookEventStatus(webhookEventStatus);
         polledEvent.setProcessedAt(LocalDateTime.now());
         try {
@@ -148,6 +149,21 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the GithubPolledEvent", e);
         }
+    }
+
+    private GithubPolledEvent mapToGithubPolledEvent(OutboundEvent outboundEvent) {
+        return new GithubPolledEvent(
+                outboundEvent.uniqueId(),
+                outboundEvent.repository(),
+                outboundEvent.type(),
+                outboundEvent.title(),
+                outboundEvent.actor(),
+                outboundEvent.url(),
+                outboundEvent.displayText(),
+                outboundEvent.extra(),
+                outboundEvent.payload(),
+                WebhookEventStatus.RECEIVED,
+                LocalDateTime.now());
     }
 
     @Override

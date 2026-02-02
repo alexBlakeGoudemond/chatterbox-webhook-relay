@@ -1,10 +1,10 @@
 package za.co.psybergate.chatterbox.application.port.out.discord.delivery;
 
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
 public interface DiscordSenderPort {
 
-    HttpResponseDto process(GithubEventDto dto, String discordDestination);
+    DeliveryResult deliver(OutboundEvent dto, String discordDestination);
 
 }

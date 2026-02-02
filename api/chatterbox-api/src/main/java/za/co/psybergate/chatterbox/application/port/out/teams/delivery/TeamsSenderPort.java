@@ -1,11 +1,11 @@
 package za.co.psybergate.chatterbox.application.port.out.teams.delivery;
 
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
 public interface TeamsSenderPort {
 
-    HttpResponseDto process(GithubEventDto dto, String teamsDestination);
+    DeliveryResult deliver(OutboundEvent dto, String teamsDestination);
 
 
 }

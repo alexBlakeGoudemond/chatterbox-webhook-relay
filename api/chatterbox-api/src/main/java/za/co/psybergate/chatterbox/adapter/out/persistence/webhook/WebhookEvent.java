@@ -98,8 +98,44 @@ public class WebhookEvent {
         this.receivedAt = receivedAt;
     }
 
-    public WebhookEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(uniqueId, eventDto.repositoryName(), eventDto.webhookEventType(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), WebhookEventStatus.RECEIVED, LocalDateTime.now());
+    public WebhookEvent(String webhookId,
+                        String repositoryFullName,
+                        String webhookEventType,
+                        String displayName,
+                        String senderName,
+                        String eventUrl,
+                        String eventUrlDisplayText,
+                        String extraDetail,
+                        String payload,
+                        WebhookEventStatus webhookEventStatus,
+                        LocalDateTime receivedAt) {
+        this(webhookId,
+                repositoryFullName,
+                WebhookEventType.valueOf(webhookEventType),
+                displayName,
+                senderName,
+                eventUrl,
+                eventUrlDisplayText,
+                extraDetail,
+                payload,
+                webhookEventStatus,
+                receivedAt);
+    }
+
+    public WebhookEvent(String uniqueId,
+                        GithubEventDto eventDto,
+                        JsonNode rawBody) {
+        this(uniqueId,
+                eventDto.repositoryName(),
+                eventDto.webhookEventType(),
+                eventDto.displayName(),
+                eventDto.senderName(),
+                eventDto.url(),
+                eventDto.urlDisplayText(),
+                eventDto.extraDetail(),
+                rawBody.toString(),
+                WebhookEventStatus.RECEIVED,
+                LocalDateTime.now());
     }
 
     @Override

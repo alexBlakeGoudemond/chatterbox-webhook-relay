@@ -2,7 +2,7 @@ package za.co.psybergate.chatterbox.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import java.util.List;
 @ConfigurationProperties(prefix = "chatterbox.sources.github.repository")
 public class ChatterboxSourceGithubRepositoryProperties {
 
-    private List<GithubDestinationMapping> destinationMapping;
+    private List<DestinationMapping> destinationMapping;
 
     public boolean acceptsRepository(String repositoryName) {
-        for (GithubDestinationMapping destinationMapping : destinationMapping) {
-            if (destinationMapping.getName().equalsIgnoreCase(repositoryName)) {
+        for (DestinationMapping destinationMapping : destinationMapping) {
+            if (destinationMapping.source().equalsIgnoreCase(repositoryName)) {
                 return true;
             }
         }

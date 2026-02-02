@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubDestinationMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -110,8 +110,8 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logProcessingEvents(GithubDestinationMapping destinationMapping) {
-        log.info("[Processing] Processing Received Webhook events for destination: '{}'", destinationMapping.getName());
+    public void logProcessingEvents(DestinationMapping destinationMapping) {
+        log.info("[Processing] Processing Received Webhook events for destination: '{}'", destinationMapping.source());
     }
 
     @Override

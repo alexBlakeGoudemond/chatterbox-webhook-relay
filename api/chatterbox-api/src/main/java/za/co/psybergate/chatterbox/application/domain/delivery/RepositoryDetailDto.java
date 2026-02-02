@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.domain.delivery.model;
+package za.co.psybergate.chatterbox.application.domain.delivery;
 
 import java.time.LocalDateTime;
 

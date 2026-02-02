@@ -85,7 +85,7 @@ public class DiscordWebhookSenderIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(eventDto);
 
-        HttpResponseDto httpResponseDto = discordWebhookSender.process(eventDto, teamsDestinationUrl);
+        HttpResponseDto httpResponseDto = discordWebhookSender.deliver(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.NO_CONTENT.value(), httpResponseDto.httpStatus());
     }

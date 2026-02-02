@@ -8,10 +8,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -74,9 +74,9 @@ public class GithubPolledEvent {
     @Convert(converter = LocalDateTimeToInstantConverter.class)
     private LocalDateTime processedAt;
 
-    public GithubPolledEvent(WebhookEventType webhookEventType,
-                             String sourceId,
+    public GithubPolledEvent(String sourceId,
                              String repositoryFullName,
+                             WebhookEventType webhookEventType,
                              String displayName,
                              String senderName,
                              String eventUrl,
@@ -98,8 +98,44 @@ public class GithubPolledEvent {
         this.fetchedAt = fetchedAt;
     }
 
-    public GithubPolledEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        this(eventDto.webhookEventType(), uniqueId, eventDto.repositoryName(), eventDto.displayName(), eventDto.senderName(), eventDto.url(), eventDto.urlDisplayText(), eventDto.extraDetail(), rawBody.toString(), WebhookEventStatus.RECEIVED, LocalDateTime.now());
+    public GithubPolledEvent(String sourceId,
+                             String repositoryFullName,
+                             String webhookEventType,
+                             String displayName,
+                             String senderName,
+                             String eventUrl,
+                             String eventUrlDisplayText,
+                             String extraDetail,
+                             String payload,
+                             WebhookEventStatus status,
+                             LocalDateTime fetchedAt) {
+        this(sourceId,
+                repositoryFullName,
+                WebhookEventType.valueOf(webhookEventType),
+                displayName,
+                senderName,
+                eventUrl,
+                eventUrlDisplayText,
+                extraDetail,
+                payload,
+                status,
+                fetchedAt);
+    }
+
+    public GithubPolledEvent(String uniqueId,
+                             GithubEventDto eventDto,
+                             JsonNode rawBody) {
+        this(uniqueId,
+                eventDto.repositoryName(),
+                eventDto.webhookEventType(),
+                eventDto.displayName(),
+                eventDto.senderName(),
+                eventDto.url(),
+                eventDto.urlDisplayText(),
+                eventDto.extraDetail(),
+                rawBody.toString(),
+                WebhookEventStatus.RECEIVED,
+                LocalDateTime.now());
     }
 
     @Override

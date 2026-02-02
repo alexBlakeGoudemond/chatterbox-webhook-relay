@@ -85,7 +85,7 @@ public class TeamsWebhookSenderIT {
         GithubEventDto eventDto = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
 
-        HttpResponseDto httpResponseDto = teamsWebhookSender.process(eventDto, teamsDestinationUrl);
+        HttpResponseDto httpResponseDto = teamsWebhookSender.deliver(eventDto, teamsDestinationUrl);
         assertNotNull(httpResponseDto);
         assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
     }
