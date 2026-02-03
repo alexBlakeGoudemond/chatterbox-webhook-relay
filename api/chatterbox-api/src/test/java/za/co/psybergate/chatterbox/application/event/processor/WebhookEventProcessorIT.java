@@ -14,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.delivery.model.CompositeEventDeliveryAdapter;
 import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordWebhookSender;
 import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
@@ -61,6 +62,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         InfrastructurePropertiesConfig.class,
         PropertiesConfigurationResolver.class,
         HttpResponseHandler.class,
+        CompositeEventDeliveryAdapter.class,
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers

@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFac
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@Service
+@Service("teamsWebhookSender")
 public class TeamsWebhookSender implements DestinationSenderPort {
 
     private final VendorFactoryPort teamsCardFactoryPort;

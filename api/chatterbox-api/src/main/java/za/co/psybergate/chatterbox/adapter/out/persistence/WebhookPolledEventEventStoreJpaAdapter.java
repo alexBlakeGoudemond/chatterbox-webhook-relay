@@ -141,7 +141,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
     @Override
     public void markProcessed(OutboundEvent outboundEvent, WebhookEventStatus webhookEventStatus) {
         GithubPolledEvent polledEvent = mapToGithubPolledEvent(outboundEvent);
-        polledEvent.setId(polledEvent.getId());
+        polledEvent.setId(outboundEvent.id());
         polledEvent.setWebhookEventStatus(webhookEventStatus);
         polledEvent.setProcessedAt(LocalDateTime.now());
         try {

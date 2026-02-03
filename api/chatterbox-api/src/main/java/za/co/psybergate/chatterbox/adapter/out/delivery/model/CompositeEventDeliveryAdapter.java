@@ -53,14 +53,14 @@ public class CompositeEventDeliveryAdapter implements EventDeliveryPort {
     }
 
     private void deliverToTeams(OutboundEvent event, String channel) {
-        String url = configurationResolver.resolveTeamsUrl(channel);
+        String url = configurationResolver.getTeamsUrl(channel);
         DeliveryResult result = teamsSender.deliver(event, url);
 
         storeResult(event, channel, url, result);
     }
 
     private void deliverToDiscord(OutboundEvent event, String channel) {
-        String url = configurationResolver.resolveDiscordUrl(channel);
+        String url = configurationResolver.getDiscordUrl(channel);
         DeliveryResult result = discordSender.deliver(event, url);
 
         storeResult(event, channel, url, result);
