@@ -28,8 +28,8 @@ public class CompositeEventDeliveryAdapter implements EventDeliveryPort {
 
     @Override
     public void deliver(OutboundEvent event, DestinationMapping mapping) {
-        deliverToTeams(event, mapping.destinationChannels().get(DeliveryMapping.MS_TEAMS));
-        deliverToDiscord(event, mapping.destinationChannels().get(DeliveryMapping.DISCORD));
+        deliverToTeams(event, mapping.destinationChannels().get(DeliveryMapping.MS_TEAMS.name()));
+        deliverToDiscord(event, mapping.destinationChannels().get(DeliveryMapping.DISCORD.name()));
     }
 
     private void deliverToTeams(OutboundEvent event, String channel) {

@@ -44,7 +44,7 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
             if (!destinationMapping.source().equals(repositoryName)) {
                 continue;
             }
-            return destinationTeamsProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.MS_TEAMS));
+            return destinationTeamsProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.MS_TEAMS.name()));
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
@@ -55,7 +55,7 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
             if (!destinationMapping.source().equalsIgnoreCase(repositoryName)) {
                 continue;
             }
-            return destinationDiscordProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.DISCORD));
+            return destinationDiscordProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.DISCORD.name()));
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
