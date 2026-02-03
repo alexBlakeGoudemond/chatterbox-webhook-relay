@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
-@Component
+@Component("discordEmbeddedObjectFactory")
 @RequiredArgsConstructor
 public class DiscordEmbeddedObjectFactory implements VendorFactoryPort {
 

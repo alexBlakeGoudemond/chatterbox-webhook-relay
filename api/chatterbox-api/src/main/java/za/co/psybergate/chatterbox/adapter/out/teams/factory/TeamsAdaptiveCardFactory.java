@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
-@Component
+@Component("teamsAdaptiveCardFactory")
 @RequiredArgsConstructor
 public class TeamsAdaptiveCardFactory implements VendorFactoryPort {
 
