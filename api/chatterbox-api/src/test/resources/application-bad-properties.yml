@@ -8,13 +8,13 @@ chatterbox:
         destination-mapping:
           - source: Psybergate-Knowledge-Repository/mentoring_software_foundations
             destination-channels:
-              - msTeams: General
+              - NOTIFICATION: TestChannel
           - source: psyAlexBlakeGoudemond/chatterbox/undefined
             destination-channels:
-              - msTeams: UndefinedTeamsChannel
+              - NOTIFICATION: TestChannel
           - source: psyAlexBlakeGoudemond/chatterbox
             destination-channels:
-              - msTeams: TestChannel
+              - NOTIFICATION: TestChannel
       payload:
         event-mapping:
           push:

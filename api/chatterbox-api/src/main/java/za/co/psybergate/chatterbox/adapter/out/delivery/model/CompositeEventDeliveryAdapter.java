@@ -2,14 +2,15 @@ package za.co.psybergate.chatterbox.adapter.out.delivery.model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordSenderPort;
+import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsSenderPort;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPort;
-import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordSenderPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsSenderPort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
 @Component
@@ -26,10 +27,19 @@ public class CompositeEventDeliveryAdapter implements EventDeliveryPort {
 
     private final WebhookEventStorePort webhookEventStore;
 
+    /// The Adapter knows that for this business use-case:
+    /// NOTIFICATION -> MS_TEAMS
+    /// CHAT -> DISCORD
     @Override
     public void deliver(OutboundEvent event, DestinationMapping mapping) {
-        deliverToTeams(event, mapping.destinationChannels().get(DeliveryMapping.MS_TEAMS.name()));
-        deliverToDiscord(event, mapping.destinationChannels().get(DeliveryMapping.DISCORD.name()));
+        String teamsChannel = mapping.destinationChannels().get(DeliveryChannelType.NOTIFICATION);
+        if (teamsChannel != null) {
+            deliverToTeams(event, teamsChannel);
+        }
+        String discordChannel = mapping.destinationChannels().get(DeliveryChannelType.CHAT);
+        if (discordChannel != null) {
+            deliverToDiscord(event, discordChannel);
+        }
     }
 
     private void deliverToTeams(OutboundEvent event, String channel) {

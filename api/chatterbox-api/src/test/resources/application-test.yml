@@ -74,12 +74,12 @@ chatterbox:
         destination-mapping:
           - source: Psybergate-Knowledge-Repository/mentoring_software_foundations
             destinationChannels:
-              - msTeams: TestChannel
-              - discord: General
+              - NOTIFICATION: TestChannel
+              - CHAT: General
           - source: psyAlexBlakeGoudemond/chatterbox
             destinationChannels:
-              - msTeams: TestChannel
-              - discord: General
+              - NOTIFICATION: TestChannel
+              - CHAT: General
       payload:
         event-mapping:
           push:

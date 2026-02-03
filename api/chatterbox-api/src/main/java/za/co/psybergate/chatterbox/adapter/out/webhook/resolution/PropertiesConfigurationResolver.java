@@ -2,12 +2,12 @@ package za.co.psybergate.chatterbox.adapter.out.webhook.resolution;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.out.delivery.model.DeliveryMapping;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
@@ -44,7 +44,7 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
             if (!destinationMapping.source().equals(repositoryName)) {
                 continue;
             }
-            return destinationTeamsProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.MS_TEAMS.name()));
+            return destinationTeamsProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryChannelType.NOTIFICATION));
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
@@ -55,7 +55,7 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
             if (!destinationMapping.source().equalsIgnoreCase(repositoryName)) {
                 continue;
             }
-            return destinationDiscordProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryMapping.DISCORD.name()));
+            return destinationDiscordProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryChannelType.CHAT));
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
