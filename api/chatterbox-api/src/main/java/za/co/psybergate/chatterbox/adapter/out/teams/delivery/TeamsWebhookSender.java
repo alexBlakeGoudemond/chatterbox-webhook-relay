@@ -13,13 +13,14 @@ import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.application.port.out.delivery.DestinationSenderPort;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
-public class TeamsWebhookSender implements TeamsSenderPort {
+public class TeamsWebhookSender implements DestinationSenderPort {
 
     private final TeamsCardFactoryPort teamsCardFactoryPort;
 
