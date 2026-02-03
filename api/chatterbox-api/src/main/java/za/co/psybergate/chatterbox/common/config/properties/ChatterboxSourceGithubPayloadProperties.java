@@ -6,7 +6,7 @@ import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequ
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.adapter.common.map.AdapterMapper;
+import za.co.psybergate.chatterbox.adapter.out.map.AdapterMapper;
 
 import java.util.HashMap;
 import java.util.Map;

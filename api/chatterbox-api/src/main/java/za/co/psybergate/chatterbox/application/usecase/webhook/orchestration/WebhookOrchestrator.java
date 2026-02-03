@@ -66,7 +66,6 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
         return pollForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
     }
 
-    // TODO BlakeGoudemond 2026/02/03 | List<?> works, but it is harder to understand and we are undoing the work by converting back to JsonNode
     @Override
     public List<WebhookPolledEventReceived> pollForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);

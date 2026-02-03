@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
-import za.co.psybergate.chatterbox.adapter.common.map.AdapterMapper;
+import za.co.psybergate.chatterbox.adapter.out.map.AdapterMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;

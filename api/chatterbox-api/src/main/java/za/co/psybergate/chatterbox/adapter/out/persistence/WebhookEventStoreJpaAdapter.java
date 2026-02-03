@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.adapter.common.map.AdapterMapper;
+import za.co.psybergate.chatterbox.adapter.out.map.AdapterMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;

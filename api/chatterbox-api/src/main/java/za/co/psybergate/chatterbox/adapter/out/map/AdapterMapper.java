@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.common.map;
+package za.co.psybergate.chatterbox.adapter.out.map;
 
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
