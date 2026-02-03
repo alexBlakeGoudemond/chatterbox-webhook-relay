@@ -7,10 +7,9 @@ import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventRe
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO BlakeGoudemond 2026/02/03 | should not mention Github
 /// Orchestrates flow end-to-end:
 /// `ingest → process → route → send downstream`
-public interface GithubWebhookPort {
+public interface WebhookOrchestratorPort {
 
     WebhookEventReceivedDto process(String eventType, String deliveryId, JsonNode rawBody);
 

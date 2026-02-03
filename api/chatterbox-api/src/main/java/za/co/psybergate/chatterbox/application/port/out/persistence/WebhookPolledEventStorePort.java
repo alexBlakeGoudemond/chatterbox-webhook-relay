@@ -8,8 +8,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledE
 
 import java.util.List;
 
-// TODO BlakeGoudemond 2026/02/03 | should not mention Github in name
-public interface GithubPolledEventStorePort {
+public interface WebhookPolledEventStorePort {
 
     List<WebhookPolledEventReceivedDto> getUnprocessedEvents(String repositoryFullName);
 

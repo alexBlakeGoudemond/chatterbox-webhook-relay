@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubPollingPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetailDto;
@@ -47,7 +47,7 @@ class GithubPollingServiceIT {
     private WebhookEventStorePort webhookEventStorePort;
 
     @MockitoBean
-    private GithubPolledEventStorePort githubPolledEventStorePort;
+    private WebhookPolledEventStorePort webhookPolledEventStorePort;
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(

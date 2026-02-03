@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.GithubWebhookOrchestrator;
+import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.WebhookOrchestrator;
 import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetailDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
@@ -23,7 +23,7 @@ import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubRestPollingClient;
-import za.co.psybergate.chatterbox.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        GithubWebhookOrchestrator.class,
+        WebhookOrchestrator.class,
         JsonFileReader.class,
         GithubWebhookValidator.class,
         GithubWebhookEventMapper.class,
@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         Slf4jWebhookLogger.class,
         GithubRestPollingClient.class,
         PropertiesConfigurationResolver.class,
-        GithubPolledEventEventStoreJpaAdapter.class
+        WebhookPolledEventEventStoreJpaAdapter.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -64,7 +64,7 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
     private WebhookEventStoreJpaAdapter webhookReceivedStore;
 
     @Autowired
-    private GithubWebhookPort githubWebhookPort;
+    private WebhookOrchestratorPort webhookOrchestratorPort;
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(
@@ -81,7 +81,7 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
         LocalDateTime fromDate = repositoryDetailDto.fromDate();
         LocalDateTime untilDate = repositoryDetailDto.toDate();
 
-        List<WebhookPolledEventReceivedDto> githubPolledEvents = githubWebhookPort.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
+        List<WebhookPolledEventReceivedDto> githubPolledEvents = webhookOrchestratorPort.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
         assertNotNull(githubPolledEvents);
         assertFalse(githubPolledEvents.isEmpty());
         for (WebhookPolledEventReceivedDto polledEvent : githubPolledEvents) {

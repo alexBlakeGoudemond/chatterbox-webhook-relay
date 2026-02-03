@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventRe
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
 import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
@@ -24,7 +24,7 @@ public class WebhookEventProcessor implements EventProcessorPort {
 
     private final WebhookConfigurationResolverPort configurationResolver;
 
-    private final GithubPolledEventStorePort polledEventStore;
+    private final WebhookPolledEventStorePort polledEventStore;
 
     private final WebhookEventStorePort webhookEventStore;
 

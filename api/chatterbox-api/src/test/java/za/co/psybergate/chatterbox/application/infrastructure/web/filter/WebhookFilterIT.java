@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
@@ -55,8 +55,8 @@ public class WebhookFilterIT {
     private MockMvc mockMvc;
 
     @MockitoBean
-    @Qualifier("githubWebhookOrchestrator")
-    private GithubWebhookPort githubWebhookPort;
+    @Qualifier("webhookOrchestrator")
+    private WebhookOrchestratorPort webhookOrchestratorPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -67,7 +67,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.when(
-                githubWebhookPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                webhookOrchestratorPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
                 )).thenReturn(null);
     }
 

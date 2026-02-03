@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubPollingPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapper;
 import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
@@ -31,11 +31,11 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class GithubWebhookOrchestrator implements GithubWebhookPort {
+public class WebhookOrchestrator implements WebhookOrchestratorPort {
 
     private final WebhookRequestValidatorPort webhookRequestValidatorPort;
 
-    private final GithubEventMapper eventExtractor;
+    private final OutboundEventMapper eventExtractor;
 
     private final JsonConverter jsonConverter;
 
@@ -43,7 +43,7 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
 
     private final WebhookEventStorePort webhookEventStorePort;
 
-    private final GithubPolledEventStorePort githubPolledEventStorePort;
+    private final WebhookPolledEventStorePort webhookPolledEventStorePort;
 
     private final ApplicationEventPublisher publisher;
 
@@ -101,7 +101,7 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
             return false;
         }
         try {
-            WebhookPolledEventReceivedDto latestGithubPolledEvent = githubPolledEventStorePort.getMostRecentPolledEvent(repositoryFullName);
+            WebhookPolledEventReceivedDto latestGithubPolledEvent = webhookPolledEventStorePort.getMostRecentPolledEvent(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.fetchedAt());
         } catch (ApplicationException e) {
@@ -131,7 +131,7 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = webhookEventType.getUniqueId(jsonNode);
             OutboundEvent outboundEvent = getOutboundEvent(webhookEventType.name(), jsonNode);
-            WebhookPolledEventReceivedDto polledEvent = githubPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
+            WebhookPolledEventReceivedDto polledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
             updates.add(polledEvent);
         }
         return updates;

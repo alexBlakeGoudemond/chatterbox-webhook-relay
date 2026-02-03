@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventStorePort {
+public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEventStorePort {
 
     private final GithubPolledEventJpaRepository repository;
 
@@ -28,9 +28,9 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
 
     private final WebhookLogger webhookLogger;
 
-    public GithubPolledEventEventStoreJpaAdapter(GithubPolledEventJpaRepository repository,
-                                                 GithubPolledEventLogJpaRepository logRepository,
-                                                 WebhookLogger webhookLogger) {
+    public WebhookPolledEventEventStoreJpaAdapter(GithubPolledEventJpaRepository repository,
+                                                  GithubPolledEventLogJpaRepository logRepository,
+                                                  WebhookLogger webhookLogger) {
         this.repository = repository;
         this.logRepository = logRepository;
         this.webhookLogger = webhookLogger;
@@ -75,7 +75,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
                 return List.of();
             }
             return githubPolledEvents.stream()
-                    .map(GithubPolledEventEventStoreJpaAdapter::mapToGithubPolledEventRecord)
+                    .map(WebhookPolledEventEventStoreJpaAdapter::mapToGithubPolledEventRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
@@ -91,7 +91,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
                 return List.of();
             }
             return githubPolledEvents.stream()
-                    .map(GithubPolledEventEventStoreJpaAdapter::mapToGithubPolledEventRecord)
+                    .map(WebhookPolledEventEventStoreJpaAdapter::mapToGithubPolledEventRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
@@ -178,7 +178,7 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
         try {
             List<GithubPolledEventDeliveryLog> deliveryLogs = logRepository.findAllByGithubPolledEventId(id);
             return deliveryLogs.stream()
-                    .map(GithubPolledEventEventStoreJpaAdapter::mapToGithubPolledEventDeliveryRecord)
+                    .map(WebhookPolledEventEventStoreJpaAdapter::mapToGithubPolledEventDeliveryRecord)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);
