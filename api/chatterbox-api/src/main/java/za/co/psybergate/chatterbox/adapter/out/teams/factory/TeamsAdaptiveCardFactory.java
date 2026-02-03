@@ -49,7 +49,7 @@ public class TeamsAdaptiveCardFactory implements VendorFactoryPort {
     @Override
     public TeamsAdaptiveCardDefinition buildDefinition(OutboundEvent outboundEvent) {
         Map<String, String> values = Map.of(
-                "displayName", outboundEvent.displayText(),
+                "displayName", outboundEvent.title(),
                 REPOSITORYNAME.getFieldName(), outboundEvent.repository(),
                 SENDERNAME.getFieldName(), outboundEvent.actor(),
                 URL.getFieldName(), outboundEvent.url(),
