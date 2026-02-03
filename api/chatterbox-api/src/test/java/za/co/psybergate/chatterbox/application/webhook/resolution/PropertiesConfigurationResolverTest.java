@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
+import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
         PropertiesConfigurationResolver.class,
-        InfrastructurePropertiesConfig.class
+        InfrastructurePropertiesConfig.class,
 })
 @ActiveProfiles({"test", "bad-properties"})
 public class PropertiesConfigurationResolverTest {
