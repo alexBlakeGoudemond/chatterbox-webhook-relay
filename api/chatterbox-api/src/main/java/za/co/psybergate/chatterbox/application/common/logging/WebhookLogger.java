@@ -2,8 +2,8 @@ package za.co.psybergate.chatterbox.application.common.logging;
 
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
@@ -46,11 +46,11 @@ public interface WebhookLogger {
 
     void logRunnerFoundNoPreviousWebhooks(String repositoryFullName);
 
-    void logRunnerFoundPreviousWebhook(WebhookEventReceivedDto latestWebhookEvent);
+    void logRunnerFoundPreviousWebhook(WebhookEventReceived latestWebhookEvent);
 
     void logRunnerFoundNoPreviousPolledEvents(String repositoryFullName);
 
-    void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceivedDto latestGithubPolledEvent);
+    void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestGithubPolledEvent);
 
     void logPolledEventsEmpty(String repositoryFullName);
 
@@ -58,7 +58,7 @@ public interface WebhookLogger {
 
     void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime);
 
-    void logPolledEventsFound(List<WebhookPolledEventReceivedDto> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime);
+    void logPolledEventsFound(List<WebhookPolledEventReceived> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime);
 
     void logPolledEventProcessed(PolledEventsProcessed polledEventsProcessed);
 

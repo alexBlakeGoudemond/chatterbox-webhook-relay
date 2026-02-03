@@ -19,8 +19,8 @@ import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundE
 import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 
@@ -51,28 +51,28 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     private final WebhookLogger webhookLogger;
 
     @Override
-    public WebhookEventReceivedDto process(String eventType, String deliveryId, JsonNode rawBody) {
+    public WebhookEventReceived process(String eventType, String deliveryId, JsonNode rawBody) {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         OutboundEvent outboundEvent = getOutboundEvent(eventType, rawBody);
-        WebhookEventReceivedDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(rawBody));
+        WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(rawBody));
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }
 
     @Override
-    public List<WebhookPolledEventReceivedDto> pollForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
+    public List<WebhookPolledEventReceived> pollForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime) {
         return pollForChanges(owner, repositoryName, lastReceivedTime, LocalDateTime.now());
     }
 
     // TODO BlakeGoudemond 2026/02/03 | List<?> works, but it is harder to understand and we are undoing the work by converting back to JsonNode
     @Override
-    public List<WebhookPolledEventReceivedDto> pollForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public List<WebhookPolledEventReceived> pollForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);
         RepositoryUpdates recentUpdates = webhookPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
-        List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
+        List<WebhookPolledEventReceived> updates = new ArrayList<>();
         for (Map.Entry<WebhookEventType, List<RawEventPayload>> entry : recentUpdates.getWebhookEventTypeDetails().entrySet()) {
             List<RawEventPayload> details = entry.getValue();
             WebhookEventType webhookEventType = entry.getKey();
@@ -82,14 +82,14 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
             for (JsonNode node : jsonNodes) {
                 appendToJsonNode(node, "full_name", repositoryFullName);
             }
-            List<WebhookPolledEventReceivedDto> githubPolledEvents = storeEvents(webhookEventType, jsonNodes);
+            List<WebhookPolledEventReceived> githubPolledEvents = storeEvents(webhookEventType, jsonNodes);
             updates.addAll(githubPolledEvents);
         }
         return updates;
     }
 
     @Override
-    public List<WebhookPolledEventReceivedDto> pollForChanges(String repositoryFullName, LocalDateTime receivedAt) {
+    public List<WebhookPolledEventReceived> pollForChanges(String repositoryFullName, LocalDateTime receivedAt) {
         String[] repositoryDetails = repositoryFullName.split("/");
         String owner = repositoryDetails[0];
         String repositoryName = repositoryDetails[1];
@@ -100,7 +100,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     public boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName) {
         LocalDateTime lastPersistedTime;
         try {
-            WebhookEventReceivedDto latestWebhookEvent = webhookEventStorePort.getMostRecentWebhook(repositoryFullName);
+            WebhookEventReceived latestWebhookEvent = webhookEventStorePort.getMostRecentWebhook(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
             lastPersistedTime = latestWebhookEvent.receivedAt();
         } catch (ApplicationException e) {
@@ -108,13 +108,13 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
             return false;
         }
         try {
-            WebhookPolledEventReceivedDto latestGithubPolledEvent = webhookPolledEventStorePort.getMostRecentPolledEvent(repositoryFullName);
+            WebhookPolledEventReceived latestGithubPolledEvent = webhookPolledEventStorePort.getMostRecentPolledEvent(repositoryFullName);
             webhookLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
             lastPersistedTime = getLastPersistedTime(lastPersistedTime, latestGithubPolledEvent.fetchedAt());
         } catch (ApplicationException e) {
             webhookLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
         }
-        List<WebhookPolledEventReceivedDto> githubPolledEvents = pollForChanges(repositoryFullName, lastPersistedTime);
+        List<WebhookPolledEventReceived> githubPolledEvents = pollForChanges(repositoryFullName, lastPersistedTime);
         if (!githubPolledEvents.isEmpty()) {
             webhookLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
             return true;
@@ -131,12 +131,12 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
         }
     }
 
-    private List<WebhookPolledEventReceivedDto> storeEvents(WebhookEventType webhookEventType, List<JsonNode> jsonNodes) {
-        List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
+    private List<WebhookPolledEventReceived> storeEvents(WebhookEventType webhookEventType, List<JsonNode> jsonNodes) {
+        List<WebhookPolledEventReceived> updates = new ArrayList<>();
         for (JsonNode jsonNode : jsonNodes) {
             String uniqueId = getWebhookEventUniqueId(webhookEventType, jsonNode);
             OutboundEvent outboundEvent = getOutboundEvent(webhookEventType.name(), jsonNode);
-            WebhookPolledEventReceivedDto polledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, RawEventPayload.of(jsonNode));
+            WebhookPolledEventReceived polledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, RawEventPayload.of(jsonNode));
             updates.add(polledEvent);
         }
         return updates;

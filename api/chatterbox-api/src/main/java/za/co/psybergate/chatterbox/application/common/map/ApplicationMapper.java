@@ -1,12 +1,12 @@
 package za.co.psybergate.chatterbox.application.common.map;
 
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
 
 public class ApplicationMapper {
 
-    public static OutboundEvent mapToOutboundEvent(WebhookPolledEventReceivedDto event) {
+    public static OutboundEvent mapToOutboundEvent(WebhookPolledEventReceived event) {
         return new OutboundEvent(
                 event.id(),
                 event.sourceId(),
@@ -21,7 +21,7 @@ public class ApplicationMapper {
         );
     }
 
-    public static OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto event) {
+    public static OutboundEvent mapToOutboundEvent(WebhookEventReceived event) {
         return new OutboundEvent(
                 event.id(),
                 event.webhookId(),

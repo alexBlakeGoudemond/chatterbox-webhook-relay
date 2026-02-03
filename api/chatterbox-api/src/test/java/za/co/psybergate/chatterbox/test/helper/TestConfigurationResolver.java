@@ -14,8 +14,8 @@ public class TestConfigurationResolver {
         this.configurationResolver = configurationResolver;
     }
 
-    public String getTeamsDestinationUrl(OutboundEvent eventDto) {
-        return configurationResolver.resolveDestinationUrl(eventDto.repository(), DeliveryChannelType.NOTIFICATION);
+    public String getTeamsDestinationUrl(OutboundEvent outboundEvent) {
+        return configurationResolver.resolveDestinationUrl(outboundEvent.repository(), DeliveryChannelType.NOTIFICATION);
     }
 
     public String getDiscordDestinationUrl(OutboundEvent outboundEvent) {

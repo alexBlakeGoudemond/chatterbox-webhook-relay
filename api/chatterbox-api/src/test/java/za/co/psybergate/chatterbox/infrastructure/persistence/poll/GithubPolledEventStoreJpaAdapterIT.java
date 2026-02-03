@@ -16,8 +16,8 @@ import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEvent
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
@@ -63,7 +63,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
-        WebhookPolledEventReceivedDto polledEvent = adapter.storeEvent("abc123", outboundEvent, RawEventPayload.of(jsonNode));
+        WebhookPolledEventReceived polledEvent = adapter.storeEvent("abc123", outboundEvent, RawEventPayload.of(jsonNode));
         assertNotNull(polledEvent);
     }
 
@@ -72,7 +72,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     public void givenGithubEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
-        WebhookPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
+        WebhookPolledEventDelivery polledEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }
 

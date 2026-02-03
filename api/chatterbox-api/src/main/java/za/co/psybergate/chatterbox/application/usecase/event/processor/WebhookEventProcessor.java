@@ -7,8 +7,8 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
 import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
@@ -48,7 +48,7 @@ public class WebhookEventProcessor implements EventProcessorPort {
     }
 
     private void processWebhookEvents(DestinationMapping mapping) {
-        for (WebhookEventReceivedDto event : webhookEventStore.getUnprocessedWebhooks(mapping.source())) {
+        for (WebhookEventReceived event : webhookEventStore.getUnprocessedWebhooks(mapping.source())) {
             OutboundEvent outbound = ApplicationMapper.mapToOutboundEvent(event);
             eventDelivery.deliver(outbound, mapping);
             webhookEventStore.markProcessed(outbound, WebhookEventStatus.PROCESSED_SUCCESS);
@@ -56,7 +56,7 @@ public class WebhookEventProcessor implements EventProcessorPort {
     }
 
     private void processPolledEvents(DestinationMapping mapping) {
-        for (WebhookPolledEventReceivedDto event : polledEventStore.getUnprocessedEvents(mapping.source())) {
+        for (WebhookPolledEventReceived event : polledEventStore.getUnprocessedEvents(mapping.source())) {
             OutboundEvent outbound = ApplicationMapper.mapToOutboundEvent(event);
             eventDelivery.deliver(outbound, mapping);
             polledEventStore.markProcessed(outbound, WebhookEventStatus.PROCESSED_SUCCESS);

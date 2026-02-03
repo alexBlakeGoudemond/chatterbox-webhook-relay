@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
@@ -104,7 +104,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousWebhook(WebhookEventReceivedDto latestWebhookEvent) {
+    public void logRunnerFoundPreviousWebhook(WebhookEventReceived latestWebhookEvent) {
         log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
     }
 
@@ -114,7 +114,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceivedDto latestGithubPolledEvent) {
+    public void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestGithubPolledEvent) {
         log.info("[Runner] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
     }
 
@@ -134,7 +134,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logPolledEventsFound(List<WebhookPolledEventReceivedDto> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+    public void logPolledEventsFound(List<WebhookPolledEventReceived> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
         log.info("[Polling] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
     }
 

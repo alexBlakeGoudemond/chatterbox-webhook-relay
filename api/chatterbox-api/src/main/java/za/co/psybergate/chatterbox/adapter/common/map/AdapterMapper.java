@@ -1,7 +1,7 @@
 package za.co.psybergate.chatterbox.adapter.common.map;
 
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 public class AdapterMapper {
 
-    public static WebhookPolledEventReceivedDto mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
-        return new WebhookPolledEventReceivedDto(
+    public static WebhookPolledEventReceived mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
+        return new WebhookPolledEventReceived(
                 polledEvent.getId(),
                 polledEvent.getRepositoryFullName(),
                 polledEvent.getSourceId(),
@@ -36,8 +36,8 @@ public class AdapterMapper {
         );
     }
 
-    public static WebhookPolledEventDeliveryDto mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
-        return new WebhookPolledEventDeliveryDto(
+    public static WebhookPolledEventDelivery mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
+        return new WebhookPolledEventDelivery(
                 deliveryLog.getId(),
                 deliveryLog.getGithubPolledEventId(),
                 deliveryLog.getDeliveryDestination(),
@@ -58,8 +58,8 @@ public class AdapterMapper {
                 .build();
     }
 
-    public static WebhookEventReceivedDto mapToWebhookEventReceivedDto(WebhookEvent webhookEvent) {
-        return new WebhookEventReceivedDto(webhookEvent.getId(),
+    public static WebhookEventReceived mapToWebhookEventReceived(WebhookEvent webhookEvent) {
+        return new WebhookEventReceived(webhookEvent.getId(),
                 webhookEvent.getRepositoryFullName(),
                 webhookEvent.getWebhookId(),
                 webhookEvent.getWebhookEventType(),
@@ -75,8 +75,8 @@ public class AdapterMapper {
                 webhookEvent.getProcessedAt());
     }
 
-    public static WebhookEventDeliveryDto mapToWebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
-        return new WebhookEventDeliveryDto(
+    public static WebhookEventDelivery mapToWebhookEventDeliveryRecord(WebhookEventDeliveryLog deliveryLog) {
+        return new WebhookEventDelivery(
                 deliveryLog.getId(),
                 deliveryLog.getWebhookEventId(),
                 deliveryLog.getDeliveryDestination(),

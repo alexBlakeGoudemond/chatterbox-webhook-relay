@@ -4,9 +4,9 @@ import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventSt
 
 import java.time.LocalDateTime;
 
-public record WebhookPolledEventDeliveryDto(
+public record WebhookEventDelivery(
         Long id,
-        Long githubPolledEventId,
+        Long webhookEventId,
         String deliveryDestination,
         String deliveryDestinationUrl,
         WebhookEventStatus webhookEventStatus,

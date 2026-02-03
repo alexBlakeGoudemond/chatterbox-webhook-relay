@@ -2,7 +2,7 @@ package za.co.psybergate.chatterbox.application.domain.event.model;
 
 import java.time.LocalDateTime;
 
-public record WebhookEventReceivedDto(
+public record WebhookEventReceived(
         Long id,
         String repositoryFullName,
         String webhookId,

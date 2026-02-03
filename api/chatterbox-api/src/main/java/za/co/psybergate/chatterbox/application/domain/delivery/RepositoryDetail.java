@@ -2,14 +2,14 @@ package za.co.psybergate.chatterbox.application.domain.delivery;
 
 import java.time.LocalDateTime;
 
-public record RepositoryDetailDto(
+public record RepositoryDetail(
         String repositoryOwner,
         String repositoryName,
         LocalDateTime fromDate,
         LocalDateTime toDate
 ) {
 
-    public RepositoryDetailDto(String repositoryOwner, String repositoryName, String fromDate, String toDate) {
+    public RepositoryDetail(String repositoryOwner, String repositoryName, String fromDate, String toDate) {
         this(repositoryOwner, repositoryName, LocalDateTime.parse(fromDate), LocalDateTime.parse(toDate));
     }
 
