@@ -1,6 +1,5 @@
-package za.co.psybergate.chatterbox.application.domain.api;
+package za.co.psybergate.chatterbox.application.domain.event.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 

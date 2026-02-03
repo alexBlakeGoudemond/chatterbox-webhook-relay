@@ -54,13 +54,8 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logSendingDtoToTeams(OutboundEvent outboundEvent, String teamsDestination) {
-        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", outboundEvent.displayText(), teamsDestination);
-    }
-
-    @Override
-    public void logSendingDtoToDiscord(OutboundEvent outboundEvent, String discordDestination) {
-        log.info("[Delivery] Sending '{}' to Discord destination '{}'", outboundEvent.displayText(), discordDestination);
+    public void logSendingDtoToDestination(OutboundEvent outboundEvent, String destination) {
+        log.info("[Delivery] Sending '{}' to destination '{}'", outboundEvent.displayText(), destination);
     }
 
     @Override
@@ -69,12 +64,12 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logGithubPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public void logPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         log.info("[GithubAPI] querying '{}/{}' for any updates since {} - {}", owner, repositoryName, fromDate, untilDate);
     }
 
     @Override
-    public void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public void logPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         log.debug("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
     }
 
@@ -124,7 +119,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logGithubPolledEventsEmpty(String repositoryFullName) {
+    public void logPolledEventsEmpty(String repositoryFullName) {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
     }
 

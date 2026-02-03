@@ -15,7 +15,7 @@ import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJ
 import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;

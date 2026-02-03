@@ -1,8 +1,5 @@
 package za.co.psybergate.chatterbox.application.domain.event.model;
 
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-
 import java.time.LocalDateTime;
 
 public record WebhookEventReceivedDto(

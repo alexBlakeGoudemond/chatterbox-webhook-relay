@@ -13,11 +13,11 @@ public interface WebhookOrchestratorPort {
 
     WebhookEventReceivedDto process(String eventType, String deliveryId, JsonNode rawBody);
 
-    List<WebhookPolledEventReceivedDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
+    List<WebhookPolledEventReceivedDto> pollForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
 
-    List<WebhookPolledEventReceivedDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    List<WebhookPolledEventReceivedDto> pollForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    List<WebhookPolledEventReceivedDto> pollGithubForChanges(String repository, LocalDateTime receivedAt);
+    List<WebhookPolledEventReceivedDto> pollForChanges(String repository, LocalDateTime receivedAt);
 
     boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName);
 

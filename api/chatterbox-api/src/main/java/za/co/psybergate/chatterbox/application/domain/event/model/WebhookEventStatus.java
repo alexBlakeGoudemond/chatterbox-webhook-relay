@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.domain.api;
+package za.co.psybergate.chatterbox.application.domain.event.model;
 
 import lombok.Getter;
 

@@ -1,11 +1,13 @@
 package za.co.psybergate.chatterbox.adapter.common.map;
 
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.*;
 

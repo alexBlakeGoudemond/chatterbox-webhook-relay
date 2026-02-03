@@ -3,7 +3,7 @@ package za.co.psybergate.chatterbox.adapter.out.webhook.resolution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
@@ -39,23 +39,13 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
     }
 
     @Override
-    public String resolveTeamsUrl(String repositoryName) throws UnrecognizedRequestException {
-        for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
-            if (!destinationMapping.source().equals(repositoryName)) {
-                continue;
-            }
-            return destinationTeamsProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryChannelType.NOTIFICATION));
-        }
-        throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
-    }
-
-    @Override
-    public String resolveDiscordUrl(String repositoryName) throws UnrecognizedRequestException {
+    public String resolveDestinationUrl(String repositoryName, DeliveryChannelType channelType) throws UnrecognizedRequestException {
         for (DestinationMapping destinationMapping : repositoryProperties.getDestinationMapping()) {
             if (!destinationMapping.source().equalsIgnoreCase(repositoryName)) {
                 continue;
             }
-            return destinationDiscordProperties.getUrl(destinationMapping.destinationChannels().get(DeliveryChannelType.CHAT));
+            String channel = destinationMapping.destinationChannels().get(channelType);
+            return getDestinationUrl(channel, channelType);
         }
         throw new UnrecognizedRequestException("Unable to find the destination for " + repositoryName);
     }
@@ -75,13 +65,12 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
     }
 
     @Override
-    public String getTeamsUrl(String teamsDestinationChannel) {
-        return destinationTeamsProperties.getUrl(teamsDestinationChannel);
-    }
-
-    @Override
-    public String getDiscordUrl(String discordDestinationChannel) {
-        return destinationDiscordProperties.getUrl(discordDestinationChannel);
+    public String getDestinationUrl(String destinationChannel, DeliveryChannelType channelType) {
+        return switch (channelType) {
+            case NOTIFICATION -> destinationTeamsProperties.getUrl(destinationChannel);
+            case CHAT -> destinationDiscordProperties.getUrl(destinationChannel);
+            default -> throw new UnrecognizedRequestException("Unsupported channel type " + channelType);
+        };
     }
 
 }

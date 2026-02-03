@@ -10,8 +10,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -55,7 +56,7 @@ public class PropertiesConfigurationResolverTest {
     @DisplayName("Known Teams Destination Channel Name succeeds")
     @Test
     public void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
-        String destinationUrl = resolver.resolveTeamsUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
+        String destinationUrl = resolver.resolveDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations", DeliveryChannelType.NOTIFICATION);
         assertNotNull(destinationUrl);
     }
 
@@ -63,7 +64,7 @@ public class PropertiesConfigurationResolverTest {
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
         Assertions.assertThrows(UnrecognizedRequestException.class,
-                () -> resolver.resolveTeamsUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
+                () -> resolver.resolveDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined", DeliveryChannelType.NOTIFICATION));
     }
 
 }

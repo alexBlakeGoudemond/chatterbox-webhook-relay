@@ -37,7 +37,7 @@ public class DiscordWebhookSender implements DestinationSenderPort {
 
     @Override
     public DeliveryResult deliver(OutboundEvent dto, String discordDestination) {
-        webhookLogger.logSendingDtoToDiscord(dto, discordDestination);
+        webhookLogger.logSendingDtoToDestination(dto, discordDestination);
         String jsonString = discordEmbeddedObjectFactoryPort.getAsPayloadString(dto);
         HttpPost httpPost = getHttpPost(discordDestination, jsonString);
         HttpResponseDto httpResponseDto = executeHttpPostRequest(httpPost);

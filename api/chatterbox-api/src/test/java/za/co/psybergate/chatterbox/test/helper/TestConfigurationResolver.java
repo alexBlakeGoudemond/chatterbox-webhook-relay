@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.test.helper;
 
 import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
@@ -14,11 +15,11 @@ public class TestConfigurationResolver {
     }
 
     public String getTeamsDestinationUrl(OutboundEvent eventDto) {
-        return configurationResolver.resolveTeamsUrl(eventDto.repository());
+        return configurationResolver.resolveDestinationUrl(eventDto.repository(), DeliveryChannelType.NOTIFICATION);
     }
 
     public String getDiscordDestinationUrl(OutboundEvent outboundEvent) {
-        return configurationResolver.resolveDiscordUrl(outboundEvent.repository());
+        return configurationResolver.resolveDestinationUrl(outboundEvent.repository(), DeliveryChannelType.CHAT);
     }
 
 }

@@ -21,6 +21,7 @@ import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -63,7 +64,7 @@ class GithubPollingServiceIT {
         String repositoryName = repositoryDetailDto.repositoryName();
         LocalDateTime fromDate = repositoryDetailDto.fromDate();
         LocalDateTime untilDate = repositoryDetailDto.toDate();
-        JsonNode commitsSince = pollingService.getCommitsSince(owner, repositoryName, fromDate, untilDate);
+        List<?> commitsSince = pollingService.getCommitsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(commitsSince);
     }
 
@@ -74,7 +75,7 @@ class GithubPollingServiceIT {
         String repositoryName = repositoryDetailDto.repositoryName();
         LocalDateTime fromDate = repositoryDetailDto.fromDate();
         LocalDateTime untilDate = repositoryDetailDto.toDate();
-        JsonNode pullRequestsSince = pollingService.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
+        List<?> pullRequestsSince = pollingService.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(pullRequestsSince);
     }
 

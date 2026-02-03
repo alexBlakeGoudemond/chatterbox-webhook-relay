@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.domain.event.model;
+package za.co.psybergate.chatterbox.application.domain.persistence;
 
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 
 import java.time.LocalDateTime;
 

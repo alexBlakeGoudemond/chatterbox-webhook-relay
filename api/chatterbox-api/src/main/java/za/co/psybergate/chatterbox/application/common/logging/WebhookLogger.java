@@ -26,15 +26,13 @@ public interface WebhookLogger {
 
     void logUnrecognizedRepository(String repositoryName);
 
-    void logSendingDtoToTeams(OutboundEvent outboundEvent, String teamsDestination);
-
-    void logSendingDtoToDiscord(OutboundEvent outboundEvent, String discordDestination);
+    void logSendingDtoToDestination(OutboundEvent outboundEvent, String destination);
 
     void logExceptionDetails(Exception exception);
 
-    void logGithubPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    void logPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    void logPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
     void logStoringEvent(Object webhook);
 
@@ -54,7 +52,7 @@ public interface WebhookLogger {
 
     void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceivedDto latestGithubPolledEvent);
 
-    void logGithubPolledEventsEmpty(String repositoryFullName);
+    void logPolledEventsEmpty(String repositoryFullName);
 
     void logWebhookEventsEmpty(String repositoryFullName);
 

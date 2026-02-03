@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
@@ -18,9 +18,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
-import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_COMMIT;
-import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_PULL_REQUEST;
+import static za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType.POLL_COMMIT;
+import static za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType.POLL_PULL_REQUEST;
 
 @Service
 public class GithubRestPollingClient implements WebhookPollingPort {
@@ -48,7 +50,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
 
     @Override
     public @Valid RepositoryUpdates getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        webhookLogger.logPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
         RepositoryUpdates informationDto = new RepositoryUpdates(fromDate, untilDate);
         for (String eventMapping : payloadProperties.getEventMapping().keySet()) {
             boolean eventExists = WebhookEventType.contains(eventMapping);
@@ -70,15 +72,15 @@ public class GithubRestPollingClient implements WebhookPollingPort {
     }
 
     @Override
-    public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate) {
+    public List<?> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate) {
         return getCommitsSince(owner, repositoryName, fromDate, LocalDateTime.now());
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
     /// [API Contract for Commits](https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28)
     @Override
-    public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        webhookLogger.logGithubPollEventType("commits", owner, repositoryName, fromDate, untilDate);
+    public List<?> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        webhookLogger.logPollEventType("commits", owner, repositoryName, fromDate, untilDate);
         ArrayNode commits = githubClient.get()
                 .uri(uri -> uri
                         .path("/repos/{owner}/{repo}/commits")
@@ -91,19 +93,21 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         if (commits == null) {
             throw new ApplicationException("No commits found when polling Repository");
         }
-        return commits;
+        List<JsonNode> list = new ArrayList<>();
+        commits.forEach(list::add);
+        return list;
     }
 
     @Override
-    public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate) {
+    public List<?> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate) {
         return getPullRequestsSince(owner, repositoryName, fromDate, LocalDateTime.now());
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
     /// [API Contract for Pull Requests](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-pull-requests)
     @Override
-    public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
-        webhookLogger.logGithubPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
+    public List<?> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        webhookLogger.logPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
         ArrayNode pullRequests = githubClient.get()
                 .uri(uri -> uri
                         .path("/repos/{owner}/{repo}/pulls")
@@ -122,8 +126,8 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         return filterByDateRange(pullRequests, fromDate, untilDate);
     }
 
-    private ArrayNode filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
-        ArrayNode filtered = mapper.createArrayNode();
+    private List<?> filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
+        List<JsonNode> filtered = new ArrayList<>();
         ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
         Instant from = fromDate.toInstant(systemOffset);
         Instant until = untilDate.toInstant(systemOffset);

@@ -81,7 +81,7 @@ public class GithubWebhookServiceImplPollGithubIT extends AbstractPostgresTestCo
         LocalDateTime fromDate = repositoryDetailDto.fromDate();
         LocalDateTime untilDate = repositoryDetailDto.toDate();
 
-        List<WebhookPolledEventReceivedDto> githubPolledEvents = webhookOrchestratorPort.pollGithubForChanges(owner, repositoryFullName, fromDate, untilDate);
+        List<WebhookPolledEventReceivedDto> githubPolledEvents = webhookOrchestratorPort.pollForChanges(owner, repositoryFullName, fromDate, untilDate);
         assertNotNull(githubPolledEvents);
         assertFalse(githubPolledEvents.isEmpty());
         for (WebhookPolledEventReceivedDto polledEvent : githubPolledEvents) {

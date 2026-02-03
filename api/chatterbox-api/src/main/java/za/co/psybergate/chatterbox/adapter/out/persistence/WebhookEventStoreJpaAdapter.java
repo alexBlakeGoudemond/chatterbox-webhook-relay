@@ -9,9 +9,9 @@ import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.We
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventLogJpaRepository;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.adapter.common.map.AdapterMapper;
