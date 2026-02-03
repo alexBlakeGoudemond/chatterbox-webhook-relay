@@ -1,11 +1,9 @@
 package za.co.psybergate.chatterbox.application.common.logging;
 
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
@@ -24,8 +22,6 @@ public interface WebhookLogger {
 
     void logCompletion(long ms);
 
-    void logEventReceived(GithubEventDto eventDto);
-
     void logUnknownEventType(String eventType);
 
     void logUnrecognizedRepository(String repositoryName);
@@ -33,8 +29,6 @@ public interface WebhookLogger {
     void logSendingDtoToTeams(OutboundEvent outboundEvent, String teamsDestination);
 
     void logSendingDtoToDiscord(OutboundEvent outboundEvent, String discordDestination);
-
-    void logTeamsResponse(HttpResponseDto httpResponseDto);
 
     void logExceptionDetails(Exception exception);
 

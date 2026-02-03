@@ -3,12 +3,10 @@ package za.co.psybergate.chatterbox.application.common.logging;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
@@ -46,11 +44,6 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logEventReceived(GithubEventDto eventDto) {
-        log.debug("[WebhookEvent] received DTO: {}", eventDto);
-    }
-
-    @Override
     public void logUnknownEventType(String eventType) {
         log.debug("[Validation] No ConfigurationProperties Found for eventType: {}", eventType);
     }
@@ -68,11 +61,6 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     @Override
     public void logSendingDtoToDiscord(OutboundEvent outboundEvent, String discordDestination) {
         log.info("[Delivery] Sending '{}' to Discord destination '{}'", outboundEvent.displayText(), discordDestination);
-    }
-
-    @Override
-    public void logTeamsResponse(HttpResponseDto httpResponseDto) {
-        log.info("[Delivery] MS Teams Response: {}", httpResponseDto);
     }
 
     @Override
