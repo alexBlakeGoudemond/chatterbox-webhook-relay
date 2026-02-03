@@ -151,7 +151,7 @@ public class WebhookEvent {
         this(uniqueId,
                 outboundEvent.repository(),
                 outboundEvent.type(),
-                outboundEvent.displayText(),
+                outboundEvent.title(),
                 outboundEvent.actor(),
                 outboundEvent.url(),
                 outboundEvent.displayText(),
