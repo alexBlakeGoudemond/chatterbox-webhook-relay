@@ -1,15 +1,17 @@
 package za.co.psybergate.chatterbox.application.domain.event.model;
 
+import jakarta.validation.constraints.NotNull;
+
 public record OutboundEvent(
         Long id,
         String sourceId,
-        String type,
-        String title,
-        String repository,
-        String actor,
-        String url,
-        String displayText,
-        String extra,
+        @NotNull String type,
+        @NotNull String title,
+        @NotNull String repository,
+        @NotNull String actor,
+        @NotNull String url,
+        @NotNull String displayText,
+        @NotNull String extra,
         String payload
 ) {
 
