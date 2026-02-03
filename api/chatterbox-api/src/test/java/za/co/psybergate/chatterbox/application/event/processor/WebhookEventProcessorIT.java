@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.*;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessor;
+import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
 import za.co.psybergate.chatterbox.application.usecase.event.processor.WebhookEventProcessor;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
@@ -75,7 +75,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
-    private EventProcessor eventProcessor;
+    private EventProcessorPort eventProcessor;
 
     @Autowired
     private WebhookEventStorePort webhookEventStorePort;

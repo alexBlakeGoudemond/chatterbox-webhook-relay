@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessor;
+import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.application.domain.event.notification.Webhook
 @RequiredArgsConstructor
 public class AsyncEventUpdateListener implements UpdatesProcessedListener {
 
-    private final EventProcessor eventProcessor;
+    private final EventProcessorPort eventProcessor;
 
     private final WebhookLogger webhookLogger;
 

@@ -9,7 +9,7 @@ import za.co.psybergate.chatterbox.application.domain.configuration.DestinationM
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessor;
+import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
 import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
@@ -18,7 +18,7 @@ import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.Webho
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class WebhookEventProcessor implements EventProcessor {
+public class WebhookEventProcessor implements EventProcessorPort {
 
     private final WebhookLogger webhookLogger;
 

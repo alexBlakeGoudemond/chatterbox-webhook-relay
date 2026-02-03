@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.application.port.in.event.processor;
 
-public interface EventProcessor {
+public interface EventProcessorPort {
 
     void processWebhookEvents();
 
