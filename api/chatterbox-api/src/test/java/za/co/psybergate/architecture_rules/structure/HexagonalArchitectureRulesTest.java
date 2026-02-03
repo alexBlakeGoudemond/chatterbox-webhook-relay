@@ -32,7 +32,7 @@ public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAb
     }
 
     @Override
-    protected List<String> infrastructureAllowedPackages() {
+    protected List<String> adapterAllowedPackages() {
         List<String> allowedPackages = new ArrayList<>();
         allowedPackages.addAll(springPackages());
         allowedPackages.addAll(jacksonPackages());
