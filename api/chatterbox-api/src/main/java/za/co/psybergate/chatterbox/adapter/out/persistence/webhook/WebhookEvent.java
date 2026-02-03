@@ -12,6 +12,7 @@ import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -122,17 +123,39 @@ public class WebhookEvent {
                 receivedAt);
     }
 
+    public WebhookEvent(String webhookId,
+                        String repositoryFullName,
+                        WebhookEventType webhookEventType,
+                        String displayName,
+                        String senderName,
+                        String eventUrl,
+                        String eventUrlDisplayText,
+                        String extraDetail,
+                        String payload) {
+        this(webhookId,
+                repositoryFullName,
+                webhookEventType,
+                displayName,
+                senderName,
+                eventUrl,
+                eventUrlDisplayText,
+                extraDetail,
+                payload,
+                WebhookEventStatus.RECEIVED,
+                LocalDateTime.now());
+    }
+
     public WebhookEvent(String uniqueId,
-                        GithubEventDto eventDto,
+                        OutboundEvent outboundEvent,
                         JsonNode rawBody) {
         this(uniqueId,
-                eventDto.repositoryName(),
-                eventDto.webhookEventType(),
-                eventDto.displayName(),
-                eventDto.senderName(),
-                eventDto.url(),
-                eventDto.urlDisplayText(),
-                eventDto.extraDetail(),
+                outboundEvent.repository(),
+                outboundEvent.type(),
+                outboundEvent.displayText(),
+                outboundEvent.actor(),
+                outboundEvent.url(),
+                outboundEvent.displayText(),
+                outboundEvent.extra(),
                 rawBody.toString(),
                 WebhookEventStatus.RECEIVED,
                 LocalDateTime.now());

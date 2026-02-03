@@ -9,21 +9,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
+import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -63,8 +63,9 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
     public void givenPayloadAndEventDto_WhenStoreWebhook_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = mapToOutboundEvent(WebhookEventStoreJpaAdapter.mapToWebhookEventReceivedDto(mapToWebhookEvent(eventDto, jsonNode)), jsonNode);
 
-        WebhookEventReceivedDto webhookEvent = adapter.storeWebhook("abc123", eventDto, jsonNode);
+        WebhookEventReceivedDto webhookEvent = adapter.storeWebhook("abc123", outboundEvent, jsonNode);
         assertNotNull(webhookEvent);
     }
 
@@ -73,14 +74,26 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
     public void givenWebhookEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        WebhookEvent webhookEvent = new WebhookEvent("abc123", eventDto, jsonNode);
-        WebhookEventReceivedDto webhookEventReceivedDto = WebhookEventStoreJpaAdapter.mapToWebhookEventRecord(webhookEvent);
+        WebhookEvent webhookEvent = mapToWebhookEvent(eventDto, jsonNode);
+        WebhookEventReceivedDto webhookEventReceivedDto = WebhookEventStoreJpaAdapter.mapToWebhookEventReceivedDto(webhookEvent);
         OutboundEvent outboundEvent = mapToOutboundEvent(webhookEventReceivedDto, jsonNode);
         WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(webhookEventDeliveryLog);
     }
 
-    private OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto webhookEventReceivedDto, JsonNode jsonNode) {
+    private WebhookEvent mapToWebhookEvent(GithubEventDto eventDto, JsonNode jsonNode) {
+        return new WebhookEvent("abc123",
+                eventDto.repositoryName(),
+                eventDto.webhookEventType(),
+                eventDto.displayName(),
+                eventDto.senderName(),
+                eventDto.urlDisplayText(),
+                eventDto.urlDisplayText(),
+                eventDto.extraDetail(),
+                jsonNode.toString());
+    }
+
+    public static OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto webhookEventReceivedDto, JsonNode jsonNode) {
         return new OutboundEvent(
                 1L,
                 "0123456789abcde",

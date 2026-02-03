@@ -12,12 +12,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.application.domain.event.model.*;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordWebhookSender;
+import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
-import za.co.psybergate.chatterbox.application.usecase.event.processor.WebhookEventProcessor;
+import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
+import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
@@ -25,17 +30,12 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEvent
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
-import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.application.domain.event.model.*;
+import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import za.co.psybergate.chatterbox.application.usecase.event.processor.WebhookEventProcessor;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordWebhookSender;
-import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -98,7 +98,8 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
-        this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, eventDto, jsonNode);
+        OutboundEvent outboundEvent = mapToOutboundEvent(uniqueId, eventDto, jsonNode);
+        this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, outboundEvent, jsonNode);
         this.persistedGithubPolledEvent = githubPolledEventStorePort.storeEvent(uniqueId, eventDto, jsonNode);
     }
 
@@ -136,6 +137,21 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
             assertNotNull(polledEventDeliveryLog);
             assertEquals(polledEventDeliveryLog.githubPolledEventId(), retrievedPolledEvent.id());
         }
+    }
+
+    private OutboundEvent mapToOutboundEvent(String uniqueId, GithubEventDto eventDto, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                uniqueId,
+                WebhookEventType.PUSH.name(),
+                eventDto.displayName(),
+                eventDto.repositoryName(),
+                eventDto.senderName(),
+                eventDto.url(),
+                eventDto.urlDisplayText(),
+                eventDto.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
 }

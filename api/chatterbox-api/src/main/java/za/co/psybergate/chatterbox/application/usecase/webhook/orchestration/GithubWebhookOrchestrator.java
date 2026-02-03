@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
 import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
@@ -57,7 +58,8 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        WebhookEventReceivedDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, eventDto, rawBody);
+        OutboundEvent outboundEvent = mapToOutboundEvent(deliveryId, eventDto, rawBody);
+        WebhookEventReceivedDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, rawBody);
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }
@@ -148,6 +150,21 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
             return persistedTime001;
         }
         return persistedTime002;
+    }
+
+    private OutboundEvent mapToOutboundEvent(String uniqueId, GithubEventDto eventDto, JsonNode jsonNode) {
+        return new OutboundEvent(
+                1L,
+                uniqueId,
+                WebhookEventType.PUSH.name(),
+                eventDto.displayName(),
+                eventDto.repositoryName(),
+                eventDto.senderName(),
+                eventDto.url(),
+                eventDto.urlDisplayText(),
+                eventDto.extraDetail(),
+                jsonNode.toString()
+        );
     }
 
 }

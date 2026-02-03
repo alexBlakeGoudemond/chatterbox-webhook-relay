@@ -3,7 +3,6 @@ package za.co.psybergate.chatterbox.adapter.out.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventJpaRepository;
@@ -37,7 +36,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
         this.webhookLogger = webhookLogger;
     }
 
-    public static WebhookEventReceivedDto mapToWebhookEventRecord(WebhookEvent webhookEvent) {
+    public static WebhookEventReceivedDto mapToWebhookEventReceivedDto(WebhookEvent webhookEvent) {
         return new WebhookEventReceivedDto(webhookEvent.getId(),
                 webhookEvent.getRepositoryFullName(),
                 webhookEvent.getWebhookId(),
@@ -74,7 +73,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
                 return List.of();
             }
             return webhookEvents.stream()
-                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventRecord)
+                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventReceivedDto)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
@@ -90,7 +89,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
                 return List.of();
             }
             return webhookEvents.stream()
-                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventRecord)
+                    .map(WebhookEventStoreJpaAdapter::mapToWebhookEventReceivedDto)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve WebhookEvents", e);
@@ -98,8 +97,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventReceivedDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        WebhookEvent webhook = new WebhookEvent(uniqueId, eventDto, rawBody);
+    public WebhookEventReceivedDto storeWebhook(String uniqueId, OutboundEvent outboundEvent, JsonNode rawBody) {
+        WebhookEvent webhook = new WebhookEvent(uniqueId, outboundEvent, rawBody);
         return storeWebhook(webhook);
     }
 
@@ -108,7 +107,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
         try {
             WebhookEvent webhookEvent = repository.save(webhook);
             webhookLogger.logEventStored(webhook);
-            return mapToWebhookEventRecord(webhookEvent);
+            return mapToWebhookEventReceivedDto(webhookEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store WebhookEvent", e);
         }
@@ -165,26 +164,11 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
                 WebhookEventStatus.PROCESSED_SUCCESS);
     }
 
-    private WebhookEvent mapToWebhookEvent(OutboundEvent outboundEvent) {
-        return new WebhookEvent(
-                outboundEvent.uniqueId(),
-                outboundEvent.repository(),
-                outboundEvent.type(),
-                outboundEvent.title(),
-                outboundEvent.actor(),
-                outboundEvent.url(),
-                outboundEvent.displayText(),
-                outboundEvent.extra(),
-                outboundEvent.payload(),
-                WebhookEventStatus.RECEIVED,
-                LocalDateTime.now());
-    }
-
     @Override
     public WebhookEventReceivedDto getWebhook(Long id) {
         WebhookEvent webhookEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
-        return mapToWebhookEventRecord(webhookEvent);
+        return mapToWebhookEventReceivedDto(webhookEvent);
     }
 
     @Override
@@ -206,6 +190,21 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
             throw new ApplicationException("No WebhookEvents found for repository " + repositoryName);
         }
         return webhookEvents.getFirst();
+    }
+
+    private WebhookEvent mapToWebhookEvent(OutboundEvent outboundEvent) {
+        return new WebhookEvent(
+                outboundEvent.uniqueId(),
+                outboundEvent.repository(),
+                outboundEvent.type(),
+                outboundEvent.title(),
+                outboundEvent.actor(),
+                outboundEvent.url(),
+                outboundEvent.displayText(),
+                outboundEvent.extra(),
+                outboundEvent.payload(),
+                WebhookEventStatus.RECEIVED,
+                LocalDateTime.now());
     }
 
 }
