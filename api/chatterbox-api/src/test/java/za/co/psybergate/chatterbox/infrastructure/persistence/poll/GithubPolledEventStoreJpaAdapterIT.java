@@ -11,7 +11,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapper;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
@@ -54,7 +54,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private OutboundEventMapper eventExtractor;
+    private OutboundEventMapperPort eventExtractor;
 
     @DisplayName("Can save GithubPolledEvent")
     @Test

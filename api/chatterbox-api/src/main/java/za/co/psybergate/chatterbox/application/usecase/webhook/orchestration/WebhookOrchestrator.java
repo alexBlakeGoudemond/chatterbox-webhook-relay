@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolle
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapper;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_COMMIT;
-import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_PULL_REQUEST;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,7 +36,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
 
     private final WebhookRequestValidatorPort webhookRequestValidatorPort;
 
-    private final OutboundEventMapper eventExtractor;
+    private final OutboundEventMapperPort eventExtractor;
 
     private final JsonConverter jsonConverter;
 

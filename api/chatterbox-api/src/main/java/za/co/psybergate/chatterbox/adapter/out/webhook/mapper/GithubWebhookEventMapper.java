@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapper;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
@@ -21,7 +21,7 @@ import static za.co.psybergate.chatterbox.application.domain.configuration.Event
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class GithubWebhookEventMapper implements OutboundEventMapper {
+public class GithubWebhookEventMapper implements OutboundEventMapperPort {
 
     private final WebhookConfigurationResolverPort webhookConfigurationResolverPort;
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
-public interface OutboundEventMapper {
+public interface OutboundEventMapperPort {
 
     OutboundEvent map(String eventType, JsonNode payload);
 

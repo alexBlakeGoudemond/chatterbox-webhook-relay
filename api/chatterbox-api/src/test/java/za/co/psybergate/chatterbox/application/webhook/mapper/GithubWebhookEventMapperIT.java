@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapper;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
         PropertiesConfigurationResolver.class,
         TestConfigurationResolver.class,
 })
-public class OutboundEventMapperImplIT {
+public class GithubWebhookEventMapperIT {
 
     @MockitoBean
     private WebhookFilter webhookFilter;
@@ -57,7 +57,7 @@ public class OutboundEventMapperImplIT {
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private OutboundEventMapper eventExtractor;
+    private OutboundEventMapperPort eventExtractor;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
