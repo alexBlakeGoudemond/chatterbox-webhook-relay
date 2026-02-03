@@ -24,7 +24,7 @@ import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
-import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubRestPollingClient;
+import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;

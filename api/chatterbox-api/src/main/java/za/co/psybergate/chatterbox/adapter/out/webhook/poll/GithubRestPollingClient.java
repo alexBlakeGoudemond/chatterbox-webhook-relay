@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.github.delivery;
+package za.co.psybergate.chatterbox.adapter.out.webhook.poll;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
@@ -22,7 +23,7 @@ import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventTyp
 import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_PULL_REQUEST;
 
 @Service
-public class GithubRestPollingClient implements GithubPollingPort {
+public class GithubRestPollingClient implements WebhookPollingPort {
 
     private final WebClient githubClient;
 
@@ -74,6 +75,7 @@ public class GithubRestPollingClient implements GithubPollingPort {
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
+    /// [API Contract for Commits](https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28)
     @Override
     public ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logGithubPollEventType("commits", owner, repositoryName, fromDate, untilDate);
@@ -98,6 +100,7 @@ public class GithubRestPollingClient implements GithubPollingPort {
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
+    /// [API Contract for Pull Requests](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-pull-requests)
     @Override
     public ArrayNode getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logGithubPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);

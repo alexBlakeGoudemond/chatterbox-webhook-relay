@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubPollingPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_COMMIT;
+import static za.co.psybergate.chatterbox.application.domain.api.WebhookEventType.POLL_PULL_REQUEST;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,7 +43,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
 
     private final JsonConverter jsonConverter;
 
-    private final GithubPollingPort githubPollingPort;
+    private final WebhookPollingPort webhookPollingPort;
 
     private final WebhookEventStorePort webhookEventStorePort;
 
@@ -68,7 +72,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     @Override
     public List<WebhookPolledEventReceivedDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);
-        RepositoryUpdates recentUpdates = githubPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        RepositoryUpdates recentUpdates = webhookPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
         for (Map.Entry<WebhookEventType, ArrayNode> entry : recentUpdates.getWebhookEventTypeDetails().entrySet()) {
@@ -129,12 +133,20 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     private List<WebhookPolledEventReceivedDto> storeEvents(WebhookEventType webhookEventType, ArrayNode arrayNode) {
         List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
         for (JsonNode jsonNode : arrayNode) {
-            String uniqueId = webhookEventType.getUniqueId(jsonNode);
+            String uniqueId = getWebhookEventUniqueId(webhookEventType, jsonNode);
             OutboundEvent outboundEvent = getOutboundEvent(webhookEventType.name(), jsonNode);
             WebhookPolledEventReceivedDto polledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
             updates.add(polledEvent);
         }
         return updates;
+    }
+
+    private String getWebhookEventUniqueId(WebhookEventType webhookEventType, JsonNode jsonNode) {
+        return switch (webhookEventType) {
+            case POLL_COMMIT -> jsonNode.get("sha").asText();
+            case POLL_PULL_REQUEST -> jsonNode.get("merge_commit_sha").asText();
+            default -> throw new DomainException("Unable to find UniqueID; Unknown event type " + this);
+        };
     }
 
     private OutboundEvent getOutboundEvent(String eventType, JsonNode rawBody) {

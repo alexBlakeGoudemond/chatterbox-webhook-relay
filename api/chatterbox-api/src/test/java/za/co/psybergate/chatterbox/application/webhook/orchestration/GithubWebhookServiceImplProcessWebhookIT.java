@@ -19,7 +19,7 @@ import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubRestPollingClient;
+import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;

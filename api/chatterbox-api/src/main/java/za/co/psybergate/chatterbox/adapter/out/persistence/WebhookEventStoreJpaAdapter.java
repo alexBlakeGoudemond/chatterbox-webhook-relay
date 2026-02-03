@@ -139,7 +139,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     @Override
     public void markProcessed(OutboundEvent outboundEvent, WebhookEventStatus webhookEventStatus) {
         WebhookEvent webhookEvent = mapToWebhookEvent(outboundEvent);
-        webhookEvent.setId(outboundEvent.technicalId());
+        webhookEvent.setId(outboundEvent.id());
         webhookEvent.setWebhookEventStatus(webhookEventStatus);
         webhookEvent.setProcessedAt(LocalDateTime.now());
         try {
@@ -150,7 +150,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     private WebhookEventDeliveryLog mapToWebhookEventDeliveryLog(OutboundEvent outboundEvent, String destinationName, String destinationUrl, WebhookEventStatus processedStatus) {
-        return new WebhookEventDeliveryLog(outboundEvent.technicalId(),
+        return new WebhookEventDeliveryLog(outboundEvent.id(),
                 destinationName,
                 destinationUrl,
                 processedStatus,
@@ -194,7 +194,7 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
 
     private WebhookEvent mapToWebhookEvent(OutboundEvent outboundEvent) {
         return new WebhookEvent(
-                outboundEvent.uniqueId(),
+                outboundEvent.sourceId(),
                 outboundEvent.repository(),
                 outboundEvent.type(),
                 outboundEvent.title(),

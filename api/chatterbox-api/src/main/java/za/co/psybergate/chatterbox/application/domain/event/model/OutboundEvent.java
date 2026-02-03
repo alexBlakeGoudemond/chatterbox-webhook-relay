@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.domain.event.model;
 
 public record OutboundEvent(
-        Long technicalId,
-        String uniqueId,
+        Long id,
+        String sourceId,
         String type,
         String title,
         String repository,

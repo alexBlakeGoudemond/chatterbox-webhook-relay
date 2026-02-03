@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubPollingPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
@@ -18,7 +18,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpda
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubRestPollingClient;
+import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
@@ -41,7 +41,7 @@ class GithubPollingServiceIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private GithubPollingPort pollingService;
+    private WebhookPollingPort pollingService;
 
     @MockitoBean
     private WebhookEventStorePort webhookEventStorePort;

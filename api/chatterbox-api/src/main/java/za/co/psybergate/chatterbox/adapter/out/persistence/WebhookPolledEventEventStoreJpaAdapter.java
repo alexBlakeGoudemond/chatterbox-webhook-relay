@@ -117,13 +117,13 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
 
     @Override
     public WebhookPolledEventDeliveryDto storeSuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(outboundEvent.technicalId(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(outboundEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_SUCCESS, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
     @Override
     public WebhookPolledEventDeliveryDto storeUnsuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl) {
-        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(outboundEvent.technicalId(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
+        GithubPolledEventDeliveryLog polledEventDeliveryLog = new GithubPolledEventDeliveryLog(outboundEvent.id(), destinationName, destinationUrl, WebhookEventStatus.PROCESSED_FAILURE, LocalDateTime.now());
         return storeSuccessfulDelivery(polledEventDeliveryLog);
     }
 
@@ -153,7 +153,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
 
     private GithubPolledEvent mapToGithubPolledEvent(OutboundEvent outboundEvent) {
         return new GithubPolledEvent(
-                outboundEvent.uniqueId(),
+                outboundEvent.sourceId(),
                 outboundEvent.repository(),
                 outboundEvent.type(),
                 outboundEvent.title(),
