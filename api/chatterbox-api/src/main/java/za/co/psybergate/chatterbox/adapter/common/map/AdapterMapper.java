@@ -1,6 +1,5 @@
-package za.co.psybergate.chatterbox.common.map;
+package za.co.psybergate.chatterbox.adapter.common.map;
 
-import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
@@ -14,8 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
-public class MapperHelper {
+public class AdapterMapper {
 
     public static WebhookPolledEventReceivedDto mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
         return new WebhookPolledEventReceivedDto(
@@ -130,35 +128,4 @@ public class MapperHelper {
                 WebhookEventStatus.RECEIVED,
                 LocalDateTime.now());
     }
-
-    public static OutboundEvent mapToOutboundEvent(WebhookPolledEventReceivedDto event) {
-        return new OutboundEvent(
-                event.id(),
-                event.sourceId(),
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryFullName(),
-                event.senderName(),
-                event.eventUrl(),
-                event.eventUrlDisplayText(),
-                event.extraDetail(),
-                event.payload()
-        );
-    }
-
-    public static OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto event) {
-        return new OutboundEvent(
-                event.id(),
-                event.webhookId(),
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryFullName(),
-                event.senderName(),
-                event.eventUrl(),
-                event.eventUrlDisplayText(),
-                event.extraDetail(),
-                event.payload()
-        );
-    }
-
 }
