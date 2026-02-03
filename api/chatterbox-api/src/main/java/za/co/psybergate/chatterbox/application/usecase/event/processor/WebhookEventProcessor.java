@@ -14,6 +14,7 @@ import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPo
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import za.co.psybergate.chatterbox.common.map.MapperHelper;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +49,7 @@ public class WebhookEventProcessor implements EventProcessorPort {
 
     private void processWebhookEvents(DestinationMapping mapping) {
         for (WebhookEventReceivedDto event : webhookEventStore.getUnprocessedWebhooks(mapping.source())) {
-            OutboundEvent outbound = mapToOutboundEvent(event);
+            OutboundEvent outbound = MapperHelper.mapToOutboundEvent(event);
             eventDelivery.deliver(outbound, mapping);
             webhookEventStore.markProcessed(outbound, WebhookEventStatus.PROCESSED_SUCCESS);
         }
@@ -56,40 +57,10 @@ public class WebhookEventProcessor implements EventProcessorPort {
 
     private void processPolledEvents(DestinationMapping mapping) {
         for (WebhookPolledEventReceivedDto event : polledEventStore.getUnprocessedEvents(mapping.source())) {
-            OutboundEvent outbound = mapToOutboundEvent(event);
+            OutboundEvent outbound = MapperHelper.mapToOutboundEvent(event);
             eventDelivery.deliver(outbound, mapping);
             polledEventStore.markProcessed(outbound, WebhookEventStatus.PROCESSED_SUCCESS);
         }
-    }
-
-    private OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto event) {
-        return new OutboundEvent(
-                event.id(),
-                event.webhookId(),
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryFullName(),
-                event.senderName(),
-                event.eventUrl(),
-                event.eventUrlDisplayText(),
-                event.extraDetail(),
-                event.payload()
-        );
-    }
-
-    private OutboundEvent mapToOutboundEvent(WebhookPolledEventReceivedDto event) {
-        return new OutboundEvent(
-                event.id(),
-                event.sourceId(),
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryFullName(),
-                event.senderName(),
-                event.eventUrl(),
-                event.eventUrlDisplayText(),
-                event.extraDetail(),
-                event.payload()
-        );
     }
 
 }

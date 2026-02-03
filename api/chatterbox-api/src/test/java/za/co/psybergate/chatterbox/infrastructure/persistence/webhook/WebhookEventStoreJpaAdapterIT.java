@@ -76,31 +76,4 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
         assertNotNull(webhookEventDeliveryLog);
     }
 
-    private WebhookEvent mapToWebhookEvent(OutboundEvent outboundEvent, JsonNode jsonNode) {
-        return new WebhookEvent("abc123",
-                outboundEvent.repository(),
-                WebhookEventType.get(outboundEvent.type()),
-                outboundEvent.title(),
-                outboundEvent.actor(),
-                outboundEvent.displayText(),
-                outboundEvent.displayText(),
-                outboundEvent.extra(),
-                jsonNode.toString());
-    }
-
-    public static OutboundEvent mapToOutboundEvent(WebhookEventReceivedDto webhookEventReceivedDto, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                "0123456789abcde",
-                WebhookEventType.PUSH.name(),
-                webhookEventReceivedDto.displayName(),
-                webhookEventReceivedDto.repositoryFullName(),
-                webhookEventReceivedDto.senderName(),
-                webhookEventReceivedDto.eventUrl(),
-                webhookEventReceivedDto.eventUrlDisplayText(),
-                webhookEventReceivedDto.extraDetail(),
-                jsonNode.toString()
-        );
-    }
-
 }

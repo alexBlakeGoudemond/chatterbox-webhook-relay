@@ -75,19 +75,4 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
         assertNotNull(polledEventDeliveryLog);
     }
 
-    private OutboundEvent mapToOutboundEvent(WebhookPolledEventReceivedDto webhookPolledEventReceivedDto, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                "0123456789abcde",
-                WebhookEventType.PUSH.name(),
-                webhookPolledEventReceivedDto.displayName(),
-                webhookPolledEventReceivedDto.repositoryFullName(),
-                webhookPolledEventReceivedDto.senderName(),
-                webhookPolledEventReceivedDto.eventUrl(),
-                webhookPolledEventReceivedDto.eventUrlDisplayText(),
-                webhookPolledEventReceivedDto.extraDetail(),
-                jsonNode.toString()
-        );
-    }
-
 }

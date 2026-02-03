@@ -6,10 +6,10 @@ import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequ
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
+import za.co.psybergate.chatterbox.common.map.MapperHelper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /// [WebhookEventType] can be defined in the properties files and loaded here, as can [GithubEventMapping]
 @Data
@@ -35,18 +35,7 @@ public class ChatterboxSourceGithubPayloadProperties {
             throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
         }
         GithubEventMapping githubMapping = eventMapping.get(eventType.toUpperCase());
-        return mapToEventPayloadMapping(githubMapping);
-    }
-
-    private EventPayloadMapping mapToEventPayloadMapping(GithubEventMapping githubMapping) {
-        return EventPayloadMapping.builder()
-                .displayName(githubMapping.getDisplayName())
-                .fields(githubMapping.getFields().entrySet().stream()
-                        .collect(Collectors.toMap(
-                                e -> EventPayloadMapping.IncomingMappingFieldKeys.valueOf(e.getKey().name()),
-                                Map.Entry::getValue
-                        )))
-                .build();
+        return MapperHelper.mapToEventPayloadMapping(githubMapping);
     }
 
 }
