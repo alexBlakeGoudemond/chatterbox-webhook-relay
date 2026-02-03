@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.adapter.out.delivery.model.DeliveryMapping;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationDiscordProperties;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationTeamsProperties;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
@@ -29,13 +29,13 @@ public class PropertiesConfigurationResolver implements WebhookConfigurationReso
     private final ChatterboxDestinationDiscordProperties destinationDiscordProperties;
 
     @Override
-    public GithubEventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
+    public EventPayloadMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException {
         return getPayloadMapping(WebhookEventType.get(eventType));
     }
 
     @Override
-    public GithubEventMapping getPayloadMapping(WebhookEventType webhookEventType) throws UnrecognizedRequestException {
-        return payloadProperties.getEventMapping(webhookEventType.name());
+    public EventPayloadMapping getPayloadMapping(WebhookEventType webhookEventType) throws UnrecognizedRequestException {
+        return payloadProperties.getEventPayloadMapping(webhookEventType.name());
     }
 
     @Override

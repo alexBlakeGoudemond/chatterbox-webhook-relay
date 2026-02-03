@@ -14,7 +14,6 @@ import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJ
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
@@ -63,9 +62,9 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenPayloadAndPolledEvent_WhenStoreEvent_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
-        WebhookPolledEventReceivedDto polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
+        WebhookPolledEventReceivedDto polledEvent = adapter.storeEvent("abc123", outboundEvent, jsonNode);
         assertNotNull(polledEvent);
     }
 
@@ -73,10 +72,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenGithubEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
-        WebhookPolledEventReceivedDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
-        OutboundEvent outboundEvent = mapToOutboundEvent(polledEvent, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         WebhookPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }

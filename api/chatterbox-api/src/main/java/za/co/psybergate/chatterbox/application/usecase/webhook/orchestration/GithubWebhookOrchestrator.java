@@ -18,18 +18,15 @@ import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConv
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubApiJsonKeys.FULL_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +54,7 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
         String repositoryName = jsonConverter.getRepositoryName(rawBody);
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
-        GithubEventDto eventDto = getEventDto(eventType, rawBody);
-        OutboundEvent outboundEvent = mapToOutboundEvent(deliveryId, eventDto, rawBody);
+        OutboundEvent outboundEvent = getOutboundEvent(eventType, rawBody);
         WebhookEventReceivedDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, rawBody);
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
@@ -72,13 +68,13 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
     @Override
     public List<WebhookPolledEventReceivedDto> pollGithubForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);
-        GithubRepositoryInformationDto recentUpdates = githubPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        RepositoryUpdates recentUpdates = githubPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
-        for (Map.Entry<WebhookEventType, ArrayNode> entry : recentUpdates.getGithubEventTypeDetails().entrySet()) {
+        for (Map.Entry<WebhookEventType, ArrayNode> entry : recentUpdates.getWebhookEventTypeDetails().entrySet()) {
             ArrayNode arrayNode = entry.getValue();
             WebhookEventType webhookEventType = entry.getKey();
-            appendToArrayNode(arrayNode, FULL_NAME.getValue(), repositoryFullName);
+            appendToArrayNode(arrayNode, "full_name", repositoryFullName);
             List<WebhookPolledEventReceivedDto> githubPolledEvents = storeEvents(webhookEventType, arrayNode);
             updates.addAll(githubPolledEvents);
         }
@@ -134,14 +130,14 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
         List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
         for (JsonNode jsonNode : arrayNode) {
             String uniqueId = webhookEventType.getUniqueId(jsonNode);
-            GithubEventDto eventDto = getEventDto(webhookEventType.name(), jsonNode);
-            WebhookPolledEventReceivedDto polledEvent = githubPolledEventStorePort.storeEvent(uniqueId, eventDto, jsonNode);
+            OutboundEvent outboundEvent = getOutboundEvent(webhookEventType.name(), jsonNode);
+            WebhookPolledEventReceivedDto polledEvent = githubPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
             updates.add(polledEvent);
         }
         return updates;
     }
 
-    private GithubEventDto getEventDto(String eventType, JsonNode rawBody) {
+    private OutboundEvent getOutboundEvent(String eventType, JsonNode rawBody) {
         return eventExtractor.map(eventType, rawBody);
     }
 
@@ -150,21 +146,6 @@ public class GithubWebhookOrchestrator implements GithubWebhookPort {
             return persistedTime001;
         }
         return persistedTime002;
-    }
-
-    private OutboundEvent mapToOutboundEvent(String uniqueId, GithubEventDto eventDto, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                uniqueId,
-                WebhookEventType.PUSH.name(),
-                eventDto.displayName(),
-                eventDto.repositoryName(),
-                eventDto.senderName(),
-                eventDto.url(),
-                eventDto.urlDisplayText(),
-                eventDto.extraDetail(),
-                jsonNode.toString()
-        );
     }
 
 }

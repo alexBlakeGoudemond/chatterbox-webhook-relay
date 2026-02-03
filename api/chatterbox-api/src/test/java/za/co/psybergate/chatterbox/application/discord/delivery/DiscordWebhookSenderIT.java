@@ -107,23 +107,7 @@ public class DiscordWebhookSenderIT {
 
     private OutboundEvent getGithubEventDto() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto githubEventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        return mapToOutboundEvent(githubEventDto, jsonNode);
-    }
-
-    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                "0123456789abcde",
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryName(),
-                event.senderName(),
-                event.url(),
-                event.urlDisplayText(),
-                event.extraDetail(),
-                jsonNode.toString()
-        );
+        return eventExtractor.map(WebhookEventType.PUSH, jsonNode);
     }
 
     private HttpPost getHttpPostWithAuthorizationHeaders(String teamsDestination, String jsonString) {

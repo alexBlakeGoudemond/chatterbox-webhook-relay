@@ -2,7 +2,6 @@ package za.co.psybergate.chatterbox.application.port.out.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
@@ -13,7 +12,7 @@ public interface GithubPolledEventStorePort {
 
     List<WebhookPolledEventReceivedDto> getUnprocessedEvents(String repositoryFullName);
 
-    WebhookPolledEventReceivedDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    WebhookPolledEventReceivedDto storeEvent(String uniqueId, OutboundEvent outboundEvent, JsonNode rawBody);
 
     List<WebhookPolledEventReceivedDto> getLatestProcessedEvents(String repositoryFullName);
 

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.github.model;
+package za.co.psybergate.chatterbox.application.domain.event.model;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.validation.constraints.NotNull;
@@ -11,29 +11,25 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO BlakeGoudemond 2026/02/03 | do we still need this?
 @Getter
 @ToString
 @EqualsAndHashCode
-public class GithubRepositoryInformationDto {
+public class RepositoryUpdates {
 
     private final @NotNull LocalDateTime fromDate;
 
     private final @NotNull LocalDateTime untilDate;
 
-    private final @NotNull Map<WebhookEventType, ArrayNode> githubEventTypeDetails;
+    private final @NotNull Map<WebhookEventType, ArrayNode> webhookEventTypeDetails;
 
-    public GithubRepositoryInformationDto(
-            @NotNull LocalDateTime fromDate,
-            @NotNull LocalDateTime untilDate
-    ) {
+    public RepositoryUpdates(@NotNull LocalDateTime fromDate, @NotNull LocalDateTime untilDate) {
         this.fromDate = fromDate;
         this.untilDate = untilDate;
-        this.githubEventTypeDetails = new HashMap<>();
+        this.webhookEventTypeDetails = new HashMap<>();
     }
 
     public void add(WebhookEventType webhookEventType, ArrayNode arrayNode) {
-        githubEventTypeDetails.put(webhookEventType, arrayNode);
+        webhookEventTypeDetails.put(webhookEventType, arrayNode);
     }
 
 }

@@ -9,18 +9,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 
@@ -67,15 +66,14 @@ public class GithubEventMapperImplIT {
     @Test
     public void givenJsonString_WhenMap_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        OutboundEvent outboundEvent = mapToOutboundEvent(eventDto, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
-        assertNotNull(eventDto);
-        assertEquals(WebhookEventType.PUSH, eventDto.webhookEventType());
-        assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
-        assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
-        assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
-        assertEquals("Test message Is here!", eventDto.urlDisplayText());
+        assertNotNull(outboundEvent);
+        assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
+        assertEquals("psyAlexBlakeGoudemond/chatterbox", outboundEvent.repository());
+        assertEquals("psyAlexBlakeGoudemond", outboundEvent.actor());
+        assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", outboundEvent.url());
+        assertEquals("Test message Is here!", outboundEvent.displayText());
         assertEquals("https://outlook.office.com/webhook/...", configurationResolver.getTeamsDestinationUrl(outboundEvent));
     }
 
@@ -107,15 +105,14 @@ public class GithubEventMapperImplIT {
     @Test
     public void givenJsonString_WithNoUrlDisplayText_WhenMap_ThenUrlDisplayTextIsEventType() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadNoDisplayText();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        OutboundEvent outboundEvent = mapToOutboundEvent(eventDto, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
-        assertNotNull(eventDto);
-        assertEquals(WebhookEventType.PUSH, eventDto.webhookEventType());
-        assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
-        assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
-        assertEquals("http://localhost:abcd", eventDto.url());
-        assertEquals("Push Event", eventDto.urlDisplayText());
+        assertNotNull(outboundEvent);
+        assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
+        assertEquals("psyAlexBlakeGoudemond/chatterbox", outboundEvent.repository());
+        assertEquals("psyAlexBlakeGoudemond", outboundEvent.actor());
+        assertEquals("http://localhost:abcd", outboundEvent.url());
+        assertEquals("Push Event", outboundEvent.displayText());
         assertEquals("https://outlook.office.com/webhook/...", configurationResolver.getTeamsDestinationUrl(outboundEvent));
     }
 
@@ -123,33 +120,17 @@ public class GithubEventMapperImplIT {
     @Test
     public void givenJsonString_WithLongUrlDisplayText_WhenMap_ThenUrlDisplayTextIsTruncated() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadLongDisplayText();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        OutboundEvent outboundEvent = mapToOutboundEvent(eventDto, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
 
-        assertNotNull(eventDto);
-        assertEquals(WebhookEventType.PUSH, eventDto.webhookEventType());
-        assertEquals("psyAlexBlakeGoudemond/chatterbox", eventDto.repositoryName());
-        assertEquals("psyAlexBlakeGoudemond", eventDto.senderName());
-        assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", eventDto.url());
+        assertNotNull(outboundEvent);
+        assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
+        assertEquals("psyAlexBlakeGoudemond/chatterbox", outboundEvent.repository());
+        assertEquals("psyAlexBlakeGoudemond", outboundEvent.actor());
+        assertEquals("https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", outboundEvent.url());
         assertEquals("https://outlook.office.com/webhook/...", configurationResolver.getTeamsDestinationUrl(outboundEvent));
 
-        assertFalse(eventDto.urlDisplayText().contains("\n"));
-        assertTrue(eventDto.urlDisplayText().contains("..."));
-    }
-
-    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                "0123456789abcde",
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryName(),
-                event.senderName(),
-                event.url(),
-                event.urlDisplayText(),
-                event.extraDetail(),
-                jsonNode.toString()
-        );
+        assertFalse(outboundEvent.displayText().contains("\n"));
+        assertTrue(outboundEvent.displayText().contains("..."));
     }
 
 }

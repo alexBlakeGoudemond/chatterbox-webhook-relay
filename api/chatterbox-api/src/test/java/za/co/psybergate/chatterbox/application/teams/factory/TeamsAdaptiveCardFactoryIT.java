@@ -15,7 +15,6 @@ import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJ
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
@@ -107,10 +106,9 @@ public class TeamsAdaptiveCardFactoryIT {
 
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateFromJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        OutboundEvent outboundEvent = mapToOutboundEvent(eventDto, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         try {
-            return teamsCardFactoryPort.buildCard(outboundEvent);
+            return (TeamsAdaptiveCardDefinition) teamsCardFactoryPort.buildCard(outboundEvent);
         } catch (Exception e) {
             return null;
         }
@@ -119,7 +117,7 @@ public class TeamsAdaptiveCardFactoryIT {
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return teamsCardFactoryPort.buildCard(propertiesToUse);
+            return (TeamsAdaptiveCardDefinition) teamsCardFactoryPort.buildCard(propertiesToUse);
         } catch (Exception e) {
             return null;
         }
@@ -135,20 +133,5 @@ public class TeamsAdaptiveCardFactoryIT {
         return propertiesToUse;
     }
 
-    // TODO BlakeGoudemond 2026/02/02 | all mappers placed in 1 class
-    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                "0123456789abcde",
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryName(),
-                event.senderName(),
-                event.url(),
-                event.urlDisplayText(),
-                event.extraDetail(),
-                jsonNode.toString()
-        );
-    }
 
 }

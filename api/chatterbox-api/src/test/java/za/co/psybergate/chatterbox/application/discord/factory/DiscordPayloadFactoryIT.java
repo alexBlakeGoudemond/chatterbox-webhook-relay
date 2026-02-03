@@ -15,7 +15,6 @@ import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEvent
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
@@ -92,10 +91,9 @@ public class DiscordPayloadFactoryIT {
 
     private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
-        OutboundEvent outboundEvent = mapToOutboundEvent(eventDto, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         try {
-            return discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(outboundEvent);
+            return (DiscordEmbeddedObjectDefinition) discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(outboundEvent);
         } catch (Exception e) {
             return null;
         }
@@ -104,7 +102,7 @@ public class DiscordPayloadFactoryIT {
     private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(propertiesToUse);
+            return (DiscordEmbeddedObjectDefinition) discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(propertiesToUse);
         } catch (Exception e) {
             return null;
         }
@@ -120,19 +118,5 @@ public class DiscordPayloadFactoryIT {
         return propertiesToUse;
     }
 
-    private OutboundEvent mapToOutboundEvent(GithubEventDto event, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                "0123456789abcde",
-                event.webhookEventType().name(),
-                event.displayName(),
-                event.repositoryName(),
-                event.senderName(),
-                event.url(),
-                event.urlDisplayText(),
-                event.extraDetail(),
-                jsonNode.toString()
-        );
-    }
 
 }

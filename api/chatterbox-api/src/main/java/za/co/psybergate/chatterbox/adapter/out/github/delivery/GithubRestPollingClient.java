@@ -11,7 +11,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.time.Instant;
@@ -42,14 +42,14 @@ public class GithubRestPollingClient implements GithubPollingPort {
     }
 
     @Override
-    public GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate) {
+    public RepositoryUpdates getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate) {
         return getRecentUpdates(owner, repositoryName, fromDate, LocalDateTime.now(ZoneOffset.UTC));
     }
 
     @Override
-    public @Valid GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public @Valid RepositoryUpdates getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logGithubPollRecentUpdates(owner, repositoryName, fromDate, untilDate);
-        GithubRepositoryInformationDto informationDto = new GithubRepositoryInformationDto(fromDate, untilDate);
+        RepositoryUpdates informationDto = new RepositoryUpdates(fromDate, untilDate);
         for (String eventMapping : payloadProperties.getEventMapping().keySet()) {
             boolean eventExists = WebhookEventType.contains(eventMapping);
             if (!eventExists) {

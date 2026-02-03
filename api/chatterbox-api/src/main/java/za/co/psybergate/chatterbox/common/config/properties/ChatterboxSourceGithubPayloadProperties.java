@@ -5,9 +5,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
+import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /// [WebhookEventType] can be defined in the properties files and loaded here, as can [GithubEventMapping]
 @Data
@@ -28,11 +30,23 @@ public class ChatterboxSourceGithubPayloadProperties {
         return eventMapping.containsKey(eventType.toUpperCase());
     }
 
-    public GithubEventMapping getEventMapping(String eventType) throws UnrecognizedRequestException {
+    public EventPayloadMapping getEventPayloadMapping(String eventType) throws UnrecognizedRequestException {
         if (!containsEvent(eventType)) {
             throw new UnrecognizedRequestException(String.format("Unsupported event type '%s'", eventType));
         }
-        return eventMapping.get(eventType.toUpperCase());
+        GithubEventMapping githubMapping = eventMapping.get(eventType.toUpperCase());
+        return mapToEventPayloadMapping(githubMapping);
+    }
+
+    private EventPayloadMapping mapToEventPayloadMapping(GithubEventMapping githubMapping) {
+        return EventPayloadMapping.builder()
+                .displayName(githubMapping.getDisplayName())
+                .fields(githubMapping.getFields().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                e -> EventPayloadMapping.IncomingMappingFieldKeys.valueOf(e.getKey().name()),
+                                Map.Entry::getValue
+                        )))
+                .build();
     }
 
 }

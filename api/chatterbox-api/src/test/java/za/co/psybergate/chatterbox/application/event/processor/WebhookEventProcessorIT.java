@@ -96,11 +96,10 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @BeforeEach
     public void setup() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         String uniqueId = UUID.randomUUID().toString();
-        OutboundEvent outboundEvent = mapToOutboundEvent(uniqueId, eventDto, jsonNode);
         this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, outboundEvent, jsonNode);
-        this.persistedGithubPolledEvent = githubPolledEventStorePort.storeEvent(uniqueId, eventDto, jsonNode);
+        this.persistedGithubPolledEvent = githubPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
     }
 
     @DisplayName("Processing Webhook Events creates Delivery Logs")
@@ -139,19 +138,5 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
         }
     }
 
-    private OutboundEvent mapToOutboundEvent(String uniqueId, GithubEventDto eventDto, JsonNode jsonNode) {
-        return new OutboundEvent(
-                1L,
-                uniqueId,
-                WebhookEventType.PUSH.name(),
-                eventDto.displayName(),
-                eventDto.repositoryName(),
-                eventDto.senderName(),
-                eventDto.url(),
-                eventDto.urlDisplayText(),
-                eventDto.extraDetail(),
-                jsonNode.toString()
-        );
-    }
 
 }

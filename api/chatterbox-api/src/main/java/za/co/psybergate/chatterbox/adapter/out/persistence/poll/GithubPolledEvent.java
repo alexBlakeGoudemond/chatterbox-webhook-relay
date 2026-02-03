@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
@@ -123,16 +123,16 @@ public class GithubPolledEvent {
     }
 
     public GithubPolledEvent(String uniqueId,
-                             GithubEventDto eventDto,
+                             OutboundEvent outboundEvent,
                              JsonNode rawBody) {
         this(uniqueId,
-                eventDto.repositoryName(),
-                eventDto.webhookEventType(),
-                eventDto.displayName(),
-                eventDto.senderName(),
-                eventDto.url(),
-                eventDto.urlDisplayText(),
-                eventDto.extraDetail(),
+                outboundEvent.repository(),
+                outboundEvent.type(),
+                outboundEvent.title(),
+                outboundEvent.actor(),
+                outboundEvent.url(),
+                outboundEvent.displayText(),
+                outboundEvent.extra(),
                 rawBody.toString(),
                 WebhookEventStatus.RECEIVED,
                 LocalDateTime.now());

@@ -14,7 +14,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolled
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetailDto;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
@@ -85,10 +85,10 @@ class GithubPollingServiceIT {
         String repositoryName = repositoryDetailDto.repositoryName();
         LocalDateTime fromDate = repositoryDetailDto.fromDate();
         LocalDateTime untilDate = repositoryDetailDto.toDate();
-        GithubRepositoryInformationDto recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        RepositoryUpdates recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         assertNotNull(recentUpdates);
-        assertNotNull(recentUpdates.getGithubEventTypeDetails());
-        assertFalse(recentUpdates.getGithubEventTypeDetails().isEmpty());
+        assertNotNull(recentUpdates.getWebhookEventTypeDetails());
+        assertFalse(recentUpdates.getWebhookEventTypeDetails().isEmpty());
     }
 
 }

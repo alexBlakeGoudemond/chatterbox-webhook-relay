@@ -3,7 +3,11 @@ package za.co.psybergate.chatterbox.adapter.out.persistence;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
+import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventJpaRepository;
@@ -11,10 +15,6 @@ import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.Githu
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -99,8 +99,8 @@ public class GithubPolledEventEventStoreJpaAdapter implements GithubPolledEventS
     }
 
     @Override
-    public WebhookPolledEventReceivedDto storeEvent(String uniqueId, GithubEventDto eventDto, JsonNode rawBody) {
-        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, eventDto, rawBody);
+    public WebhookPolledEventReceivedDto storeEvent(String uniqueId, OutboundEvent outboundEvent, JsonNode rawBody) {
+        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, outboundEvent, rawBody);
         return storeEvent(webhook);
     }
 

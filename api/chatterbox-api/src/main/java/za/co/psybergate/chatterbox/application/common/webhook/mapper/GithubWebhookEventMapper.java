@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys;
+import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor
@@ -25,19 +25,19 @@ public class GithubWebhookEventMapper implements GithubEventMapper {
     private final WebhookConfigurationResolverPort webhookConfigurationResolverPort;
 
     @Override
-    public GithubEventDto map(String eventType, JsonNode payload) {
+    public OutboundEvent map(String eventType, JsonNode payload) {
         return map(WebhookEventType.get(eventType), payload);
     }
 
-    /// Transform the eventType and JsonPayload into an internal type: [GithubEventDto].
+    /// Transform the eventType and JsonPayload into an internal type: [OutboundEvent].
     ///
-    /// The [GithubEventDto] has simple validation setup through the constructor of the record.
+    /// The [OutboundEvent] has simple validation setup through the constructor of the record.
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Override
     @Valid
-    public GithubEventDto map(WebhookEventType webhookEventType, JsonNode payload) {
+    public OutboundEvent map(WebhookEventType webhookEventType, JsonNode payload) {
         var payloadMapping = webhookConfigurationResolverPort.getPayloadMapping(webhookEventType);
-        Map<GithubIncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
+        Map<IncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
         String repositoryName = read(payload, fields.get(REPOSITORYNAME));
         String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
@@ -46,14 +46,17 @@ public class GithubWebhookEventMapper implements GithubEventMapper {
         String senderName = read(payload, fields.get(SENDERNAME));
         String url = read(payload, fields.get(URL));
         String extraDetail = read(payload, fields.get(EXTRADETAIL));
-        return new GithubEventDto(
-                webhookEventType,
+        return new OutboundEvent(
+                null,
+                null,
+                webhookEventType.name(),
                 displayName,
                 repositoryName,
                 senderName,
                 url,
                 formattedUrlDisplayText,
-                extraDetail
+                extraDetail,
+                payload.toString()
         );
     }
 

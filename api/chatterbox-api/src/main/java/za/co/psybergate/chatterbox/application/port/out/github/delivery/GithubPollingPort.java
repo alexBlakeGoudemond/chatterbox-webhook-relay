@@ -1,16 +1,16 @@
 package za.co.psybergate.chatterbox.application.port.out.github.delivery;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubRepositoryInformationDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 
 import java.time.LocalDateTime;
 
 // TODO BlakeGoudemond 2026/01/17 | test this class?
 public interface GithubPollingPort {
 
-    GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate);
+    RepositoryUpdates getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate);
 
-    GithubRepositoryInformationDto getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    RepositoryUpdates getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
     ArrayNode getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate);
 
