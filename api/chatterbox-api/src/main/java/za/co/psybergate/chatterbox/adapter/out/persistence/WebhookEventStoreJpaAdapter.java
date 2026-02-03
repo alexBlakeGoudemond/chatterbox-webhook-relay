@@ -9,6 +9,7 @@ import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.We
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventLogJpaRepository;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDeliveryDto;
@@ -70,8 +71,8 @@ public class WebhookEventStoreJpaAdapter implements WebhookEventStorePort {
     }
 
     @Override
-    public WebhookEventReceivedDto storeWebhook(String uniqueId, OutboundEvent outboundEvent, JsonNode rawBody) {
-        WebhookEvent webhook = new WebhookEvent(uniqueId, outboundEvent, rawBody);
+    public WebhookEventReceivedDto storeWebhook(String uniqueId, OutboundEvent outboundEvent, RawEventPayload rawBody) {
+        WebhookEvent webhook = new WebhookEvent(uniqueId, outboundEvent, rawBody.getAs(JsonNode.class));
         return storeWebhook(webhook);
     }
 

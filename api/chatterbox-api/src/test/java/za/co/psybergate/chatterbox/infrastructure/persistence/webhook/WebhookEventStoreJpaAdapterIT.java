@@ -17,6 +17,7 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDeliveryDto;
@@ -60,9 +61,9 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
     @Test
     public void givenPayloadAndEventDto_WhenStoreWebhook_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
-        WebhookEventReceivedDto webhookEvent = adapter.storeWebhook("abc123", outboundEvent, jsonNode);
+        WebhookEventReceivedDto webhookEvent = adapter.storeWebhook("abc123", outboundEvent, RawEventPayload.of(jsonNode));
         assertNotNull(webhookEvent);
     }
 
@@ -70,7 +71,7 @@ public class WebhookEventStoreJpaAdapterIT extends AbstractPostgresTestContainer
     @Test
     public void givenWebhookEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
         WebhookEventDeliveryDto webhookEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(webhookEventDeliveryLog);
     }

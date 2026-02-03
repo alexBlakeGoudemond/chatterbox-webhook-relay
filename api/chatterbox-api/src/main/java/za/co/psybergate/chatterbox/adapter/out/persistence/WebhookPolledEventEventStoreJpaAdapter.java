@@ -14,6 +14,7 @@ import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.Githu
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventLogJpaRepository;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.adapter.common.map.AdapterMapper;
 
@@ -70,8 +71,8 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
     }
 
     @Override
-    public WebhookPolledEventReceivedDto storeEvent(String uniqueId, OutboundEvent outboundEvent, JsonNode rawBody) {
-        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, outboundEvent, rawBody);
+    public WebhookPolledEventReceivedDto storeEvent(String uniqueId, OutboundEvent outboundEvent, RawEventPayload rawBody) {
+        GithubPolledEvent webhook = new GithubPolledEvent(uniqueId, outboundEvent, rawBody.getAs(JsonNode.class));
         return storeEvent(webhook);
     }
 

@@ -13,6 +13,7 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDeliveryDto;
@@ -60,9 +61,9 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenPayloadAndPolledEvent_WhenStoreEvent_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
-        WebhookPolledEventReceivedDto polledEvent = adapter.storeEvent("abc123", outboundEvent, jsonNode);
+        WebhookPolledEventReceivedDto polledEvent = adapter.storeEvent("abc123", outboundEvent, RawEventPayload.of(jsonNode));
         assertNotNull(polledEvent);
     }
 
@@ -70,7 +71,7 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenGithubEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
         WebhookPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }

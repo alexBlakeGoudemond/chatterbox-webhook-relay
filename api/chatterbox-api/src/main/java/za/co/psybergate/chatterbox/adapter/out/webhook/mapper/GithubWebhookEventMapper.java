@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
@@ -26,27 +27,28 @@ public class GithubWebhookEventMapper implements OutboundEventMapperPort {
     private final WebhookConfigurationResolverPort webhookConfigurationResolverPort;
 
     @Override
-    public OutboundEvent map(String eventType, JsonNode payload) {
+    public OutboundEvent map(String eventType, RawEventPayload payload) {
         return map(WebhookEventType.get(eventType), payload);
     }
 
-    /// Transform the eventType and JsonPayload into an internal type: [OutboundEvent].
+    /// Transform the eventType and RawEventPayload into an internal type: [OutboundEvent].
     ///
     /// The [OutboundEvent] has simple validation setup through the constructor of the record.
     /// Thus, if Validation fails - this method will produce a [ConstraintViolationException]
     @Override
     @Valid
-    public OutboundEvent map(WebhookEventType webhookEventType, JsonNode payload) {
+    public OutboundEvent map(WebhookEventType webhookEventType, RawEventPayload payload) {
+        JsonNode jsonPayload = payload.getAs(JsonNode.class);
         var payloadMapping = webhookConfigurationResolverPort.getPayloadMapping(webhookEventType);
         Map<IncomingMappingFieldKeys, String> fields = payloadMapping.getFields();
 
-        String repositoryName = read(payload, fields.get(REPOSITORYNAME));
-        String urlDisplayText = read(payload, fields.get(URLDISPLAYTEXT));
+        String repositoryName = read(jsonPayload, fields.get(REPOSITORYNAME));
+        String urlDisplayText = read(jsonPayload, fields.get(URLDISPLAYTEXT));
         String displayName = payloadMapping.getDisplayName();
         String formattedUrlDisplayText = format(urlDisplayText, displayName);
-        String senderName = read(payload, fields.get(SENDERNAME));
-        String url = read(payload, fields.get(URL));
-        String extraDetail = read(payload, fields.get(EXTRADETAIL));
+        String senderName = read(jsonPayload, fields.get(SENDERNAME));
+        String url = read(jsonPayload, fields.get(URL));
+        String extraDetail = read(jsonPayload, fields.get(EXTRADETAIL));
         return new OutboundEvent(
                 null,
                 null,
@@ -57,7 +59,7 @@ public class GithubWebhookEventMapper implements OutboundEventMapperPort {
                 url,
                 formattedUrlDisplayText,
                 extraDetail,
-                payload.toString()
+                jsonPayload.toString()
         );
     }
 

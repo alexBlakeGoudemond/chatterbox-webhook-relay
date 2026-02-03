@@ -16,6 +16,7 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
@@ -66,7 +67,7 @@ public class GithubWebhookEventMapperIT {
     @Test
     public void givenJsonString_WhenMap_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
         assertNotNull(outboundEvent);
         assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
@@ -82,7 +83,7 @@ public class GithubWebhookEventMapperIT {
     public void givenJsonString_WithUnknownEvent_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadUnknownEvent();
         assertThrows(DomainException.class,
-                () -> eventExtractor.map("unknownEvent", jsonNode));
+                () -> eventExtractor.map("unknownEvent", RawEventPayload.of(jsonNode)));
     }
 
     @DisplayName("Missing All JSON keys: Exception")
@@ -90,7 +91,7 @@ public class GithubWebhookEventMapperIT {
     public void givenIncompleteJsonString_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadMissingProperties();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.map(WebhookEventType.PUSH, jsonNode));
+                () -> eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode)));
     }
 
     @DisplayName("Missing Most JSON keys: Exception")
@@ -98,14 +99,14 @@ public class GithubWebhookEventMapperIT {
     public void givenPartialJsonString_WithRepositoryName_WhenMap_ThenException() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadInvalidEventTypeAndRepositoryName();
         assertThrows(ConstraintViolationException.class,
-                () -> eventExtractor.map(WebhookEventType.PUSH, jsonNode));
+                () -> eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode)));
     }
 
     @DisplayName("No UrlDisplayText; then eventType")
     @Test
     public void givenJsonString_WithNoUrlDisplayText_WhenMap_ThenUrlDisplayTextIsEventType() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadNoDisplayText();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
         assertNotNull(outboundEvent);
         assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
@@ -120,7 +121,7 @@ public class GithubWebhookEventMapperIT {
     @Test
     public void givenJsonString_WithLongUrlDisplayText_WhenMap_ThenUrlDisplayTextIsTruncated() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadLongDisplayText();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
         assertNotNull(outboundEvent);
         assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());

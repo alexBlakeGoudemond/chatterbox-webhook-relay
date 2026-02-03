@@ -21,6 +21,7 @@ import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJ
 import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
@@ -116,7 +117,7 @@ public class TeamsWebhookSenderIT {
 
     private OutboundEvent getOutboundEvent() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        return eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
     }
 
 }

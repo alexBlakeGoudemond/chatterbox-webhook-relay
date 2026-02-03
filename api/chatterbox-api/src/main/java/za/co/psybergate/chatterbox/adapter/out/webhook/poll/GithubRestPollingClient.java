@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
@@ -72,14 +73,14 @@ public class GithubRestPollingClient implements WebhookPollingPort {
     }
 
     @Override
-    public List<?> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate) {
+    public List<RawEventPayload> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate) {
         return getCommitsSince(owner, repositoryName, fromDate, LocalDateTime.now());
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
     /// [API Contract for Commits](https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28)
     @Override
-    public List<?> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public List<RawEventPayload> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logPollEventType("commits", owner, repositoryName, fromDate, untilDate);
         ArrayNode commits = githubClient.get()
                 .uri(uri -> uri
@@ -93,20 +94,20 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         if (commits == null) {
             throw new ApplicationException("No commits found when polling Repository");
         }
-        List<JsonNode> list = new ArrayList<>();
-        commits.forEach(list::add);
+        List<RawEventPayload> list = new ArrayList<>();
+        commits.forEach(node -> list.add(RawEventPayload.of(node)));
         return list;
     }
 
     @Override
-    public List<?> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate) {
+    public List<RawEventPayload> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate) {
         return getPullRequestsSince(owner, repositoryName, fromDate, LocalDateTime.now());
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
     /// [API Contract for Pull Requests](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-pull-requests)
     @Override
-    public List<?> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public List<RawEventPayload> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
         ArrayNode pullRequests = githubClient.get()
                 .uri(uri -> uri
@@ -126,8 +127,8 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         return filterByDateRange(pullRequests, fromDate, untilDate);
     }
 
-    private List<?> filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
-        List<JsonNode> filtered = new ArrayList<>();
+    private List<RawEventPayload> filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
+        List<RawEventPayload> filtered = new ArrayList<>();
         ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
         Instant from = fromDate.toInstant(systemOffset);
         Instant until = untilDate.toInstant(systemOffset);
@@ -138,7 +139,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
             }
             Instant mergedAt = Instant.parse(mergedAtNode.asText());
             if (mergedAt.isAfter(from) && mergedAt.isBefore(until)) {
-                filtered.add(pr);
+                filtered.add(RawEventPayload.of(pr));
             }
         }
         return filtered;

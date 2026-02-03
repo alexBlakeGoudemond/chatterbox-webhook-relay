@@ -15,6 +15,7 @@ import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJ
 import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
@@ -108,7 +109,7 @@ public class TeamsAdaptiveCardFactoryIT {
 
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateFromJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
         try {
             return (TeamsAdaptiveCardDefinition) teamsPayloadFactory.buildDefinition(outboundEvent);
         } catch (Exception e) {

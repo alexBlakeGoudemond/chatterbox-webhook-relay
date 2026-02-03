@@ -30,6 +30,7 @@ import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubs
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.*;
@@ -99,10 +100,10 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @BeforeEach
     public void setup() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
         String uniqueId = UUID.randomUUID().toString();
-        this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, outboundEvent, jsonNode);
-        this.persistedGithubPolledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
+        this.persistedWebhookEvent = webhookEventStorePort.storeWebhook(uniqueId, outboundEvent, RawEventPayload.of(jsonNode));
+        this.persistedGithubPolledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, RawEventPayload.of(jsonNode));
     }
 
     @DisplayName("Processing Webhook Events creates Delivery Logs")

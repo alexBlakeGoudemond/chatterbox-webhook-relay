@@ -19,7 +19,7 @@ public class RepositoryUpdates {
 
     private final @NotNull LocalDateTime untilDate;
 
-    private final @NotNull Map<WebhookEventType, List<?>> webhookEventTypeDetails;
+    private final @NotNull Map<WebhookEventType, List<RawEventPayload>> webhookEventTypeDetails;
 
     public RepositoryUpdates(@NotNull LocalDateTime fromDate, @NotNull LocalDateTime untilDate) {
         this.fromDate = fromDate;
@@ -27,7 +27,7 @@ public class RepositoryUpdates {
         this.webhookEventTypeDetails = new HashMap<>();
     }
 
-    public void add(WebhookEventType webhookEventType, List<?> details) {
+    public void add(WebhookEventType webhookEventType, List<RawEventPayload> details) {
         webhookEventTypeDetails.put(webhookEventType, details);
     }
 

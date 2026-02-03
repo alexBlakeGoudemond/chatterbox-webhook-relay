@@ -17,6 +17,7 @@ import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceivedDto;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceivedDto;
@@ -55,7 +56,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         OutboundEvent outboundEvent = getOutboundEvent(eventType, rawBody);
-        WebhookEventReceivedDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, rawBody);
+        WebhookEventReceivedDto webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(rawBody));
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }
@@ -72,12 +73,11 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
         RepositoryUpdates recentUpdates = webhookPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         List<WebhookPolledEventReceivedDto> updates = new ArrayList<>();
-        for (Map.Entry<WebhookEventType, List<?>> entry : recentUpdates.getWebhookEventTypeDetails().entrySet()) {
-            List<?> details = entry.getValue();
+        for (Map.Entry<WebhookEventType, List<RawEventPayload>> entry : recentUpdates.getWebhookEventTypeDetails().entrySet()) {
+            List<RawEventPayload> details = entry.getValue();
             WebhookEventType webhookEventType = entry.getKey();
             List<JsonNode> jsonNodes = details.stream()
-                    .filter(JsonNode.class::isInstance)
-                    .map(JsonNode.class::cast)
+                    .map(payload -> payload.getAs(JsonNode.class))
                     .toList();
             for (JsonNode node : jsonNodes) {
                 appendToJsonNode(node, "full_name", repositoryFullName);
@@ -136,7 +136,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
         for (JsonNode jsonNode : jsonNodes) {
             String uniqueId = getWebhookEventUniqueId(webhookEventType, jsonNode);
             OutboundEvent outboundEvent = getOutboundEvent(webhookEventType.name(), jsonNode);
-            WebhookPolledEventReceivedDto polledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, jsonNode);
+            WebhookPolledEventReceivedDto polledEvent = webhookPolledEventStorePort.storeEvent(uniqueId, outboundEvent, RawEventPayload.of(jsonNode));
             updates.add(polledEvent);
         }
         return updates;
@@ -151,7 +151,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     }
 
     private OutboundEvent getOutboundEvent(String eventType, JsonNode rawBody) {
-        return eventExtractor.map(eventType, rawBody);
+        return eventExtractor.map(eventType, RawEventPayload.of(rawBody));
     }
 
     private LocalDateTime getLastPersistedTime(LocalDateTime persistedTime001, LocalDateTime persistedTime002) {

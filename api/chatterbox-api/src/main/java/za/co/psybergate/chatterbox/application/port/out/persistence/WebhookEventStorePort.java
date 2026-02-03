@@ -1,6 +1,6 @@
 package za.co.psybergate.chatterbox.application.port.out.persistence;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDeliveryDto;
@@ -14,7 +14,7 @@ public interface WebhookEventStorePort {
 
     List<WebhookEventReceivedDto> getUnprocessedWebhooks(String repositoryFullName);
 
-    WebhookEventReceivedDto storeWebhook(String uniqueId, OutboundEvent outboundEvent, JsonNode rawBody);
+    WebhookEventReceivedDto storeWebhook(String uniqueId, OutboundEvent outboundEvent, RawEventPayload rawBody);
 
     WebhookEventDeliveryDto storeSuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl);
 
