@@ -2,11 +2,12 @@ package za.co.psybergate.chatterbox.adapter.out.teams.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import za.co.psybergate.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
 
 import java.util.List;
 
 @Data
-public class TeamsAdaptiveCardDefinition {
+public class TeamsAdaptiveCardDefinition implements VendorPayloadDefinitionPort {
 
     private String type = "message";
 

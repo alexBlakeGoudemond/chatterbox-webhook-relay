@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,9 +16,9 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
@@ -69,7 +70,8 @@ public class TeamsWebhookSenderIT {
     private TeamsWebhookSender teamsWebhookSender;
 
     @Autowired
-    private TeamsCardFactoryPort teamsCardFactoryPort;
+    @Qualifier("teamsAdaptiveCardFactory")
+    private VendorFactoryPort teamsPayloadFactory;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
@@ -96,7 +98,7 @@ public class TeamsWebhookSenderIT {
         OutboundEvent outboundEvent = getOutboundEvent();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(outboundEvent);
+        String jsonString = teamsPayloadFactory.getAsPayloadString(outboundEvent);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = teamsWebhookSender.executeHttpPostRequest(httpPost);

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,14 +15,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
+import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubWebhookEventMapper.class,
         PropertiesConfigurationResolver.class,
         DiscordWebhookSender.class,
-        DiscordPayloadFactory.class,
+        DiscordEmbeddedObjectFactory.class,
         RegexTemplateSubstitutor.class,
         InfrastructurePropertiesConfig.class,
         TestConfigurationResolver.class,
@@ -69,7 +70,8 @@ public class DiscordWebhookSenderIT {
     private DiscordWebhookSender discordWebhookSender;
 
     @Autowired
-    private DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
+    @Qualifier("discordEmbeddedObjectFactory")
+    private VendorFactoryPort discordPayloadFactory;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
@@ -96,7 +98,7 @@ public class DiscordWebhookSenderIT {
         OutboundEvent outboundEvent = getGithubEventDto();
         String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(outboundEvent);
+        String jsonString = discordPayloadFactory.getAsPayloadString(outboundEvent);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = discordWebhookSender.executeHttpPostRequest(httpPost);

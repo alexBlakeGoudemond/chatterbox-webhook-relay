@@ -5,13 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
@@ -51,7 +52,8 @@ public class TeamsAdaptiveCardFactoryIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private TeamsCardFactoryPort teamsCardFactoryPort;
+    @Qualifier("teamsAdaptiveCardFactory")
+    private VendorFactoryPort teamsPayloadFactory;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -108,7 +110,7 @@ public class TeamsAdaptiveCardFactoryIT {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         try {
-            return (TeamsAdaptiveCardDefinition) teamsCardFactoryPort.buildCard(outboundEvent);
+            return (TeamsAdaptiveCardDefinition) teamsPayloadFactory.buildDefinition(outboundEvent);
         } catch (Exception e) {
             return null;
         }
@@ -117,7 +119,7 @@ public class TeamsAdaptiveCardFactoryIT {
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return (TeamsAdaptiveCardDefinition) teamsCardFactoryPort.buildCard(propertiesToUse);
+            return (TeamsAdaptiveCardDefinition) teamsPayloadFactory.buildDefinition(propertiesToUse);
         } catch (Exception e) {
             return null;
         }

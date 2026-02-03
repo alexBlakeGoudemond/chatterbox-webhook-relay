@@ -8,6 +8,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
@@ -17,7 +18,7 @@ import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMa
 
 @Component
 @RequiredArgsConstructor
-public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {
+public class TeamsAdaptiveCardFactory implements VendorFactoryPort {
 
     private final ChatterboxDeliveryTeamsProperties teamsProperties;
 
@@ -28,7 +29,7 @@ public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {
     private final HttpResponseHandler httpResponseHandler;
 
     @Override
-    public TeamsAdaptiveCardDefinition buildCard(Map<String, String> values) {
+    public TeamsAdaptiveCardDefinition buildDefinition(Map<String, String> values) {
         TeamsAdaptiveCardDefinition clone = deepCopy(teamsProperties.getAdaptiveCardDefinition()); // use Jackson
 
         clone.getAttachments().forEach(attachment -> {
@@ -46,7 +47,7 @@ public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {
     }
 
     @Override
-    public TeamsAdaptiveCardDefinition buildCard(OutboundEvent outboundEvent) {
+    public TeamsAdaptiveCardDefinition buildDefinition(OutboundEvent outboundEvent) {
         Map<String, String> values = Map.of(
                 "displayName", outboundEvent.displayText(),
                 REPOSITORYNAME.getFieldName(), outboundEvent.repository(),
@@ -55,7 +56,7 @@ public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {
                 URLDISPLAYTEXT.getFieldName(), outboundEvent.displayText(),
                 EXTRADETAIL.getFieldName(), outboundEvent.extra()
         );
-        return buildCard(values);
+        return buildDefinition(values);
     }
 
     private TeamsAdaptiveCardDefinition deepCopy(TeamsAdaptiveCardDefinition src) {
@@ -63,8 +64,8 @@ public class TeamsAdaptiveCardFactory implements TeamsCardFactoryPort {
     }
 
     @Override
-    public String getAsTeamsPayloadString(OutboundEvent outboundEvent) throws ApplicationException {
-        TeamsAdaptiveCardDefinition teamsAdaptiveCardDefinition = buildCard(outboundEvent);
+    public String getAsPayloadString(OutboundEvent outboundEvent) throws ApplicationException {
+        TeamsAdaptiveCardDefinition teamsAdaptiveCardDefinition = buildDefinition(outboundEvent);
         String teamsPayload;
         try {
             teamsPayload = objectMapper.writeValueAsString(teamsAdaptiveCardDefinition);

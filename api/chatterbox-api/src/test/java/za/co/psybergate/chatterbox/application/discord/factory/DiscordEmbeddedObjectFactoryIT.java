@@ -5,17 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
-import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
+import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
@@ -30,7 +31,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
-        DiscordPayloadFactory.class,
+        DiscordEmbeddedObjectFactory.class,
         InfrastructurePropertiesConfig.class,
         RegexTemplateSubstitutor.class,
         HttpResponseHandler.class,
@@ -39,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
         PropertiesConfigurationResolver.class,
         JacksonJsonConverter.class,
 })
-public class DiscordPayloadFactoryIT {
+public class DiscordEmbeddedObjectFactoryIT {
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
@@ -48,7 +49,8 @@ public class DiscordPayloadFactoryIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
+    @Qualifier("discordEmbeddedObjectFactory")
+    private VendorFactoryPort discordPayloadFactory;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -93,7 +95,7 @@ public class DiscordPayloadFactoryIT {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, jsonNode);
         try {
-            return (DiscordEmbeddedObjectDefinition) discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(outboundEvent);
+            return (DiscordEmbeddedObjectDefinition) discordPayloadFactory.buildDefinition(outboundEvent);
         } catch (Exception e) {
             return null;
         }
@@ -102,7 +104,7 @@ public class DiscordPayloadFactoryIT {
     private DiscordEmbeddedObjectDefinition getDiscordEmbeddedObjectTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return (DiscordEmbeddedObjectDefinition) discordEmbeddedObjectFactoryPort.buildEmbeddedObjectDefinition(propertiesToUse);
+            return (DiscordEmbeddedObjectDefinition) discordPayloadFactory.buildDefinition(propertiesToUse);
         } catch (Exception e) {
             return null;
         }

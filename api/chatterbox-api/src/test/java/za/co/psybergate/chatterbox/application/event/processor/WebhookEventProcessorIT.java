@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordWebhookSender;
-import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordPayloadFactory;
+import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
@@ -56,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         TeamsWebhookSender.class,
         TeamsAdaptiveCardFactory.class,
         DiscordWebhookSender.class,
-        DiscordPayloadFactory.class,
+        DiscordEmbeddedObjectFactory.class,
         RegexTemplateSubstitutor.class,
         InfrastructurePropertiesConfig.class,
         PropertiesConfigurationResolver.class,

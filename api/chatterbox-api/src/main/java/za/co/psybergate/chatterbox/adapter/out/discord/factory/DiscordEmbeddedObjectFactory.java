@@ -8,6 +8,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryDiscordProperties;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMa
 
 @Component
 @RequiredArgsConstructor
-public class DiscordPayloadFactory implements DiscordEmbeddedObjectFactoryPort {
+public class DiscordEmbeddedObjectFactory implements VendorFactoryPort {
 
     private final ChatterboxDeliveryDiscordProperties discordProperties;
 
@@ -25,7 +26,7 @@ public class DiscordPayloadFactory implements DiscordEmbeddedObjectFactoryPort {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(Map<String, String> values) {
+    public DiscordEmbeddedObjectDefinition buildDefinition(Map<String, String> values) {
         DiscordEmbeddedObjectDefinition clone = deepCopy(discordProperties.getEmbeddedObjectDefinition()); // use Jackson
 
         clone.getEmbeds().forEach(embeddedObject -> {
@@ -47,7 +48,7 @@ public class DiscordPayloadFactory implements DiscordEmbeddedObjectFactoryPort {
     }
 
     @Override
-    public DiscordEmbeddedObjectDefinition buildEmbeddedObjectDefinition(OutboundEvent outboundEvent) {
+    public DiscordEmbeddedObjectDefinition buildDefinition(OutboundEvent outboundEvent) {
         Map<String, String> values = Map.of(
                 "displayName", outboundEvent.displayText(),
                 REPOSITORYNAME.getFieldName(), outboundEvent.repository(),
@@ -56,12 +57,12 @@ public class DiscordPayloadFactory implements DiscordEmbeddedObjectFactoryPort {
                 URLDISPLAYTEXT.getFieldName(), outboundEvent.displayText(),
                 EXTRADETAIL.getFieldName(), outboundEvent.extra()
         );
-        return buildEmbeddedObjectDefinition(values);
+        return buildDefinition(values);
     }
 
     @Override
-    public String getAsDiscordPayloadString(OutboundEvent eventDto) throws ApplicationException {
-        DiscordEmbeddedObjectDefinition embeddedObjectDefinition = buildEmbeddedObjectDefinition(eventDto);
+    public String getAsPayloadString(OutboundEvent eventDto) throws ApplicationException {
+        DiscordEmbeddedObjectDefinition embeddedObjectDefinition = buildDefinition(eventDto);
         String teamsPayload;
         try {
             teamsPayload = objectMapper.writeValueAsString(embeddedObjectDefinition);
