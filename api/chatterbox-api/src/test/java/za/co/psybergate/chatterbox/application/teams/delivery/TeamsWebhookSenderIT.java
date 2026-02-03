@@ -15,13 +15,12 @@ import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
+import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
 import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.application.domain.api.WebhookEventType;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventDto;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;

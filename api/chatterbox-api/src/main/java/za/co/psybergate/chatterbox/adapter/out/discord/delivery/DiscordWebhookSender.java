@@ -10,8 +10,7 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.discord.delivery.DiscordSenderPort;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
+import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 

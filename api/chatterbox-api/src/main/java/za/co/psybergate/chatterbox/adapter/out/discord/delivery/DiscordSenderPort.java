@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.port.out.discord.delivery;
+package za.co.psybergate.chatterbox.adapter.out.discord.delivery;
 
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;

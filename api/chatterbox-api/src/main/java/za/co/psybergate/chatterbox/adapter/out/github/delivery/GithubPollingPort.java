@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.port.out.github.delivery;
+package za.co.psybergate.chatterbox.adapter.out.github.delivery;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;

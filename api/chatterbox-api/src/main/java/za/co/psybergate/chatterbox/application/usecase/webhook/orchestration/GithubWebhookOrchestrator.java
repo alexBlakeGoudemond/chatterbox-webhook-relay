@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
-import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
+import za.co.psybergate.chatterbox.adapter.out.github.delivery.GithubPollingPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;

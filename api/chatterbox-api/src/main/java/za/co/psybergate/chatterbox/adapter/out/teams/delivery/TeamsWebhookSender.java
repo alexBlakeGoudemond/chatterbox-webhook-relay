@@ -10,9 +10,8 @@ import za.co.psybergate.chatterbox.application.common.exception.ApplicationExcep
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
+import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsCardFactoryPort;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 
 import java.io.IOException;

@@ -6,10 +6,10 @@ import za.co.psybergate.chatterbox.application.domain.configuration.DestinationM
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPort;
-import za.co.psybergate.chatterbox.application.port.out.discord.delivery.DiscordSenderPort;
+import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordSenderPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.teams.delivery.TeamsSenderPort;
+import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsSenderPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
 @Component
