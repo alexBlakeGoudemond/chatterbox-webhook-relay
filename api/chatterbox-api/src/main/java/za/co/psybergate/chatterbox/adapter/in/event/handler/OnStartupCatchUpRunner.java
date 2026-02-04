@@ -6,7 +6,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.port.in.event.handler.CatchUpHandlerPort;
 
@@ -18,8 +17,6 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
 
     private final WebhookOrchestratorPort webhookService;
 
-    private final WebhookConfigurationResolverPort configurationResolver;
-
     private final ApplicationEventPublisher publisher;
 
     @Override
@@ -30,7 +27,7 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
 
     @Override
     public List<String> getAllRepositories() {
-        return configurationResolver.getAllRepositories();
+        return webhookService.getAllRepositories();
     }
 
     @Override

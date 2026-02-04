@@ -21,4 +21,6 @@ public interface WebhookOrchestratorPort {
 
     boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName);
 
+    List<String> getAllRepositories();
+
 }

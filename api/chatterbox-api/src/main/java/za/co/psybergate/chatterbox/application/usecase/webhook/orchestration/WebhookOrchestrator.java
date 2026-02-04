@@ -13,6 +13,7 @@ import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.Web
 import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
@@ -45,6 +46,8 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     private final WebhookEventStorePort webhookEventStorePort;
 
     private final WebhookPolledEventStorePort webhookPolledEventStorePort;
+
+    private final WebhookConfigurationResolverPort configurationResolver;
 
     private final ApplicationEventPublisher publisher;
 
@@ -158,6 +161,11 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
             return persistedTime001;
         }
         return persistedTime002;
+    }
+
+    @Override
+    public List<String> getAllRepositories() {
+        return configurationResolver.getAllRepositories();
     }
 
 }

@@ -11,6 +11,8 @@
 - Can make decisions:
     - Application must not have any Spring or Jakarta references OR
     - May allow some Spring annotations (@Service, @Transactional) in Application layer
+- Application.usecase / service can access application.port.in or application.port.out
+  (Necessary in some cases)
 
 ## Quick mental model
 
