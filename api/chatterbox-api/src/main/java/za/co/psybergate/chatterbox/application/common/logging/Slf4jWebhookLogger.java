@@ -3,13 +3,12 @@ package za.co.psybergate.chatterbox.application.common.logging;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,11 +44,6 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logEventReceived(GithubEventDto eventDto) {
-        log.debug("[WebhookEvent] received DTO: {}", eventDto);
-    }
-
-    @Override
     public void logUnknownEventType(String eventType) {
         log.debug("[Validation] No ConfigurationProperties Found for eventType: {}", eventType);
     }
@@ -60,18 +54,8 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logSendingDtoToTeams(GithubEventDto eventDto, String teamsDestination) {
-        log.info("[Delivery] Sending '{}' to MS Teams destination '{}'", eventDto.displayName(), teamsDestination);
-    }
-
-    @Override
-    public void logSendingDtoToDiscord(GithubEventDto eventDto, String discordDestination) {
-        log.info("[Delivery] Sending '{}' to Discord destination '{}'", eventDto.displayName(), discordDestination);
-    }
-
-    @Override
-    public void logTeamsResponse(HttpResponseDto httpResponseDto) {
-        log.info("[Delivery] MS Teams Response: {}", httpResponseDto);
+    public void logSendingDtoToDestination(OutboundEvent outboundEvent, String destination) {
+        log.info("[Delivery] Sending '{}' to destination '{}'", outboundEvent.displayText(), destination);
     }
 
     @Override
@@ -80,12 +64,12 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logGithubPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public void logPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         log.info("[GithubAPI] querying '{}/{}' for any updates since {} - {}", owner, repositoryName, fromDate, untilDate);
     }
 
     @Override
-    public void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+    public void logPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         log.debug("[GithubAPI] querying if any {} occurred for '{}/{}' since {} - {}", eventType, owner, repositoryName, fromDate, untilDate);
     }
 
@@ -110,8 +94,8 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logProcessingEvents(GithubDestinationMapping destinationMapping) {
-        log.info("[Processing] Processing Received Webhook events for destination: '{}'", destinationMapping.getName());
+    public void logProcessingEvents(DestinationMapping destinationMapping) {
+        log.info("[Processing] Processing Received Webhook events for destination: '{}'", destinationMapping.source());
     }
 
     @Override
@@ -120,7 +104,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousWebhook(WebhookEventDto latestWebhookEvent) {
+    public void logRunnerFoundPreviousWebhook(WebhookEventReceived latestWebhookEvent) {
         log.info("[Runner] Previous webhook found '{}', continuing with Poll", truncate(latestWebhookEvent));
     }
 
@@ -130,12 +114,12 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logRunnerFoundPreviousPolledEvent(GithubPolledEventDto latestGithubPolledEvent) {
+    public void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestGithubPolledEvent) {
         log.info("[Runner] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
     }
 
     @Override
-    public void logGithubPolledEventsEmpty(String repositoryFullName) {
+    public void logPolledEventsEmpty(String repositoryFullName) {
         log.warn("[Polling] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
     }
 
@@ -150,7 +134,7 @@ public class Slf4jWebhookLogger implements WebhookLogger {
     }
 
     @Override
-    public void logPolledEventsFound(List<GithubPolledEventDto> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+    public void logPolledEventsFound(List<WebhookPolledEventReceived> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
         log.info("[Polling] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
     }
 

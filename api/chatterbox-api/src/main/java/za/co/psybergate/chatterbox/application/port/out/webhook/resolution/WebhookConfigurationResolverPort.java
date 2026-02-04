@@ -1,29 +1,26 @@
 package za.co.psybergate.chatterbox.application.port.out.webhook.resolution;
 
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
-import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
 
 import java.util.List;
 
 /// resolves configuration, handles destination and template mapping
 public interface WebhookConfigurationResolverPort {
 
-    GithubEventMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException;
+    EventPayloadMapping getPayloadMapping(String eventType) throws UnrecognizedRequestException;
 
-    GithubEventMapping getPayloadMapping(EventType eventType) throws UnrecognizedRequestException;
+    EventPayloadMapping getPayloadMapping(WebhookEventType webhookEventType) throws UnrecognizedRequestException;
 
-    String getTeamsDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
-
-    String getDiscordDestinationUrl(String repositoryName) throws UnrecognizedRequestException;
+    String resolveDestinationUrl(String repositoryName, DeliveryChannelType channelType) throws UnrecognizedRequestException;
 
     List<String> getAllRepositories();
 
-    List<GithubDestinationMapping> getDestinationMapping();
+    List<DestinationMapping> getDestinationMapping();
 
-    String getTeamsUrl(String teamsDestinationChannel);
-
-    String getDiscordUrl(String discordDestinationChannel);
+    String getDestinationUrl(String destinationChannel, DeliveryChannelType channelType);
 
 }

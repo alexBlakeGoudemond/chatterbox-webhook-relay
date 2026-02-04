@@ -7,26 +7,29 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.port.out.discord.factory.DiscordEmbeddedObjectFactoryPort;
+import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.factory.DiscordPayloadFactory;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.discord.delivery.DiscordWebhookSender;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactory;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordWebhookSender;
+import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 
@@ -41,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubWebhookEventMapper.class,
         PropertiesConfigurationResolver.class,
         DiscordWebhookSender.class,
-        DiscordPayloadFactory.class,
+        DiscordEmbeddedObjectFactory.class,
         RegexTemplateSubstitutor.class,
         InfrastructurePropertiesConfig.class,
         TestConfigurationResolver.class,
@@ -62,13 +65,14 @@ public class DiscordWebhookSenderIT {
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventMapper eventExtractor;
+    private OutboundEventMapperPort eventExtractor;
 
     @Autowired
     private DiscordWebhookSender discordWebhookSender;
 
     @Autowired
-    private DiscordEmbeddedObjectFactoryPort discordEmbeddedObjectFactoryPort;
+    @Qualifier("discordEmbeddedObjectFactory")
+    private VendorFactoryPort discordPayloadFactory;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
@@ -82,21 +86,20 @@ public class DiscordWebhookSenderIT {
     @DisplayName("DiscordSenderService can process DTO")
     @Test
     public void givenGithubEventDto_WhenDiscordSenderServiceProcessesDto_ThenSuccess() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getDiscordDestinationUrl(outboundEvent);
 
-        HttpResponseDto httpResponseDto = discordWebhookSender.process(eventDto, teamsDestinationUrl);
-        assertNotNull(httpResponseDto);
-        assertEquals(HttpStatus.NO_CONTENT.value(), httpResponseDto.httpStatus());
+        DeliveryResult httpResponseDto = discordWebhookSender.deliver(outboundEvent, teamsDestinationUrl);
+        assertEquals(DeliveryResult.SUCCESS, httpResponseDto);
     }
 
     @DisplayName("Bad HttpPost yields 401")
     @Test
     public void givenGithubEventDto_AndBadHttpPost_WhenExecuteHttp_ThenUnauthorised() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getGithubEventDto();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        String jsonString = discordEmbeddedObjectFactoryPort.getAsDiscordPayloadString(eventDto);
+        String jsonString = discordPayloadFactory.getAsPayloadString(outboundEvent);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = discordWebhookSender.executeHttpPostRequest(httpPost);
@@ -104,9 +107,9 @@ public class DiscordWebhookSenderIT {
         assertEquals(HttpStatus.UNAUTHORIZED.value(), httpResponseDto.httpStatus());
     }
 
-    private GithubEventDto getGithubEventDto() {
+    private OutboundEvent getGithubEventDto() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.map(EventType.PUSH, jsonNode);
+        return eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
     }
 
     private HttpPost getHttpPostWithAuthorizationHeaders(String teamsDestination, String jsonString) {

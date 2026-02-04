@@ -7,26 +7,29 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
+import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.delivery.TeamsWebhookSender;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import za.co.psybergate.chatterbox.test.helper.TestConfigurationResolver;
 
@@ -62,13 +65,14 @@ public class TeamsWebhookSenderIT {
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventMapper eventExtractor;
+    private OutboundEventMapperPort eventExtractor;
 
     @Autowired
     private TeamsWebhookSender teamsWebhookSender;
 
     @Autowired
-    private TeamsCardFactoryPort teamsCardFactoryPort;
+    @Qualifier("teamsAdaptiveCardFactory")
+    private VendorFactoryPort teamsPayloadFactory;
 
     @Autowired
     private TestConfigurationResolver configurationResolver;
@@ -82,21 +86,20 @@ public class TeamsWebhookSenderIT {
     @DisplayName("TeamsSenderService can process DTO")
     @Test
     public void givenGithubEventDto_WhenTeamsSenderServiceProcessesDto_ThenSuccess() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getOutboundEvent();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        HttpResponseDto httpResponseDto = teamsWebhookSender.process(eventDto, teamsDestinationUrl);
-        assertNotNull(httpResponseDto);
-        assertEquals(HttpStatus.ACCEPTED.value(), httpResponseDto.httpStatus());
+        DeliveryResult deliveryResult = teamsWebhookSender.deliver(outboundEvent, teamsDestinationUrl);
+        assertEquals(DeliveryResult.SUCCESS, deliveryResult);
     }
 
     @DisplayName("Bad HttpPost yields 401")
     @Test
     public void givenGithubEventDto_AndBadHttpPost_WhenExecuteHttp_ThenUnauthorised() {
-        GithubEventDto eventDto = getGithubEventDto();
-        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(eventDto);
+        OutboundEvent outboundEvent = getOutboundEvent();
+        String teamsDestinationUrl = configurationResolver.getTeamsDestinationUrl(outboundEvent);
 
-        String jsonString = teamsCardFactoryPort.getAsTeamsPayloadString(eventDto);
+        String jsonString = teamsPayloadFactory.getAsPayloadString(outboundEvent);
         HttpPost httpPost = getHttpPostWithAuthorizationHeaders(teamsDestinationUrl, jsonString);
 
         HttpResponseDto httpResponseDto = teamsWebhookSender.executeHttpPostRequest(httpPost);
@@ -112,9 +115,9 @@ public class TeamsWebhookSenderIT {
         return httpPost;
     }
 
-    private GithubEventDto getGithubEventDto() {
+    private OutboundEvent getOutboundEvent() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        return eventExtractor.map(EventType.PUSH, jsonNode);
+        return eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
     }
 
 }

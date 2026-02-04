@@ -15,16 +15,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.GithubWebhookPort;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.validation.GithubWebhookValidator;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.common.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.common.security.HmacSha256Cryptor;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.common.exception.InvalidSignatureException;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -55,8 +55,8 @@ public class WebhookFilterIT {
     private MockMvc mockMvc;
 
     @MockitoBean
-    @Qualifier("githubWebhookOrchestrator")
-    private GithubWebhookPort githubWebhookPort;
+    @Qualifier("webhookOrchestrator")
+    private WebhookOrchestratorPort webhookOrchestratorPort;
 
     @Autowired
     private JsonFileReader jsonFileReader;
@@ -67,7 +67,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.when(
-                githubWebhookPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                webhookOrchestratorPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
                 )).thenReturn(null);
     }
 

@@ -1,31 +1,31 @@
 package za.co.psybergate.chatterbox.application.port.out.persistence;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.domain.api.EventStatus;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDeliveryDto;
-import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
 
 import java.util.List;
 
 public interface WebhookEventStorePort {
 
-    List<WebhookEventDto> getLatestProcessedWebhooks(String repositoryFullName);
+    List<WebhookEventReceived> getLatestProcessedWebhooks(String repositoryFullName);
 
-    List<WebhookEventDto> getUnprocessedWebhooks(String repositoryFullName);
+    List<WebhookEventReceived> getUnprocessedWebhooks(String repositoryFullName);
 
-    WebhookEventDto storeWebhook(String uniqueId, GithubEventDto eventDto, JsonNode rawBody);
+    WebhookEventReceived storeWebhook(String uniqueId, OutboundEvent outboundEvent, RawEventPayload rawBody);
 
-    WebhookEventDeliveryDto storeSuccessfulDelivery(WebhookEventDto webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDelivery storeSuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl);
 
-    WebhookEventDeliveryDto storeUnsuccessfulDelivery(WebhookEventDto webhookEvent, String destinationName, String destinationUrl);
+    WebhookEventDelivery storeUnsuccessfulDelivery(OutboundEvent outboundEvent, String destinationName, String destinationUrl);
 
-    void setProcessedStatus(WebhookEventDto webhookEvent, EventStatus eventStatus);
+    void markProcessed(OutboundEvent outboundEvent, WebhookEventStatus webhookEventStatus);
 
-    WebhookEventDto getWebhook(Long id);
+    WebhookEventReceived getWebhook(Long id);
 
-    List<WebhookEventDeliveryDto> getDeliveryLogs(Long id);
+    List<WebhookEventDelivery> getDeliveryLogs(Long id);
 
-    WebhookEventDto getMostRecentWebhook(String repositoryName);
+    WebhookEventReceived getMostRecentWebhook(String repositoryName);
 
 }
