@@ -1,12 +1,11 @@
 package za.co.psybergate.chatterbox.application.common.logging;
 
-import za.co.psybergate.chatterbox.domain.delivery.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.WebhookEventDto;
-import za.co.psybergate.chatterbox.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.domain.github.model.GithubDestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,23 +22,17 @@ public interface WebhookLogger {
 
     void logCompletion(long ms);
 
-    void logEventReceived(GithubEventDto eventDto);
-
     void logUnknownEventType(String eventType);
 
     void logUnrecognizedRepository(String repositoryName);
 
-    void logSendingDtoToTeams(GithubEventDto eventDto, String teamsDestination);
-
-    void logSendingDtoToDiscord(GithubEventDto eventDto, String discordDestination);
-
-    void logTeamsResponse(HttpResponseDto httpResponseDto);
+    void logSendingDtoToDestination(OutboundEvent outboundEvent, String destination);
 
     void logExceptionDetails(Exception exception);
 
-    void logGithubPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    void logPollRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
-    void logGithubPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
+    void logPollEventType(String eventType, String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate);
 
     void logStoringEvent(Object webhook);
 
@@ -49,23 +42,23 @@ public interface WebhookLogger {
 
     void logEventDelivered(Object webhookEvent);
 
-    void logProcessingEvents(GithubDestinationMapping destinationMapping);
+    void logProcessingEvents(DestinationMapping destinationMapping);
 
     void logRunnerFoundNoPreviousWebhooks(String repositoryFullName);
 
-    void logRunnerFoundPreviousWebhook(WebhookEventDto latestWebhookEvent);
+    void logRunnerFoundPreviousWebhook(WebhookEventReceived latestWebhookEvent);
 
     void logRunnerFoundNoPreviousPolledEvents(String repositoryFullName);
 
-    void logRunnerFoundPreviousPolledEvent(GithubPolledEventDto latestGithubPolledEvent);
+    void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestGithubPolledEvent);
 
-    void logGithubPolledEventsEmpty(String repositoryFullName);
+    void logPolledEventsEmpty(String repositoryFullName);
 
     void logWebhookEventsEmpty(String repositoryFullName);
 
     void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime);
 
-    void logPolledEventsFound(List<GithubPolledEventDto> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime);
+    void logPolledEventsFound(List<WebhookPolledEventReceived> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime);
 
     void logPolledEventProcessed(PolledEventsProcessed polledEventsProcessed);
 

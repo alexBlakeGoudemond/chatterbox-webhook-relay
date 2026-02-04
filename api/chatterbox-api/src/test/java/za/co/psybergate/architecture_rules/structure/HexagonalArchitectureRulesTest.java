@@ -15,7 +15,6 @@ public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAb
     @Override
     protected List<String> domainAllowedPackages() {
         List<String> allowedPackages = new ArrayList<>();
-        allowedPackages.addAll(jacksonPackages());
         allowedPackages.addAll(lombokPackages());
         allowedPackages.addAll(jakartaValidationPackages());
         return allowedPackages;
@@ -33,7 +32,7 @@ public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAb
     }
 
     @Override
-    protected List<String> infrastructureAllowedPackages() {
+    protected List<String> adapterAllowedPackages() {
         List<String> allowedPackages = new ArrayList<>();
         allowedPackages.addAll(springPackages());
         allowedPackages.addAll(jacksonPackages());
