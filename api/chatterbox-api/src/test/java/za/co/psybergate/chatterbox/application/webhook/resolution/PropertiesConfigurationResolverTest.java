@@ -7,20 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
+import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
+import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.domain.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
         PropertiesConfigurationResolver.class,
-        InfrastructurePropertiesConfig.class
+        InfrastructurePropertiesConfig.class,
 })
 @ActiveProfiles({"test", "bad-properties"})
 public class PropertiesConfigurationResolverTest {
@@ -34,14 +35,14 @@ public class PropertiesConfigurationResolverTest {
     @DisplayName("Known eventType succeeds")
     @Test
     public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
-        GithubEventMapping payloadMapping = resolver.getPayloadMapping(EventType.PUSH);
+        EventPayloadMapping payloadMapping = resolver.getPayloadMapping(WebhookEventType.PUSH);
         assertNotNull(payloadMapping);
     }
 
     @DisplayName("Known eventType String succeeds")
     @Test
     public void givenRecognizedEventTypeString_WhenGetPayloadMapping_ThenSuccess() {
-        GithubEventMapping payloadMapping = resolver.getPayloadMapping("push");
+        EventPayloadMapping payloadMapping = resolver.getPayloadMapping("push");
         assertNotNull(payloadMapping);
     }
 
@@ -55,7 +56,7 @@ public class PropertiesConfigurationResolverTest {
     @DisplayName("Known Teams Destination Channel Name succeeds")
     @Test
     public void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
-        String destinationUrl = resolver.getTeamsDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations");
+        String destinationUrl = resolver.resolveDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations", DeliveryChannelType.NOTIFICATION);
         assertNotNull(destinationUrl);
     }
 
@@ -63,7 +64,7 @@ public class PropertiesConfigurationResolverTest {
     @Test
     public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
         Assertions.assertThrows(UnrecognizedRequestException.class,
-                () -> resolver.getTeamsDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined"));
+                () -> resolver.resolveDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined", DeliveryChannelType.NOTIFICATION));
     }
 
 }

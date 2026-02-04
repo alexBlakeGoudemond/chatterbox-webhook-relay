@@ -5,24 +5,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
-import za.co.psybergate.chatterbox.application.port.out.teams.factory.TeamsCardFactoryPort;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition;
-import za.co.psybergate.chatterbox.domain.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
+import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
+import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import java.util.HashMap;
@@ -51,13 +53,14 @@ public class TeamsAdaptiveCardFactoryIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private TeamsCardFactoryPort teamsCardFactoryPort;
+    @Qualifier("teamsAdaptiveCardFactory")
+    private VendorFactoryPort teamsPayloadFactory;
 
     @Autowired
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventMapper eventExtractor;
+    private OutboundEventMapperPort eventExtractor;
 
     @DisplayName("Factory(Map) can build template")
     @Test
@@ -106,9 +109,9 @@ public class TeamsAdaptiveCardFactoryIT {
 
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateFromJsonString() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
         try {
-            return teamsCardFactoryPort.buildCard(eventDto);
+            return (TeamsAdaptiveCardDefinition) teamsPayloadFactory.buildDefinition(outboundEvent);
         } catch (Exception e) {
             return null;
         }
@@ -117,7 +120,7 @@ public class TeamsAdaptiveCardFactoryIT {
     private TeamsAdaptiveCardDefinition getTeamsAdaptiveCardTemplateUsingMap() {
         Map<String, String> propertiesToUse = getPropertiesToUse();
         try {
-            return teamsCardFactoryPort.buildCard(propertiesToUse);
+            return (TeamsAdaptiveCardDefinition) teamsPayloadFactory.buildDefinition(propertiesToUse);
         } catch (Exception e) {
             return null;
         }
@@ -132,5 +135,6 @@ public class TeamsAdaptiveCardFactoryIT {
         propertiesToUse.put("displayName", "Pull Request Event");
         return propertiesToUse;
     }
+
 
 }

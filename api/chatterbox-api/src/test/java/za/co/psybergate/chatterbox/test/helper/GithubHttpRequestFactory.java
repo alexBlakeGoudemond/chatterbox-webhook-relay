@@ -3,9 +3,9 @@ package za.co.psybergate.chatterbox.test.helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxApiProperties;
-import za.co.psybergate.chatterbox.infrastructure.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
-import za.co.psybergate.chatterbox.infrastructure.common.security.PayloadCryptor;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxApiProperties;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
+import za.co.psybergate.chatterbox.common.security.PayloadCryptor;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

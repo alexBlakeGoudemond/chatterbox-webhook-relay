@@ -11,18 +11,18 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubEventMapper;
-import za.co.psybergate.chatterbox.application.common.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.domain.api.EventType;
-import za.co.psybergate.chatterbox.domain.event.model.GithubEventDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDeliveryDto;
-import za.co.psybergate.chatterbox.domain.event.model.GithubPolledEventDto;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.GithubPolledEventEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @Import({
-        GithubPolledEventEventStoreJpaAdapter.class,
+        WebhookPolledEventEventStoreJpaAdapter.class,
         JsonFileReader.class,
         JacksonJsonConverter.class,
         GithubWebhookEventMapper.class,
@@ -49,21 +49,21 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
     @Autowired
-    private GithubPolledEventEventStoreJpaAdapter adapter;
+    private WebhookPolledEventEventStoreJpaAdapter adapter;
 
     @Autowired
     private JsonFileReader jsonFileReader;
 
     @Autowired
-    private GithubEventMapper eventExtractor;
+    private OutboundEventMapperPort eventExtractor;
 
     @DisplayName("Can save GithubPolledEvent")
     @Test
     public void givenPayloadAndPolledEvent_WhenStoreEvent_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
 
-        GithubPolledEventDto polledEvent = adapter.storeEvent("abc123", eventDto, jsonNode);
+        WebhookPolledEventReceived polledEvent = adapter.storeEvent("abc123", outboundEvent, RawEventPayload.of(jsonNode));
         assertNotNull(polledEvent);
     }
 
@@ -71,10 +71,8 @@ public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestCont
     @Test
     public void givenGithubEvent_WhenStoreDelivery_ThenSuccess() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
-        GithubEventDto eventDto = eventExtractor.map(EventType.PUSH, jsonNode);
-        GithubPolledEvent githubPolledEvent = new GithubPolledEvent("abc123", eventDto, jsonNode);
-        GithubPolledEventDto polledEvent = GithubPolledEventEventStoreJpaAdapter.mapToGithubPolledEventRecord(githubPolledEvent);
-        GithubPolledEventDeliveryDto polledEventDeliveryLog = adapter.storeSuccessfulDelivery(polledEvent, "exampleDestination", "exampleDestinationUrl");
+        OutboundEvent outboundEvent = eventExtractor.map(WebhookEventType.PUSH, RawEventPayload.of(jsonNode));
+        WebhookPolledEventDelivery polledEventDeliveryLog = adapter.storeSuccessfulDelivery(outboundEvent, "exampleDestination", "exampleDestinationUrl");
         assertNotNull(polledEventDeliveryLog);
     }
 

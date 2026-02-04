@@ -18,8 +18,7 @@
             Save space with package name reduction by adjusting %logger{...}
             -->
             <Pattern>
-                ${appName} %magenta(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] [%magenta(%X{threadExecutionId})]
-                %yellow(%logger{20}): %msg%n%throwable
+                ${appName} %magenta(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] [%magenta(%X{threadExecutionId})] %yellow(%logger{20}): %msg%n%throwable
             </Pattern>
         </layout>
     </appender>

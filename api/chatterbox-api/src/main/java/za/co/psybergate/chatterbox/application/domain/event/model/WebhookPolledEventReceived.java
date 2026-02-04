@@ -1,0 +1,21 @@
+package za.co.psybergate.chatterbox.application.domain.event.model;
+
+import java.time.LocalDateTime;
+
+public record WebhookPolledEventReceived(
+        Long id,
+        String repositoryFullName,
+        String sourceId,
+        WebhookEventType webhookEventType,
+        String displayName,
+        String senderName,
+        String eventUrl,
+        String eventUrlDisplayText,
+        String extraDetail,
+        String payload,
+        WebhookEventStatus webhookEventStatus,
+        String errorMessage,
+        LocalDateTime fetchedAt,
+        LocalDateTime processedAt) {
+
+}

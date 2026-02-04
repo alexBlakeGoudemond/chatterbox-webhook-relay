@@ -1,6 +1,5 @@
 package za.co.psybergate.chatterbox.application.github.delivery;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -9,18 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.port.out.github.delivery.GithubPollingPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.GithubPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
-import za.co.psybergate.chatterbox.domain.delivery.model.RepositoryDetailDto;
-import za.co.psybergate.chatterbox.domain.github.model.GithubRepositoryInformationDto;
-import za.co.psybergate.chatterbox.infrastructure.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.infrastructure.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.infrastructure.adapter.out.github.delivery.GithubRestPollingClient;
+import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetail;
+import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,54 +41,54 @@ class GithubPollingServiceIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private GithubPollingPort pollingService;
+    private WebhookPollingPort pollingService;
 
     @MockitoBean
     private WebhookEventStorePort webhookEventStorePort;
 
     @MockitoBean
-    private GithubPolledEventStorePort githubPolledEventStorePort;
+    private WebhookPolledEventStorePort webhookPolledEventStorePort;
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(
-                Arguments.of(Named.of("Chatterbox", new RepositoryDetailDto("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
-                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetailDto("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
+                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("psyAlexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
+                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Psybergate-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
         );
     }
 
     @ParameterizedTest(name = "Commits; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void givenRepositoryDetailsAndDates_WhenPollCommits_ThenSuccess(RepositoryDetailDto repositoryDetailDto) {
-        String owner = repositoryDetailDto.repositoryOwner();
-        String repositoryName = repositoryDetailDto.repositoryName();
-        LocalDateTime fromDate = repositoryDetailDto.fromDate();
-        LocalDateTime untilDate = repositoryDetailDto.toDate();
-        JsonNode commitsSince = pollingService.getCommitsSince(owner, repositoryName, fromDate, untilDate);
+    public void givenRepositoryDetailsAndDates_WhenPollCommits_ThenSuccess(RepositoryDetail repositoryDetail) {
+        String owner = repositoryDetail.repositoryOwner();
+        String repositoryName = repositoryDetail.repositoryName();
+        LocalDateTime fromDate = repositoryDetail.fromDate();
+        LocalDateTime untilDate = repositoryDetail.toDate();
+        List<?> commitsSince = pollingService.getCommitsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(commitsSince);
     }
 
     @ParameterizedTest(name = "Pull Requests; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void givenRepositoryDetailsAndDates_WhenPollPullRequests_ThenSuccess(RepositoryDetailDto repositoryDetailDto) {
-        String owner = repositoryDetailDto.repositoryOwner();
-        String repositoryName = repositoryDetailDto.repositoryName();
-        LocalDateTime fromDate = repositoryDetailDto.fromDate();
-        LocalDateTime untilDate = repositoryDetailDto.toDate();
-        JsonNode pullRequestsSince = pollingService.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
+    public void givenRepositoryDetailsAndDates_WhenPollPullRequests_ThenSuccess(RepositoryDetail repositoryDetail) {
+        String owner = repositoryDetail.repositoryOwner();
+        String repositoryName = repositoryDetail.repositoryName();
+        LocalDateTime fromDate = repositoryDetail.fromDate();
+        LocalDateTime untilDate = repositoryDetail.toDate();
+        List<?> pullRequestsSince = pollingService.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(pullRequestsSince);
     }
 
     @ParameterizedTest(name = "Recent Updates; {index}: repo:{0}")
     @MethodSource("repositoryDetails")
-    public void givenRepositoryDetailsAndDates_WhenPollRecentUpdates_ThenSuccess(RepositoryDetailDto repositoryDetailDto) {
-        String owner = repositoryDetailDto.repositoryOwner();
-        String repositoryName = repositoryDetailDto.repositoryName();
-        LocalDateTime fromDate = repositoryDetailDto.fromDate();
-        LocalDateTime untilDate = repositoryDetailDto.toDate();
-        GithubRepositoryInformationDto recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+    public void givenRepositoryDetailsAndDates_WhenPollRecentUpdates_ThenSuccess(RepositoryDetail repositoryDetail) {
+        String owner = repositoryDetail.repositoryOwner();
+        String repositoryName = repositoryDetail.repositoryName();
+        LocalDateTime fromDate = repositoryDetail.fromDate();
+        LocalDateTime untilDate = repositoryDetail.toDate();
+        RepositoryUpdates recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         assertNotNull(recentUpdates);
-        assertNotNull(recentUpdates.getGithubEventTypeDetails());
-        assertFalse(recentUpdates.getGithubEventTypeDetails().isEmpty());
+        assertNotNull(recentUpdates.getWebhookEventTypeDetails());
+        assertFalse(recentUpdates.getWebhookEventTypeDetails().isEmpty());
     }
 
 }

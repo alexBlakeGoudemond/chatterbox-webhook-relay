@@ -6,12 +6,12 @@ chatterbox:
     github:
       repository:
         destination-mapping:
-          - name: Psybergate-Knowledge-Repository/mentoring_software_foundations
-            teamsDestinationChannel: General
-          - name: psyAlexBlakeGoudemond/chatterbox/undefined
-            teamsDestinationChannel: UndefinedTeamsChannel
-          - name: psyAlexBlakeGoudemond/chatterbox
-            teamsDestinationChannel: TestChannel
+          - source: Psybergate-Knowledge-Repository/mentoring_software_foundations
+            destination-channels:
+              NOTIFICATION: TestChannel
+          - source: psyAlexBlakeGoudemond/chatterbox
+            destination-channels:
+              NOTIFICATION: TestChannel
       payload:
         event-mapping:
           push:
