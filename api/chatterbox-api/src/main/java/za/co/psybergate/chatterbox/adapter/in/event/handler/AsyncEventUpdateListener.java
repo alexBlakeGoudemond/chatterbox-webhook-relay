@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.thread.async.listener;
+package za.co.psybergate.chatterbox.adapter.in.event.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -8,11 +8,12 @@ import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProc
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.application.port.in.event.handler.EventUpdateHandlerPort;
 
 // TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component
 @RequiredArgsConstructor
-public class AsyncEventUpdateListener implements UpdatesProcessedListener {
+public class AsyncEventUpdateListener implements EventUpdateHandlerPort {
 
     private final EventProcessorPort eventProcessor;
 
@@ -21,7 +22,7 @@ public class AsyncEventUpdateListener implements UpdatesProcessedListener {
     @Async("polledEventExecutor")
     @EventListener
     @Override
-    public void onPolledEventsProcessed(PolledEventsProcessed polledEventsProcessed) {
+    public void handle(PolledEventsProcessed polledEventsProcessed) {
         webhookLogger.logPolledEventProcessed(polledEventsProcessed);
         eventProcessor.processPolledEvents();
     }
@@ -29,7 +30,7 @@ public class AsyncEventUpdateListener implements UpdatesProcessedListener {
     @Async("webhookEventExecutor")
     @EventListener
     @Override
-    public void onWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
+    public void handle(WebhookEventProcessed webhookEventProcessed) {
         webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
         eventProcessor.processWebhookEvents();
     }

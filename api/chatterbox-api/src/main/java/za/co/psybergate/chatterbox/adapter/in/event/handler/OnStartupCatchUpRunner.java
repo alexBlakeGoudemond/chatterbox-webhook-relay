@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.thread.sync.runner;
+package za.co.psybergate.chatterbox.adapter.in.event.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import za.co.psybergate.chatterbox.application.port.in.event.handler.CatchUpHandlerPort;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class OnStartupCatchUpRunner implements CatchUpRunner, ApplicationRunner {
+public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRunner {
 
     private final WebhookOrchestratorPort webhookService;
 
