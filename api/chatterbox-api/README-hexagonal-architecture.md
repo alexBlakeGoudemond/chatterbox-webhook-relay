@@ -1,6 +1,6 @@
 # README Heaxagonal Architecture
 
-## Common layout
+## Project layout
 
 - 3 main packages: application, application.domain, adapter (Other layouts do exist)
     - Could also have common, application.common
@@ -18,6 +18,9 @@
 - Application = use case orchestration
 - Adapter = technical details
 - Common = shared code, from that layer inwards
+
+The classes in the domain package are anaemic; essentially just data transfer objects. Business logic has been
+chosen to be placed in the application package as much as possible.
 
 ## Where do ports (contracts) live?
 
