@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-public class GithubPolledEventStoreJpaAdapterIT extends AbstractPostgresTestContainer {
+public class WebhookPolledEventEventStoreJpaAdapterIT extends AbstractPostgresTestContainer {
 
     @MockitoBean
     private WebhookFilter webhookFilter;

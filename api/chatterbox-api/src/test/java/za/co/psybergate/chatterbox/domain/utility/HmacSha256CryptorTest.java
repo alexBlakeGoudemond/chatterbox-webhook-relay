@@ -12,10 +12,10 @@ import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = HmacSha256Cryptor.class)
-public class PayloadCryptorTest {
+public class HmacSha256CryptorTest {
 
     @Autowired
-    private PayloadCryptor payloadCryptor;
+    private HmacSha256Cryptor payloadCryptor;
 
     @Test
     @DisplayName("Encrypt with SHA256 works")
