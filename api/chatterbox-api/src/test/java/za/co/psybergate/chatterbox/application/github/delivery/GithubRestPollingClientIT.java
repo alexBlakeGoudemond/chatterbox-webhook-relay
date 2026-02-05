@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         Slf4jWebhookLogger.class,
 })
 @ActiveProfiles({"test", "live-url"})
-class GithubPollingServiceIT {
+class GithubRestPollingClientIT {
 
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
@@ -42,8 +42,7 @@ class GithubPollingServiceIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    @Qualifier("githubRestPollingClient")
-    private WebhookPollingPort githubRestPollingClient;
+    private GithubRestPollingClient githubRestPollingClient;
 
     @MockitoBean
     private WebhookEventStorePort webhookEventStorePort;
