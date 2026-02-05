@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -41,7 +42,8 @@ class GithubPollingServiceIT {
     private WebhookFilter webhookFilter;
 
     @Autowired
-    private WebhookPollingPort pollingService;
+    @Qualifier("githubRestPollingClient")
+    private WebhookPollingPort githubRestPollingClient;
 
     @MockitoBean
     private WebhookEventStorePort webhookEventStorePort;
@@ -63,7 +65,7 @@ class GithubPollingServiceIT {
         String repositoryName = repositoryDetail.repositoryName();
         LocalDateTime fromDate = repositoryDetail.fromDate();
         LocalDateTime untilDate = repositoryDetail.toDate();
-        List<?> commitsSince = pollingService.getCommitsSince(owner, repositoryName, fromDate, untilDate);
+        List<?> commitsSince = githubRestPollingClient.getCommitsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(commitsSince);
     }
 
@@ -74,7 +76,7 @@ class GithubPollingServiceIT {
         String repositoryName = repositoryDetail.repositoryName();
         LocalDateTime fromDate = repositoryDetail.fromDate();
         LocalDateTime untilDate = repositoryDetail.toDate();
-        List<?> pullRequestsSince = pollingService.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
+        List<?> pullRequestsSince = githubRestPollingClient.getPullRequestsSince(owner, repositoryName, fromDate, untilDate);
         assertNotNull(pullRequestsSince);
     }
 
@@ -85,7 +87,7 @@ class GithubPollingServiceIT {
         String repositoryName = repositoryDetail.repositoryName();
         LocalDateTime fromDate = repositoryDetail.fromDate();
         LocalDateTime untilDate = repositoryDetail.toDate();
-        RepositoryUpdates recentUpdates = pollingService.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
+        RepositoryUpdates recentUpdates = githubRestPollingClient.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         assertNotNull(recentUpdates);
         assertNotNull(recentUpdates.getWebhookEventTypeDetails());
         assertFalse(recentUpdates.getWebhookEventTypeDetails().isEmpty());

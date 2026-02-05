@@ -25,7 +25,7 @@ import java.util.List;
 import static za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType.POLL_COMMIT;
 import static za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType.POLL_PULL_REQUEST;
 
-@Service
+@Service("githubRestPollingClient")
 public class GithubRestPollingClient implements WebhookPollingPort {
 
     private final WebClient githubClient;
