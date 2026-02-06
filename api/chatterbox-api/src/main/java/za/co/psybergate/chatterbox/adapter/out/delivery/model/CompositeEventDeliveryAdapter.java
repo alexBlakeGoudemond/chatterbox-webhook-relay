@@ -37,9 +37,9 @@ public class CompositeEventDeliveryAdapter implements EventDeliveryPort {
         this.webhookEventStore = webhookEventStore;
     }
 
-    /// The Adapter knows that for this business use-case:
-    /// NOTIFICATION -> MS_TEAMS
-    /// CHAT -> DISCORD
+    // The Adapter knows that for this business use-case:
+    // NOTIFICATION -> MS_TEAMS
+    // CHAT -> DISCORD
     @Override
     public void deliver(OutboundEvent event, DestinationMapping mapping) {
         String teamsChannel = mapping.destinationChannels().get(DeliveryChannelType.NOTIFICATION);

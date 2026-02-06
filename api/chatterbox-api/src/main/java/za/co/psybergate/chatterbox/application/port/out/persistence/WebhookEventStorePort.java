@@ -4,7 +4,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayloa
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 
 import java.util.List;
 

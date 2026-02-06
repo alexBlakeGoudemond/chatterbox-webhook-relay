@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.port.in.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,5 +20,7 @@ public interface WebhookOrchestratorPort {
     List<WebhookPolledEventReceived> pollForChanges(String repository, LocalDateTime receivedAt);
 
     boolean findMostRecentWebhookAndCheckForUpdatesSince(String repositoryFullName);
+
+    List<String> getAllRepositories();
 
 }
