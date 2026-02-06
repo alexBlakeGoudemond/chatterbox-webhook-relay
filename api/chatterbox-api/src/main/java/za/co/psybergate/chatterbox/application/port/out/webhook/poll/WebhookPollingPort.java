@@ -6,7 +6,6 @@ import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpda
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO BlakeGoudemond 2026/01/17 | test this class?
 public interface WebhookPollingPort {
 
     RepositoryUpdates getRecentUpdates(String owner, String repositoryName, LocalDateTime fromDate);

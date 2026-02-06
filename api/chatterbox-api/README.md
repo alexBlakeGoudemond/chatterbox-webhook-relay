@@ -102,7 +102,7 @@ curl -X POST https://<publicFacingURL>/chatterbox/github -H "Content-Type: appli
       |      | Container: chatterbox-postgres |                                              |                                                      |    
       |      | Image: chatterbox-postgres:dev |                                              |                                                      |    
       |      | (hostPort : conPort)           |                                              |                                                      |    
-      |      | ( "55432" : "5432" )           |                                              |                                                      |    
+      |      | ( "55618" : "5432" )           |                                              |                                                      |    
       |      |                                |                                              |                                                      |    
       |      +--------------------------------+                                              ↓                                                      |    
       |                                                                                      |                                                      |    
