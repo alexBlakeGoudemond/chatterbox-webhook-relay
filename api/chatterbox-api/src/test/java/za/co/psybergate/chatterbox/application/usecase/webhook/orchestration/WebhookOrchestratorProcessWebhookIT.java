@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@MirrorProductionClassForArchitectureRuleTests("WebhookOrchestrator")
+@MirrorProductionClassForArchitectureRuleTests(WebhookOrchestrator.class)
 public class WebhookOrchestratorProcessWebhookIT extends AbstractPostgresTestContainer {
 
     @MockitoBean

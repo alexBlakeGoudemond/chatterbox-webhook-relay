@@ -98,7 +98,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         HttpResponseHandler.class,
 })
 @WebMvcTest(GithubWebhookController.class)
-@MirrorProductionClassForArchitectureRuleTests("GithubWebhookController")
+@MirrorProductionClassForArchitectureRuleTests(GithubWebhookController.class)
 public class GithubWebhookControllerMockedTeamsIT {
 
     @MockitoBean

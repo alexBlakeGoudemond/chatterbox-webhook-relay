@@ -1,6 +1,7 @@
 package za.co.psybergate.chatterbox.adapter.out.webhook.poll;
 
 import org.junit.jupiter.api.Named;
+import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

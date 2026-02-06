@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         HttpResponseHandler.class
 })
 @WebMvcTest(GithubWebhookController.class)
-@MirrorProductionClassForArchitectureRuleTests("GlobalExceptionHandler")
+@MirrorProductionClassForArchitectureRuleTests(GlobalExceptionHandler.class)
 public class GithubWebhookControllerExceptionHandlerIT {
 
     @MockitoBean
