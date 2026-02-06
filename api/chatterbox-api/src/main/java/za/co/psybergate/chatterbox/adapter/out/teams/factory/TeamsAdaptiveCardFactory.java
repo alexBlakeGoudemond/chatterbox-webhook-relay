@@ -26,8 +26,6 @@ public class TeamsAdaptiveCardFactory implements VendorFactoryPort {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final HttpResponseHandler httpResponseHandler;
-
     @Override
     public TeamsAdaptiveCardDefinition buildDefinition(Map<String, String> values) {
         TeamsAdaptiveCardDefinition clone = deepCopy(teamsProperties.getAdaptiveCardDefinition()); // use Jackson

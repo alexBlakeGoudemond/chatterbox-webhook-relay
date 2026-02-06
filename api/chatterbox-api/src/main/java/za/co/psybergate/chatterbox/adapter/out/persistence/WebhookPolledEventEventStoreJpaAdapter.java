@@ -5,7 +5,7 @@ import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
