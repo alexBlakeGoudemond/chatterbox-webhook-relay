@@ -12,35 +12,34 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.delivery.model.CompositeEventDeliveryAdapter;
 import za.co.psybergate.chatterbox.adapter.out.discord.delivery.DiscordWebhookSender;
 import za.co.psybergate.chatterbox.adapter.out.discord.factory.DiscordEmbeddedObjectFactory;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
-import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
+import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
-import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
-import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.event.model.*;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -51,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
+@ImportSlf4jWebhookLogger
 @Import({
         WebhookEventProcessor.class,
         WebhookEventStoreJpaAdapter.class,
@@ -58,7 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         JsonFileReader.class,
         JacksonJsonConverter.class,
         GithubWebhookEventMapper.class,
-        Slf4jWebhookLogger.class,
         TeamsWebhookSender.class,
         TeamsAdaptiveCardFactory.class,
         DiscordWebhookSender.class,

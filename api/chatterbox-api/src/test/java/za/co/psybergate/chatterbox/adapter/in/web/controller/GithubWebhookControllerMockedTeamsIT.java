@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
-import za.co.psybergate.chatterbox.adapter.in.web.controller.GithubWebhookController;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
@@ -21,13 +20,13 @@ import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFa
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.WebhookOrchestrator;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -80,9 +79,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 ///        Back to test assertion
 ///        (e.g., .andExpect(httpStatus().isAccepted()))
 /// ```
+@ImportSlf4jWebhookLogger
 @Import({
         WebhookFilter.class,
-        Slf4jWebhookLogger.class,
         HmacSha256Cryptor.class,
         InfrastructurePropertiesConfig.class,
         WebhookOrchestrator.class,

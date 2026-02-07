@@ -1,8 +1,7 @@
 package za.co.psybergate.chatterbox.application.port.in.webhook.orchestration;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 /// `ingest → process → route → send downstream`
 public interface WebhookOrchestratorPort {
 
-    WebhookEventReceived process(String eventType, String deliveryId, JsonNode rawBody);
+    WebhookEventReceived process(String eventType, String deliveryId, String rawBody);
 
     List<WebhookPolledEventReceived> pollForChanges(String owner, String repositoryName, LocalDateTime lastReceivedTime);
 

@@ -7,23 +7,23 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
-import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import za.co.psybergate.chatterbox.application.port.in.validation.WebhookRequestValidatorPort;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
+import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,12 +54,13 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     private final WebhookLogger webhookLogger;
 
     @Override
-    public WebhookEventReceived process(String eventType, String deliveryId, JsonNode rawBody) {
-        String repositoryName = jsonConverter.getRepositoryName(rawBody);
+    public WebhookEventReceived process(String eventType, String deliveryId, String rawBody) {
+        JsonNode jsonNode = jsonConverter.getAsJson(rawBody);
+        String repositoryName = jsonConverter.getRepositoryName(jsonNode);
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
-        OutboundEvent outboundEvent = getOutboundEvent(eventType, rawBody);
-        WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(rawBody));
+        OutboundEvent outboundEvent = getOutboundEvent(eventType, jsonNode);
+        WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(jsonNode));
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }

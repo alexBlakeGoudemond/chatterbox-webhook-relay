@@ -6,12 +6,12 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.application.port.out.delivery.DestinationSenderPort;
 import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 
