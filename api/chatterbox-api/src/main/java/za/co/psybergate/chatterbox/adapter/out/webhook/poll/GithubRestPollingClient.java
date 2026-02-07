@@ -7,12 +7,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.time.Instant;
@@ -78,6 +78,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
+
     /// [API Contract for Commits](https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28)
     @Override
     public List<RawEventPayload> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
@@ -105,6 +106,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
     }
 
     // TODO BlakeGoudemond 2026/01/16 | do we want a retryWhen(...) option?
+
     /// [API Contract for Pull Requests](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-pull-requests)
     @Override
     public List<RawEventPayload> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {

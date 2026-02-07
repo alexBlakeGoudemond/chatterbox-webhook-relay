@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
 import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
+import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryDiscordProperties;
 

@@ -1,16 +1,16 @@
 package za.co.psybergate.chatterbox.adapter.out.map;
 
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
 import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.application.domain.event.model.*;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 import java.time.LocalDateTime;
@@ -132,4 +132,5 @@ public class AdapterMapper {
                 WebhookEventStatus.RECEIVED,
                 LocalDateTime.now());
     }
+
 }

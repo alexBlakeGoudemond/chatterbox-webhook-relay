@@ -3,19 +3,13 @@ package za.co.psybergate.chatterbox.common.security;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.common.security.PayloadCryptor;
-import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = HmacSha256Cryptor.class)
-public class HmacSha256CryptorTest {
+class HmacSha256CryptorTest {
 
-    @Autowired
-    private HmacSha256Cryptor payloadCryptor;
+    private final HmacSha256Cryptor payloadCryptor = new HmacSha256Cryptor();
 
     @Test
     @DisplayName("Encrypt with SHA256 works")
