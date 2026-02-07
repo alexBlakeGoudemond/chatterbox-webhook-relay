@@ -27,4 +27,15 @@ public class Slf4jStorageLogger extends AbstractSlf4jLogger implements StorageLo
     public void logEventDelivered(Object webhookEvent) {
         log.trace("[Storage] webhook event delivered: {}", truncate(webhookEvent, -1));
     }
+
+    @Override
+    public void logPolledEventsEmpty(String repositoryFullName) {
+        log.warn("[Storage] No GithubPolledEvents found for the destination '{}'", repositoryFullName);
+    }
+
+    @Override
+    public void logWebhookEventsEmpty(String repositoryFullName) {
+        log.warn("[Storage] No WebhookEvents found for the destination '{}'", repositoryFullName);
+    }
+
 }

@@ -33,6 +33,8 @@ public class Slf4jWebhookLogger implements WebhookLogger {
 
     private final Slf4jExceptionLogger exceptionLogger;
 
+    private final Slf4jOrchestrationLogger orchestrationLogger;
+
     @Override
     public void logMissingSignature() {
         signatureLogger.logMissingSignature();
@@ -115,42 +117,42 @@ public class Slf4jWebhookLogger implements WebhookLogger {
 
     @Override
     public void logRunnerFoundNoPreviousWebhooks(String repositoryFullName) {
-        pollingLogger.logRunnerFoundNoPreviousWebhooks(repositoryFullName);
+        orchestrationLogger.logRunnerFoundNoPreviousWebhooks(repositoryFullName);
     }
 
     @Override
     public void logRunnerFoundPreviousWebhook(WebhookEventReceived latestWebhookEvent) {
-        pollingLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
+        orchestrationLogger.logRunnerFoundPreviousWebhook(latestWebhookEvent);
     }
 
     @Override
     public void logRunnerFoundNoPreviousPolledEvents(String repositoryFullName) {
-        pollingLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
+        orchestrationLogger.logRunnerFoundNoPreviousPolledEvents(repositoryFullName);
     }
 
     @Override
     public void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestGithubPolledEvent) {
-        pollingLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
+        orchestrationLogger.logRunnerFoundPreviousPolledEvent(latestGithubPolledEvent);
     }
 
     @Override
     public void logPolledEventsEmpty(String repositoryFullName) {
-        pollingLogger.logPolledEventsEmpty(repositoryFullName);
+        storageLogger.logPolledEventsEmpty(repositoryFullName);
     }
 
     @Override
     public void logWebhookEventsEmpty(String repositoryFullName) {
-        pollingLogger.logWebhookEventsEmpty(repositoryFullName);
+        storageLogger.logWebhookEventsEmpty(repositoryFullName);
     }
 
     @Override
     public void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime) {
-        pollingLogger.logNoPolledEventsFound(repositoryFullName, lastPersistedTime);
+        orchestrationLogger.logNoPolledEventsFound(repositoryFullName, lastPersistedTime);
     }
 
     @Override
     public void logPolledEventsFound(List<WebhookPolledEventReceived> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
-        pollingLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
+        orchestrationLogger.logPolledEventsFound(githubPolledEvents, repositoryFullName, lastPersistedTime);
     }
 
     @Override

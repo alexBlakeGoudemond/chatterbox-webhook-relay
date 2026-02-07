@@ -19,7 +19,8 @@ import java.lang.annotation.Target;
         Slf4jStorageLogger.class,
         Slf4jPollingLogger.class,
         Slf4jProcessingLogger.class,
-        Slf4jExceptionLogger.class
+        Slf4jExceptionLogger.class,
+        Slf4jOrchestrationLogger.class
 })
 public @interface ImportSlf4jWebhookLogger {
 

@@ -10,4 +10,8 @@ public interface StorageLogger {
 
     void logEventDelivered(Object webhookEvent);
 
+    void logPolledEventsEmpty(String repositoryFullName);
+
+    void logWebhookEventsEmpty(String repositoryFullName);
+
 }
