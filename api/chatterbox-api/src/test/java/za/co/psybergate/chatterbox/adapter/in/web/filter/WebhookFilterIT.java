@@ -68,7 +68,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.when(
-                webhookOrchestratorPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                webhookOrchestratorPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()
                 )).thenReturn(null);
     }
 

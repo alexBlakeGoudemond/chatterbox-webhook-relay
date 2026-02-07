@@ -24,10 +24,10 @@ public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAb
     @Override
     protected List<String> applicationAllowedPackages() {
         List<String> allowedPackages = new ArrayList<>();
-        allowedPackages.addAll(springPackages());
-        allowedPackages.addAll(jacksonPackages());
         allowedPackages.addAll(lombokPackages());
         allowedPackages.addAll(jakartaValidationPackages());
+        allowedPackages.addAll(springPackages());
+        allowedPackages.addAll(jacksonPackages());
         allowedPackages.addAll(slf4jPackages());
         return allowedPackages;
     }

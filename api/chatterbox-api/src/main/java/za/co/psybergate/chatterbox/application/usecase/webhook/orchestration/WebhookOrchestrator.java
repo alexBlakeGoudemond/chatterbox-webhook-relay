@@ -54,12 +54,13 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     private final WebhookLogger webhookLogger;
 
     @Override
-    public WebhookEventReceived process(String eventType, String deliveryId, JsonNode rawBody) {
-        String repositoryName = jsonConverter.getRepositoryName(rawBody);
+    public WebhookEventReceived process(String eventType, String deliveryId, String rawBody) {
+        JsonNode jsonNode = jsonConverter.getAsJson(rawBody);
+        String repositoryName = jsonConverter.getRepositoryName(jsonNode);
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
-        OutboundEvent outboundEvent = getOutboundEvent(eventType, rawBody);
-        WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(rawBody));
+        OutboundEvent outboundEvent = getOutboundEvent(eventType, jsonNode);
+        WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(jsonNode));
         publisher.publishEvent(new WebhookEventProcessed());
         return webhookEvent;
     }

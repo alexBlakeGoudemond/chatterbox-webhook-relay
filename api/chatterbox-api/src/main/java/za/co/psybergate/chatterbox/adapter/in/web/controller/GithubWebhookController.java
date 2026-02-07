@@ -19,7 +19,7 @@ public class GithubWebhookController {
     public ResponseEntity<String> handleGithubWebhook(@RequestHeader("X-GitHub-Event") String eventType,
                                                       @RequestHeader("X-GitHub-Delivery") String deliveryId,
                                                       @RequestBody JsonNode rawBody) {
-        webhookOrchestratorPort.process(eventType, deliveryId, rawBody);
+        webhookOrchestratorPort.process(eventType, deliveryId, rawBody.toString());
         return ResponseEntity.accepted().body("Webhook received; work underway");
     }
 

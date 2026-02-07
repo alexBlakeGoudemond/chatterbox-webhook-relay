@@ -1,6 +1,5 @@
 package za.co.psybergate.chatterbox.adapter.in.web.handler;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,11 +21,11 @@ import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFa
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.common.exception.InfrastructureException;
 import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
@@ -68,13 +67,12 @@ public class GithubWebhookControllerExceptionHandlerIT {
 
     @MockitoBean
     @Qualifier("webhookOrchestrator")
-    private WebhookOrchestratorPort webhookOrchestratorPort;
+    private WebhookOrchestratorPort webhookOrchestrator;
 
     @DisplayName("ConstraintViolationException -> BAD_REQUEST")
     @Test
     public void whenServiceRaisesConstraintViolationException_ThenHandlerProducesBadRequest() {
-        Mockito.doThrow(ConstraintViolationException.class)
-                .when(webhookOrchestratorPort).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
+        mock_WebhookOrchestrator_Process_ToThrow(ConstraintViolationException.class);
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -88,8 +86,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @DisplayName("ApplicationException -> BAD_REQUEST")
     @Test
     public void whenServiceRaisesApplicationException_ThenHandlerProducesBadRequest() {
-        Mockito.doThrow(ApplicationException.class)
-                .when(webhookOrchestratorPort).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
+        mock_WebhookOrchestrator_Process_ToThrow(ApplicationException.class);
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -103,8 +100,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @DisplayName("Infrastructure Exception -> INTERNAL_SERVER_ERROR")
     @Test
     public void whenServiceRaisesInfrastructureException_ThenHandlerProducesInternalServerError() {
-        Mockito.doThrow(InfrastructureException.class)
-                .when(webhookOrchestratorPort).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
+        mock_WebhookOrchestrator_Process_ToThrow(InfrastructureException.class);
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -118,8 +114,7 @@ public class GithubWebhookControllerExceptionHandlerIT {
     @DisplayName("External Exception -> INTERNAL_SERVER_ERROR")
     @Test
     public void whenServiceRaisesExternalException_ThenHandlerProducesInternalServerError() {
-        Mockito.doThrow(RuntimeException.class)
-                .when(webhookOrchestratorPort).process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class));
+        mock_WebhookOrchestrator_Process_ToThrow(RuntimeException.class);
 
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
@@ -128,6 +123,11 @@ public class GithubWebhookControllerExceptionHandlerIT {
         } catch (Exception e) {
             fail("Expected the HttpRequest to produce the expected HttpRequest", e);
         }
+    }
+
+    private void mock_WebhookOrchestrator_Process_ToThrow(Class<? extends Throwable> exceptionClass) {
+        Mockito.doThrow(exceptionClass)
+                .when(webhookOrchestrator).process(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
     }
 
 }

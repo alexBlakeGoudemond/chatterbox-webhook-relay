@@ -71,7 +71,7 @@ public class WebhookOrchestratorProcessWebhookIT extends AbstractPostgresTestCon
     public void whenProcessWebhook_ThenEventPersisted() {
         JsonNode jsonNode = jsonFileReader.getGithubPayloadValid();
         String uniqueId = UUID.randomUUID().toString();
-        WebhookEventReceived webhookEvent = webhookOrchestratorPort.process(WebhookEventType.PUSH.name(), uniqueId, jsonNode);
+        WebhookEventReceived webhookEvent = webhookOrchestratorPort.process(WebhookEventType.PUSH.name(), uniqueId, jsonNode.toString());
         assertNotNull(webhookEvent);
         assertNotNull(webhookEvent.id());
     }
