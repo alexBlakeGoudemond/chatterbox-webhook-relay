@@ -120,3 +120,35 @@ curl -X POST https://<publicFacingURL>/chatterbox/github -H "Content-Type: appli
                                                   | (Delivery Example: MS Teams)        |        |  (Delivery Example: Discord)        |                                    
                                                   +-------------------------------------+        +-------------------------------------+                                                                                                                                                           
 ```
+
+## Developer Debates and Discussions
+
+As software developers, we make the decisions (the alternative being to blindly repeat what we see mentioned elsewhere)
+With this awareness in mind, here are some decisions made in this repo:
+
+- Publicly stated opinions that the authors of this repo challenge:
+    - Some 3rd party libraries should be allowed in the Domain layer, as long as risk is accepted
+    - Spring annotations are allowed in the Application layer
+        - The 'pure' model of Hexagonal Architecture is used like this: must not have any Spring or Jakarta references
+          in
+          application / domain packages
+        - However, by allowing Spring in the application layer, we can then place (@Service, @Transactional) there
+- The Architectural-rules maven dependency is particularly useful here
+    - It encodes the expectations of the project
+    - A fun exercise is to remove support for a type in the application package and then see how easy it is to address
+      the
+      issues mentioned in the tests
+- Johan was also super helpful in this repo, offering advice on Hexagonal Architecture
+- Another pattern explored in this repo is the decision that all logging statements are defined in one place
+    - Logs are grouped together into separate classes, but they are wired into 1 master Logging class
+    - An outcome of this is that logging is consistent, duplication is reduced, and only 1 type need be imported
+    - Also decouples from frameworks in the event of moving to PURE hexagonal architecture down the line
+    - Tests that need logs are bloated though, as several logging types must be imported. The
+      `@ImportSlf4jWebhookLogger` is a lovely solution to this problem
+- AI Tools greatly assisted in making this repository. Originally using ChatGPT in the browser and then swapping to
+  Junie
+  inside the IDE; the project has grown to this point with their help
+    - Other resources that helped a lot are `Collaboration custom scripts` repo
+- And the biggest value here is, of course, Webhooks!
+- Also, one of the dependencies imported that was never ultimately used was `github-api` (converting to JsonNode makes
+  additional HTTP calls - which was not desirable in this case)

@@ -177,7 +177,7 @@
         </dependency>
 
         <!--
-        Used to interact with Github's API // todo add to docs and mention why not being used (converting to JsonNode does extra calls)
+        Used to interact with Github's API
         -->
         <dependency>
             <groupId>org.kohsuke</groupId>
