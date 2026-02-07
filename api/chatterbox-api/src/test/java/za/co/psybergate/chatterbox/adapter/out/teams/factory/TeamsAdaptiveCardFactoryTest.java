@@ -13,8 +13,6 @@ import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefi
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryTeamsProperties;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -25,12 +23,16 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TeamsAdaptiveCardFactoryTest {
+
+    private final JsonFileReader jsonFileReader = new JsonFileReader();
+
+    private final JacksonJsonConverter jsonConverter = new JacksonJsonConverter();
+
+    private final RegexTemplateSubstitutor substitutionService = new RegexTemplateSubstitutor();
 
     @Mock
     private ChatterboxDeliveryTeamsProperties teamsProperties;
@@ -39,10 +41,6 @@ class TeamsAdaptiveCardFactoryTest {
     private OutboundEventMapperPort eventExtractor;
 
     private TeamsAdaptiveCardFactory teamsPayloadFactory;
-
-    private final JsonFileReader jsonFileReader = new JsonFileReader();
-    private final JacksonJsonConverter jsonConverter = new JacksonJsonConverter();
-    private final RegexTemplateSubstitutor substitutionService = new RegexTemplateSubstitutor();
 
     @BeforeEach
     void setUp() throws Exception {
@@ -125,7 +123,7 @@ class TeamsAdaptiveCardFactoryTest {
         TeamsAdaptiveCardDefinition definition = new TeamsAdaptiveCardDefinition();
         TeamsAdaptiveCardDefinition.Attachment attachment = new TeamsAdaptiveCardDefinition.Attachment();
         TeamsAdaptiveCardDefinition.Attachment.Content content = new TeamsAdaptiveCardDefinition.Attachment.Content();
-        
+
         TeamsAdaptiveCardDefinition.Attachment.MsTeams msTeams = new TeamsAdaptiveCardDefinition.Attachment.MsTeams();
         content.setMsteams(msTeams);
 
@@ -150,4 +148,5 @@ class TeamsAdaptiveCardFactoryTest {
         propertiesToUse.put("displayName", "Pull Request Event");
         return propertiesToUse;
     }
+
 }

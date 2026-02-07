@@ -22,4 +22,5 @@ public abstract class AbstractSlf4jLogger {
         }
         return string.length() > length ? string.substring(0, length - 4) + " ..." : string;
     }
+
 }

@@ -13,4 +13,5 @@ public class Slf4jDeliveryLogger implements DeliveryLogger {
     public void logSendingDtoToDestination(OutboundEvent outboundEvent, String destination) {
         log.info("[Delivery] Sending '{}' to destination '{}'", outboundEvent.displayText(), destination);
     }
+
 }

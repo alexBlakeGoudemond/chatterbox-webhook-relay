@@ -34,6 +34,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class WebhookOrchestratorTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Mock
     private WebhookRequestValidatorPort webhookRequestValidatorPort;
 
@@ -62,8 +64,6 @@ class WebhookOrchestratorTest {
     private WebhookLogger webhookLogger;
 
     private WebhookOrchestrator orchestrator;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
@@ -214,4 +214,5 @@ class WebhookOrchestratorTest {
                 WebhookEventStatus.RECEIVED, null, LocalDateTime.now(), null
         );
     }
+
 }

@@ -17,4 +17,5 @@ public class Slf4jValidationLogger implements ValidationLogger {
     public void logUnrecognizedRepository(String repositoryName) {
         log.debug("[Validation] Repository '{}' is not whitelisted as an accepted repository", repositoryName);
     }
+
 }

@@ -22,4 +22,5 @@ public class Slf4jSignatureLogger implements SignatureLogger {
     public void logValidSignature() {
         log.info("[Signature] Valid signature");
     }
+
 }

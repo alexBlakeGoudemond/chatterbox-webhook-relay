@@ -17,4 +17,5 @@ public class Slf4jWebhookEventLogger implements WebhookEventLogger {
     public void logCompletion(long ms) {
         log.debug("[Webhook] Completed in {}ms", ms);
     }
+
 }

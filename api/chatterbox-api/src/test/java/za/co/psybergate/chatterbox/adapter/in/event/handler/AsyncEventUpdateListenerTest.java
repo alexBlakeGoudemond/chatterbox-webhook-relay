@@ -46,4 +46,5 @@ class AsyncEventUpdateListenerTest {
         verify(webhookLogger).logWebhookEventProcessed(event);
         verify(eventProcessor).processWebhookEvents();
     }
+
 }

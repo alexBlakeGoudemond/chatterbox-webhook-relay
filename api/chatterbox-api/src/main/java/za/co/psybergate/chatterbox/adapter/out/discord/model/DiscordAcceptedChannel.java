@@ -7,4 +7,5 @@ import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelDe
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DiscordAcceptedChannel extends DeliveryChannelDetails {
+
 }

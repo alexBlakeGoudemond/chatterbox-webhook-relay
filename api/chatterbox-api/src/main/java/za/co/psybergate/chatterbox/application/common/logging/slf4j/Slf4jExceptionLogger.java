@@ -12,4 +12,5 @@ public class Slf4jExceptionLogger implements ExceptionLogger {
     public void logExceptionDetails(Exception exception) {
         log.error("[Exception] Exception encountered: {}", exception.getClass().getSimpleName(), exception);
     }
+
 }

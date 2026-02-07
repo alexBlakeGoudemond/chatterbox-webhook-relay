@@ -25,4 +25,5 @@ public class Slf4jProcessingLogger implements ProcessingLogger {
     public void logWebhookEventProcessed(WebhookEventProcessed webhookEventProcessed) {
         log.debug("[Listener] WebhookEventProcessed has occurred: {}", webhookEventProcessed);
     }
+
 }

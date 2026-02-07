@@ -4,9 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 class TeamsAdaptiveCardDefinitionTest {
 
     @Test
@@ -42,16 +41,16 @@ class TeamsAdaptiveCardDefinitionTest {
 
         assertEquals("notification", definition.getType());
         assertEquals(1, definition.getAttachments().size());
-        
+
         TeamsAdaptiveCardDefinition.Attachment actualAttachment = definition.getAttachments().get(0);
         assertEquals("custom/type", actualAttachment.getContentType());
-        
+
         TeamsAdaptiveCardDefinition.Attachment.Content actualContent = actualAttachment.getContent();
         assertEquals("CustomContent", actualContent.getType());
         assertEquals("2.0", actualContent.getVersion());
         assertEquals("http://custom-schema.json", actualContent.getSchema());
         assertEquals("Small", actualContent.getMsteams().getWidth());
-        
+
         assertEquals(1, actualContent.getBody().size());
         TeamsAdaptiveCardDefinition.Attachment.BodyItem actualBodyItem = actualContent.getBody().get(0);
         assertEquals("Hello World", actualBodyItem.getText());

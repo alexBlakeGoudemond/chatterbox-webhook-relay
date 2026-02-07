@@ -50,5 +50,5 @@ class DiscordEmbeddedObjectDefinitionTest {
         assertEquals("Author Name", definition.getEmbeds().getFirst().getAuthor().getName());
         assertEquals("http://custom-icon.png", definition.getEmbeds().getFirst().getAuthor().getIcon_url());
     }
-    
+
 }

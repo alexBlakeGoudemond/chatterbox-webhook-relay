@@ -26,14 +26,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DiscordEmbeddedObjectFactoryTest {
 
+    private final JsonFileReader jsonFileReader = new JsonFileReader();
+
+    private final JacksonJsonConverter jsonConverter = new JacksonJsonConverter();
+
+    private final RegexTemplateSubstitutor substitutionService = new RegexTemplateSubstitutor();
+
     @Mock
     private ChatterboxDeliveryDiscordProperties discordProperties;
 
     private DiscordEmbeddedObjectFactory discordPayloadFactory;
-
-    private final JsonFileReader jsonFileReader = new JsonFileReader();
-    private final JacksonJsonConverter jsonConverter = new JacksonJsonConverter();
-    private final RegexTemplateSubstitutor substitutionService = new RegexTemplateSubstitutor();
 
     @BeforeEach
     void setUp() throws Exception {
@@ -126,4 +128,5 @@ class DiscordEmbeddedObjectFactoryTest {
         propertiesToUse.put("displayName", "Pull Request Event");
         return propertiesToUse;
     }
+
 }

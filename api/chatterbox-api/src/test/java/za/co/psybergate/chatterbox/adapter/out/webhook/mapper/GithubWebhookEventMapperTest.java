@@ -11,11 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
-import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
@@ -25,7 +23,6 @@ import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -34,13 +31,14 @@ import static za.co.psybergate.chatterbox.application.domain.configuration.Event
 @ExtendWith(MockitoExtension.class)
 class GithubWebhookEventMapperTest {
 
+    private final JacksonJsonConverter jsonConverter = new JacksonJsonConverter();
+
+    private final JsonFileReader jsonFileReader = new JsonFileReader();
+
     @Mock
     private WebhookConfigurationResolverPort configurationResolver;
 
     private GithubWebhookEventMapper eventExtractor;
-
-    private final JacksonJsonConverter jsonConverter = new JacksonJsonConverter();
-    private final JsonFileReader jsonFileReader = new JsonFileReader();
 
     private Validator validator;
 
@@ -148,4 +146,5 @@ class GithubWebhookEventMapperTest {
             throw new ConstraintViolationException(violations);
         }
     }
+
 }
