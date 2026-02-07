@@ -20,6 +20,7 @@ public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAb
         return allowedPackages;
     }
 
+    // TODO BlakeGoudemond 2026/02/07 | fun exercise - comment out and see how easy it is to fix - slf4j done
     @Override
     protected List<String> applicationAllowedPackages() {
         List<String> allowedPackages = new ArrayList<>();

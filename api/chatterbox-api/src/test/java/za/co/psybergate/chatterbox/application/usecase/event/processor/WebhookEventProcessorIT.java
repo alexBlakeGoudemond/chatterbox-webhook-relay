@@ -23,7 +23,7 @@ import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaA
 import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.chatterbox.application.common.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;

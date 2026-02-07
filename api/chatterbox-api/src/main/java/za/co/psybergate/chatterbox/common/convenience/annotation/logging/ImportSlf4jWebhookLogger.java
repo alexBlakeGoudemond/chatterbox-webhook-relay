@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.logging;
+package za.co.psybergate.chatterbox.common.convenience.annotation.logging;
 
 import org.springframework.context.annotation.Import;
 import za.co.psybergate.chatterbox.application.common.logging.slf4j.*;
