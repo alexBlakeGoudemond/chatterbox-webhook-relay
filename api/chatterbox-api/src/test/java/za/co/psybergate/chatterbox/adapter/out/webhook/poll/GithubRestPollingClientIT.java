@@ -1,25 +1,21 @@
 package za.co.psybergate.chatterbox.adapter.out.webhook.poll;
 
 import org.junit.jupiter.api.Named;
-import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetail;
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 
 import java.time.LocalDateTime;
 import java.util.List;

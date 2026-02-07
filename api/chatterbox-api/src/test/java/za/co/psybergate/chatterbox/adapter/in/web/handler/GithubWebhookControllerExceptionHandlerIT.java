@@ -16,14 +16,13 @@ import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchi
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.adapter.in.web.controller.GithubWebhookController;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.http.HttpResponseHandler;
 import za.co.psybergate.chatterbox.adapter.out.teams.delivery.TeamsWebhookSender;
 import za.co.psybergate.chatterbox.adapter.out.teams.factory.TeamsAdaptiveCardFactory;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
@@ -36,9 +35,8 @@ import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ImportSlf4jWebhookLogger
 @Import({
-        WebhookFilter.class,
-        Slf4jWebhookLogger.class,
         HmacSha256Cryptor.class,
         InfrastructurePropertiesConfig.class,
         GithubWebhookValidator.class,

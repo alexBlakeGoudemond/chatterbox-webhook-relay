@@ -9,11 +9,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
+import za.co.psybergate.chatterbox.application.common.logging.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.WebhookOrchestrator;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
@@ -32,6 +31,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
+@ImportSlf4jWebhookLogger
 @Import({
         WebhookOrchestrator.class,
         JsonFileReader.class,
@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         GithubWebhookEventMapper.class,
         JacksonJsonConverter.class,
         InfrastructurePropertiesConfig.class,
-        Slf4jWebhookLogger.class,
         PropertiesConfigurationResolver.class,
         WebhookEventStoreJpaAdapter.class,
 })
