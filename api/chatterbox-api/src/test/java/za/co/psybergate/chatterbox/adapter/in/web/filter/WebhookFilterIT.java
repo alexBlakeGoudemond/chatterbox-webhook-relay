@@ -1,6 +1,5 @@
 package za.co.psybergate.chatterbox.adapter.in.web.filter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
@@ -15,21 +14,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.application.common.logging.Slf4jWebhookLogger;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.exception.InvalidSignatureException;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
+import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import za.co.psybergate.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
+import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.exception.InvalidSignatureException;
+import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ImportSlf4jWebhookLogger
 @SpringBootTest(classes = {
         WebhookFilter.class,
         Slf4jWebhookLogger.class,
@@ -67,7 +67,7 @@ public class WebhookFilterIT {
     @BeforeEach
     public void setup() {
         Mockito.when(
-                webhookOrchestratorPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.any(JsonNode.class)
+                webhookOrchestratorPort.process(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()
                 )).thenReturn(null);
     }
 

@@ -1,8 +1,8 @@
 package za.co.psybergate.chatterbox.application.port.out.persistence;
 
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 

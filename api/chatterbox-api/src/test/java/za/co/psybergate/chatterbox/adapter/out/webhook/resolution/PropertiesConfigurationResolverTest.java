@@ -1,71 +1,100 @@
 package za.co.psybergate.chatterbox.adapter.out.webhook.resolution;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
 import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
 import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationDiscordProperties;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationTeamsProperties;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {
-        PropertiesConfigurationResolver.class,
-        InfrastructurePropertiesConfig.class,
-})
-@ActiveProfiles({"test", "bad-properties"})
-public class PropertiesConfigurationResolverTest {
+@ExtendWith(MockitoExtension.class)
+class PropertiesConfigurationResolverTest {
 
-    @MockitoBean
-    private WebhookFilter webhookFilter;
+    @Mock
+    private ChatterboxSourceGithubPayloadProperties payloadProperties;
 
-    @Autowired
-    private WebhookConfigurationResolverPort resolver;
+    @Mock
+    private ChatterboxSourceGithubRepositoryProperties repositoryProperties;
+
+    @Mock
+    private ChatterboxDestinationTeamsProperties destinationTeamsProperties;
+
+    @Mock
+    private ChatterboxDestinationDiscordProperties destinationDiscordProperties;
+
+    private PropertiesConfigurationResolver resolver;
+
+    @BeforeEach
+    void setUp() {
+        resolver = new PropertiesConfigurationResolver(
+                payloadProperties,
+                repositoryProperties,
+                destinationTeamsProperties,
+                destinationDiscordProperties
+        );
+    }
 
     @DisplayName("Known eventType succeeds")
     @Test
-    public void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
+    void givenRecognizedEventType_WhenGetPayloadMapping_ThenSuccess() {
+        when(payloadProperties.getEventPayloadMapping("PUSH")).thenReturn(EventPayloadMapping.builder().build());
         EventPayloadMapping payloadMapping = resolver.getPayloadMapping(WebhookEventType.PUSH);
         assertNotNull(payloadMapping);
     }
 
     @DisplayName("Known eventType String succeeds")
     @Test
-    public void givenRecognizedEventTypeString_WhenGetPayloadMapping_ThenSuccess() {
+    void givenRecognizedEventTypeString_WhenGetPayloadMapping_ThenSuccess() {
+        when(payloadProperties.getEventPayloadMapping("PUSH")).thenReturn(EventPayloadMapping.builder().build());
         EventPayloadMapping payloadMapping = resolver.getPayloadMapping("push");
         assertNotNull(payloadMapping);
     }
 
     @DisplayName("Unknown eventType gives Exception")
     @Test
-    public void givenUnrecognizedEventType_WhenGetPayloadMapping_ThenException() {
+    void givenUnrecognizedEventType_WhenGetPayloadMapping_ThenException() {
         Assertions.assertThrows(DomainException.class,
                 () -> resolver.getPayloadMapping("unknownEventType"));
     }
 
     @DisplayName("Known Teams Destination Channel Name succeeds")
     @Test
-    public void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
-        String destinationUrl = resolver.resolveDestinationUrl("Psybergate-Knowledge-Repository/mentoring_software_foundations", DeliveryChannelType.NOTIFICATION);
+    void givenRecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenSuccess() {
+        String repo = "org/repo";
+        String channel = "dev-channel";
+        String url = "http://teams.webhook";
+        DestinationMapping mapping = new DestinationMapping(repo, Map.of(DeliveryChannelType.NOTIFICATION, channel));
+        when(repositoryProperties.getDestinationMapping()).thenReturn(List.of(mapping));
+        when(destinationTeamsProperties.getUrl(channel)).thenReturn(url);
+
+        String destinationUrl = resolver.resolveDestinationUrl(repo, DeliveryChannelType.NOTIFICATION);
         assertNotNull(destinationUrl);
+        Assertions.assertEquals(url, destinationUrl);
     }
 
     @DisplayName("Unknown Teams Destination Channel Name gives Exception")
     @Test
-    public void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
+    void givenUnrecognizedTeamsDestinationChannelName_WhenGetPayloadMapping_ThenException() {
+        when(repositoryProperties.getDestinationMapping()).thenReturn(List.of());
         Assertions.assertThrows(UnrecognizedRequestException.class,
-                () -> resolver.resolveDestinationUrl("psyAlexBlakeGoudemond/chatterbox/undefined", DeliveryChannelType.NOTIFICATION));
+                () -> resolver.resolveDestinationUrl("unknown/repo", DeliveryChannelType.NOTIFICATION));
     }
 
 }

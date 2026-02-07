@@ -1,6 +1,6 @@
 package za.co.psybergate.architecture_rules.quality;
 
-public class TestNamingAndPackagingTest extends TestNamingAndPackagingAbstractTest{
+public class TestNamingAndPackagingTest extends TestNamingAndPackagingAbstractTest {
 
     @Override
     protected String basePackage() {
