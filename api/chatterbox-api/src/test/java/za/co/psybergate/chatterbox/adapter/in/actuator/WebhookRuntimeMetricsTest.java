@@ -13,4 +13,5 @@ class WebhookRuntimeMetricsTest {
     void contextLoads() {
         assertDoesNotThrow(() -> {});
     }
+
 }
