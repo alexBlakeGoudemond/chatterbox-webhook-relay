@@ -3,14 +3,11 @@
 ## Project layout
 
 - 3 main packages: application, application.domain, adapter (Other layouts do exist)
-    - Could also have common, application.common
+    - Other valuable packages: common, application.common
 - Domain must not have any type imported from application
 - Application must not have any type imported from adapter
 - Adapter may access types in Application or Domain
-    - Adapter may also reference Domain directly (if port is in domain)
-- Can make decisions:
-    - Application must not have any Spring or Jakarta references OR
-    - May allow some Spring annotations (@Service, @Transactional) in Application layer
+    - Adapter may also reference types defined in Domain directly
 - Application.usecase / service can access application.port.in or application.port.out
   (Necessary in some cases)
 
@@ -43,7 +40,7 @@ For this project, this resource was used as a source of inspiration:
 
 Pros to using Hexagonal Architecture:
 
-- Intentionally place implementation details in a space where replacement is straightforward, 
+- Intentionally place implementation details in a space where replacement is straightforward,
   without needing a large refactor
 - The domain is kept pure and dependency-free; focussed on Ubiquitous Language ("Business Terms")
 - The application layer becomes clean, focused and reusable in the event that an adapter is replaced
@@ -77,4 +74,4 @@ When It May Be Overkill
 
 ## Diagram
 
-![example-hexagonal-architecture-and-connections.svg](example-hexagonal-architecture-and-connections.svg)
+![example-hexagonal-architecture-and-connections.svg](../example-hexagonal-architecture-and-connections.svg)

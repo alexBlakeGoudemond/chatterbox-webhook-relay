@@ -2,7 +2,7 @@
 # Or, if using dockerissimo: `dockerissimo -f docker/docker-compose.yml -p chatterbox-container-grouping`
 services:
 
-  # designed so only nginx can chat to this
+  # API service
   chatterbox:
     # build an image for everything in the root folder, using the chatterbox-api.dockerfile
     image: chatterbox-api:dev
@@ -33,16 +33,12 @@ services:
       postgres:
         condition: service_healthy
 
+  # Postgres service
   postgres:
     image: chatterbox-postgres:dev
     build:
       context: .
       dockerfile: chatterbox-postgres.dockerfile
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U user -d chatterbox" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     container_name: chatterbox-postgres
     ports:
       - "55618:5432"
@@ -50,14 +46,20 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: chatterbox
-      TZ: Africa/Johannesburg #UTC+2
+      TZ: Africa/Johannesburg
     volumes:
       - ./postgres/ddl:/docker-entrypoint-initdb.d
-      - ./postgres/data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d chatterbox" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
     networks:
       - chatterbox-net
-    restart: unless-stopped
 
+  # Nginx service
   nginx:
     image: chatterbox-nginx:dev
     build:
@@ -65,7 +67,7 @@ services:
       dockerfile: ../chatterbox-nginx.dockerfile
     container_name: chatterbox-nginx
     ports:
-      - "3002:80"   # hostPort:containerPort
+      - "3002:80"
       - "443:443"
     environment:
       TZ: Africa/Johannesburg
@@ -84,6 +86,7 @@ services:
     networks:
       - chatterbox-net
 
+  # Prometheus service
   prometheus:
     image: chatterbox-prometheus:dev
     build:
@@ -101,6 +104,7 @@ services:
     networks:
       - chatterbox-net
 
+  # Grafana service
   grafana:
     image: chatterbox-grafana:dev
     build:
@@ -126,4 +130,8 @@ services:
 networks:
   chatterbox-net:
     name: chatterbox-net
-    driver: bridge         # default driver, good for local use
+    driver: bridge
+
+# Named volumes (for persistence)
+volumes:
+  postgres_data:

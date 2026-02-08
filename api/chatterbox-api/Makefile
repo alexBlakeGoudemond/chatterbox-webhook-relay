@@ -77,3 +77,6 @@ spin-up:
 # `\q` → quit psql
 postgres-login:
 	docker exec -it chatterbox-postgres psql -U user -d chatterbox
+
+count-tests:
+	grep -R "@\(Test\|ParameterizedTest\|RepeatedTest\|TestFactory\)" src/test/java | wc -l
