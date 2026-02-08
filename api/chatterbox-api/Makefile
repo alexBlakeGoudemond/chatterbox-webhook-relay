@@ -79,4 +79,4 @@ postgres-login:
 	docker exec -it chatterbox-postgres psql -U user -d chatterbox
 
 count-tests:
-    grep -R "@\(Test\|ParameterizedTest\|RepeatedTest\|TestFactory\)" src/test/java | wc -l
+	grep -R "@\(Test\|ParameterizedTest\|RepeatedTest\|TestFactory\)" src/test/java | wc -l
