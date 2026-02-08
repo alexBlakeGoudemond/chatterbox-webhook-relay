@@ -229,6 +229,8 @@
                     <includes>
                         <include>**/Test*.java</include>
                         <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*TestCase.java</include>
                     </includes>
                     <excludes>
                         <exclude>**/*IT.java</exclude>
@@ -261,8 +263,10 @@
                         <include>**/*IT.java</include>
                     </includes>
                     <excludes>
-                        <include>**/Test*.java</include>
                         <exclude>**/*Test.java</exclude>
+                        <exclude>**/Test*.java</exclude>
+                        <exclude>**/*Tests.java</exclude>
+                        <exclude>**/*TestCase.java</exclude>
                     </excludes>
                     <excludedGroups>${maven-plugin.excludedGroups}</excludedGroups>
                 </configuration>
