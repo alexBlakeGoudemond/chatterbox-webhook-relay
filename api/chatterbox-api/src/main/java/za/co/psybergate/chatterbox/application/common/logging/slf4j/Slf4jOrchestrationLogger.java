@@ -29,18 +29,18 @@ public class Slf4jOrchestrationLogger extends AbstractSlf4jLogger implements Orc
     }
 
     @Override
-    public void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestGithubPolledEvent) {
-        log.info("[Orchestration] Previous polled event found '{}', continuing with Poll", truncate(latestGithubPolledEvent));
+    public void logRunnerFoundPreviousPolledEvent(WebhookPolledEventReceived latestPolledEvent) {
+        log.info("[Orchestration] Previous polled event found '{}', continuing with Poll", truncate(latestPolledEvent));
     }
 
     @Override
     public void logNoPolledEventsFound(String repositoryFullName, LocalDateTime lastPersistedTime) {
-        log.warn("[Orchestration] No GithubPolledEvents found for '{}' since '{}'", repositoryFullName, lastPersistedTime);
+        log.warn("[Orchestration] No PolledEvents found for '{}' since '{}'", repositoryFullName, lastPersistedTime);
     }
 
     @Override
-    public void logPolledEventsFound(List<WebhookPolledEventReceived> githubPolledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
-        log.info("[Orchestration] Found {} GithubPolledEvents for '{}' since '{}'", githubPolledEvents.size(), repositoryFullName, lastPersistedTime);
+    public void logPolledEventsFound(List<WebhookPolledEventReceived> polledEvents, String repositoryFullName, LocalDateTime lastPersistedTime) {
+        log.info("[Orchestration] Found {} PolledEvents for '{}' since '{}'", polledEvents.size(), repositoryFullName, lastPersistedTime);
     }
 
 }
