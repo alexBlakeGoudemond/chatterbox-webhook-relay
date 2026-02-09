@@ -18,7 +18,7 @@
             Save space with package name reduction by adjusting %logger{...}
             -->
             <Pattern>
-                ${appName} %magenta(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] [%magenta(%X{threadExecutionId})] %yellow(%logger{20}): %msg%n%throwable
+                ${appName} %magenta(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] [%magenta(%X{threadExecutionId})] %boldCyan([%X{repositoryName}]) %yellow(%logger{20}): %msg%n%throwable
             </Pattern>
         </layout>
     </appender>
@@ -31,7 +31,7 @@
             <!--
             Save space with a package name reduction by adjusting %logger{...}
             -->
-            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] %logger{20} %m%n</Pattern>
+            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
 
         </encoder>
 
@@ -60,7 +60,7 @@
         <file>${logLocation}/${appName}-trace.log</file>
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] %logger{20} %m%n</Pattern>
+            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
         </encoder>
 
         <!--        <filter class="za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter"/>-->
@@ -96,7 +96,7 @@
 
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] %logger{20} %m%n</Pattern>
+            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
         </encoder>
 
         <rollingPolicy
