@@ -10,5 +10,5 @@ COPY src/main/resources/application-prod.yml configuration/application-prod.yml
 # Expose the port Spring Boot runs on
 EXPOSE 1234
 
-# Run the app with absolute config path and prod profile
-ENTRYPOINT ["java", "-Dspring.config.location=/app/configuration/application-prod.yml", "-Dspring.profiles.active=prod", "-jar", "chatterbox.jar"]
+# Run the app with additional config path and prod profile
+ENTRYPOINT ["java", "-Dspring.config.additional-location=file:/app/configuration/", "-Dspring.profiles.active=prod", "-jar", "chatterbox.jar"]
