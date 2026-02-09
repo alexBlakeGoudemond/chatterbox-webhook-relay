@@ -20,7 +20,6 @@ services:
     container_name: chatterbox-api
     environment:
       TZ: Africa/Johannesburg
-      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chatterbox
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
