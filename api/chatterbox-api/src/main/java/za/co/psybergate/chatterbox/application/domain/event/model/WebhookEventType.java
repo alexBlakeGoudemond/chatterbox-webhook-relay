@@ -11,7 +11,8 @@ public enum WebhookEventType {
     PUSH,
     PULL_REQUEST,
     POLL_COMMIT,
-    POLL_PULL_REQUEST;
+    POLL_PULL_REQUEST,
+    PING;
 
     public static boolean contains(String eventMapping) {
         for (WebhookEventType webhookEventType : values()) {
