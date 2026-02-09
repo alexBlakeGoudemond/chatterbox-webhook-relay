@@ -1,0 +1,113 @@
+spring:
+  application:
+    name: chatterbox-api-prod
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate.format_sql: false
+
+logging:
+  level:
+    root: INFO
+  org:
+    springframework:
+      web:
+        client:
+          RestTemplate: DEBUG
+  apache:
+    http: DEBUG
+
+chatterbox:
+  sources:
+    github:
+      repository:
+        destination-mapping:
+          - source: Psybergate-Knowledge-Repository/mentoring_software_foundations
+            destinationChannels:
+              NOTIFICATION: msTeamsTestChannel
+              CHAT: discordTestChannel
+          - source: psyAlexBlakeGoudemond/chatterbox
+            destinationChannels:
+              NOTIFICATION: msTeamsTestChannel
+              CHAT: discordTestChannel
+          - source: Psybergate-Knowledge-Repository/collaboration_custom_aliases_scripts
+            destinationChannels:
+              NOTIFICATION: msTeamsTestChannel
+              CHAT: discordTestChannel
+      payload:
+        event-mapping:
+#          push:
+#            displayName: "Push Event"
+#            fields:
+#              repositoryName: "repository.full_name"
+#              senderName: "sender.login"
+#              url: "compare"
+#              urlDisplayText: "head_commit.message"
+#              extraDetail: "repository.name"
+          pull_request:
+            displayName: "Pull Request Event"
+            fields:
+              repositoryName: "repository.full_name"
+              senderName: "pull_request.user.login"
+              url: "pull_request.html_url"
+              urlDisplayText: "pull_request.title"
+              extraDetail: "action"
+          #          poll_commit:
+          #            displayName: "Commit Event"
+          #            fields:
+          #              repositoryName: "full_name"
+          #              senderName: "commit.author.name"
+          #              url: "commit.url"
+          #              urlDisplayText: "commit.message" #
+          #              extraDetail: "full_name"
+          poll_pull_request:
+            displayName: "Pull Request Event"
+            fields:
+              repositoryName: "full_name"
+              senderName: "user.login"
+              url: "html_url"
+              urlDisplayText: "title"
+              extraDetail: "state"
+  destinations:
+    teams:
+      accepted-channel:
+        - channelName: "msTeamsGeneral"
+          webhookUrl: "https://default758c91982b5e499ea7d9a53ebc9eca.e5.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a61dfe6851ae4531afef2750e1a2bb2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mQAx9I7BbGtmbh1G1j3VgM7RPwnJzSK09HLwbJa7k2g"
+        - channelName: "msTeamsTestChannel"
+          webhookUrl: "https://default758c91982b5e499ea7d9a53ebc9eca.e5.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a61dfe6851ae4531afef2750e1a2bb2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mQAx9I7BbGtmbh1G1j3VgM7RPwnJzSK09HLwbJa7k2g"
+    discord:
+      accepted-channel:
+        - channelName: "discordTestChannel"
+          webhookUrl: "https://discordapp.com/api/webhooks/1458507438222344325/etTtNOAki9ga8HvRFK9c9ffr2iW4eumlX0tfxVf1G58Ch0grf5iLhM-zBsRs54mthE0M"
+  deliveries:
+    teams:
+      adaptive-card-definition:
+        type: "message"
+        attachments:
+          - content:
+              msteams:
+                width: Full
+              body:
+                - text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+                - text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
+    discord:
+      embedded-object-definition:
+        embeds:
+          - title: "${urlDisplayText}"
+            description: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+            url: "${url}"
+            color: 3066993
+            author:
+              name: "${senderName}"
+              icon_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+  security:
+    webhook:
+      github:
+        secret: secret
+    api:
+      github:
+        token: "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"
+  api:
+    prefix: /api

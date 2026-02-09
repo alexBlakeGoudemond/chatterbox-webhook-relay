@@ -26,7 +26,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
     volumes:
       - ./api/logs/chatterbox-api:/var/log/chatterbox-api
-#      - ./api/configuration:/app/configuration
+      - ./api/configuration:/app/configuration   # Mount host folder for IDE access of settings
     restart: unless-stopped
     networks:
       - chatterbox-net
