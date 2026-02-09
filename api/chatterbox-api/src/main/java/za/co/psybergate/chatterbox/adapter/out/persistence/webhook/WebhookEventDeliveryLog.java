@@ -36,7 +36,7 @@ public class WebhookEventDeliveryLog {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_status", nullable = false)
+    @Column(name = "webhook_event_status", nullable = false)
     private WebhookEventStatus webhookEventStatus;
 
     @Column(name = "delivered_at")
