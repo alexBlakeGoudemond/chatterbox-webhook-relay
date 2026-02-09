@@ -80,3 +80,12 @@ postgres-login:
 
 count-tests:
 	grep -R "@\(Test\|ParameterizedTest\|RepeatedTest\|TestFactory\)" src/test/java | wc -l
+
+verify-bundled-files-in-api-jar:
+	docker exec chatterbox-api bash -c '\
+    		jar tf chatterbox.jar \
+    		| grep -v "^BOOT-INF/classes/za" \
+    		| grep -v "^BOOT-INF/lib/" \
+    		| grep -v "^org" \
+    		| grep -v "^META-INF" \
+    	'

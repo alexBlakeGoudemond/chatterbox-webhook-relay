@@ -138,6 +138,9 @@ With this awareness in mind, here are some decisions made in this repo:
     - A fun exercise is to remove support for a type in the application package and then see how easy it is to address
       the
       issues mentioned in the tests
+- Other Hexagonal Architectural notes
+    - the convention is: If a class is in adapter and ends with 'Adapter' - then it COULD implement a port. Else, it
+      would implement a contract defined elsewhere, like application.common (think logging)
 - Johan was also super helpful in this repo, offering advice on Hexagonal Architecture
 - Another pattern explored in this repo is the decision that all logging statements are defined in one place
     - Logs are grouped together into separate classes, but they are wired into 1 master Logging class

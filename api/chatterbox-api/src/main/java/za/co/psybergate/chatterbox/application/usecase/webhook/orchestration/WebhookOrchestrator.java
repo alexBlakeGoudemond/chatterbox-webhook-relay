@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
@@ -57,6 +58,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     public WebhookEventReceived process(String eventType, String deliveryId, String rawBody) {
         JsonNode jsonNode = jsonConverter.getAsJson(rawBody);
         String repositoryName = jsonConverter.getRepositoryName(jsonNode);
+        MdcContext.setRepositoryName(repositoryName);
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         OutboundEvent outboundEvent = getOutboundEvent(eventType, jsonNode);
@@ -72,9 +74,10 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
 
     @Override
     public List<WebhookPolledEventReceived> pollForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
+        String repositoryFullName = String.format("%s/%s", owner, repositoryName);
+        MdcContext.setRepositoryName(repositoryFullName);
         webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);
         RepositoryUpdates recentUpdates = webhookPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
-        String repositoryFullName = String.format("%s/%s", owner, repositoryName);
         List<WebhookPolledEventReceived> updates = new ArrayList<>();
         for (Map.Entry<WebhookEventType, List<RawEventPayload>> entry : recentUpdates.getWebhookEventTypeDetails().entrySet()) {
             List<RawEventPayload> details = entry.getValue();

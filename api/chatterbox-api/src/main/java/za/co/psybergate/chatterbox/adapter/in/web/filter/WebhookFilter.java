@@ -2,9 +2,9 @@ package za.co.psybergate.chatterbox.adapter.in.web.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.common.exception.InternalServerException;
@@ -14,9 +14,6 @@ import za.co.psybergate.chatterbox.common.security.PayloadCryptor;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
-import static za.co.psybergate.chatterbox.application.common.logging.MDC_KEYS.THREAD_EXECUTION_ID;
 
 @Component
 public class WebhookFilter implements Filter {
@@ -43,8 +40,7 @@ public class WebhookFilter implements Filter {
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        String threadExecutionId = UUID.randomUUID().toString();
-        MDC.put(THREAD_EXECUTION_ID.value(), threadExecutionId);
+        MdcContext.initialize();
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         CachedBodyHttpServletRequest wrappedRequest = new CachedBodyHttpServletRequest(httpRequest);
@@ -61,7 +57,8 @@ public class WebhookFilter implements Filter {
 
         webhookRuntimeMetrics.recordProcessingSuccess(event);
         webhookLogger.logCompletion(ms);
-        MDC.clear();
+
+        MdcContext.clear();
     }
 
     private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,
