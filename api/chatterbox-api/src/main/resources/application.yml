@@ -96,27 +96,35 @@ chatterbox:
           pull_request:
             displayName: "Pull Request Event"
             fields:
-              repositoryName: "repository.full_name"
-              senderName: "pull_request.user.login"
-              url: "pull_request.html_url"
-              urlDisplayText: "pull_request.title"
-              extraDetail: "action"
+              REPOSITORYNAME: "repository.full_name"
+              SENDERNAME: "pull_request.user.login"
+              URL: "pull_request.html_url"
+              URLDISPLAYTEXT: "pull_request.title"
+              EXTRADETAIL: "action"
           #          poll_commit:
           #            displayName: "Commit Event"
           #            fields:
-          #              repositoryName: "full_name"
-          #              senderName: "commit.author.name"
-          #              url: "commit.url"
-          #              urlDisplayText: "commit.message"
-          #              extraDetail: "full_name"
+          #              REPOSITORYNAME: "full_name"
+          #              SENDERNAME: "commit.author.name"
+          #              URL: "commit.url"
+          #              URLDISPLAYTEXT: "commit.message"
+          #              EXTRADETAIL: "full_name"
           poll_pull_request:
             displayName: "Pull Request Event"
             fields:
-              repositoryName: "full_name"
-              senderName: "user.login"
-              url: "html_url"
-              urlDisplayText: "title"
-              extraDetail: "state"
+              REPOSITORYNAME: "full_name"
+              SENDERNAME: "user.login"
+              URL: "html_url"
+              URLDISPLAYTEXT: "title"
+              EXTRADETAIL: "state"
+          ping:
+            displayName: "Ping Event"
+            fields:
+              REPOSITORYNAME: "repository.full_name"
+              SENDERNAME: "sender.login"
+              URL: "hook.ping_url"
+              URLDISPLAYTEXT: "zen"
+              EXTRADETAIL: "hook.name"
   destinations:
     teams:
       accepted-channel:

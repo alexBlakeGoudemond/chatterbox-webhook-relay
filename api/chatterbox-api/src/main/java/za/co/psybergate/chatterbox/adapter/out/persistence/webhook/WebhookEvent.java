@@ -36,7 +36,7 @@ public class WebhookEvent {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_type", nullable = false)
+    @Column(name = "webhook_event_status", nullable = false)
     private WebhookEventType webhookEventType;
 
     @Column(name = "display_name", nullable = false)
@@ -60,7 +60,7 @@ public class WebhookEvent {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_status", nullable = false)
+    @Column(name = "webhook_event_status", nullable = false)
     private WebhookEventStatus webhookEventStatus;
 
     @Column(name = "error_message")
