@@ -1,8 +1,8 @@
 DROP type if exists webhook_event_status;
 CREATE TYPE webhook_event_status AS ENUM ('RECEIVED', 'PROCESSING', 'PROCESSED_SUCCESS', 'PROCESSED_FAILURE');
 
-DROP type if exists EVENT_TYPE;
-CREATE TYPE EVENT_TYPE AS ENUM ('PUSH', 'PULL_REQUEST', 'POLL_COMMIT', 'POLL_PULL_REQUEST', 'PING');
+DROP type if exists webhook_event_type;
+CREATE TYPE webhook_event_type AS ENUM ('PUSH', 'PULL_REQUEST', 'POLL_COMMIT', 'POLL_PULL_REQUEST', 'PING');
 
 DROP table if EXISTS webhook_event;
 CREATE TABLE webhook_event
@@ -10,7 +10,7 @@ CREATE TABLE webhook_event
     id                     SERIAL PRIMARY KEY,
     repository_full_name   TEXT                 NOT NULL, -- e.g., <organisation>/<someRepository>
     webhook_id             TEXT                 NOT NULL, -- X-GitHub-Delivery
-    event_type             EVENT_TYPE           NOT NULL,
+    webhook_event_type     webhook_event_type   NOT NULL,
     display_name           TEXT                 NOT NULL,
     sender_name            TEXT                 NOT NULL,
     event_url              TEXT                 NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE github_polled_event
     id                     SERIAL PRIMARY KEY,
     repository_full_name   TEXT                 NOT NULL, -- e.g., <organisation>/<someRepository>
     source_id              TEXT                 NOT NULL, -- commit sha, pull_request id, issue id etc
-    event_type             EVENT_TYPE           NOT NULL,
+    webhook_event_type     webhook_event_type   NOT NULL,
     display_name           TEXT                 NOT NULL,
     sender_name            TEXT                 NOT NULL,
     event_url              TEXT                 NOT NULL,
