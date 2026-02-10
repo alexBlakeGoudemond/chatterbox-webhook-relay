@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
+import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
 import za.co.psybergate.chatterbox.common.exception.InternalServerException;
@@ -26,21 +27,25 @@ public class WebhookFilter implements Filter {
 
     private final WebhookRuntimeMetrics webhookRuntimeMetrics;
 
+    private final MdcContext mdcContext;
+
     public WebhookFilter(WebhookLogger webhookLogger,
                          PayloadCryptor payloadCryptor,
                          WebhookRuntimeMetrics webhookRuntimeMetrics,
-                         ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties) {
+                         ChatterboxSecurityWebhookGithubProperties securityWebhookGithubProperties,
+                         MdcContext mdcContext) {
         this.webhookLogger = webhookLogger;
         this.payloadCryptor = payloadCryptor;
         this.webhookRuntimeMetrics = webhookRuntimeMetrics;
         this.securityWebhookGithubProperties = securityWebhookGithubProperties;
+        this.mdcContext = mdcContext;
     }
 
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        MdcContext.initialize();
+        mdcContext.initialize();
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         CachedBodyHttpServletRequest wrappedRequest = new CachedBodyHttpServletRequest(httpRequest);
@@ -58,7 +63,7 @@ public class WebhookFilter implements Filter {
         webhookRuntimeMetrics.recordProcessingSuccess(event);
         webhookLogger.logCompletion(ms);
 
-        MdcContext.clear();
+        mdcContext.clear();
     }
 
     private void assertValidSignature(CachedBodyHttpServletRequest wrappedRequest,

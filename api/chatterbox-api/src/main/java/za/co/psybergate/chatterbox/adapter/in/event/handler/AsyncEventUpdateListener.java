@@ -23,16 +23,16 @@ public class AsyncEventUpdateListener implements EventUpdateHandlerPort {
     @EventListener
     @Override
     public void handle(PolledEventsProcessed polledEventsProcessed) {
-        webhookLogger.logPolledEventProcessed(polledEventsProcessed);
-        eventProcessor.processPolledEvents();
+            webhookLogger.logPolledEventProcessed(polledEventsProcessed);
+            eventProcessor.processPolledEvents();
     }
 
     @Async("webhookEventExecutor")
     @EventListener
     @Override
     public void handle(WebhookEventProcessed webhookEventProcessed) {
-        webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
-        eventProcessor.processWebhookEvent(webhookEventProcessed.getRepositoryFullName());
+            webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
+            eventProcessor.processWebhookEvent(webhookEventProcessed.getRepositoryFullName());
     }
 
 }

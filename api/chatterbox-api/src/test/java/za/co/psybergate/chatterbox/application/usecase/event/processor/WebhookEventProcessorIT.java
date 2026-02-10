@@ -39,7 +39,7 @@ import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEvent
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -111,7 +111,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @Tag("live-integration")
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
-        eventProcessor.processWebhookEvent("repositoryFullName");
+        eventProcessor.processWebhookEvent("psyAlexBlakeGoudemond/chatterbox");
         WebhookEventReceived retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());

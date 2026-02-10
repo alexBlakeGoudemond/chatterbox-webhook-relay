@@ -20,6 +20,8 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
 
     private final ApplicationEventPublisher publisher;
 
+    private final MdcContext mdcContext;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<String> repositories = getAllRepositories();
@@ -35,7 +37,7 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
     public void processMissedEvents(List<String> repositories) {
         boolean webhookEventsFound = false;
         for (String repositoryFullName : repositories) {
-            MdcContext.setRepositoryName(repositoryFullName);
+            mdcContext.setRepositoryName(repositoryFullName);
             if (webhookService.findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName)) {
                 webhookEventsFound = true;
             }

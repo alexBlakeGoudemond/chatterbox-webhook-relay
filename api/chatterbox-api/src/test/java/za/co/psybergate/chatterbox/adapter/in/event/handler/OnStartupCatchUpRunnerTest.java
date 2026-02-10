@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.ApplicationEventPublisher;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 
@@ -26,11 +27,14 @@ class OnStartupCatchUpRunnerTest {
     @Mock
     private ApplicationEventPublisher publisher;
 
+    @Mock
+    private MdcContext mdcContext;
+
     private OnStartupCatchUpRunner onStartupCatchUpRunner;
 
     @BeforeEach
     void setUp() {
-        onStartupCatchUpRunner = new OnStartupCatchUpRunner(webhookService, publisher);
+        onStartupCatchUpRunner = new OnStartupCatchUpRunner(webhookService, publisher, mdcContext);
     }
 
     @Test
