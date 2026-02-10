@@ -151,6 +151,7 @@ With this awareness in mind, here are some decisions made in this repo:
 - And the biggest value here is, of course, Webhooks!
 - Also, one of the dependencies imported that was never ultimately used was `github-api` (converting to JsonNode makes
   additional HTTP calls - which was not desirable in this case)
+- WebFilter and TaskDecorator in regard to Logging and MDC keys
 
 ## Acknowledgements
 Shoutouts to the following for their time and input:

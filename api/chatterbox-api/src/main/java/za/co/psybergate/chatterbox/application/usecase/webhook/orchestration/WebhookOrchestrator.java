@@ -7,7 +7,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.common.logging.mdc.MdcContext;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
+import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
@@ -54,16 +55,18 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
 
     private final WebhookLogger webhookLogger;
 
+    private final MdcContext mdcContext;
+
     @Override
     public WebhookEventReceived process(String eventType, String deliveryId, String rawBody) {
         JsonNode jsonNode = jsonConverter.getAsJson(rawBody);
         String repositoryName = jsonConverter.getRepositoryName(jsonNode);
-        MdcContext.setRepositoryName(repositoryName);
+        mdcContext.setRepositoryName(repositoryName);
         webhookRequestValidatorPort.assertAcceptedRepository(repositoryName);
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         OutboundEvent outboundEvent = getOutboundEvent(eventType, jsonNode);
         WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(jsonNode));
-        publisher.publishEvent(new WebhookEventProcessed(MdcContext.getThreadId(), webhookEvent));
+        publisher.publishEvent(new WebhookEventProcessed(webhookEvent));
         return webhookEvent;
     }
 
@@ -75,7 +78,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
     @Override
     public List<WebhookPolledEventReceived> pollForChanges(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         String repositoryFullName = String.format("%s/%s", owner, repositoryName);
-        MdcContext.setRepositoryName(repositoryFullName);
+        mdcContext.setRepositoryName(repositoryFullName);
         webhookRequestValidatorPort.assertAcceptedRepository(owner, repositoryName);
         RepositoryUpdates recentUpdates = webhookPollingPort.getRecentUpdates(owner, repositoryName, fromDate, untilDate);
         List<WebhookPolledEventReceived> updates = new ArrayList<>();

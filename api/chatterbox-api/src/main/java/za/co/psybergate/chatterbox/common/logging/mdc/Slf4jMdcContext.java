@@ -1,6 +1,8 @@
 package za.co.psybergate.chatterbox.common.logging.mdc;
 
 import org.slf4j.MDC;
+import org.springframework.stereotype.Component;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 
 import java.util.UUID;
 
@@ -10,26 +12,15 @@ import static za.co.psybergate.chatterbox.application.common.logging.MDC_KEYS.TH
 /**
  * Utility class to centralize MDC (Mapped Diagnostic Context) variables managed in the map.
  */
-public class MdcContext {
-
-    private MdcContext() {
-        // Prevent instantiation
-    }
+@Component
+public class Slf4jMdcContext implements MdcContext {
 
     /**
      * Initializes the MDC context with a unique execution ID.
      */
-    public static void initialize() {
+    @Override
+    public void initialize() {
         String threadExecutionId = UUID.randomUUID().toString();
-        setThreadExecutionId(threadExecutionId);
-    }
-
-    /**
-     * Sets the Thread Execution name in the MDC context.
-     *
-     * @param threadExecutionId the unique identifier of the Thread
-     */
-    public static void setThreadExecutionId(String threadExecutionId) {
         MDC.put(THREAD_EXECUTION_ID.value(), threadExecutionId);
     }
 
@@ -38,20 +29,18 @@ public class MdcContext {
      *
      * @param repositoryName the name of the repository
      */
-    public static void setRepositoryName(String repositoryName) {
+    @Override
+    public void setRepositoryName(String repositoryName) {
         if (repositoryName != null) {
             MDC.put(REPOSITORY_NAME.value(), repositoryName);
         }
     }
 
-    public static String getThreadId(){
-        return MDC.get(THREAD_EXECUTION_ID.value());
-    }
-
     /**
      * Clears the MDC context.
      */
-    public static void clear() {
+    @Override
+    public void clear() {
         MDC.clear();
     }
 

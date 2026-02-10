@@ -10,12 +10,9 @@ import java.time.LocalDateTime;
 @ToString
 public class PolledEventsProcessed {
 
-    private final String webhookTrackingUuid;
-
     private final LocalDateTime eventDateTime;
 
-    public PolledEventsProcessed(String webhookTrackingUuid) {
-        this.webhookTrackingUuid = webhookTrackingUuid;
+    public PolledEventsProcessed() {
         this.eventDateTime = LocalDateTime.now();
     }
 

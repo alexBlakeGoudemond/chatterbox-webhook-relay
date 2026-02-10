@@ -10,20 +10,17 @@ import java.time.LocalDateTime;
 @ToString
 public class WebhookEventProcessed {
 
-    private final String webhookTrackingUuid;
-
     private final String repositoryFullName;
 
     private final LocalDateTime eventDateTime;
 
-    public WebhookEventProcessed(String webhookTrackingUuid, String repositoryFullName) {
-        this.webhookTrackingUuid = webhookTrackingUuid;
+    public WebhookEventProcessed(String repositoryFullName) {
         this.repositoryFullName = repositoryFullName;
         this.eventDateTime = LocalDateTime.now();
     }
 
-    public WebhookEventProcessed(String webhookTrackingUuid, WebhookEventReceived webhookEventReceived) {
-        this(webhookTrackingUuid, webhookEventReceived.repositoryFullName());
+    public WebhookEventProcessed(WebhookEventReceived webhookEventReceived) {
+        this(webhookEventReceived.repositoryFullName());
     }
 
 }

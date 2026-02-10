@@ -5,10 +5,11 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.common.logging.mdc.MdcContext;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.port.in.event.handler.CatchUpHandlerPort;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
     private final WebhookOrchestratorPort webhookService;
 
     private final ApplicationEventPublisher publisher;
+
+    private MdcContext mdcContext;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -35,13 +38,13 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
     public void processMissedEvents(List<String> repositories) {
         boolean webhookEventsFound = false;
         for (String repositoryFullName : repositories) {
-            MdcContext.setRepositoryName(repositoryFullName);
+            mdcContext.setRepositoryName(repositoryFullName);
             if (webhookService.findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName)) {
                 webhookEventsFound = true;
             }
         }
         if (webhookEventsFound) {
-            publisher.publishEvent(new PolledEventsProcessed(MdcContext.getThreadId()));
+            publisher.publishEvent(new PolledEventsProcessed());
         }
     }
 
