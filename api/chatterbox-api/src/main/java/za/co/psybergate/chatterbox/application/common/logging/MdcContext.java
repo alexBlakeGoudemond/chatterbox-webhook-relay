@@ -20,7 +20,17 @@ public class MdcContext {
      * Initializes the MDC context with a unique execution ID.
      */
     public static void initialize() {
-        MDC.put(THREAD_EXECUTION_ID.value(), UUID.randomUUID().toString());
+        String threadExecutionId = UUID.randomUUID().toString();
+        setThreadExecutionId(threadExecutionId);
+    }
+
+    /**
+     * Sets the Thread Execution name in the MDC context.
+     *
+     * @param threadExecutionId the unique identifier of the Thread
+     */
+    public static void setThreadExecutionId(String threadExecutionId) {
+        MDC.put(THREAD_EXECUTION_ID.value(), threadExecutionId);
     }
 
     /**
@@ -32,6 +42,10 @@ public class MdcContext {
         if (repositoryName != null) {
             MDC.put(REPOSITORY_NAME.value(), repositoryName);
         }
+    }
+
+    public static String getThreadId(){
+        return MDC.get(THREAD_EXECUTION_ID.value());
     }
 
     /**
