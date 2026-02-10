@@ -36,7 +36,7 @@ public class GithubPolledEvent {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "event_type", nullable = false)
+    @Column(name = "webhook_event_type", nullable = false)
     private WebhookEventType webhookEventType;
 
     @Column(name = "display_name", nullable = false)
