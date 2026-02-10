@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -22,11 +25,15 @@ import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingCli
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.application.usecase.webhook.orchestration.WebhookOrchestrator;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -95,9 +102,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         RegexTemplateSubstitutor.class,
         GithubHttpRequestFactory.class,
         HttpResponseHandler.class,
+        Slf4jMdcContext.class,
 })
 @WebMvcTest(GithubWebhookController.class)
 @MirrorProductionClassForArchitectureRuleTests(GithubWebhookController.class)
+@ExtendWith(MockitoExtension.class)
 public class GithubWebhookControllerMockedTeamsIT {
 
     @MockitoBean
@@ -205,6 +214,8 @@ public class GithubWebhookControllerMockedTeamsIT {
     @DisplayName("Encrypted signature: ACCEPTED")
     @Test
     public void whenPostToGithubWebhook_WithJsonAndValidSignature_ThenHttpStatusAccepted() {
+        Mockito.when(webhookEventStorePort.storeWebhook(Mockito.anyString(), Mockito.any(OutboundEvent.class), Mockito.any(RawEventPayload.class)))
+                .thenReturn(mockedWebhookEventReceived());
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValid(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";
@@ -219,6 +230,8 @@ public class GithubWebhookControllerMockedTeamsIT {
     @DisplayName("Signature, No UTF-8: ACCEPTED")
     @Test
     public void whenPostToGithubWebhook_WithValidPayload_AndNoEncoding_ThenHttpStatusAccepted() {
+        Mockito.when(webhookEventStorePort.storeWebhook(Mockito.anyString(), Mockito.any(OutboundEvent.class), Mockito.any(RawEventPayload.class)))
+                .thenReturn(mockedWebhookEventReceived());
         MockHttpServletRequestBuilder httpRequest = githubHttpRequestFactory.getHttpRequestValidNoEncoding(jsonFileReader.getGithubPayloadValidAsString());
         try {
             String expectedContentBody = "Webhook received; work underway";
@@ -228,6 +241,23 @@ public class GithubWebhookControllerMockedTeamsIT {
         } catch (Exception e) {
             fail("Expected the HttpRequest to succeed without an exception", e);
         }
+    }
+
+    private WebhookEventReceived mockedWebhookEventReceived() {
+        return new WebhookEventReceived(0L,
+                "",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
 }
