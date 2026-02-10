@@ -16,7 +16,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpda
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
 import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -24,7 +24,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventTy
 import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
 import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
 import java.util.HashMap;

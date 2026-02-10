@@ -5,7 +5,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
+import za.co.psybergate.chatterbox.common.logging.mdc.MdcContext;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.port.in.event.handler.CatchUpHandlerPort;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;

@@ -25,7 +25,7 @@ import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubs
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.convenience.annotation.logging.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.common.exception.InfrastructureException;
 import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;

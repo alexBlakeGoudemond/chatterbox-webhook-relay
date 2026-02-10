@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
+import za.co.psybergate.chatterbox.common.logging.mdc.MdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;

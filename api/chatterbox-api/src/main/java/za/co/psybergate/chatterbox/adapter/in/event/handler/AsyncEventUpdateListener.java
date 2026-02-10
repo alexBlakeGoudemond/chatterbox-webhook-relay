@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
@@ -24,21 +23,16 @@ public class AsyncEventUpdateListener implements EventUpdateHandlerPort {
     @EventListener
     @Override
     public void handle(PolledEventsProcessed polledEventsProcessed) {
-        MdcContext.setThreadExecutionId(polledEventsProcessed.getWebhookTrackingUuid());
-        webhookLogger.logPolledEventProcessed(polledEventsProcessed);
-        eventProcessor.processPolledEvents();
-        MdcContext.clear();
+            webhookLogger.logPolledEventProcessed(polledEventsProcessed);
+            eventProcessor.processPolledEvents();
     }
 
     @Async("webhookEventExecutor")
     @EventListener
     @Override
     public void handle(WebhookEventProcessed webhookEventProcessed) {
-        MdcContext.setThreadExecutionId(webhookEventProcessed.getWebhookTrackingUuid());
-        MdcContext.setRepositoryName(webhookEventProcessed.getRepositoryFullName());
-        webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
-        eventProcessor.processWebhookEvent(webhookEventProcessed.getRepositoryFullName());
-        MdcContext.clear();
+            webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
+            eventProcessor.processWebhookEvent(webhookEventProcessed.getRepositoryFullName());
     }
 
 }

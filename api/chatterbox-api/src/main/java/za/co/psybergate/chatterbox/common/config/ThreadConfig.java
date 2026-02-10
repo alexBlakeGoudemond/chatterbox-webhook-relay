@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import za.co.psybergate.chatterbox.common.config.properties.concurrency.ExecutorProperties;
+import za.co.psybergate.chatterbox.common.logging.mdc.decorator.MdcTaskDecorator;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -46,6 +47,7 @@ public class ThreadConfig {
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix(threadNamePrefix);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+        executor.setTaskDecorator(new MdcTaskDecorator());
         return executor;
     }
 

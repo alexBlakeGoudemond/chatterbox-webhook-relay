@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.logging;
+package za.co.psybergate.chatterbox.common.logging.mdc;
 
 import org.slf4j.MDC;
 
