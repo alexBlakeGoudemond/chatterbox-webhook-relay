@@ -32,7 +32,7 @@ class AsyncEventUpdateListenerTest {
     @Test
     @DisplayName("Should log and process polled events when handle(PolledEventsProcessed) is called")
     void givenPolledEventsProcessed_WhenHandleEvent_ThenEventProcessorIsCalled() {
-        PolledEventsProcessed event = new PolledEventsProcessed();
+        PolledEventsProcessed event = new PolledEventsProcessed("webhookTrackingUuid");
         asyncEventUpdateListener.handle(event);
         verify(webhookLogger).logPolledEventProcessed(event);
         verify(eventProcessor).processPolledEvents();

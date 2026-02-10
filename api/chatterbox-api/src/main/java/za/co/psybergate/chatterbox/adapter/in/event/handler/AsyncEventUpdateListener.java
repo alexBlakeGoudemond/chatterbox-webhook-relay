@@ -24,8 +24,10 @@ public class AsyncEventUpdateListener implements EventUpdateHandlerPort {
     @EventListener
     @Override
     public void handle(PolledEventsProcessed polledEventsProcessed) {
+        MdcContext.setThreadExecutionId(polledEventsProcessed.getWebhookTrackingUuid());
         webhookLogger.logPolledEventProcessed(polledEventsProcessed);
         eventProcessor.processPolledEvents();
+        MdcContext.clear();
     }
 
     @Async("webhookEventExecutor")
@@ -33,6 +35,7 @@ public class AsyncEventUpdateListener implements EventUpdateHandlerPort {
     @Override
     public void handle(WebhookEventProcessed webhookEventProcessed) {
         MdcContext.setThreadExecutionId(webhookEventProcessed.getWebhookTrackingUuid());
+        MdcContext.setRepositoryName(webhookEventProcessed.getRepositoryFullName());
         webhookLogger.logWebhookEventProcessed(webhookEventProcessed);
         eventProcessor.processWebhookEvent(webhookEventProcessed.getRepositoryFullName());
         MdcContext.clear();

@@ -41,7 +41,7 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
             }
         }
         if (webhookEventsFound) {
-            publisher.publishEvent(new PolledEventsProcessed());
+            publisher.publishEvent(new PolledEventsProcessed(MdcContext.getThreadId()));
         }
     }
 
