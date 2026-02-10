@@ -41,10 +41,10 @@ class AsyncEventUpdateListenerTest {
     @Test
     @DisplayName("Should log and process webhook events when handle(WebhookEventProcessed) is called")
     void givenWebhookEventProcessed_WhenHandleEvent_ThenEventProcessorIsCalled() {
-        WebhookEventProcessed event = new WebhookEventProcessed();
+        WebhookEventProcessed event = new WebhookEventProcessed("repositoryFullName");
         asyncEventUpdateListener.handle(event);
         verify(webhookLogger).logWebhookEventProcessed(event);
-        verify(eventProcessor).processWebhookEvents();
+        verify(eventProcessor).processWebhookEvent(event.getRepositoryFullName());
     }
 
 }

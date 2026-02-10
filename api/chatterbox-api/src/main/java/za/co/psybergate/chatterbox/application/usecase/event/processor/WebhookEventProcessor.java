@@ -32,8 +32,11 @@ public class WebhookEventProcessor implements EventProcessorPort {
     private final EventDeliveryPort eventDelivery;
 
     @Override
-    public void processWebhookEvents() {
+    public void processWebhookEvent(String repositoryFullName) {
         for (DestinationMapping mapping : configurationResolver.getDestinationMapping()) {
+            if (!mapping.source().equalsIgnoreCase(repositoryFullName)){
+                continue;
+            }
             webhookLogger.logProcessingEvents(mapping);
             processWebhookEvents(mapping);
         }
