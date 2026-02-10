@@ -23,6 +23,7 @@ import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.Web
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
 import za.co.psybergate.chatterbox.common.exception.InvalidSignatureException;
+import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
 import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
@@ -42,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
         WebhookRuntimeMetrics.class,
         SimpleMeterRegistry.class,
         GithubHttpRequestFactory.class,
+        Slf4jMdcContext.class,
 })
 @AutoConfigureMockMvc
 public class WebhookFilterIT {

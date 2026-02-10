@@ -25,6 +25,7 @@ import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetail;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
+import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
 import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
 
@@ -46,7 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         InfrastructurePropertiesConfig.class,
         GithubRestPollingClient.class,
         PropertiesConfigurationResolver.class,
-        WebhookPolledEventEventStoreJpaAdapter.class
+        WebhookPolledEventEventStoreJpaAdapter.class,
+        Slf4jMdcContext.class,
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers

@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
 import za.co.psybergate.chatterbox.application.domain.event.model.*;
@@ -63,6 +64,9 @@ class WebhookOrchestratorTest {
     @Mock
     private WebhookLogger webhookLogger;
 
+    @Mock
+    private MdcContext mdcContext;
+
     private WebhookOrchestrator orchestrator;
 
     @BeforeEach
@@ -76,7 +80,8 @@ class WebhookOrchestratorTest {
                 webhookPolledEventStorePort,
                 configurationResolver,
                 publisher,
-                webhookLogger
+                webhookLogger,
+                mdcContext
         );
     }
 

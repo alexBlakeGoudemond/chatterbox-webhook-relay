@@ -9,7 +9,6 @@ import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
 import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
 import za.co.psybergate.chatterbox.application.port.in.event.handler.CatchUpHandlerPort;
 import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
 
     private final ApplicationEventPublisher publisher;
 
-    private MdcContext mdcContext;
+    private final MdcContext mdcContext;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
