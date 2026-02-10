@@ -111,7 +111,7 @@ public class WebhookEventProcessorIT extends AbstractPostgresTestContainer {
     @Tag("live-integration")
     @Test
     public void whenProcessWebhookEvents_ThenEventStatusUpdated_AndDeliveryLogExists() {
-        eventProcessor.processWebhookEvents();
+        eventProcessor.processWebhookEvent("repositoryFullName");
         WebhookEventReceived retrievedWebhookEvent = webhookEventStorePort.getWebhook(persistedWebhookEvent.id());
         assertNotNull(retrievedWebhookEvent);
         assertEquals(retrievedWebhookEvent.id(), persistedWebhookEvent.id());

@@ -63,7 +63,7 @@ public class WebhookOrchestrator implements WebhookOrchestratorPort {
         webhookRequestValidatorPort.assertAcceptedEvent(eventType);
         OutboundEvent outboundEvent = getOutboundEvent(eventType, jsonNode);
         WebhookEventReceived webhookEvent = webhookEventStorePort.storeWebhook(deliveryId, outboundEvent, RawEventPayload.of(jsonNode));
-        publisher.publishEvent(new WebhookEventProcessed());
+        publisher.publishEvent(new WebhookEventProcessed(webhookEvent));
         return webhookEvent;
     }
 
