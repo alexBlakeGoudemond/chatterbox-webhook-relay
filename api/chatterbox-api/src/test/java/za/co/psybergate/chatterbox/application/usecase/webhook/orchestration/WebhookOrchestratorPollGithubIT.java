@@ -18,6 +18,8 @@ import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventJpaRepository;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventJpaRepository;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
@@ -72,6 +74,9 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
     private WebhookEventJpaRepository webhookEventJpaRepository;
 
     @Autowired
+    private GithubPolledEventJpaRepository githubPolledEventJpaRepository;
+
+    @Autowired
     private WebhookOrchestrator webhookOrchestrator;
 
     private static Stream<Arguments> repositoryDetails() {
@@ -99,13 +104,37 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
 
     // TODO BlakeGoudemond 2026/02/15 | leverage paramaterizedTest in time
     @Test
-    public void x() {
+    public void givenPreviouslyProcessedWebhookAndNoMatchingPolledEvent_WhenPollForChanges_ThenNoChangesReturned() {
         String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
-        saveWebhookEvent(repositoryFullName, WebhookEventStatus.PROCESSED_SUCCESS);
-        boolean mostRecentWebhookAndCheckForUpdatesSince = webhookOrchestrator.findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName);
+        String[] repositoryDetails = repositoryFullName.split("/");
+        String owner = repositoryDetails[0];
+        String repositoryName = repositoryDetails[1];
+        LocalDateTime fromDate = LocalDateTime.parse("2026-02-14T22:27:39");
+        LocalDateTime toDate = LocalDateTime.parse("2026-02-15T10:00:00");
+        saveWebhookEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
+
+        List<WebhookPolledEventReceived> webhookPolledEvents = webhookOrchestrator.pollForChanges(owner, repositoryName, fromDate, toDate);
+        assertNotNull(webhookPolledEvents);
+        assertTrue(webhookPolledEvents.isEmpty());
     }
 
-    private void saveWebhookEvent(String repositoryFullName, WebhookEventStatus webhookEventStatus) {
+    @Test
+    public void givenPreviouslyProcessedWebhookAndMatchingPolledEvent_WhenPollForChanges_ThenNoChangesReturned() {
+        String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
+        String[] repositoryDetails = repositoryFullName.split("/");
+        String owner = repositoryDetails[0];
+        String repositoryName = repositoryDetails[1];
+        LocalDateTime fromDate = LocalDateTime.parse("2026-02-14T22:27:39");
+        LocalDateTime toDate = LocalDateTime.parse("2026-02-15T10:00:00");
+        saveWebhookEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
+        saveWebhookPolledEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
+
+        List<WebhookPolledEventReceived> webhookPolledEvents = webhookOrchestrator.pollForChanges(owner, repositoryName, fromDate, toDate);
+        assertNotNull(webhookPolledEvents);
+        assertTrue(webhookPolledEvents.isEmpty());
+    }
+
+    private void saveWebhookEvent(String repositoryFullName, LocalDateTime fromDate, WebhookEventStatus webhookEventStatus) {
         WebhookEvent webhookEvent = new WebhookEvent();
         webhookEvent.setRepositoryFullName(repositoryFullName);
         webhookEvent.setWebhookId("abc123");
@@ -117,11 +146,30 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
         webhookEvent.setExtraDetail("Dummy Extra Detail");
         webhookEvent.setPayload("{}");
         webhookEvent.setWebhookEventStatus(webhookEventStatus);
-        webhookEvent.setReceivedAt(LocalDateTime.parse("2026-02-14T22:27:39"));
+        webhookEvent.setReceivedAt(fromDate);
 
         WebhookEvent persistedWebhookEvent = webhookEventJpaRepository.save(webhookEvent);
         assertNotNull(persistedWebhookEvent);
         assertTrue(persistedWebhookEvent.getId() > 0L);
+    }
+
+    private void saveWebhookPolledEvent(String repositoryFullName, LocalDateTime fromDate, WebhookEventStatus webhookEventStatus) {
+        GithubPolledEvent githubPolledEvent = new GithubPolledEvent();
+        githubPolledEvent.setRepositoryFullName(repositoryFullName);
+        githubPolledEvent.setSourceId("abc123");
+        githubPolledEvent.setWebhookEventType(WebhookEventType.PULL_REQUEST);
+        githubPolledEvent.setDisplayName("Dummy Display Name");
+        githubPolledEvent.setSenderName("Dummy Sender Name");
+        githubPolledEvent.setEventUrl("Dummy Event URL");
+        githubPolledEvent.setEventUrlDisplayText("Dummy Event URL Display Text");
+        githubPolledEvent.setExtraDetail("Dummy Extra Detail");
+        githubPolledEvent.setPayload("{}");
+        githubPolledEvent.setWebhookEventStatus(webhookEventStatus);
+        githubPolledEvent.setFetchedAt(fromDate);
+
+        GithubPolledEvent persistedPolledEvent = githubPolledEventJpaRepository.save(githubPolledEvent);
+        assertNotNull(persistedPolledEvent);
+        assertTrue(persistedPolledEvent.getId() > 0L);
     }
 
 }
