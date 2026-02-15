@@ -46,7 +46,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
                 return List.of();
             }
             return githubPolledEvents.stream()
-                    .map(AdapterMapper::mapToGithubPolledEventRecord)
+                    .map(AdapterMapper::mapToWebhookPolledEventReceived)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
@@ -62,7 +62,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
                 return List.of();
             }
             return githubPolledEvents.stream()
-                    .map(AdapterMapper::mapToGithubPolledEventRecord)
+                    .map(AdapterMapper::mapToWebhookPolledEventReceived)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEvents", e);
@@ -80,7 +80,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
         try {
             GithubPolledEvent polledEvent = repository.save(event);
             webhookLogger.logEventStored(polledEvent);
-            return AdapterMapper.mapToGithubPolledEventRecord(polledEvent);
+            return AdapterMapper.mapToWebhookPolledEventReceived(polledEvent);
         } catch (Exception e) {
             throw new ApplicationException("Unable to update the GithubPolledEvent", e);
         }
@@ -103,7 +103,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
         try {
             GithubPolledEventDeliveryLog deliveryLog = logRepository.save(polledEventDeliveryLog);
             webhookLogger.logEventDelivered(deliveryLog);
-            return AdapterMapper.mapToGithubPolledEventDeliveryRecord(deliveryLog);
+            return AdapterMapper.mapToWebhookPolledEventDelivery(deliveryLog);
         } catch (Exception e) {
             throw new ApplicationException("Unable to Store Delivery information of the event", e);
         }
@@ -126,7 +126,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
     public WebhookPolledEventReceived getEvent(Long id) {
         GithubPolledEvent polledEvent = repository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Unable to find WebhookEvent with ID " + id));
-        return AdapterMapper.mapToGithubPolledEventRecord(polledEvent);
+        return AdapterMapper.mapToWebhookPolledEventReceived(polledEvent);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class WebhookPolledEventEventStoreJpaAdapter implements WebhookPolledEven
         try {
             List<GithubPolledEventDeliveryLog> deliveryLogs = logRepository.findAllByGithubPolledEventId(id);
             return deliveryLogs.stream()
-                    .map(AdapterMapper::mapToGithubPolledEventDeliveryRecord)
+                    .map(AdapterMapper::mapToWebhookPolledEventDelivery)
                     .toList();
         } catch (Exception e) {
             throw new ApplicationException("Unable to retrieve GithubPolledEventLogs", e);
