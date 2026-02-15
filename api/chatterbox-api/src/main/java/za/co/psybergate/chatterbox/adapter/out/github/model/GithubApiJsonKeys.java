@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum GithubApiJsonKeys {
 
-    FULL_NAME("full_name");
+    FULL_NAME("full_name"), MERGED_AT("merged_at");
 
     private final String value;
 

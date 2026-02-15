@@ -1,6 +1,8 @@
 package za.co.psybergate.chatterbox.application.usecase.webhook.orchestration;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,11 +19,17 @@ import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventJpaRepository;
+import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
+import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.repository.WebhookEventJpaRepository;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetail;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
+import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
@@ -33,8 +41,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ImportSlf4jWebhookLogger
@@ -49,6 +56,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         PropertiesConfigurationResolver.class,
         WebhookPolledEventEventStoreJpaAdapter.class,
         Slf4jMdcContext.class,
+        WebhookEventStoreJpaAdapter.class,
+        WebhookPolledEventEventStoreJpaAdapter.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -62,8 +71,11 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    @MockitoBean
-    private WebhookEventStoreJpaAdapter webhookReceivedStore;
+    @Autowired
+    private WebhookEventJpaRepository webhookEventJpaRepository;
+
+    @Autowired
+    private GithubPolledEventJpaRepository githubPolledEventJpaRepository;
 
     @Autowired
     private WebhookOrchestrator webhookOrchestrator;
@@ -89,6 +101,79 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
         for (WebhookPolledEventReceived polledEvent : githubPolledEvents) {
             assertNotNull(polledEvent.id());
         }
+    }
+
+    @DisplayName("With previous Webhook Received; Polling does not duplicate")
+    @Test
+    public void givenPreviouslyProcessedWebhookAndNoMatchingPolledEvent_WhenPollForChanges_ThenNoDuplicateChangesReturned() {
+        String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
+        String[] repositoryDetails = repositoryFullName.split("/");
+        String owner = repositoryDetails[0];
+        String repositoryName = repositoryDetails[1];
+        LocalDateTime fromDate = LocalDateTime.parse("2026-02-14T22:27:39");
+        LocalDateTime toDate = LocalDateTime.parse("2026-02-15T10:00:00");
+        saveWebhookEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
+
+        List<WebhookPolledEventReceived> webhookPolledEvents = webhookOrchestrator.pollForChanges(owner, repositoryName, fromDate, toDate);
+        assertNotNull(webhookPolledEvents);
+        assertTrue(webhookPolledEvents.isEmpty());
+    }
+
+    @DisplayName("With previous Webhook Received and Poll Successful; Polling does not duplicate")
+    @Test
+    public void givenPreviouslyProcessedWebhookAndMatchingPolledEvent_WhenPollForChanges_ThenNoDuplicateChangesReturned() {
+        String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
+        String[] repositoryDetails = repositoryFullName.split("/");
+        String owner = repositoryDetails[0];
+        String repositoryName = repositoryDetails[1];
+        LocalDateTime fromDate = LocalDateTime.parse("2026-02-14T22:27:39");
+        LocalDateTime toDate = LocalDateTime.parse("2026-02-15T10:00:00");
+        saveWebhookEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
+        saveWebhookPolledEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
+
+        List<WebhookPolledEventReceived> webhookPolledEvents = webhookOrchestrator.pollForChanges(owner, repositoryName, fromDate, toDate);
+        assertNotNull(webhookPolledEvents);
+        assertTrue(webhookPolledEvents.isEmpty());
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void saveWebhookEvent(String repositoryFullName, LocalDateTime fromDate, WebhookEventStatus webhookEventStatus) {
+        WebhookEvent webhookEvent = new WebhookEvent();
+        webhookEvent.setRepositoryFullName(repositoryFullName);
+        webhookEvent.setWebhookId("abc123");
+        webhookEvent.setWebhookEventType(WebhookEventType.PULL_REQUEST);
+        webhookEvent.setDisplayName("Dummy Display Name");
+        webhookEvent.setSenderName("Dummy Sender Name");
+        webhookEvent.setEventUrl("Dummy Event URL");
+        webhookEvent.setEventUrlDisplayText("Dummy Event URL Display Text");
+        webhookEvent.setExtraDetail("Dummy Extra Detail");
+        webhookEvent.setPayload("{}");
+        webhookEvent.setWebhookEventStatus(webhookEventStatus);
+        webhookEvent.setReceivedAt(fromDate);
+
+        WebhookEvent persistedWebhookEvent = webhookEventJpaRepository.save(webhookEvent);
+        assertNotNull(persistedWebhookEvent);
+        assertTrue(persistedWebhookEvent.getId() > 0L);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void saveWebhookPolledEvent(String repositoryFullName, LocalDateTime fromDate, WebhookEventStatus webhookEventStatus) {
+        GithubPolledEvent githubPolledEvent = new GithubPolledEvent();
+        githubPolledEvent.setRepositoryFullName(repositoryFullName);
+        githubPolledEvent.setSourceId("abc123");
+        githubPolledEvent.setWebhookEventType(WebhookEventType.PULL_REQUEST);
+        githubPolledEvent.setDisplayName("Dummy Display Name");
+        githubPolledEvent.setSenderName("Dummy Sender Name");
+        githubPolledEvent.setEventUrl("Dummy Event URL");
+        githubPolledEvent.setEventUrlDisplayText("Dummy Event URL Display Text");
+        githubPolledEvent.setExtraDetail("Dummy Extra Detail");
+        githubPolledEvent.setPayload("{}");
+        githubPolledEvent.setWebhookEventStatus(webhookEventStatus);
+        githubPolledEvent.setFetchedAt(fromDate);
+
+        GithubPolledEvent persistedPolledEvent = githubPolledEventJpaRepository.save(githubPolledEvent);
+        assertNotNull(persistedPolledEvent);
+        assertTrue(persistedPolledEvent.getId() > 0L);
     }
 
 }

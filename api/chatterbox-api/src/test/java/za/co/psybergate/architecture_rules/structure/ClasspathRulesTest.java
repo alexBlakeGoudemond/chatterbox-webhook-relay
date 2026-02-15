@@ -11,7 +11,7 @@ public class ClasspathRulesTest extends ClasspathResourcesRulesAbstractTest {
 
     @Override
     public List<String> allowedPaths() {
-        return List.of("test-classes", "classes/application.yml");
+        return List.of("test-classes", "classes/application.yml", "classes/application-qa.yml");
     }
 
 }
