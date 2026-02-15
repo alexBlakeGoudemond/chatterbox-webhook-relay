@@ -138,3 +138,4 @@ chatterbox:
         token: "github_pat_123abc"
   api:
     prefix: /api
+    polledEventToleranceInSeconds: 5

@@ -9,4 +9,6 @@ public class ChatterboxApiProperties {
 
     private String prefix;
 
+    private int polledEventToleranceInSeconds;
+
 }

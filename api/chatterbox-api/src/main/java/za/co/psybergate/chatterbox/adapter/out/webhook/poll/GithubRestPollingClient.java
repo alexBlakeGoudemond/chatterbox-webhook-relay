@@ -14,6 +14,7 @@ import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayloa
 import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
 import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
 import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
+import za.co.psybergate.chatterbox.common.config.properties.ChatterboxApiProperties;
 import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.time.Instant;
@@ -33,16 +34,20 @@ public class GithubRestPollingClient implements WebhookPollingPort {
 
     private final ChatterboxSourceGithubPayloadProperties payloadProperties;
 
+    private final ChatterboxApiProperties chatterboxApiProperties;
+
     private final WebhookLogger webhookLogger;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     public GithubRestPollingClient(@Qualifier("githubClient") WebClient webClient,
                                    ChatterboxSourceGithubPayloadProperties payloadProperties,
+                                   ChatterboxApiProperties chatterboxApiProperties,
                                    WebhookLogger webhookLogger) {
         this.githubClient = webClient;
         this.payloadProperties = payloadProperties;
         this.webhookLogger = webhookLogger;
+        this.chatterboxApiProperties = chatterboxApiProperties;
     }
 
     @Override
@@ -132,7 +137,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
 
     private List<RawEventPayload> filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
         List<RawEventPayload> filtered = new ArrayList<>();
-        int toleranceInSeconds = 5; // TODO BlakeGoudemond 2026/02/15 | place in properties file
+        int toleranceInSeconds = chatterboxApiProperties.getPolledEventToleranceInSeconds();
         ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
         Instant from = fromDate.plusSeconds(toleranceInSeconds).toInstant(systemOffset);
         Instant until = untilDate.toInstant(systemOffset);
