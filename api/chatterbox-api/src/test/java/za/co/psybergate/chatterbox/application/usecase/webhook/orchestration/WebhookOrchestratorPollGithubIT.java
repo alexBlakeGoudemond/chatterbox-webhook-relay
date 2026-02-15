@@ -1,9 +1,11 @@
 package za.co.psybergate.chatterbox.application.usecase.webhook.orchestration;
 
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,13 +17,18 @@ import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchi
 import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
+import za.co.psybergate.chatterbox.adapter.out.map.AdapterMapper;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
 import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
+import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
+import za.co.psybergate.chatterbox.adapter.out.persistence.poll.repository.GithubPolledEventJpaRepository;
+import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
 import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
 import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
 import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
 import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
 import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetail;
+import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
 import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
 import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
@@ -49,6 +56,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         PropertiesConfigurationResolver.class,
         WebhookPolledEventEventStoreJpaAdapter.class,
         Slf4jMdcContext.class,
+        WebhookEventStoreJpaAdapter.class,
+        WebhookPolledEventEventStoreJpaAdapter.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -62,8 +71,11 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
     @MockitoBean
     private WebhookRuntimeMetrics webhookRuntimeMetrics;
 
-    @MockitoBean
-    private WebhookEventStoreJpaAdapter webhookReceivedStore;
+//    @MockitoBean
+//    private WebhookEventStoreJpaAdapter webhookStoreAdapter;
+
+//    @MockitoBean
+//    private WebhookPolledEventEventStoreJpaAdapter webhookPolledStoreAdapter;
 
     @Autowired
     private WebhookOrchestrator webhookOrchestrator;
@@ -90,5 +102,22 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
             assertNotNull(polledEvent.id());
         }
     }
+
+    // TODO BlakeGoudemond 2026/02/15 | leverage paramaterizedTest in time
+    @Test
+    public void x(){
+        String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
+        // TODO BlakeGoudemond 2026/02/15 | insert into WebhookEventJpaRepository only then verify polling calls the thing
+        boolean mostRecentWebhookAndCheckForUpdatesSince = webhookOrchestrator.findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName);
+    }
+
+//    // TODO BlakeGoudemond 2026/02/15 | may have NPE as we go - set the fields needed
+//    private List<WebhookEventReceived> mockedProcessedWebhook(String repositoryFullName) {
+//        WebhookEvent webhookEvent = new WebhookEvent();
+//        webhookEvent.setRepositoryFullName(repositoryFullName);
+//        return List.of(AdapterMapper.mapToWebhookEventReceived(webhookEvent));
+//    }
+
+
 
 }
