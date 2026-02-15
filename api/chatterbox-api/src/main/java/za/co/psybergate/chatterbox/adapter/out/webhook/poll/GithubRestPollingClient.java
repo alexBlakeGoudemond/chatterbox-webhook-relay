@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import za.co.psybergate.chatterbox.adapter.out.github.model.GithubApiJsonKeys;
 import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
 import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
 import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
@@ -136,7 +137,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         Instant from = fromDate.plusSeconds(toleranceInSeconds).toInstant(systemOffset);
         Instant until = untilDate.toInstant(systemOffset);
         for (JsonNode pr : prArray) {
-            JsonNode mergedAtNode = pr.get("merged_at"); // TODO BlakeGoudemond 2026/02/15 | add to enum
+            JsonNode mergedAtNode = pr.get(GithubApiJsonKeys.MERGED_AT.getValue());
             if (mergedAtNode == null || mergedAtNode.isNull()) {
                 continue;
             }
