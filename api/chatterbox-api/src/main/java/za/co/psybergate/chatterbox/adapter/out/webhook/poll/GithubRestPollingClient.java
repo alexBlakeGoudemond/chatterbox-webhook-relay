@@ -131,11 +131,12 @@ public class GithubRestPollingClient implements WebhookPollingPort {
 
     private List<RawEventPayload> filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
         List<RawEventPayload> filtered = new ArrayList<>();
+        int toleranceInSeconds = 5; // TODO BlakeGoudemond 2026/02/15 | place in properties file
         ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
-        Instant from = fromDate.toInstant(systemOffset);
+        Instant from = fromDate.plusSeconds(toleranceInSeconds).toInstant(systemOffset);
         Instant until = untilDate.toInstant(systemOffset);
         for (JsonNode pr : prArray) {
-            JsonNode mergedAtNode = pr.get("merged_at");
+            JsonNode mergedAtNode = pr.get("merged_at"); // TODO BlakeGoudemond 2026/02/15 | add to enum
             if (mergedAtNode == null || mergedAtNode.isNull()) {
                 continue;
             }
