@@ -53,3 +53,4 @@ chatterbox:
         secret: secret
   api:
     prefix: /api
+    polledEventToleranceInSeconds: 5

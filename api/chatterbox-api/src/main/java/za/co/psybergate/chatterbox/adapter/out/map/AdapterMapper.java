@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class AdapterMapper {
 
-    public static WebhookPolledEventReceived mapToGithubPolledEventRecord(GithubPolledEvent polledEvent) {
+    public static WebhookPolledEventReceived mapToWebhookPolledEventReceived(GithubPolledEvent polledEvent) {
         return new WebhookPolledEventReceived(
                 polledEvent.getId(),
                 polledEvent.getRepositoryFullName(),
@@ -38,7 +38,7 @@ public class AdapterMapper {
         );
     }
 
-    public static WebhookPolledEventDelivery mapToGithubPolledEventDeliveryRecord(GithubPolledEventDeliveryLog deliveryLog) {
+    public static WebhookPolledEventDelivery mapToWebhookPolledEventDelivery(GithubPolledEventDeliveryLog deliveryLog) {
         return new WebhookPolledEventDelivery(
                 deliveryLog.getId(),
                 deliveryLog.getGithubPolledEventId(),
