@@ -1,5 +1,6 @@
 package za.co.psybergate.chatterbox.application.usecase.webhook.orchestration;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -102,9 +103,9 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
         }
     }
 
-    // TODO BlakeGoudemond 2026/02/15 | leverage paramaterizedTest in time
+    @DisplayName("With previous Webhook Received; Polling does not duplicate")
     @Test
-    public void givenPreviouslyProcessedWebhookAndNoMatchingPolledEvent_WhenPollForChanges_ThenNoChangesReturned() {
+    public void givenPreviouslyProcessedWebhookAndNoMatchingPolledEvent_WhenPollForChanges_ThenNoDuplicateChangesReturned() {
         String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
         String[] repositoryDetails = repositoryFullName.split("/");
         String owner = repositoryDetails[0];
@@ -118,8 +119,9 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
         assertTrue(webhookPolledEvents.isEmpty());
     }
 
+    @DisplayName("With previous Webhook Received and Poll Successful; Polling does not duplicate")
     @Test
-    public void givenPreviouslyProcessedWebhookAndMatchingPolledEvent_WhenPollForChanges_ThenNoChangesReturned() {
+    public void givenPreviouslyProcessedWebhookAndMatchingPolledEvent_WhenPollForChanges_ThenNoDuplicateChangesReturned() {
         String repositoryFullName = "psyAlexBlakeGoudemond/chatterbox";
         String[] repositoryDetails = repositoryFullName.split("/");
         String owner = repositoryDetails[0];
@@ -134,6 +136,7 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
         assertTrue(webhookPolledEvents.isEmpty());
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void saveWebhookEvent(String repositoryFullName, LocalDateTime fromDate, WebhookEventStatus webhookEventStatus) {
         WebhookEvent webhookEvent = new WebhookEvent();
         webhookEvent.setRepositoryFullName(repositoryFullName);
@@ -153,6 +156,7 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
         assertTrue(persistedWebhookEvent.getId() > 0L);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void saveWebhookPolledEvent(String repositoryFullName, LocalDateTime fromDate, WebhookEventStatus webhookEventStatus) {
         GithubPolledEvent githubPolledEvent = new GithubPolledEvent();
         githubPolledEvent.setRepositoryFullName(repositoryFullName);
