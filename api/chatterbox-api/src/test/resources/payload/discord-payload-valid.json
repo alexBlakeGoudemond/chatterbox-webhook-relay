@@ -2,11 +2,11 @@
     "embeds": [
         {
             "title": "Test message Is here!",
-            "description": "📢 Push Event (chatterbox) for psyAlexBlakeGoudemond/chatterbox",
-            "url": "https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif",
+            "description": "📢 Push Event (chatterbox) for alexBlakeGoudemond/chatterbox",
+            "url": "https://github.com/alexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif",
             "color": 6993,
             "author": {
-                "name": "psyAlexBlakeGoudemond",
+                "name": "alexBlakeGoudemond",
                 "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
             }
         }

@@ -11,12 +11,12 @@
                 "body": [
                     {
                         "type": "TextBlock",
-                        "text": "📢 Push Event (chatterbox) for psyAlexBlakeGoudemond/chatterbox",
+                        "text": "📢 Push Event (chatterbox) for alexBlakeGoudemond/chatterbox",
                         "wrap": true
                     },
                     {
                         "type": "TextBlock",
-                        "text": "⁉️ Details: [Test message Is here!](https://github.com/psyAlexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif) created by psyAlexBlakeGoudemond",
+                        "text": "⁉️ Details: [Test message Is here!](https://github.com/alexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif) created by alexBlakeGoudemond",
                         "wrap": true
                     }
                 ],
