@@ -16,7 +16,7 @@ public class RegexTemplateSubstitutor implements TemplateSubstitutor {
     ///
     /// For example, if the values are
     ///
-    /// `[{"displayName", "Pull Request Event"}, {"repositoryName", "psyAlexBlakeGoudemond/chatterbox"}]`
+    /// `[{"displayName", "Pull Request Event"}, {"repositoryName", "alexBlakeGoudemond/chatterbox"}]`
     ///
     /// and the textToReplace is
     ///
@@ -24,7 +24,7 @@ public class RegexTemplateSubstitutor implements TemplateSubstitutor {
     ///
     /// then the replacemed String is:
     ///
-    /// `📢 Pull Request Event for psyAlexBlakeGoudemond/chatterbox`
+    /// `📢 Pull Request Event for alexBlakeGoudemond/chatterbox`
     @Override
     public String apply(String textToReplace, Map<String, String> values) {
         Matcher matcher = PLACEHOLDER.matcher(textToReplace);

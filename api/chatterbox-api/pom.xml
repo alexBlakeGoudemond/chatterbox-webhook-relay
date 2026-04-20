@@ -60,7 +60,7 @@
     <dependencies>
 
         <!--
-            Psybergate Managed Dependency
+            Company Managed Dependency
         -->
         <dependency>
             <groupId>com.webhook.relay.software-foundations.common.logging</groupId>
@@ -69,7 +69,7 @@
         </dependency>
 
         <!--
-            Psybergate Managed Dependency: contains rule definitions
+            Company Managed Dependency: contains rule definitions
         -->
         <dependency>
             <groupId>com.webhook.relay</groupId>
@@ -78,7 +78,7 @@
             <scope>test</scope>
         </dependency>
         <!--
-            Psybergate Managed Dependency: contains abstract test definitions
+            Company Managed Dependency: contains abstract test definitions
         -->
         <dependency>
             <groupId>com.webhook.relay</groupId>

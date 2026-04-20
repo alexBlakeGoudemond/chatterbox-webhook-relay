@@ -3,11 +3,11 @@
     "hello": "world",
     "eventType": "push",
     "repository": {
-        "full_name": "psyAlexBlakeGoudemond/chatterbox",
+        "full_name": "alexBlakeGoudemond/chatterbox",
         "name": "chatterbox"
     },
     "sender": {
-        "login": "psyAlexBlakeGoudemond"
+        "login": "alexBlakeGoudemond"
     },
     "compare": "http://localhost:abcd",
     "head_commit": {

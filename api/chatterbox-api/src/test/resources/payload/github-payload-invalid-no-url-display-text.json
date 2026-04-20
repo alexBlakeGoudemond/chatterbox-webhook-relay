@@ -2,11 +2,11 @@
     "action": "opened",
     "hello": "world",
     "repository": {
-        "full_name": "psyAlexBlakeGoudemond/chatterbox",
+        "full_name": "alexBlakeGoudemond/chatterbox",
         "name": "chatterbox"
     },
     "sender": {
-        "login": "psyAlexBlakeGoudemond"
+        "login": "alexBlakeGoudemond"
     },
     "compare": "http://localhost:abcd",
     "full_name": "chatterbox"
