@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.webhook.resolution;
+package com.webhook.relay.chatterbox.adapter.out.webhook.resolution;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,16 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationDiscordProperties;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDestinationTeamsProperties;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import com.webhook.relay.chatterbox.application.common.exception.UnrecognizedRequestException;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping;
+import com.webhook.relay.chatterbox.application.domain.delivery.DeliveryChannelType;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.domain.exception.DomainException;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxDestinationDiscordProperties;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxDestinationTeamsProperties;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.application.port.in.event.handler;
+package com.webhook.relay.chatterbox.application.port.in.event.handler;
 
-import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import com.webhook.relay.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import com.webhook.relay.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
 public interface EventUpdateHandlerPort {
 

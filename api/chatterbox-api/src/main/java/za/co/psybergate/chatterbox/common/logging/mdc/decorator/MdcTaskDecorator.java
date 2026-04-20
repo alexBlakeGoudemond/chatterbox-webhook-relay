@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.common.logging.mdc.decorator;
+package com.webhook.relay.chatterbox.common.logging.mdc.decorator;
 
 import org.slf4j.MDC;
 import org.springframework.core.task.TaskDecorator;

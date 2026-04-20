@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.exception;
+package com.webhook.relay.chatterbox.application.common.exception;
 
 public class ApplicationException extends RuntimeException {
 

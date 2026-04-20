@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.http.model;
+package com.webhook.relay.chatterbox.adapter.out.http.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

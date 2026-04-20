@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.common.config;
+package com.webhook.relay.chatterbox.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import za.co.psybergate.chatterbox.common.config.properties.*;
+import com.webhook.relay.chatterbox.common.config.properties.*;
 
 @Configuration
 @EnableConfigurationProperties({

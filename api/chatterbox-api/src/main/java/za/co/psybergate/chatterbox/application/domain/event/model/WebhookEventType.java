@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.application.domain.event.model;
+package com.webhook.relay.chatterbox.application.domain.event.model;
 
 import lombok.Getter;
-import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
+import com.webhook.relay.chatterbox.application.domain.exception.DomainException;
 
 /// These properties may also be expected by Services and thus must
 /// be defined in the properties file

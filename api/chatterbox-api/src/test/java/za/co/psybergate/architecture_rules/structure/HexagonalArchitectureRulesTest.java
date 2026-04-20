@@ -1,15 +1,15 @@
-package za.co.psybergate.architecture_rules.structure;
+package com.webhook.relay.architecture_rules.structure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static za.co.psybergate.architecture_rules.definition.KnownPackagesHelper.*;
+import static com.webhook.relay.architecture_rules.definition.KnownPackagesHelper.*;
 
 public class HexagonalArchitectureRulesTest extends HexagonalArchitectureRulesAbstractTest {
 
     @Override
     protected String basePackage() {
-        return "za.co.psybergate.chatterbox";
+        return "com.webhook.relay.chatterbox";
     }
 
     @Override

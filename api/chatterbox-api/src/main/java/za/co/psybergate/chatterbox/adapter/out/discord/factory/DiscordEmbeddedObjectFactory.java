@@ -1,19 +1,19 @@
-package za.co.psybergate.chatterbox.adapter.out.discord.factory;
+package com.webhook.relay.chatterbox.adapter.out.discord.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.common.template.TemplateSubstitutor;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryDiscordProperties;
+import com.webhook.relay.chatterbox.adapter.out.discord.model.DiscordEmbeddedObjectDefinition;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.template.TemplateSubstitutor;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxDeliveryDiscordProperties;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static com.webhook.relay.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component("discordEmbeddedObjectFactory")
 @RequiredArgsConstructor

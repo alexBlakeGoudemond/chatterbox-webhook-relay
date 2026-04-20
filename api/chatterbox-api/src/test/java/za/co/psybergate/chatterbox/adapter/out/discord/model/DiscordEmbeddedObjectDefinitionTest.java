@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.discord.model;
+package com.webhook.relay.chatterbox.adapter.out.discord.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
