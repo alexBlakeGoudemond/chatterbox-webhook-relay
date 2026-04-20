@@ -2,7 +2,7 @@
     "action": "opened",
     "eventType": "push",
     "repository": {
-        "full_name": "psyAlexBlakeGoudemond/chatterbox",
+        "full_name": "alexBlakeGoudemond/chatterbox",
         "name": "chatterbox"
     },
     "full_name": "chatterbox"

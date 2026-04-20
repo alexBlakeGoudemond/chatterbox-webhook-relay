@@ -22,12 +22,12 @@ import com.webhook.relay.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDef
 ///         "body": [
 ///           {
 ///             "type": "TextBlock",
-///             "text": "📢 Push Event for psyAlexBlakeGoudemond/chatterbox",
+///             "text": "📢 Push Event for alexBlakeGoudemond/chatterbox",
 ///             "wrap": true
 ///           },
 ///           {
 ///             "type": "TextBlock",
-///             "text": "⁉️ Details: [Test message Is here!](http://localhost:abcd) created by psyAlexBlakeGoudemond",
+///             "text": "⁉️ Details: [Test message Is here!](http://localhost:abcd) created by alexBlakeGoudemond",
 ///             "wrap": true
 ///  }
 ///         ],
