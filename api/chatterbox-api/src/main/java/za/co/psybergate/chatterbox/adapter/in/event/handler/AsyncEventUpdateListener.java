@@ -1,14 +1,14 @@
-package za.co.psybergate.chatterbox.adapter.in.event.handler;
+package com.webhook.relay.chatterbox.adapter.in.event.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.port.in.event.handler.EventUpdateHandlerPort;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import com.webhook.relay.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import com.webhook.relay.chatterbox.application.port.in.event.handler.EventUpdateHandlerPort;
+import com.webhook.relay.chatterbox.application.port.in.event.processor.EventProcessorPort;
 
 // TODO BlakeGoudemond 2026/01/04 | retry cron job?
 @Component

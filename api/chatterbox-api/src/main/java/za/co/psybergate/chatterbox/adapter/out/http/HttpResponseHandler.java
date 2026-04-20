@@ -1,12 +1,12 @@
-package za.co.psybergate.chatterbox.adapter.out.http;
+package com.webhook.relay.chatterbox.adapter.out.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.out.http.model.HttpResponseDto;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.adapter.out.http.model.HttpResponseDto;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

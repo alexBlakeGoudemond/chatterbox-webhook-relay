@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox;
+package com.webhook.relay.chatterbox;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

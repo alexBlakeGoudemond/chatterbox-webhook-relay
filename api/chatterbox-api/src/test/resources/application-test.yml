@@ -55,7 +55,7 @@ common:
 packages:
   separate:
     logging:
-      level: za.co.psybergate.chatterbox
+      level: com.webhook.relay.chatterbox
 
 chatterbox:
   polled-event-executor:

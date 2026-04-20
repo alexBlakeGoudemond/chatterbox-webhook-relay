@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.webhook.mapper;
+package com.webhook.relay.chatterbox.adapter.out.webhook.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
@@ -11,22 +11,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.exception.DomainException;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
-import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import com.webhook.relay.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.domain.exception.DomainException;
+import com.webhook.relay.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import com.webhook.relay.chatterbox.test.helper.JsonFileReader;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys.*;
+import static com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys.*;
 
 @ExtendWith(MockitoExtension.class)
 class GithubWebhookEventMapperTest {

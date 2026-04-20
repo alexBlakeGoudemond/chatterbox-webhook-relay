@@ -1,11 +1,11 @@
-package za.co.psybergate.chatterbox.application.common.logging;
+package com.webhook.relay.chatterbox.application.common.logging;
 
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import com.webhook.relay.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 import java.time.LocalDateTime;
 import java.util.List;

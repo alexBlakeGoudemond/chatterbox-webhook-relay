@@ -1,10 +1,10 @@
-package za.co.psybergate.architecture_rules.transaction;
+package com.webhook.relay.architecture_rules.transaction;
 
 public class TransactionalAnnotationRulesTest extends TransactionalAnnotationRulesAbstractTest {
 
     @Override
     protected String basePackage() {
-        return "za.co.psybergate.chatterbox";
+        return "com.webhook.relay.chatterbox";
     }
 
 }

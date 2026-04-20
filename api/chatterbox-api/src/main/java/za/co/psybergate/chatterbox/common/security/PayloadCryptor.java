@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.common.security;
+package com.webhook.relay.chatterbox.common.security;
 
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
 
 public interface PayloadCryptor {
 

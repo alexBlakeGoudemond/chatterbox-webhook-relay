@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.domain.event.model;
+package com.webhook.relay.chatterbox.application.domain.event.model;
 
 import jakarta.validation.constraints.NotNull;
 

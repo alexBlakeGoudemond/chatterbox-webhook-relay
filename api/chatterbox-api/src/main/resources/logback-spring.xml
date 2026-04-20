@@ -7,7 +7,7 @@
     <springProperty scope="context" name="fileAppenderLocation" source="common.logging.appender.file.location"
                     defaultValue="/var/log/chatterbox-api"/>
     <springProperty name="packagesForSeparateLoggingLevel" source="packages.separate.logging.level"
-                    defaultValue="za.co.psybergate"/>
+                    defaultValue="com.webhook.relay"/>
     <property name="logLocation" value="${fileAppenderLocation}/${appName}"/>
 
     <!-- Appenders below -->
@@ -35,9 +35,9 @@
 
         </encoder>
 
-        <!--        <filter class="za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter"/>-->
+        <!--        <filter class="com.webhook.relay.chatterbox.infrastructure.filter.WebhookFilter"/>-->
 
-        <filter class="za.co.psybergate.software_foundations.common.logging.filter.LevelRangeFilter">
+        <filter class="com.webhook.relay.software_foundations.common.logging.filter.LevelRangeFilter">
             <levelMin>INFO</levelMin>
         </filter>
 
@@ -63,7 +63,7 @@
             <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
         </encoder>
 
-        <!--        <filter class="za.co.psybergate.chatterbox.infrastructure.filter.WebhookFilter"/>-->
+        <!--        <filter class="com.webhook.relay.chatterbox.infrastructure.filter.WebhookFilter"/>-->
 
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

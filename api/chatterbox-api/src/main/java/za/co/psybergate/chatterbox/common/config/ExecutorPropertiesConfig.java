@@ -1,9 +1,9 @@
-package za.co.psybergate.chatterbox.common.config;
+package com.webhook.relay.chatterbox.common.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import za.co.psybergate.chatterbox.common.config.properties.concurrency.ExecutorProperties;
+import com.webhook.relay.chatterbox.common.config.properties.concurrency.ExecutorProperties;
 
 @Configuration
 public class ExecutorPropertiesConfig {

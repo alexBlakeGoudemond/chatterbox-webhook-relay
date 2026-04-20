@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.application.port.in.webhook.orchestration;
+package com.webhook.relay.chatterbox.application.port.in.webhook.orchestration;
 
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,20 +1,20 @@
-package za.co.psybergate.chatterbox.application.usecase.event.processor;
+package com.webhook.relay.chatterbox.application.usecase.event.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.common.map.ApplicationMapper;
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
-import za.co.psybergate.chatterbox.application.port.out.delivery.EventDeliveryPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.application.common.map.ApplicationMapper;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventStatus;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.application.port.in.event.processor.EventProcessorPort;
+import com.webhook.relay.chatterbox.application.port.out.delivery.EventDeliveryPort;
+import com.webhook.relay.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import com.webhook.relay.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
+import com.webhook.relay.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
 @Service
 @RequiredArgsConstructor
