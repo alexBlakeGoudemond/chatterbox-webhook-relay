@@ -112,8 +112,8 @@ public class DiscordEmbeddedObjectFactoryIT {
 
     private Map<String, String> getPropertiesToUse() {
         Map<String, String> propertiesToUse = new HashMap<>();
-        propertiesToUse.put("repositoryName", "psyAlexBlakeGoudemond/chatterbox");
-        propertiesToUse.put("senderName", "psyAlexBlakeGoudemond");
+        propertiesToUse.put("repositoryName", "alexBlakeGoudemond/chatterbox");
+        propertiesToUse.put("senderName", "alexBlakeGoudemond");
         propertiesToUse.put("url", "http://localhost:abcd");
         propertiesToUse.put("urlDisplayText", "Test message Is here!");
         propertiesToUse.put("displayName", "Pull Request Event");

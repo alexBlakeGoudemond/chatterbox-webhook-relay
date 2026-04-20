@@ -72,11 +72,11 @@ chatterbox:
     github:
       repository:
         destination-mapping:
-          - source: Psybergate-Knowledge-Repository/mentoring_software_foundations
+          - source: Company-Knowledge-Repository/mentoring_software_foundations
             destinationChannels:
               NOTIFICATION: TestChannel
               CHAT: General
-          - source: psyAlexBlakeGoudemond/chatterbox
+          - source: alexBlakeGoudemond/chatterbox
             destinationChannels:
               NOTIFICATION: TestChannel
               CHAT: General
