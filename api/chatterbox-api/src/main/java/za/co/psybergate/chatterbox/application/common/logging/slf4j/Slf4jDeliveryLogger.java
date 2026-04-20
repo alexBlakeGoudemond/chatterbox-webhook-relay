@@ -1,9 +1,9 @@
-package za.co.psybergate.chatterbox.application.common.logging.slf4j;
+package com.webhook.relay.chatterbox.application.common.logging.slf4j;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.detail.DeliveryLogger;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.common.logging.detail.DeliveryLogger;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
 
 @Slf4j
 @Component

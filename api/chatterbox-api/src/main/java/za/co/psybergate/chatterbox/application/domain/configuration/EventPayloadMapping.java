@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.domain.configuration;
+package com.webhook.relay.chatterbox.application.domain.configuration;
 
 import lombok.Builder;
 import lombok.Getter;

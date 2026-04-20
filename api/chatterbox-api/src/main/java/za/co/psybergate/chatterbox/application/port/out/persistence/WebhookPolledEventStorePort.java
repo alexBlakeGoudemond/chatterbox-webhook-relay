@@ -1,10 +1,10 @@
-package za.co.psybergate.chatterbox.application.port.out.persistence;
+package com.webhook.relay.chatterbox.application.port.out.persistence;
 
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventStatus;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 import java.util.List;
 

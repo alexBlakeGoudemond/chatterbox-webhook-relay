@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.application.common.map;
+package com.webhook.relay.chatterbox.application.common.map;
 
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 public class ApplicationMapper {
 

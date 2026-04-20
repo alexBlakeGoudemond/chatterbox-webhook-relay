@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.common.logging.slf4j;
+package com.webhook.relay.chatterbox.application.common.logging.slf4j;
 
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
 
 public abstract class AbstractSlf4jLogger {
 

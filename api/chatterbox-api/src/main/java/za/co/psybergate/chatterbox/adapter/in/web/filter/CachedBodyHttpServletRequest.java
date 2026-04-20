@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.web.filter;
+package com.webhook.relay.chatterbox.adapter.in.web.filter;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;

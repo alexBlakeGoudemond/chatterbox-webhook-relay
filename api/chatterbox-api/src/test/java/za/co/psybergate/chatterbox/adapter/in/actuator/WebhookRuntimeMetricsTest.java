@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.actuator;
+package com.webhook.relay.chatterbox.adapter.in.actuator;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;

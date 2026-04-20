@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.web.handler;
+package com.webhook.relay.chatterbox.adapter.in.web.handler;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.common.exception.InfrastructureException;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.common.exception.InfrastructureException;
 
 @ControllerAdvice
 @RequiredArgsConstructor

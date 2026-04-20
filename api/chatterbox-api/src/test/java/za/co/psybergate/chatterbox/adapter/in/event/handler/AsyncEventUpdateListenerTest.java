@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.event.handler;
+package com.webhook.relay.chatterbox.adapter.in.event.handler;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
-import za.co.psybergate.chatterbox.application.port.in.event.processor.EventProcessorPort;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import com.webhook.relay.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import com.webhook.relay.chatterbox.application.port.in.event.processor.EventProcessorPort;
 
 import static org.mockito.Mockito.verify;
 

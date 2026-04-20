@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.event.handler;
+package com.webhook.relay.chatterbox.adapter.in.event.handler;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.ApplicationEventPublisher;
-import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
-import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import com.webhook.relay.chatterbox.application.common.logging.MdcContext;
+import com.webhook.relay.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import com.webhook.relay.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 
 import java.util.Collections;
 import java.util.List;

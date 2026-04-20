@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.test.container;
+package com.webhook.relay.chatterbox.test.container;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.logging.detail;
+package com.webhook.relay.chatterbox.application.common.logging.detail;
 
 public interface StorageLogger {
 

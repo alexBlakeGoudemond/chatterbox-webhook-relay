@@ -1,11 +1,11 @@
-package za.co.psybergate.chatterbox.application.common.logging.slf4j;
+package com.webhook.relay.chatterbox.application.common.logging.slf4j;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.detail.ProcessingLogger;
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.event.notification.PolledEventsProcessed;
-import za.co.psybergate.chatterbox.application.domain.event.notification.WebhookEventProcessed;
+import com.webhook.relay.chatterbox.application.common.logging.detail.ProcessingLogger;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.event.notification.PolledEventsProcessed;
+import com.webhook.relay.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 
 @Slf4j
 @Component
