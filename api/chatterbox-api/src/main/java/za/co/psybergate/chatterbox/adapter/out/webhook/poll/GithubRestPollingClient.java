@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.webhook.poll;
+package com.webhook.relay.chatterbox.adapter.out.webhook.poll;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,15 +7,15 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubApiJsonKeys;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxApiProperties;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
+import com.webhook.relay.chatterbox.adapter.out.github.model.GithubApiJsonKeys;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.RepositoryUpdates;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.port.out.webhook.poll.WebhookPollingPort;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxApiProperties;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -24,8 +24,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-import static za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType.POLL_COMMIT;
-import static za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType.POLL_PULL_REQUEST;
+import static com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType.POLL_COMMIT;
+import static com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType.POLL_PULL_REQUEST;
 
 @Service("githubRestPollingClient")
 public class GithubRestPollingClient implements WebhookPollingPort {

@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.application.port.out.vendor.factory;
+package com.webhook.relay.chatterbox.application.port.out.vendor.factory;
 
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
 
 import java.util.Map;
 

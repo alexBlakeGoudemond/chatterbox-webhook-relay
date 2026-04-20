@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.common.config.properties;
+package com.webhook.relay.chatterbox.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.domain.event.model;
+package com.webhook.relay.chatterbox.application.domain.event.model;
 
 /**
  * Represents a raw event payload from a source (e.g., GitHub).

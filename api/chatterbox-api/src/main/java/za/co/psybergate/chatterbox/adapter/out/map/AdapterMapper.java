@@ -1,17 +1,17 @@
-package za.co.psybergate.chatterbox.adapter.out.map;
+package com.webhook.relay.chatterbox.adapter.out.map;
 
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
-import za.co.psybergate.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
-import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
-import za.co.psybergate.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.adapter.out.github.model.GithubEventMapping;
+import com.webhook.relay.chatterbox.adapter.out.persistence.poll.GithubPolledEvent;
+import com.webhook.relay.chatterbox.adapter.out.persistence.poll.GithubPolledEventDeliveryLog;
+import com.webhook.relay.chatterbox.adapter.out.persistence.webhook.WebhookEvent;
+import com.webhook.relay.chatterbox.adapter.out.persistence.webhook.WebhookEventDeliveryLog;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventStatus;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventDelivery;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
 
 import java.time.LocalDateTime;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.teams.factory;
+package com.webhook.relay.chatterbox.adapter.out.teams.factory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
-import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
-import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryTeamsProperties;
-import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import com.webhook.relay.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
+import com.webhook.relay.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition.Attachment.BodyItem;
+import com.webhook.relay.chatterbox.application.common.template.RegexTemplateSubstitutor;
+import com.webhook.relay.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxDeliveryTeamsProperties;
+import com.webhook.relay.chatterbox.test.helper.JsonFileReader;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

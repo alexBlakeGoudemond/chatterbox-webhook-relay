@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.web.filter;
+package com.webhook.relay.chatterbox.adapter.in.web.filter;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -14,19 +14,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
-import za.co.psybergate.chatterbox.common.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
-import za.co.psybergate.chatterbox.common.security.HmacSha256Cryptor;
-import za.co.psybergate.chatterbox.test.helper.GithubHttpRequestFactory;
-import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import com.webhook.relay.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import com.webhook.relay.chatterbox.adapter.in.validation.GithubWebhookValidator;
+import com.webhook.relay.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import com.webhook.relay.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
+import com.webhook.relay.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import com.webhook.relay.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import com.webhook.relay.chatterbox.common.config.InfrastructurePropertiesConfig;
+import com.webhook.relay.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
+import com.webhook.relay.chatterbox.common.exception.InvalidSignatureException;
+import com.webhook.relay.chatterbox.common.logging.mdc.Slf4jMdcContext;
+import com.webhook.relay.chatterbox.common.security.HmacSha256Cryptor;
+import com.webhook.relay.chatterbox.test.helper.GithubHttpRequestFactory;
+import com.webhook.relay.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 

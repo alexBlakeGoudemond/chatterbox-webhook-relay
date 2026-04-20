@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.common.security;
+package com.webhook.relay.chatterbox.common.security;
 
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

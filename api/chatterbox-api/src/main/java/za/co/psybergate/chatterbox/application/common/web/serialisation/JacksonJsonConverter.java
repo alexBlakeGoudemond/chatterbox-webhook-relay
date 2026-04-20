@@ -1,10 +1,10 @@
-package za.co.psybergate.chatterbox.application.common.web.serialisation;
+package com.webhook.relay.chatterbox.application.common.web.serialisation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
 
 import java.io.IOException;
 import java.nio.file.Files;

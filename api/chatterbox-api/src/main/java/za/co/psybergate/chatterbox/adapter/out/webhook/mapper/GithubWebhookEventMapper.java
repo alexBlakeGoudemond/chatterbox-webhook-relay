@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.webhook.mapper;
+package com.webhook.relay.chatterbox.adapter.out.webhook.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.ConstraintViolationException;
@@ -7,16 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import com.webhook.relay.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys.*;
+import static com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping.IncomingMappingFieldKeys.*;
 
 @Component
 @RequiredArgsConstructor

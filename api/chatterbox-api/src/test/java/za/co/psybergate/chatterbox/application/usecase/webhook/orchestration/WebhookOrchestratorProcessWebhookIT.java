@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.usecase.webhook.orchestration;
+package com.webhook.relay.chatterbox.application.usecase.webhook.orchestration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
@@ -8,24 +8,24 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.validation.GithubWebhookValidator;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
-import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookEventReceived;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
-import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
-import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
-import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import com.webhook.relay.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
+import com.webhook.relay.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import com.webhook.relay.chatterbox.adapter.in.validation.GithubWebhookValidator;
+import com.webhook.relay.chatterbox.adapter.in.web.filter.WebhookFilter;
+import com.webhook.relay.chatterbox.adapter.out.persistence.WebhookEventStoreJpaAdapter;
+import com.webhook.relay.chatterbox.adapter.out.persistence.WebhookPolledEventEventStoreJpaAdapter;
+import com.webhook.relay.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import com.webhook.relay.chatterbox.adapter.out.webhook.poll.GithubRestPollingClient;
+import com.webhook.relay.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import com.webhook.relay.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
+import com.webhook.relay.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import com.webhook.relay.chatterbox.common.config.InfrastructurePropertiesConfig;
+import com.webhook.relay.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
+import com.webhook.relay.chatterbox.common.logging.mdc.Slf4jMdcContext;
+import com.webhook.relay.chatterbox.test.container.AbstractPostgresTestContainer;
+import com.webhook.relay.chatterbox.test.helper.JsonFileReader;
 
 import java.util.UUID;
 

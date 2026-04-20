@@ -1,11 +1,11 @@
-package za.co.psybergate.chatterbox.adapter.in.web.controller;
+package com.webhook.relay.chatterbox.adapter.in.web.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.co.psybergate.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
+import com.webhook.relay.chatterbox.application.port.in.webhook.orchestration.WebhookOrchestratorPort;
 
 @RestController
 @RequestMapping("${chatterbox.api.prefix}/webhook/github")

@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.adapter.out.teams.model;
+package com.webhook.relay.chatterbox.adapter.out.teams.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import za.co.psybergate.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
+import com.webhook.relay.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
 
 import java.util.List;
 

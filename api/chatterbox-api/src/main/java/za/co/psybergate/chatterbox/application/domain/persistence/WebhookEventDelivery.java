@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.domain.persistence;
+package com.webhook.relay.chatterbox.application.domain.persistence;
 
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventStatus;
 
 import java.time.LocalDateTime;
 

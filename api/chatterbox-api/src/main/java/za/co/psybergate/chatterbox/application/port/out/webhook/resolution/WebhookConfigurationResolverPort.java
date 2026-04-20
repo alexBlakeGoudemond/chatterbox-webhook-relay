@@ -1,10 +1,10 @@
-package za.co.psybergate.chatterbox.application.port.out.webhook.resolution;
+package com.webhook.relay.chatterbox.application.port.out.webhook.resolution;
 
-import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.common.exception.UnrecognizedRequestException;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping;
+import com.webhook.relay.chatterbox.application.domain.delivery.DeliveryChannelType;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
 
 import java.util.List;
 
