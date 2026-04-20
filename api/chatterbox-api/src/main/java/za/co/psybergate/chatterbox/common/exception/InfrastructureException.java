@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.common.exception;
+package com.webhook.relay.chatterbox.common.exception;
 
 /// [InfrastructureException] represents:
 ///

@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.application.port.out.webhook.poll;
+package com.webhook.relay.chatterbox.application.port.out.webhook.poll;
 
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.RepositoryUpdates;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.common.config.properties.concurrency;
+package com.webhook.relay.chatterbox.common.config.properties.concurrency;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

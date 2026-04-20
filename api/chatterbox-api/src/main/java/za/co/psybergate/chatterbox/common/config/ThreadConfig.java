@@ -1,11 +1,11 @@
-package za.co.psybergate.chatterbox.common.config;
+package com.webhook.relay.chatterbox.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import za.co.psybergate.chatterbox.common.config.properties.concurrency.ExecutorProperties;
-import za.co.psybergate.chatterbox.common.logging.mdc.decorator.MdcTaskDecorator;
+import com.webhook.relay.chatterbox.common.config.properties.concurrency.ExecutorProperties;
+import com.webhook.relay.chatterbox.common.logging.mdc.decorator.MdcTaskDecorator;
 
 import java.util.concurrent.ThreadPoolExecutor;
 

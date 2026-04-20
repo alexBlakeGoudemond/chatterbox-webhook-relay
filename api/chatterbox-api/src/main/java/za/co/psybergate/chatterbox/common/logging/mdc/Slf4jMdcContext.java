@@ -1,13 +1,13 @@
-package za.co.psybergate.chatterbox.common.logging.mdc;
+package com.webhook.relay.chatterbox.common.logging.mdc;
 
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
+import com.webhook.relay.chatterbox.application.common.logging.MdcContext;
 
 import java.util.UUID;
 
-import static za.co.psybergate.chatterbox.application.common.logging.MDC_KEYS.REPOSITORY_NAME;
-import static za.co.psybergate.chatterbox.application.common.logging.MDC_KEYS.THREAD_EXECUTION_ID;
+import static com.webhook.relay.chatterbox.application.common.logging.MDC_KEYS.REPOSITORY_NAME;
+import static com.webhook.relay.chatterbox.application.common.logging.MDC_KEYS.THREAD_EXECUTION_ID;
 
 /**
  * Utility class to centralize MDC (Mapped Diagnostic Context) variables managed in the map.

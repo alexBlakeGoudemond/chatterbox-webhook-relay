@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.in.validation;
+package com.webhook.relay.chatterbox.adapter.in.validation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
+import com.webhook.relay.chatterbox.application.common.exception.UnrecognizedRequestException;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxSourceGithubPayloadProperties;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxSourceGithubRepositoryProperties;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

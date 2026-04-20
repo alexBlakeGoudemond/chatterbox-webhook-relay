@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.template;
+package com.webhook.relay.chatterbox.application.common.template;
 
 import java.util.Map;
 

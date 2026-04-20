@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.common.config.properties;
+package com.webhook.relay.chatterbox.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
+import com.webhook.relay.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
 
 /// Reference Material:
 /// [Example MS Teams Webhook JSON](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=newteams%2Cdotnet#example)

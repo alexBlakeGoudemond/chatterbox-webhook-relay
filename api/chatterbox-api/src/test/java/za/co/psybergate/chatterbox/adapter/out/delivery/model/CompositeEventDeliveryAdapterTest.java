@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.delivery.model;
+package com.webhook.relay.chatterbox.adapter.out.delivery.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.co.psybergate.chatterbox.application.domain.configuration.DestinationMapping;
-import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
-import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryResult;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.delivery.DestinationSenderPort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
+import com.webhook.relay.chatterbox.application.domain.configuration.DestinationMapping;
+import com.webhook.relay.chatterbox.application.domain.delivery.DeliveryChannelType;
+import com.webhook.relay.chatterbox.application.domain.delivery.DeliveryResult;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.port.out.delivery.DestinationSenderPort;
+import com.webhook.relay.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import com.webhook.relay.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
+import com.webhook.relay.chatterbox.application.port.out.webhook.resolution.WebhookConfigurationResolverPort;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.github.model;
+package com.webhook.relay.chatterbox.adapter.out.github.model;
 
 import lombok.Data;
 import lombok.Getter;

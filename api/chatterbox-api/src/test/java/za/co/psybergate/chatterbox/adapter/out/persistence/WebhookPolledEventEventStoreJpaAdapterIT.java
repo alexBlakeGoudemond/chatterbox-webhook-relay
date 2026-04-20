@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.persistence;
+package com.webhook.relay.chatterbox.adapter.out.persistence;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.DisplayName;
@@ -9,21 +9,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
-import za.co.psybergate.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
-import za.co.psybergate.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
-import za.co.psybergate.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
-import za.co.psybergate.chatterbox.test.container.AbstractPostgresTestContainer;
-import za.co.psybergate.chatterbox.test.helper.JsonFileReader;
+import com.webhook.relay.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import com.webhook.relay.chatterbox.adapter.in.web.filter.WebhookFilter;
+import com.webhook.relay.chatterbox.adapter.out.webhook.mapper.GithubWebhookEventMapper;
+import com.webhook.relay.chatterbox.adapter.out.webhook.resolution.PropertiesConfigurationResolver;
+import com.webhook.relay.chatterbox.application.common.web.serialisation.JacksonJsonConverter;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventDelivery;
+import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;
+import com.webhook.relay.chatterbox.application.port.out.webhook.mapper.OutboundEventMapperPort;
+import com.webhook.relay.chatterbox.common.config.InfrastructurePropertiesConfig;
+import com.webhook.relay.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
+import com.webhook.relay.chatterbox.test.container.AbstractPostgresTestContainer;
+import com.webhook.relay.chatterbox.test.helper.JsonFileReader;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

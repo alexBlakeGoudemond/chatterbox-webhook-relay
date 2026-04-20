@@ -1,19 +1,19 @@
-package za.co.psybergate.chatterbox.adapter.out.teams.factory;
+package com.webhook.relay.chatterbox.adapter.out.teams.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
-import za.co.psybergate.chatterbox.application.common.template.RegexTemplateSubstitutor;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxDeliveryTeamsProperties;
+import com.webhook.relay.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDefinition;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.template.RegexTemplateSubstitutor;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.port.out.vendor.factory.VendorFactoryPort;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxDeliveryTeamsProperties;
 
 import java.util.Map;
 
-import static za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
+import static com.webhook.relay.chatterbox.adapter.out.github.model.GithubEventMapping.GithubIncomingMappingFieldKeys.*;
 
 @Component("teamsAdaptiveCardFactory")
 @RequiredArgsConstructor

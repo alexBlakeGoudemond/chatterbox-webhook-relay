@@ -1,12 +1,12 @@
-package za.co.psybergate.chatterbox.common.config.properties;
+package com.webhook.relay.chatterbox.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.psybergate.chatterbox.adapter.out.github.model.GithubEventMapping;
-import za.co.psybergate.chatterbox.adapter.out.map.AdapterMapper;
-import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
-import za.co.psybergate.chatterbox.application.domain.configuration.EventPayloadMapping;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.adapter.out.github.model.GithubEventMapping;
+import com.webhook.relay.chatterbox.adapter.out.map.AdapterMapper;
+import com.webhook.relay.chatterbox.application.common.exception.UnrecognizedRequestException;
+import com.webhook.relay.chatterbox.application.domain.configuration.EventPayloadMapping;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
 
 import java.util.HashMap;
 import java.util.Map;

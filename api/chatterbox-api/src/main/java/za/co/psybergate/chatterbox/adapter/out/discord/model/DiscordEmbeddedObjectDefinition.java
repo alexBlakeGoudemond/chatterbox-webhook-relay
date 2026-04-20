@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.adapter.out.discord.model;
+package com.webhook.relay.chatterbox.adapter.out.discord.model;
 
 import lombok.Data;
-import za.co.psybergate.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
+import com.webhook.relay.chatterbox.application.port.out.vendor.model.VendorPayloadDefinitionPort;
 
 import java.util.List;
 

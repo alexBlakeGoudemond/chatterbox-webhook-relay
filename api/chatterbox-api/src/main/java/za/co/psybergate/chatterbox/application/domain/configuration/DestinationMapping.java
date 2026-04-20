@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.domain.configuration;
+package com.webhook.relay.chatterbox.application.domain.configuration;
 
-import za.co.psybergate.chatterbox.application.domain.delivery.DeliveryChannelType;
+import com.webhook.relay.chatterbox.application.domain.delivery.DeliveryChannelType;
 
 import java.util.Map;
 

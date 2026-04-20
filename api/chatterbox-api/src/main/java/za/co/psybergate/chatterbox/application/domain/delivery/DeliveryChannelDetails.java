@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.domain.delivery;
+package com.webhook.relay.chatterbox.application.domain.delivery;
 
 import lombok.Data;
 

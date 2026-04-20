@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.application.common.logging.slf4j;
+package com.webhook.relay.chatterbox.application.common.logging.slf4j;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.logging.detail.PollingLogger;
+import com.webhook.relay.chatterbox.application.common.logging.detail.PollingLogger;
 
 import java.time.LocalDateTime;
 
