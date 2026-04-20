@@ -15,7 +15,7 @@ import com.webhook.relay.chatterbox.application.common.exception.ApplicationExce
 import com.webhook.relay.chatterbox.application.common.logging.MdcContext;
 import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
 import com.webhook.relay.chatterbox.application.common.web.serialisation.JsonConverter;
-import za.co.psybergate.chatterbox.application.domain.event.model.*;
+import com.webhook.relay.chatterbox.application.domain.event.model.*;
 import com.webhook.relay.chatterbox.application.domain.event.notification.WebhookEventProcessed;
 import com.webhook.relay.chatterbox.application.domain.persistence.WebhookEventReceived;
 import com.webhook.relay.chatterbox.application.domain.persistence.WebhookPolledEventReceived;

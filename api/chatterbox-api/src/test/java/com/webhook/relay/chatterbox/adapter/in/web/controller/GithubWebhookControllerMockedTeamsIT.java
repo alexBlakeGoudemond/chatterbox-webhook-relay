@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import za.co.psybergate.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
+import com.webhook.relay.architecture_rules.quality.MirrorProductionClassForArchitectureRuleTests;
 import com.webhook.relay.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
 import com.webhook.relay.chatterbox.adapter.in.validation.GithubWebhookValidator;
 import com.webhook.relay.chatterbox.adapter.in.web.filter.WebhookFilter;
