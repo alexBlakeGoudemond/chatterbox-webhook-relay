@@ -6,10 +6,10 @@ chatterbox:
     github:
       repository:
         destination-mapping:
-          - source: Psybergate-Knowledge-Repository/mentoring_software_foundations
+          - source: Company-Knowledge-Repository/mentoring_software_foundations
             destination-channels:
               NOTIFICATION: TestChannel
-          - source: psyAlexBlakeGoudemond/chatterbox
+          - source: alexBlakeGoudemond/chatterbox
             destination-channels:
               NOTIFICATION: TestChannel
       payload:
