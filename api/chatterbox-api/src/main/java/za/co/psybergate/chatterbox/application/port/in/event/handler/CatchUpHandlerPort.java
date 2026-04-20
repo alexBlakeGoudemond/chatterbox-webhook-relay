@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.port.in.event.handler;
+package com.webhook.relay.chatterbox.application.port.in.event.handler;
 
 import java.util.List;
 

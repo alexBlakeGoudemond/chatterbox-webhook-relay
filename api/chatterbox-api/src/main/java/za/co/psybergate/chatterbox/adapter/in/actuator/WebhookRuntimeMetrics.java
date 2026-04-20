@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.adapter.in.actuator;
+package com.webhook.relay.chatterbox.adapter.in.actuator;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.port.in.actuator.WebhookMetricsPort;
+import com.webhook.relay.chatterbox.application.port.in.actuator.WebhookMetricsPort;
 
 /// Store some additional details in the [MeterRegistry]
 /// The details captured here are stored for the lifetime of the registry.

@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.common.logging.detail;
+package com.webhook.relay.chatterbox.application.common.logging.detail;
 
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
 
 public interface DeliveryLogger {
 

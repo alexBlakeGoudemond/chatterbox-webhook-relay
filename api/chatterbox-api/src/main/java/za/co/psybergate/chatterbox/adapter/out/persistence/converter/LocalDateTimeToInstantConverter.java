@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.persistence.converter;
+package com.webhook.relay.chatterbox.adapter.out.persistence.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

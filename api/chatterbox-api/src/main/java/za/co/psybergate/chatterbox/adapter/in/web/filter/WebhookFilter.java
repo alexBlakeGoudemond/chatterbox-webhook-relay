@@ -1,16 +1,16 @@
-package za.co.psybergate.chatterbox.adapter.in.web.filter;
+package com.webhook.relay.chatterbox.adapter.in.web.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.application.common.logging.MdcContext;
-import za.co.psybergate.chatterbox.common.logging.mdc.Slf4jMdcContext;
-import za.co.psybergate.chatterbox.application.common.logging.WebhookLogger;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
-import za.co.psybergate.chatterbox.common.exception.InternalServerException;
-import za.co.psybergate.chatterbox.common.exception.InvalidSignatureException;
-import za.co.psybergate.chatterbox.common.security.PayloadCryptor;
+import com.webhook.relay.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import com.webhook.relay.chatterbox.application.common.logging.MdcContext;
+import com.webhook.relay.chatterbox.common.logging.mdc.Slf4jMdcContext;
+import com.webhook.relay.chatterbox.application.common.logging.WebhookLogger;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxSecurityWebhookGithubProperties;
+import com.webhook.relay.chatterbox.common.exception.InternalServerException;
+import com.webhook.relay.chatterbox.common.exception.InvalidSignatureException;
+import com.webhook.relay.chatterbox.common.security.PayloadCryptor;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

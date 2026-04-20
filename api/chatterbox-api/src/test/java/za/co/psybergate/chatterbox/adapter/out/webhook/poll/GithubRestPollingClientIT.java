@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.webhook.poll;
+package com.webhook.relay.chatterbox.adapter.out.webhook.poll;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import za.co.psybergate.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
-import za.co.psybergate.chatterbox.application.domain.delivery.RepositoryDetail;
-import za.co.psybergate.chatterbox.application.domain.event.model.RepositoryUpdates;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookEventStorePort;
-import za.co.psybergate.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
-import za.co.psybergate.chatterbox.common.config.InfrastructurePropertiesConfig;
-import za.co.psybergate.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
+import com.webhook.relay.chatterbox.adapter.in.actuator.WebhookRuntimeMetrics;
+import com.webhook.relay.chatterbox.adapter.in.web.filter.WebhookFilter;
+import com.webhook.relay.chatterbox.application.common.logging.slf4j.Slf4jWebhookLogger;
+import com.webhook.relay.chatterbox.application.domain.delivery.RepositoryDetail;
+import com.webhook.relay.chatterbox.application.domain.event.model.RepositoryUpdates;
+import com.webhook.relay.chatterbox.application.port.out.persistence.WebhookEventStorePort;
+import com.webhook.relay.chatterbox.application.port.out.persistence.WebhookPolledEventStorePort;
+import com.webhook.relay.chatterbox.common.config.InfrastructurePropertiesConfig;
+import com.webhook.relay.chatterbox.common.logging.convenience.ImportSlf4jWebhookLogger;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,7 +1,7 @@
-package za.co.psybergate.chatterbox.common.logging.convenience;
+package com.webhook.relay.chatterbox.common.logging.convenience;
 
 import org.springframework.context.annotation.Import;
-import za.co.psybergate.chatterbox.application.common.logging.slf4j.*;
+import com.webhook.relay.chatterbox.application.common.logging.slf4j.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

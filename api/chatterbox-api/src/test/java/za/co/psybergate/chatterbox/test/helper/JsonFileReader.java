@@ -1,9 +1,9 @@
-package za.co.psybergate.chatterbox.test.helper;
+package com.webhook.relay.chatterbox.test.helper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import za.co.psybergate.chatterbox.application.common.web.serialisation.JsonConverter;
+import com.webhook.relay.chatterbox.application.common.web.serialisation.JsonConverter;
 
 import java.nio.file.Path;
 

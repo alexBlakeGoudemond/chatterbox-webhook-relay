@@ -1,12 +1,12 @@
-package za.co.psybergate.chatterbox.common.config;
+package com.webhook.relay.chatterbox.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import za.co.psybergate.chatterbox.adapter.in.web.filter.WebhookFilter;
-import za.co.psybergate.chatterbox.common.config.properties.ChatterboxApiProperties;
+import com.webhook.relay.chatterbox.adapter.in.web.filter.WebhookFilter;
+import com.webhook.relay.chatterbox.common.config.properties.ChatterboxApiProperties;
 
 @Configuration
 @RequiredArgsConstructor

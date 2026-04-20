@@ -1,6 +1,6 @@
-package za.co.psybergate.chatterbox.application.port.in.validation;
+package com.webhook.relay.chatterbox.application.port.in.validation;
 
-import za.co.psybergate.chatterbox.application.common.exception.UnrecognizedRequestException;
+import com.webhook.relay.chatterbox.application.common.exception.UnrecognizedRequestException;
 
 /// Entry point, validates and normalizes input
 public interface WebhookRequestValidatorPort {

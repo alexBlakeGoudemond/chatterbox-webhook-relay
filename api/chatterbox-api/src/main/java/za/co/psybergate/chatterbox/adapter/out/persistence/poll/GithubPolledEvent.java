@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.persistence.poll;
+package com.webhook.relay.chatterbox.adapter.out.persistence.poll;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
@@ -8,10 +8,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import za.co.psybergate.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventStatus;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.adapter.out.persistence.converter.LocalDateTimeToInstantConverter;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventStatus;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

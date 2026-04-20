@@ -1,8 +1,8 @@
-package za.co.psybergate.chatterbox.application.port.out.webhook.mapper;
+package com.webhook.relay.chatterbox.application.port.out.webhook.mapper;
 
-import za.co.psybergate.chatterbox.application.domain.event.model.OutboundEvent;
-import za.co.psybergate.chatterbox.application.domain.event.model.RawEventPayload;
-import za.co.psybergate.chatterbox.application.domain.event.model.WebhookEventType;
+import com.webhook.relay.chatterbox.application.domain.event.model.OutboundEvent;
+import com.webhook.relay.chatterbox.application.domain.event.model.RawEventPayload;
+import com.webhook.relay.chatterbox.application.domain.event.model.WebhookEventType;
 
 public interface OutboundEventMapperPort {
 

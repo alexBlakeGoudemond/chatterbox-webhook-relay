@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.port.in.event.processor;
+package com.webhook.relay.chatterbox.application.port.in.event.processor;
 
 public interface EventProcessorPort {
 

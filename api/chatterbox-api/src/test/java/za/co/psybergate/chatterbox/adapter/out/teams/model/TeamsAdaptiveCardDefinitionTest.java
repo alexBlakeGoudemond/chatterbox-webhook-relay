@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.adapter.out.teams.model;
+package com.webhook.relay.chatterbox.adapter.out.teams.model;
 
 import org.junit.jupiter.api.Test;
 

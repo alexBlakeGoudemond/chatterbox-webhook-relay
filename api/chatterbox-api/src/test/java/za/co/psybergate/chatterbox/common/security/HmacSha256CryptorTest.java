@@ -1,9 +1,9 @@
-package za.co.psybergate.chatterbox.common.security;
+package com.webhook.relay.chatterbox.common.security;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import za.co.psybergate.chatterbox.application.common.exception.ApplicationException;
+import com.webhook.relay.chatterbox.application.common.exception.ApplicationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

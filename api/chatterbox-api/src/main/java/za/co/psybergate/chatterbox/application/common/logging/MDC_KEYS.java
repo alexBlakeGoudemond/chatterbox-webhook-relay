@@ -1,4 +1,4 @@
-package za.co.psybergate.chatterbox.application.common.logging;
+package com.webhook.relay.chatterbox.application.common.logging;
 
 public enum MDC_KEYS {
 
