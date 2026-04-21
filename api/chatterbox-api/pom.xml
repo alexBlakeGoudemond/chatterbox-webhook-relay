@@ -59,32 +59,17 @@
 
     <dependencies>
 
-        <!--
-            Company Managed Dependency
-        -->
+        <!-- Source: https://mvnrepository.com/artifact/com.tngtech.archunit/archunit-junit5 -->
         <dependency>
-            <groupId>com.webhook.relay.software-foundations.common.logging</groupId>
-            <artifactId>common-logging</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>1.4.1</version>
         </dependency>
 
-        <!--
-            Company Managed Dependency: contains rule definitions
-        -->
         <dependency>
-            <groupId>com.webhook.relay</groupId>
-            <artifactId>architecture-rules</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!--
-            Company Managed Dependency: contains abstract test definitions
-        -->
-        <dependency>
-            <groupId>com.webhook.relay</groupId>
-            <artifactId>architecture-rules</artifactId>
-            <version>1.0.0</version>
-            <classifier>tests</classifier>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
 
