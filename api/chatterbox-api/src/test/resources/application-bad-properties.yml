@@ -9,7 +9,7 @@ chatterbox:
           - source: Company-Knowledge-Repository/mentoring_software_foundations
             destination-channels:
               NOTIFICATION: TestChannel
-          - source: alexBlakeGoudemond/chatterbox
+          - source: alexBlakeGoudemond/chatterbox-webhook-relay
             destination-channels:
               NOTIFICATION: TestChannel
       payload:

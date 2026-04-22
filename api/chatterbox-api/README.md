@@ -38,7 +38,7 @@ ngrok http 3002
 ```
 
 ```bash
-curl -X POST https://<publicFacingURL>/chatterbox/github -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-GitHub-Delivery: test123" -H "X-Hub-Signature-256: sha256=efd6f5b2172766c993fe6c7c0743faef8262eb38ab0e31c17b1cb910c10817cd" -d '{"repository":{"full_name":"alexBlakeGoudemond/chatterbox"}}'
+curl -X POST https://<publicFacingURL>/chatterbox/github -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-GitHub-Delivery: test123" -H "X-Hub-Signature-256: sha256=efd6f5b2172766c993fe6c7c0743faef8262eb38ab0e31c17b1cb910c10817cd" -d '{"repository":{"full_name":"alexBlakeGoudemond/chatterbox-webhook-relay"}}'
 ```
 
 # Architecture Diagram
