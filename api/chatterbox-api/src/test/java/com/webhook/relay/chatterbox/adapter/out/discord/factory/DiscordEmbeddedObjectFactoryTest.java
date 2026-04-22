@@ -97,8 +97,8 @@ class DiscordEmbeddedObjectFactoryTest {
     private OutboundEvent createOutboundEventForComparison() {
         return new OutboundEvent(
                 1L, "source-123", "PUSH", "Push Event (chatterbox)",
-                "alexBlakeGoudemond/chatterbox", "alexBlakeGoudemond",
-                "https://github.com/alexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", "Test message Is here!",
+                "alexBlakeGoudemond/chatterbox-webhook-relay", "alexBlakeGoudemond",
+                "https://github.com/alexBlakeGoudemond/chatterbox-webhook-relay/blob/develop/api/chatterbox-api/chattering_teeth.gif", "Test message Is here!",
                 "extra", "{}"
         );
     }
@@ -121,7 +121,7 @@ class DiscordEmbeddedObjectFactoryTest {
 
     private Map<String, String> getPropertiesToUse() {
         Map<String, String> propertiesToUse = new HashMap<>();
-        propertiesToUse.put("repositoryName", "alexBlakeGoudemond/chatterbox");
+        propertiesToUse.put("repositoryName", "alexBlakeGoudemond/chatterbox-webhook-relay");
         propertiesToUse.put("senderName", "alexBlakeGoudemond");
         propertiesToUse.put("url", "http://localhost:abcd");
         propertiesToUse.put("urlDisplayText", "Test message Is here!");
