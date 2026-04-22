@@ -81,9 +81,9 @@ class GithubWebhookEventMapperTest {
         validate(outboundEvent);
 
         assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
-        assertEquals("alexBlakeGoudemond/chatterbox", outboundEvent.repository());
+        assertEquals("alexBlakeGoudemond/chatterbox-webhook-relay", outboundEvent.repository());
         assertEquals("alexBlakeGoudemond", outboundEvent.actor());
-        assertEquals("https://github.com/alexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", outboundEvent.url());
+        assertEquals("https://github.com/alexBlakeGoudemond/chatterbox-webhook-relay/blob/develop/api/chatterbox-api/chattering_teeth.gif", outboundEvent.url());
         assertEquals("Test message Is here!", outboundEvent.displayText());
     }
 
@@ -115,7 +115,7 @@ class GithubWebhookEventMapperTest {
         validate(outboundEvent);
 
         assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
-        assertEquals("alexBlakeGoudemond/chatterbox", outboundEvent.repository());
+        assertEquals("alexBlakeGoudemond/chatterbox-webhook-relay", outboundEvent.repository());
         assertEquals("alexBlakeGoudemond", outboundEvent.actor());
         assertEquals("http://localhost:abcd", outboundEvent.url());
         assertEquals("Push Event", outboundEvent.displayText());
@@ -132,9 +132,9 @@ class GithubWebhookEventMapperTest {
         validate(outboundEvent);
 
         assertEquals(WebhookEventType.PUSH.name(), outboundEvent.type());
-        assertEquals("alexBlakeGoudemond/chatterbox", outboundEvent.repository());
+        assertEquals("alexBlakeGoudemond/chatterbox-webhook-relay", outboundEvent.repository());
         assertEquals("alexBlakeGoudemond", outboundEvent.actor());
-        assertEquals("https://github.com/alexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif", outboundEvent.url());
+        assertEquals("https://github.com/alexBlakeGoudemond/chatterbox-webhook-relay/blob/develop/api/chatterbox-api/chattering_teeth.gif", outboundEvent.url());
 
         assertFalse(outboundEvent.displayText().contains("\n"));
         assertTrue(outboundEvent.displayText().contains("..."));

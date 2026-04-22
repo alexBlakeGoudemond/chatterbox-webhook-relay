@@ -101,9 +101,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         if (commits == null) {
             throw new ApplicationException("No commits found when polling Repository");
         }
-        List<RawEventPayload> list = new ArrayList<>();
-        commits.forEach(node -> list.add(RawEventPayload.of(node)));
-        return list;
+        return filterCommitsByDateRange(commits, fromDate, untilDate);
     }
 
     @Override
@@ -132,15 +130,27 @@ public class GithubRestPollingClient implements WebhookPollingPort {
         if (pullRequests == null) {
             throw new ApplicationException("No pull requests found when polling Repository");
         }
-        return filterByDateRange(pullRequests, fromDate, untilDate);
+        return filterPullRequestsByDateRange(pullRequests, fromDate, untilDate);
     }
 
-    private List<RawEventPayload> filterByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
-        List<RawEventPayload> filtered = new ArrayList<>();
+    private List<RawEventPayload> filterPullRequestsByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {
         int toleranceInSeconds = chatterboxApiProperties.getPolledEventToleranceInSeconds();
         ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
         Instant from = fromDate.plusSeconds(toleranceInSeconds).toInstant(systemOffset);
         Instant until = untilDate.toInstant(systemOffset);
+        return getPullRequestsWithinRange(prArray, from, until);
+    }
+
+    private List<RawEventPayload> filterCommitsByDateRange(JsonNode commitArray, LocalDateTime fromDate, LocalDateTime untilDate) {
+        int toleranceInSeconds = chatterboxApiProperties.getPolledEventToleranceInSeconds();
+        ZoneOffset systemOffset = OffsetDateTime.now().getOffset();
+        Instant from = fromDate.plusSeconds(toleranceInSeconds).toInstant(systemOffset);
+        Instant until = untilDate.toInstant(systemOffset);
+        return getCommitsWithinRange(commitArray, from, until);
+    }
+
+    private List<RawEventPayload> getPullRequestsWithinRange(JsonNode prArray, Instant from, Instant until) {
+        List<RawEventPayload> filtered = new ArrayList<>();
         for (JsonNode pr : prArray) {
             JsonNode mergedAtNode = pr.get(GithubApiJsonKeys.MERGED_AT.getValue());
             if (mergedAtNode == null || mergedAtNode.isNull()) {
@@ -149,6 +159,27 @@ public class GithubRestPollingClient implements WebhookPollingPort {
             Instant mergedAt = Instant.parse(mergedAtNode.asText());
             if (mergedAt.isAfter(from) && mergedAt.isBefore(until)) {
                 filtered.add(RawEventPayload.of(pr));
+            }
+        }
+        return filtered;
+    }
+
+    private List<RawEventPayload> getCommitsWithinRange(JsonNode commitArray, Instant from, Instant until) {
+        List<RawEventPayload> filtered = new ArrayList<>();
+        for (JsonNode commit : commitArray) {
+            JsonNode commitNode = commit.get("commit");
+            if (commitNode == null || commitNode.isNull()) {
+                continue;
+            }
+            JsonNode committerDateNode = commitNode.path("committer").path("date");
+            JsonNode authorDateNode = commitNode.path("author").path("date");
+            JsonNode commitDateNode = committerDateNode.isMissingNode() ? authorDateNode : committerDateNode;
+            if (commitDateNode.isMissingNode() || commitDateNode.isNull()) {
+                continue;
+            }
+            Instant commitDate = Instant.parse(commitDateNode.asText());
+            if (commitDate.isAfter(from) && commitDate.isBefore(until)) {
+                filtered.add(RawEventPayload.of(commit));
             }
         }
         return filtered;

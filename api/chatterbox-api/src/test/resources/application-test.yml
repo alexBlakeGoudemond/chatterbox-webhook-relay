@@ -76,7 +76,7 @@ chatterbox:
             destinationChannels:
               NOTIFICATION: TestChannel
               CHAT: General
-          - source: alexBlakeGoudemond/chatterbox
+          - source: alexBlakeGoudemond/chatterbox-webhook-relay
             destinationChannels:
               NOTIFICATION: TestChannel
               CHAT: General
