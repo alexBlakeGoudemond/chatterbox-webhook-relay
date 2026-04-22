@@ -1,0 +1,137 @@
+# use `docker compose -f docker/docker-compose.yml -p chatterbox-container-grouping up -d --build` to build
+# Or, if using dockerissimo: `dockerissimo -f docker/docker-compose.yml -p chatterbox-container-grouping`
+services:
+
+  # API service
+  chatterbox:
+    # build an image for everything in the root folder, using the chatterbox-api.dockerfile
+    image: chatterbox-api:dev
+    build:
+      context: ..
+      dockerfile: docker/chatterbox-api.dockerfile
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:1234/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    expose:
+      - "1234" # port only available inside the docker network
+    container_name: chatterbox-api
+    environment:
+      TZ: Africa/Johannesburg
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chatterbox
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    volumes:
+      - ./api/logs/chatterbox-api:/var/log/chatterbox-api
+      - ./api/configuration/application-prod.yml:/app/configuration/application-prod.yml
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Postgres service
+  postgres:
+    image: chatterbox-postgres:dev
+    build:
+      context: .
+      dockerfile: chatterbox-postgres.dockerfile
+    container_name: chatterbox-postgres
+    ports:
+      - "55618:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chatterbox
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./postgres/ddl:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d chatterbox" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+
+  # Nginx service
+  nginx:
+    image: chatterbox-nginx:dev
+    build:
+      context: ./nginx
+      dockerfile: ../chatterbox-nginx.dockerfile
+    container_name: chatterbox-nginx
+    ports:
+      - "3002:80"
+      - "443:443"
+    environment:
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites-available:/etc/nginx/sites-available
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/certs/cert.pem:/etc/nginx/certs/cert.pem:ro
+      - ./nginx/certs/key.pem:/etc/nginx/certs/key.pem:ro
+    depends_on:
+      chatterbox:
+        condition: service_healthy # only attempts to connect if this service indicates ready
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+
+  # Prometheus service
+  prometheus:
+    image: chatterbox-prometheus:dev
+    build:
+      context: .
+      dockerfile: chatterbox-prometheus.dockerfile
+    container_name: chatterbox-prometheus
+    ports:
+      - "9090:9090"
+    environment:
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/data:/prometheus
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+
+  # Grafana service
+  grafana:
+    image: chatterbox-grafana:dev
+    build:
+      context: .
+      dockerfile: chatterbox-grafana.dockerfile
+    container_name: chatterbox-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      TZ: Africa/Johannesburg
+    volumes:
+      - ./grafana/logs:/var/log/grafana
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/data/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    restart: unless-stopped
+    networks:
+      - chatterbox-net
+    depends_on:
+      - prometheus
+
+# Define a custom network (allowing access across services via serviceName)
+networks:
+  chatterbox-net:
+    name: chatterbox-net
+    driver: bridge
+
+# Named volumes (for persistence)
+volumes:
+  postgres_data:

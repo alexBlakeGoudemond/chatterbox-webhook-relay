@@ -1,0 +1,47 @@
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+.run/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Docker data we dont want to track
+/docker/nginx/logs/
+/docker/prometheus/data/
+/docker/grafana/data/
+/docker/postgres/data/
+
+# Additional files for convenience scripting
+/tmp/
+/src/main/resources/application-qa.yml
+/src/test/resources/application-live-url.yml
+/docker/api/logs/
+/docker/api/configuration/
+/src/main/resources/application-qa.yml

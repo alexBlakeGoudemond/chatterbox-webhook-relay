@@ -1,0 +1,141 @@
+spring:
+  application:
+    name: chatterbox-api-test
+
+  # Allows for ANSI additions, particularly to the banner.txt
+  output:
+    ansi:
+      enabled: ALWAYS
+  banner:
+    location: banners-coloured/banner-chatterbox-test-colour-001.txt
+  datasource:
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:55618/chatterbox
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      max-lifetime: 30000 # 30s; reduces the chance Hikari validates closed connections on shutdown
+      idle-timeout: 10000 # 10s
+      connection-test-query: SELECT 1
+      health-check-properties:
+        connectivityCheckTimeout: 1
+      leak-detection-threshold: 0
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+server:
+  port: 8082
+
+logging:
+  level:
+    root: INFO
+    org.springframework.boot.autoconfigure.jdbc: DEBUG
+#    org.hibernate.tool.schema: DEBUG
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+common:
+  logging:
+    appender:
+      file:
+        location: /var/log/chatterbox-api
+
+packages:
+  separate:
+    logging:
+      level: com.webhook.relay.chatterbox
+
+chatterbox:
+  polled-event-executor:
+    thread-count: 1
+    max-pool-size: 1
+    queue-capacity: 10
+    thread-name-prefix: "polled-event-"
+  webhook-event-executor:
+    thread-count: 1
+    max-pool-size: 1
+    queue-capacity: 10
+    thread-name-prefix: "webhook-event-"
+  sources:
+    github:
+      repository:
+        destination-mapping:
+          - source: Company-Knowledge-Repository/mentoring_software_foundations
+            destinationChannels:
+              NOTIFICATION: TestChannel
+              CHAT: General
+          - source: alexBlakeGoudemond/chatterbox-webhook-relay
+            destinationChannels:
+              NOTIFICATION: TestChannel
+              CHAT: General
+      payload:
+        event-mapping:
+          push:
+            displayName: "Push Event"
+            fields:
+              repositoryName: "repository.full_name"
+              senderName: "sender.login"
+              url: "compare"
+              urlDisplayText: "head_commit.message"
+              extraDetail: "repository.name"
+  destinations:
+    teams:
+      accepted-channel:
+        - channelName: "General"
+          webhookUrl: "https://outlook.office.com/webhook/..."
+        - channelName: "TestChannel"
+          webhookUrl: "https://outlook.office.com/webhook/..."
+    discord:
+      accepted-channel:
+        - channelName: "General"
+          webhookUrl: "https://discord.com/api/webhooks/..."
+  deliveries:
+    teams:
+      adaptive-card-definition:
+        type: "message"
+        attachments:
+          - contentType: "application/vnd.microsoft.card.adaptive"
+            content:
+              type: "AdaptiveCard"
+              version: "1.0"
+              msteams:
+                width: Full
+              body:
+                - type: "TextBlock"
+                  text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+                  wrap: true
+                - type: "TextBlock"
+                  text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
+                  wrap: true
+    discord:
+      embedded-object-definition:
+        embeds:
+          - title: "${urlDisplayText}"
+            description: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+            url: "${url}"
+            color: 6993
+            author:
+              name: "${senderName}"
+              icon_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+  security:
+    webhook:
+      github:
+        secret: secret
+    api:
+      github:
+        token: "github_pat_123abc"
+  api:
+    prefix: /api
+    polledEventToleranceInSeconds: 5
