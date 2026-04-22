@@ -82,8 +82,8 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
 
     private static Stream<Arguments> repositoryDetails() {
         return Stream.of(
-                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("alexBlakeGoudemond", "chatterbox", "2025-12-15T06:00:00", "2025-12-16T06:00:00"))),
-                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Company-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00")))
+                Arguments.of(Named.of("Chatterbox", new RepositoryDetail("alexBlakeGoudemond", "chatterbox-webhook-relay", "2025-12-15T06:00:00", "2025-12-16T06:00:00")))
+//                Arguments.of(Named.of("SoftwareFoundations", new RepositoryDetail("Company-Knowledge-Repository", "mentoring_software_foundations", "2025-11-26T06:00:00", "2025-11-27T06:00:00"))) // todo remove later
         );
     }
 
@@ -106,12 +106,12 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
     @DisplayName("With previous Webhook Received; Polling does not duplicate")
     @Test
     public void givenPreviouslyProcessedWebhookAndNoMatchingPolledEvent_WhenPollForChanges_ThenNoDuplicateChangesReturned() {
-        String repositoryFullName = "alexBlakeGoudemond/chatterbox";
+        String repositoryFullName = "alexBlakeGoudemond/chatterbox-webhook-relay";
         String[] repositoryDetails = repositoryFullName.split("/");
         String owner = repositoryDetails[0];
         String repositoryName = repositoryDetails[1];
         LocalDateTime fromDate = LocalDateTime.parse("2026-02-14T22:27:39");
-        LocalDateTime toDate = LocalDateTime.parse("2026-02-15T10:00:00");
+        LocalDateTime toDate = LocalDateTime.parse("2026-02-15T10:00:05");
         saveWebhookEvent(repositoryFullName, fromDate, WebhookEventStatus.PROCESSED_SUCCESS);
 
         List<WebhookPolledEventReceived> webhookPolledEvents = webhookOrchestrator.pollForChanges(owner, repositoryName, fromDate, toDate);
@@ -122,7 +122,7 @@ public class WebhookOrchestratorPollGithubIT extends AbstractPostgresTestContain
     @DisplayName("With previous Webhook Received and Poll Successful; Polling does not duplicate")
     @Test
     public void givenPreviouslyProcessedWebhookAndMatchingPolledEvent_WhenPollForChanges_ThenNoDuplicateChangesReturned() {
-        String repositoryFullName = "alexBlakeGoudemond/chatterbox";
+        String repositoryFullName = "alexBlakeGoudemond/chatterbox-webhook-relay";
         String[] repositoryDetails = repositoryFullName.split("/");
         String owner = repositoryDetails[0];
         String repositoryName = repositoryDetails[1];

@@ -2,7 +2,7 @@
     "action": "opened",
     "eventType": "push",
     "repository": {
-        "full_name": "alexBlakeGoudemond/chatterbox",
+        "full_name": "alexBlakeGoudemond/chatterbox-webhook-relay",
         "name": "chatterbox"
     },
     "full_name": "chatterbox"

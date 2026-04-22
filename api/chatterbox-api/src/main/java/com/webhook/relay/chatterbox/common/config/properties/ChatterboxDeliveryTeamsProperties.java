@@ -22,7 +22,7 @@ import com.webhook.relay.chatterbox.adapter.out.teams.model.TeamsAdaptiveCardDef
 ///         "body": [
 ///           {
 ///             "type": "TextBlock",
-///             "text": "📢 Push Event for alexBlakeGoudemond/chatterbox",
+///             "text": "📢 Push Event for alexBlakeGoudemond/chatterbox-webhook-relay",
 ///             "wrap": true
 ///           },
 ///           {
