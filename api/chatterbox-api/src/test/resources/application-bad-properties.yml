@@ -1,0 +1,56 @@
+server:
+  port: 8082
+
+chatterbox:
+  sources:
+    github:
+      repository:
+        destination-mapping:
+          - source: Company-Knowledge-Repository/mentoring_software_foundations
+            destination-channels:
+              NOTIFICATION: TestChannel
+          - source: alexBlakeGoudemond/chatterbox-webhook-relay
+            destination-channels:
+              NOTIFICATION: TestChannel
+      payload:
+        event-mapping:
+          push:
+            displayName: "Push Event"
+            fields:
+              repositoryName: "repository.full_name" # intentional - test confirms this is supposed to be present
+              #        senderName: "sender.login"
+              url: "compare"
+              urlDisplayText: "head_commit.message"
+              extraDetail: "repository.name"
+  destinations:
+    teams:
+      accepted-channel:
+        - channelName: "General"
+          webhookUrl: "https://outlook.office.com/webhook/..."
+        - channelName: "TestChannel"
+          webhookUrl: "https://outlook.office.com/webhook/..."
+  deliveries:
+    teams:
+      adaptive-card-definition:
+        type: "message"
+        attachments:
+          - contentType: "application/vnd.microsoft.card.adaptive"
+            content:
+              type: "AdaptiveCard"
+              version: "1.0"
+              msteams:
+                width: Full
+              body:
+                - type: "TextBlock"
+                  text: "📢 ${displayName} (${extraDetail}) for ${repositoryName}"
+                  wrap: true
+                - type: "TextBlock"
+                  text: "⁉️ Details: [${urlDisplayText}](${url}) created by ${senderName}"
+                  wrap: true
+  security:
+    webhook:
+      github:
+        secret: secret
+  api:
+    prefix: /api
+    polledEventToleranceInSeconds: 5

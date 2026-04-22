@@ -1,0 +1,13 @@
+{
+    "action": "opened",
+    "hello": "world",
+    "repository": {
+        "full_name": "alexBlakeGoudemond/chatterbox-webhook-relay",
+        "name": "chatterbox"
+    },
+    "sender": {
+        "login": "alexBlakeGoudemond"
+    },
+    "compare": "http://localhost:abcd",
+    "full_name": "chatterbox"
+}

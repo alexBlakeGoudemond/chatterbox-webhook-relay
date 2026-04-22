@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Custom Properties -->
+    <springProperty scope="context" name="appName" source="spring.application.name"
+                    defaultValue="localhost-app"/>
+    <springProperty scope="context" name="fileAppenderLocation" source="common.logging.appender.file.location"
+                    defaultValue="/var/log/chatterbox-api"/>
+    <springProperty name="packagesForSeparateLoggingLevel" source="packages.separate.logging.level"
+                    defaultValue="com.webhook.relay"/>
+    <property name="logLocation" value="${fileAppenderLocation}/${appName}"/>
+
+    <!-- Appenders below -->
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--
+            Save space with package name reduction by adjusting %logger{...}
+            -->
+            <Pattern>
+                ${appName} %magenta(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] [%magenta(%X{threadExecutionId})] %boldCyan([%X{repositoryName}]) %yellow(%logger{20}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="GeneralRollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logLocation}/${appName}.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--
+            Save space with a package name reduction by adjusting %logger{...}
+            -->
+            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
+
+        </encoder>
+
+        <!--        <filter class="com.webhook.relay.chatterbox.infrastructure.filter.WebhookFilter"/>-->
+
+        <filter class="com.webhook.relay.software_foundations.common.logging.filter.LevelRangeFilter">
+            <levelMin>INFO</levelMin>
+        </filter>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 250 MegaBytes -->
+            <fileNamePattern>${logLocation}/archived/${appName}-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>250MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="TraceRollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logLocation}/${appName}-trace.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
+        </encoder>
+
+        <!--        <filter class="com.webhook.relay.chatterbox.infrastructure.filter.WebhookFilter"/>-->
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 250 MegaBytes -->
+            <fileNamePattern>${logLocation}/archived/${appName}-trace-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>250MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <!--
+    Logs that contain the AUDIT marker will be accepted, no matter the logging level
+    -->
+    <appender name="AuditRollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logLocation}/${appName}-audit.log</file>
+
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>AUDIT</marker>
+            </evaluator>
+            <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${appName} %d %p [%t] [%X{threadExecutionId}] [%X{repositoryName}] %logger{20} %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 250 MegaBytes -->
+            <fileNamePattern>${logLocation}/archived/${appName}-audit-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>250MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>90</maxHistory>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+        </rollingPolicy>
+
+    </appender>
+
+    <!-- Enable Appenders -->
+
+    <!-- No profile used -->
+    <root level="warn">
+        <appender-ref ref="Console"/>
+    </root>
+    <logger name="${packagesForSeparateLoggingLevel}" level="debug" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+
+    <springProfile name="dev | test">
+        <root level="warn">
+            <appender-ref ref="Console"/>
+        </root>
+        <logger name="${packagesForSeparateLoggingLevel}" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="TraceRollingFile"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="qa | prod">
+        <logger name="${packagesForSeparateLoggingLevel}" level="debug">
+            <appender-ref ref="AuditRollingFile"/>
+        </logger>
+        <root level="info">
+            <appender-ref ref="GeneralRollingFile"/>
+            <appender-ref ref="TraceRollingFile"/>
+        </root>
+    </springProfile>
+
+</configuration>
