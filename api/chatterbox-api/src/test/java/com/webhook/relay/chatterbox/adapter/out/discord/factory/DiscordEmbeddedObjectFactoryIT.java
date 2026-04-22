@@ -112,7 +112,7 @@ public class DiscordEmbeddedObjectFactoryIT {
 
     private Map<String, String> getPropertiesToUse() {
         Map<String, String> propertiesToUse = new HashMap<>();
-        propertiesToUse.put("repositoryName", "alexBlakeGoudemond/chatterbox");
+        propertiesToUse.put("repositoryName", "alexBlakeGoudemond/chatterbox-webhook-relay");
         propertiesToUse.put("senderName", "alexBlakeGoudemond");
         propertiesToUse.put("url", "http://localhost:abcd");
         propertiesToUse.put("urlDisplayText", "Test message Is here!");

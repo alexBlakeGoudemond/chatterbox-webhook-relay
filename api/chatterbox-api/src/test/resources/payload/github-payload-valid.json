@@ -3,13 +3,13 @@
     "hello": "world",
     "eventType": "push",
     "repository": {
-        "full_name": "psyAlexBlakeGoudemond/chatterbox",
+        "full_name": "alexBlakeGoudemond/chatterbox-webhook-relay",
         "name": "chatterbox"
     },
     "sender": {
         "login": "alexBlakeGoudemond"
     },
-    "compare": "https://github.com/alexBlakeGoudemond/chatterbox/blob/develop/api/chatterbox-api/chattering_teeth.gif",
+    "compare": "https://github.com/alexBlakeGoudemond/chatterbox-webhook-relay/blob/develop/api/chatterbox-api/chattering_teeth.gif",
     "head_commit": {
         "message": "Test message Is here!"
     },

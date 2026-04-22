@@ -21,7 +21,7 @@ import com.webhook.relay.chatterbox.adapter.out.discord.model.DiscordEmbeddedObj
  *         "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
  *       },
  *       "title": "Chatterbox API",
- *       "description": "📢 Push Event for alexBlakeGoudemond/chatterbox",
+ *       "description": "📢 Push Event for alexBlakeGoudemond/chatterbox-webhook-relay",
  *       "url": "http://localhost:8080",
  *       "color"6993
  *    }

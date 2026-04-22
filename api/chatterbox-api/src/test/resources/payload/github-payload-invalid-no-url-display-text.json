@@ -2,7 +2,7 @@
     "action": "opened",
     "hello": "world",
     "repository": {
-        "full_name": "alexBlakeGoudemond/chatterbox",
+        "full_name": "alexBlakeGoudemond/chatterbox-webhook-relay",
         "name": "chatterbox"
     },
     "sender": {
