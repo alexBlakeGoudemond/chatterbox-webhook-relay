@@ -21,6 +21,9 @@ find . -type f -iname "readme*
 
 # How to Confirm things Working?
 
+> NOTE: see [README_nginx](readme-and-notes/README_nginx.md) to ensure certifactes 
+> exist before trying to run the containers, as the certs are not tracked by git
+
 Can use Makefile commands - just review the environment variables at the top!
 
 ## Quick Commands
