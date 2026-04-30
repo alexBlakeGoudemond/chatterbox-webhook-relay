@@ -40,8 +40,9 @@ build/
 
 # Additional files for convenience scripting
 /tmp/
+
 /src/main/resources/application-qa.yml
 /src/test/resources/application-live-url.yml
 /docker/api/logs/
 /docker/api/configuration/
-/src/main/resources/application-qa.yml
+/docker/nginx/certs/
