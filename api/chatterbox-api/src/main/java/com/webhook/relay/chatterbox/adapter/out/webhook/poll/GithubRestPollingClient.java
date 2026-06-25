@@ -89,19 +89,22 @@ public class GithubRestPollingClient implements WebhookPollingPort {
     @Override
     public List<RawEventPayload> getCommitsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logPollEventType("commits", owner, repositoryName, fromDate, untilDate);
-        ArrayNode commits = githubClient.get()
+        JsonNode response = githubClient.get()
                 .uri(uri -> uri
                         .path("/repos/{owner}/{repo}/commits")
                         .queryParam("since", fromDate.toString())
                         .queryParam("until", untilDate.toString())
                         .build(owner, repositoryName))
                 .retrieve()
-                .bodyToMono(ArrayNode.class)
+                .bodyToMono(JsonNode.class)
                 .block();
-        if (commits == null) {
+        if (response == null) {
             throw new ApplicationException("No commits found when polling Repository");
         }
-        return filterCommitsByDateRange(commits, fromDate, untilDate);
+        if (!response.isArray()) {
+            throw new ApplicationException("Expected array of commits from GitHub API, but got: " + response);
+        }
+        return filterCommitsByDateRange(response, fromDate, untilDate);
     }
 
     @Override
@@ -115,7 +118,7 @@ public class GithubRestPollingClient implements WebhookPollingPort {
     @Override
     public List<RawEventPayload> getPullRequestsSince(String owner, String repositoryName, LocalDateTime fromDate, LocalDateTime untilDate) {
         webhookLogger.logPollEventType("pull_requests", owner, repositoryName, fromDate, untilDate);
-        ArrayNode pullRequests = githubClient.get()
+        JsonNode response = githubClient.get()
                 .uri(uri -> uri
                         .path("/repos/{owner}/{repo}/pulls")
                         .queryParam("state", "all")
@@ -125,12 +128,15 @@ public class GithubRestPollingClient implements WebhookPollingPort {
                         .build(owner, repositoryName)
                 )
                 .retrieve()
-                .bodyToMono(ArrayNode.class)
+                .bodyToMono(JsonNode.class)
                 .block();
-        if (pullRequests == null) {
+        if (response == null) {
             throw new ApplicationException("No pull requests found when polling Repository");
         }
-        return filterPullRequestsByDateRange(pullRequests, fromDate, untilDate);
+        if (!response.isArray()) {
+            throw new ApplicationException("Expected array of pull requests from GitHub API, but got: " + response);
+        }
+        return filterPullRequestsByDateRange(response, fromDate, untilDate);
     }
 
     private List<RawEventPayload> filterPullRequestsByDateRange(JsonNode prArray, LocalDateTime fromDate, LocalDateTime untilDate) {

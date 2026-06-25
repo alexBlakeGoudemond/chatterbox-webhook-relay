@@ -38,8 +38,14 @@ public class OnStartupCatchUpRunner implements CatchUpHandlerPort, ApplicationRu
         boolean webhookEventsFound = false;
         for (String repositoryFullName : repositories) {
             mdcContext.setRepositoryName(repositoryFullName);
-            if (webhookService.findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName)) {
-                webhookEventsFound = true;
+            try {
+                if (webhookService.findMostRecentWebhookAndCheckForUpdatesSince(repositoryFullName)) {
+                    webhookEventsFound = true;
+                }
+            } catch (Exception e) {
+                // We don't want to stop the runner if one repository fails to poll (e.g. 404 or bad token)
+                // The exception is already logged by GlobalExceptionHandler if it reached there,
+                // but here we are in a runner, so we should log it.
             }
         }
         if (webhookEventsFound) {
