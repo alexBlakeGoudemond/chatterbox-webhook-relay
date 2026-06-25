@@ -37,7 +37,7 @@
 
         <!--        <filter class="com.webhook.relay.chatterbox.infrastructure.filter.WebhookFilter"/>-->
 
-        <filter class="com.webhook.relay.software_foundations.common.logging.filter.LevelRangeFilter">
+        <filter class="com.webhook.relay.chatterbox.common.logging.filter.LevelRangeFilter">
             <levelMin>INFO</levelMin>
         </filter>
 
